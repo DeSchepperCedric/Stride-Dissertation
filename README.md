@@ -1,3 +1,6 @@
+# Vaccinators
+Fork of stride for the vaccinators group
+
 # Stride project 
 
 The Stride acronym stands for **S**imulate **tr**ansmission of **i**nfectious **d**is**e**ases.
