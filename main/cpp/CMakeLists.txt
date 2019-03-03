@@ -133,6 +133,8 @@ set(STRIDE_SRC
     util/ConfigInfo.cpp
     util/FileSys.cpp
     util/RunConfigManager.cpp
+    util/TimeStamp.cpp
+    util/TimeToString.cpp
     #---
     viewers/InfectedFileViewer.cpp
     viewers/InfectedViewer.cpp
@@ -145,9 +147,9 @@ set(STRIDE_SRC
 # MACROS to inject in ConfigInfo.cpp
 #============================================================================
 set_source_files_properties(util/ConfigInfo.cpp PROPERTIES
-    COMPILE_DEFINITIONS "STRIDE_GIT_HASH=${STRIDE_WC_REVISION_HASH}")
+    COMPILE_FLAGS "-DSTRIDE_GIT_HASH=${STRIDE_WC_REVISION_HASH}")
 set_source_files_properties(util/ConfigInfo.cpp PROPERTIES
-    COMPILE_DEFINITIONS "PROCCOUNT=${PROCCOUNT}")
+    COMPILE_FLAGS "-DPROCCOUNT=${PROCCOUNT}")
 
 #============================================================================
 # Build the Stride library.
@@ -162,11 +164,12 @@ set_target_properties(libstride
 include(CheckIPOSupported)
 
 # For future use: inter procedural optimization
-check_ipo_supported(RESULT ipo_result)
-if(ipo_result)
-    set_target_properties(libstride PROPERTIES INTERPROCEDURAL_OPTIMIZATION TRUE)
-endif()
-message( STATUS "CheckIPOSupported: ${ipo_result}" )
+# Disabled for now because of issues with gcc 8.1.0 on travis.
+#check_ipo_supported(RESULT ipo_result)
+#if(ipo_result)
+#    set_target_properties(libstride PROPERTIES INTERPROCEDURAL_OPTIMIZATION TRUE)
+#endif()
+#message( STATUS "CheckIPOSupported: ${ipo_result}" )
 
 #============================================================================
 # Build the stride binary.
