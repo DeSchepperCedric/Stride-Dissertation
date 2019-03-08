@@ -72,10 +72,7 @@ public:
         void TimeStep();
 
         /// Get the Sim configuration for the given attribute.
-        std::string GetConfigValue(const std::string& attribute) const
-        {
-                return m_config_pt.get<std::string>(attribute);
-        }
+        std::string GetConfigValue(const std::string& attribute) const { return m_config.get<std::string>(attribute); }
 
         /// Get the stored transmission rate.
         double GetTransmissionRate() const { return m_transmission_profile.GetRate(); }
@@ -91,7 +88,7 @@ private:
         friend class SimBuilder;
 
 private:
-        boost::property_tree::ptree m_config_pt;                     ///< Configuration property tree
+        boost::property_tree::ptree m_config;                        ///< Configuration property tree
         ContactLogMode::Id          m_contact_log_mode;              ///< Specifies contact/transmission logging mode.
         unsigned int                m_num_threads;                   ///< The number of (OpenMP) threads.
         bool                        m_track_index_case;              ///< General simulation or tracking index case.
