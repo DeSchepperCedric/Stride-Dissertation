@@ -42,7 +42,7 @@ using namespace boost::property_tree;
 
 namespace stride {
 
-StanController::StanController(const ptree& configPt) : ControlHelper("Stancontoller", configPt) {}
+StanController::StanController(const ptree& config) : ControlHelper("Stancontoller", config) {}
 
 void StanController::Control()
 {
@@ -57,7 +57,7 @@ void StanController::Control()
         // -----------------------------------------------------------------------------------------
         // Seeds for the stochastic analysis.
         // -----------------------------------------------------------------------------------------
-        const auto                              stanCount = m_config.get<size_t>("run.stan_count");
+        const auto                              stanCount = m_config.get<unsigned int>("run.stan_count");
         random_device                           rd;
         vector<std::random_device::result_type> seeds;
         for (unsigned int i = 0; i < stanCount; i++) {
@@ -67,17 +67,19 @@ void StanController::Control()
 
         // -----------------------------------------------------------------------------------------
         // Instantiate simRunners & run, once for each seed.
-        // Multiple runs in parallel, individual runs not.
+        // Multiple runs in parallel, individual runs in single thread..
         // -----------------------------------------------------------------------------------------
         m_config.put("run.num_threads", 1);
+
 #pragma omp parallel for num_threads(ConfigInfo::NumberAvailableThreads())
         for (unsigned int i = 0U; i < seeds.size(); ++i) {
                 ptree configPt(m_config);
                 configPt.put("run.rng_seed", seeds[i]);
                 m_stride_logger->info("Starting run using seed {}", seeds[i]);
 
-                auto runner =
-                    make_shared<SimRunner>(configPt, Population::Create(configPt, m_rn_manager), m_rn_manager);
+                auto pop    = Population::Create(configPt, m_rn_man);
+                auto runner = make_shared<SimRunner>(configPt, pop, m_rn_man);
+
                 auto iViewer = make_shared<viewers::InfectedViewer>(runner);
                 runner->Register(iViewer, bind(&viewers::InfectedViewer::Update, iViewer, std::placeholders::_1));
 
