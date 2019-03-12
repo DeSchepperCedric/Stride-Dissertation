@@ -35,6 +35,7 @@ enum class Id : unsigned int
 {
         Household = static_cast<unsigned int>(0), // Needs to be zero.
         Daycare,
+        PreSchool,
         K12School,
         College,
         Workplace,
