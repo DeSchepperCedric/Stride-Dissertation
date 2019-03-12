@@ -64,10 +64,10 @@ def runSimulation(outputPrefix, file, seed):
     # Set up simulator
     control = PyController(data_dir="data")
     # Load configuration from file
-    control.loadRunConfig(os.path.join("config", "commuting/comuting" + str(file) + ".xml"))
+    control.loadRunConfig(os.path.join("config", "run_generate_default.xml"))
     # Set some parameters
-    #control.runConfig.setParameter("geopopulation_file", "commuting" + str(file) + ".proto")
-    #control.runConfig.setParameter("population_type", "import")
+    control.runConfig.setParameter("population_file", "commuting" + str(file) + ".proto")
+    control.runConfig.setParameter("population_type", "import")
     control.runConfig.setParameter("output_prefix", outputPrefix + "/" + str(file) + "/" + str(seed))
     control.runConfig.setParameter("seeding_rate", 0.00000334)  # Seed 2 infected persons in population of 600 000
     control.runConfig.setParameter('rng_seed', seed)
