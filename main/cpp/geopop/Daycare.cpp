@@ -10,17 +10,22 @@
  *  You should have received a copy of the GNU General Public License
  *  along with the software. If not, see <http://www.gnu.org/licenses/>.
  *
- *  Copyright 2018, Kuylen E, Willem L, Broeckhove J
+ *  Copyright 2018, 2019, Jan Broeckhove and Bistromatics group.
  */
 
-/**
- * @file
- * Definition of Subject/Observer for SimEvents.
- */
+#include "Daycare.h"
 
-#include "Subject.h"
+#include "GeoGrid.h"
+#include "GeoGridConfig.h"
 
-namespace stride {
+namespace geopop {
 
-template class stride::util::Subject<sim_event::Id>;
+void Daycare::Fill(const GeoGridConfig& geoGridConfig, const std::shared_ptr<GeoGrid>& geoGrid)
+{
+        for (auto i = 0U; i < geoGridConfig.pools.pools_per_daycare; ++i) {
+                const auto p = geoGrid->CreateContactPool(stride::ContactType::Id::Daycare);
+                RegisterPool(p);
+        }
 }
+
+} // namespace geopop

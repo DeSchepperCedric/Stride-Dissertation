@@ -34,6 +34,7 @@ namespace ContactType {
 enum class Id : unsigned int
 {
         Household = static_cast<unsigned int>(0), // Needs to be zero.
+        Daycare,
         K12School,
         College,
         Workplace,
@@ -42,7 +43,7 @@ enum class Id : unsigned int
 };
 
 /// Number of ContactPool types.
-inline constexpr unsigned int NumOfTypes() { return 6U; }
+inline constexpr unsigned int NumOfTypes() { return 7U; }
 
 /// Check whether string is name of a ContactPoolType::Id.
 bool IsId(const std::string& s);

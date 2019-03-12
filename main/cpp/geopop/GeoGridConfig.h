@@ -110,6 +110,10 @@ public:
                 /// Every houselhold constitutes a single ContactPool.
                 unsigned int pools_per_houselhold = 1U;
 
+                /// Used to calculate the number of Daycares.
+                unsigned int daycare_size      = 3U;
+                unsigned int pools_per_daycare = 1U;
+
                 /// Used to calculate the number of K12Schools.
                 unsigned int k12school_size      = 500U;
                 unsigned int pools_per_k12school = 25U;
