@@ -20,15 +20,15 @@
 namespace geopop {
 
 /**
- * Generate Prechools.
+ * Generator PreSchool contact pool types.
  */
 class PreSchoolGenerator : public Generator
 {
 public:
         using Generator::Generator;
 
-        void Apply(std::shared_ptr<GeoGrid> geogrid, const GeoGridConfig& geoGridConfig,
-                   unsigned int& contactCenterCounter) override;
+        void Apply(GeoGrid& geogrid, const GeoGridConfig& geoGridConfig,
+                   stride::ContactType::IdSubscriptArray<unsigned int>& ccCounter) override;
 };
 
 } // namespace geopop

@@ -18,18 +18,16 @@
 #include "geopop/GeoGrid.h"
 #include "geopop/GeoGridConfig.h"
 #include "geopop/Location.h"
-#include "geopop/PreSchool.h"
+#include "geopop/PreSchoolCenter.h"
 #include "util/RnMan.h"
-
-#include <trng/discrete_dist.hpp>
-#include <geopop/GeoGridConfig.h>
 
 namespace geopop {
 
 using namespace std;
+using namespace stride::ContactType;
 
-void PreSchoolGenerator::Apply(shared_ptr<GeoGrid> geoGrid, const GeoGridConfig& geoGridConfig,
-                               unsigned int& contactCenterCounter)
+void PreSchoolGenerator::Apply(GeoGrid& geoGrid, const GeoGridConfig& geoGridConfig,
+                               IdSubscriptArray<unsigned int>& ccCounter)
 {
         // 1. given the number of persons of school age, calculate number of schools; schools
         //    have 120 pupils on average
@@ -42,8 +40,8 @@ void PreSchoolGenerator::Apply(shared_ptr<GeoGrid> geoGrid, const GeoGridConfig&
             static_cast<unsigned int>(ceil(pupilCount / static_cast<double>(geoGridConfig.pools.preschool_size)));
 
         vector<double> weights;
-        for (const auto& loc : *geoGrid) {
-                weights.push_back(loc->GetRelativePopulationSize());
+        for (const auto& loc : geoGrid) {
+                weights.push_back(loc->GetRelativePop());
         }
 
         if (weights.empty()) {
@@ -51,13 +49,13 @@ void PreSchoolGenerator::Apply(shared_ptr<GeoGrid> geoGrid, const GeoGridConfig&
                 return;
         }
 
-        const auto dist = m_rnManager[0].variate_generator(trng::discrete_dist(weights.begin(), weights.end()));
+        const auto dist = m_rn_man.GetDiscreteGenerator(weights, 0U);
 
         for (auto i = 0U; i < schoolCount; i++) {
-                const auto loc = (*geoGrid)[dist()];
-                const auto pre = make_shared<PreSchool>(contactCenterCounter++);
-                pre->Fill(geoGridConfig, geoGrid);
-                loc->AddContactCenter(pre);
+                const auto loc = geoGrid[dist()];
+                const auto pre = make_shared<PreSchoolCenter>(ccCounter[Id::PreSchool]++);
+                pre->SetupPools(geoGridConfig, geoGrid.GetPopulation());
+                loc->AddCenter(pre);
         }
 }
 

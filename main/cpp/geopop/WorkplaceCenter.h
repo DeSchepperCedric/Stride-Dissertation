@@ -13,19 +13,28 @@
  *  Copyright 2018, 2019, Jan Broeckhove and Bistromatics group.
  */
 
-#include "PreSchool.h"
+#pragma once
 
-#include "GeoGrid.h"
-#include "GeoGridConfig.h"
+#include "ContactCenter.h"
 
 namespace geopop {
 
-void PreSchool::Fill(const GeoGridConfig& geoGridConfig, const std::shared_ptr<GeoGrid>& geoGrid)
+class GeoGrid;
+
+/**
+ * Models a Workplace as ContactCenter.
+ */
+class WorkplaceCenter : public ContactCenter
 {
-        for (auto i = 0U; i < geoGridConfig.pools.pools_per_preschool; ++i) {
-                const auto p = geoGrid->CreateContactPool(stride::ContactType::Id::PreSchool);
-                RegisterPool(p);
-        }
-}
+public:
+        /// Construct workplace with assigned ID.
+        explicit WorkplaceCenter(unsigned int id) : ContactCenter(id) {}
+
+        /// See ContactCenter::Fill.
+        void SetupPools(const GeoGridConfig& geoGridConfig, stride::Population* pop) override;
+
+        /// See ContactCenter::GetContactPoolType.
+        stride::ContactType::Id GetContactPoolType() const override { return stride::ContactType::Id::Workplace; }
+};
 
 } // namespace geopop

@@ -24,14 +24,14 @@ class GeoGrid;
 /**
  * Models a K12School as ContactCenter.
  */
-class K12School : public ContactCenter
+class K12SchoolCenter : public ContactCenter
 {
 public:
         /// Construct K12school with assigned ID.
-        explicit K12School(unsigned int id) : ContactCenter(id) {}
+        explicit K12SchoolCenter(unsigned int id) : ContactCenter(id) {}
 
         /// See ContactCenter::Fill.
-        void Fill(const GeoGridConfig& geoGridConfig, const std::shared_ptr<GeoGrid>& geoGrid) override;
+        void SetupPools(const GeoGridConfig& geoGridConfig, stride::Population* pop) override;
 
         /// See ContactCenter::GetContactPoolType.
         stride::ContactType::Id GetContactPoolType() const override { return stride::ContactType::Id::K12School; }

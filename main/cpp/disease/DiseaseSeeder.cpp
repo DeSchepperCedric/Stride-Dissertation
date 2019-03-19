@@ -27,7 +27,6 @@
 #include "util/StringUtils.h"
 
 #include <boost/property_tree/ptree.hpp>
-#include <trng/uniform_int_dist.hpp>
 
 namespace stride {
 
@@ -36,7 +35,7 @@ using namespace stride::ContactType;
 using namespace stride::util;
 using namespace std;
 
-DiseaseSeeder::DiseaseSeeder(const ptree& configPt, RnMan& rnManager) : m_config(configPt), m_rn_man(rnManager) {}
+DiseaseSeeder::DiseaseSeeder(const ptree& config, RnMan& rnMan) : m_config(config), m_rn_man(rnMan) {}
 
 void DiseaseSeeder::Seed(std::shared_ptr<Population> pop)
 {
@@ -44,10 +43,10 @@ void DiseaseSeeder::Seed(std::shared_ptr<Population> pop)
         // Population immunity (natural immunity & vaccination).
         // --------------------------------------------------------------
         const auto immunityProfile = m_config.get<std::string>("run.immunity_profile");
-        Vaccinate("immunity", immunityProfile, pop->GetContactPoolSys()[Id::Household]);
+        Vaccinate("immunity", immunityProfile, pop->CRefPoolSys().CRefPools<Id::Household>());
 
         const auto vaccinationProfile = m_config.get<std::string>("run.vaccine_profile");
-        Vaccinate("vaccine", vaccinationProfile, pop->GetContactPoolSys()[Id::Household]);
+        Vaccinate("vaccine", vaccinationProfile, pop->CRefPoolSys().CRefPools<Id::Household>());
 
         // --------------------------------------------------------------
         // Seed infected persons.
@@ -56,9 +55,9 @@ void DiseaseSeeder::Seed(std::shared_ptr<Population> pop)
         const auto   sAgeMin     = m_config.get<double>("run.seeding_age_min", 1);
         const auto   sAgeMax     = m_config.get<double>("run.seeding_age_max", 99);
         const auto   popSize     = pop->size();
-        const auto   maxPopIndex = static_cast<unsigned int>(popSize - 1);
-        auto         generator   = m_rn_man[0].variate_generator(trng::uniform_int_dist(0, maxPopIndex));
-        auto&        logger      = pop->GetContactLogger();
+        const auto   maxPopIndex = static_cast<int>(popSize - 1);
+        auto         generator   = m_rn_man.GetUniformIntGenerator(0, maxPopIndex, 0U);
+        auto&        logger      = pop->RefContactLogger();
         const string log_level   = m_config.get<string>("run.contact_log_level", "None");
 
         auto numInfected = static_cast<unsigned int>(floor(static_cast<double>(popSize) * sRate));

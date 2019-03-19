@@ -1,4 +1,3 @@
-#pragma once
 /*
  *  This is free software: you can redistribute it and/or modify it
  *  under the terms of the GNU General Public License as published by
@@ -11,26 +10,34 @@
  *  You should have received a copy of the GNU General Public License
  *  along with the software. If not, see <http://www.gnu.org/licenses/>.
  *
- *  Copyright 2019, Jan Broeckhove and Bistromatics group.
+ *  Copyright 2018, 2019, Jan Broeckhove and Bistromatics group.
  */
 
-#include <string>
+#pragma once
+
+#include "ContactCenter.h"
 
 namespace geopop {
 
-class GeoGridConfig;
+class GeoGrid;
 
 /**
- * Controls the complete generation and population of a GeoGrid.
+ * A model of a Primary Community (as a ContactCenter)
  */
-class GeoGridConfigBuilder
+class PrimaryCommunityCenter : public ContactCenter
 {
 public:
-        /// Create a GenGeoPopController.
-        GeoGridConfigBuilder() = default;
+        /// Construct community with assigned ID.
+        explicit PrimaryCommunityCenter(unsigned int id) : ContactCenter(id) {}
 
-        /// Reads the househould data file, parse it and set data.
-        void SetData(GeoGridConfig& geoGridConfig, const std::string& householdsFileName);
+        /// See ContactCenter::Fill.
+        void SetupPools(const GeoGridConfig& geoGridConfig, stride::Population* pop) override;
+
+        /// See ContactCenter::GetContactPoolType.
+        stride::ContactType::Id GetContactPoolType() const override
+        {
+                return stride::ContactType::Id::PrimaryCommunity;
+        }
 };
 
 } // namespace geopop

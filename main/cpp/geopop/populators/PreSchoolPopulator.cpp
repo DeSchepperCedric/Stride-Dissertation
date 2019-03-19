@@ -16,15 +16,14 @@
 #include "PreSchoolPopulator.h"
 
 #include "contact/AgeBrackets.h"
+#include "contact/ContactPool.h"
 #include "geopop/GeoGrid.h"
-#include "geopop/Household.h"
+#include "geopop/GeoGridConfig.h"
+#include "geopop/HouseholdCenter.h"
 #include "geopop/Location.h"
-#include "geopop/PreSchool.h"
+#include "geopop/PreSchoolCenter.h"
 #include "pop/Person.h"
 #include "util/Assert.h"
-
-#include <trng/uniform_int_dist.hpp>
-#include <geopop/GeoGridConfig.h>
 
 namespace geopop {
 
@@ -32,35 +31,34 @@ using namespace std;
 using namespace stride;
 using namespace stride::ContactType;
 
-void PreSchoolPopulator::Apply(std::shared_ptr<geopop::GeoGrid> geoGrid, const geopop::GeoGridConfig& geoGridConfig)
+void PreSchoolPopulator::Apply(GeoGrid& geoGrid, const GeoGridConfig& geoGridConfig)
 {
         m_logger->info("Starting to populate Schools");
         set<ContactPool*> found;
         unsigned int      pupils = 0U;
 
         // for every location
-        for (const shared_ptr<Location>& loc : *geoGrid) {
+        for (const auto& loc : geoGrid) {
                 if (loc->GetPopCount() == 0) {
                         continue;
                 }
 
                 // 1. find all preschools in an area of 10-k*10 km
-                const vector<ContactPool*>& nearByPreSchools = GetNearbyPools<PreSchool>(geoGrid, loc);
+                const vector<ContactPool*>& classes = GetNearbyPools(Id::PreSchool, geoGrid, *loc);
 
-                AssertThrow(!nearByPreSchools.empty(), "No PreSchool found!", m_logger);
+                AssertThrow(!classes.empty(), "No PreSchool found!", m_logger);
 
-                auto dist = m_rnManager[0].variate_generator(trng::uniform_int_dist(
-                    0, static_cast<trng::uniform_int_dist::result_type>(nearByPreSchools.size())));
+                auto dist = m_rn_man.GetUniformIntGenerator(0, static_cast<int>(classes.size()), 0U);
 
                 // 2. for every student assign a class
-                for (const auto& household : loc->GetContactCentersOfType<Household>()) {
-                        ContactPool* contactPool = household->GetPools()[0];
+                for (const auto& hhCenter : loc->RefCenters(Id::Household)) {
+                        ContactPool* const contactPool = (*hhCenter)[0];
                         found.insert(contactPool);
                         for (Person* p : *contactPool) {
                                 if (AgeBrackets::PreSchool::HasAge(p->GetAge()) &&
                                     MakeChoice(geoGridConfig.input.participation_preschool)) {
                                         // this person is a student
-                                        auto& c = nearByPreSchools[dist()];
+                                        auto& c = classes[dist()];
                                         c->AddMember(p);
                                         p->SetPoolId(Id::PreSchool, c->GetId());
                                         pupils++;

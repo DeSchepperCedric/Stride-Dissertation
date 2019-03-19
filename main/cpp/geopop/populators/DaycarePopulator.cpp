@@ -16,15 +16,14 @@
 #include "DaycarePopulator.h"
 
 #include "contact/AgeBrackets.h"
-#include "geopop/Daycare.h"
+#include "contact/ContactPool.h"
+#include "geopop/DaycareCenter.h"
 #include "geopop/GeoGrid.h"
-#include "geopop/Household.h"
+#include "geopop/GeoGridConfig.h"
+#include "geopop/HouseholdCenter.h"
 #include "geopop/Location.h"
 #include "pop/Person.h"
 #include "util/Assert.h"
-
-#include <trng/uniform_int_dist.hpp>
-#include <geopop/GeoGridConfig.h>
 
 namespace geopop {
 
@@ -32,29 +31,28 @@ using namespace std;
 using namespace stride;
 using namespace stride::ContactType;
 
-void DaycarePopulator::Apply(std::shared_ptr<geopop::GeoGrid> geoGrid, const geopop::GeoGridConfig& geoGridConfig)
+void DaycarePopulator::Apply(GeoGrid& geoGrid, const GeoGridConfig& geoGridConfig)
 {
         m_logger->info("Starting to populate Daycares");
         set<ContactPool*> found;
         unsigned int      pupils = 0U;
 
         // for every location
-        for (const shared_ptr<Location>& loc : *geoGrid) {
+        for (const auto& loc : geoGrid) {
                 if (loc->GetPopCount() == 0) {
                         continue;
                 }
 
                 // 1. find all preschools in an area of 10-k*10 km
-                const vector<ContactPool*>& nearByDaycares = GetNearbyPools<Daycare>(geoGrid, loc);
+                const vector<ContactPool*>& nearByDaycares = GetNearbyPools(Id::Daycare, geoGrid, *loc);
 
                 AssertThrow(!nearByDaycares.empty(), "No Daycare found!", m_logger);
 
-                auto dist = m_rnManager[0].variate_generator(
-                    trng::uniform_int_dist(0, static_cast<trng::uniform_int_dist::result_type>(nearByDaycares.size())));
+                auto dist = m_rn_man.GetUniformIntGenerator(0, static_cast<int>(nearByDaycares.size()), 0U);
 
                 // 2. for every student assign a class
-                for (const auto& household : loc->GetContactCentersOfType<Household>()) {
-                        ContactPool* contactPool = household->GetPools()[0];
+                for (const auto& hhCenter : loc->RefCenters(Id::Household)) {
+                        ContactPool* const contactPool = (*hhCenter)[0];
                         found.insert(contactPool);
                         for (Person* p : *contactPool) {
                                 if (AgeBrackets::Daycare::HasAge(p->GetAge()) &&
@@ -71,6 +69,7 @@ void DaycarePopulator::Apply(std::shared_ptr<geopop::GeoGrid> geoGrid, const geo
 
         m_logger->info("Number of pupils in daycares: {}", pupils);
         m_logger->info("Number of different classes: {}", found.size());
+        m_logger->trace("Done populating Daycares");
 }
 
 } // namespace geopop

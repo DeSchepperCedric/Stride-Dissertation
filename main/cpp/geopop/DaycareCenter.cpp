@@ -13,28 +13,22 @@
  *  Copyright 2018, 2019, Jan Broeckhove and Bistromatics group.
  */
 
-#pragma once
+#include "DaycareCenter.h"
 
-#include "ContactCenter.h"
+#include "GeoGrid.h"
+#include "GeoGridConfig.h"
+#include "pop/Population.h"
 
 namespace geopop {
 
-class GeoGrid;
-
-/**
- * Models a Daycare as ContactCenter.
- */
-class Daycare : public ContactCenter
+void DaycareCenter::SetupPools(const GeoGridConfig& geoGridConfig, stride::Population* pop)
 {
-public:
-        /// Construct daycare with assigned ID.
-        explicit Daycare(unsigned int id) : ContactCenter(id) {}
+        auto& poolSys = pop->RefPoolSys();
 
-        /// See ContactCenter::Fill.
-        void Fill(const GeoGridConfig& geoGridConfig, const std::shared_ptr<GeoGrid>& geoGrid) override;
-
-        /// See ContactCenter::GetContactPoolType.
-        stride::ContactType::Id GetContactPoolType() const override { return stride::ContactType::Id::Daycare; }
-};
+        for (auto i = 0U; i < geoGridConfig.pools.pools_per_daycare; ++i) {
+                const auto p = poolSys.CreateContactPool(stride::ContactType::Id::Daycare);
+                RegisterPool(p);
+        }
+}
 
 } // namespace geopop

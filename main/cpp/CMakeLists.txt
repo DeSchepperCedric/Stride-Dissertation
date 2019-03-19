@@ -47,6 +47,7 @@ set(STRIDE_SRC
     contact/AgeContactProfile.cpp
     contact/ContactLogMode.cpp
     contact/ContactPool.cpp
+    contact/ContactPoolSys.cpp
     contact/ContactType.cpp
     contact/Infector.cpp
     contact/TransmissionProfile.cpp
@@ -62,21 +63,19 @@ set(STRIDE_SRC
     execs/SimController.cpp
     execs/StanController.cpp
     #---
-    geopop/College.cpp
+    geopop/CollegeCenter.cpp
     geopop/ContactCenter.cpp
     geopop/Coordinate.h
     geopop/GeoGrid.cpp
-    geopop/GeoGridBuilder.cpp
     geopop/GeoGridConfig.cpp
-    geopop/GeoGridConfigBuilder.cpp
-    geopop/Household.cpp
-    geopop/K12School.cpp
+    geopop/HouseholdCenter.cpp
+    geopop/K12SchoolCenter.cpp
     geopop/Location.cpp
-    geopop/PrimaryCommunity.cpp
-    geopop/SecondaryCommunity.cpp
-    geopop/Workplace.cpp
-    geopop/Daycare.cpp
-    geopop/PreSchool.cpp
+    geopop/PrimaryCommunityCenter.cpp
+    geopop/SecondaryCommunityCenter.cpp
+    geopop/WorkplaceCenter.cpp
+    geopop/DaycareCenter.cpp
+    geopop/PreSchoolCenter.cpp
     #---
     geopop/geo/GeoGridKdTree.cpp
     geopop/geo/KdTree2DPoint.cpp
@@ -121,6 +120,7 @@ set(STRIDE_SRC
     viewers/PersonsFile.cpp
     viewers/SummaryFile.cpp
     #---
+    pop/AbstractPopBuilder.cpp
     pop/Person.cpp
     pop/Population.cpp
     pop/DefaultPopBuilder.cpp
@@ -134,19 +134,20 @@ set(STRIDE_SRC
     sim/event/Id.cpp
     sim/event/Subject.cpp
     #---
+    util/ConfigInfo.cpp
+    util/CSV.cpp
     util/CSVRow.cpp
+    util/FileSys.cpp
     util/LogUtils.cpp
     util/Rn.cpp
-    util/CSV.cpp
-    util/ConfigInfo.cpp
-    util/FileSys.cpp
+    util/RnMan.cpp
     util/RunConfigManager.cpp
     util/TimeStamp.cpp
     util/TimeToString.cpp
     #---
+    viewers/CliViewer.cpp
     viewers/InfectedFileViewer.cpp
     viewers/InfectedViewer.cpp
-    viewers/CliViewer.cpp
     viewers/PersonsFileViewer.cpp
     viewers/SummaryFileViewer.cpp
 )

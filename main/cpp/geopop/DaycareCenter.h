@@ -22,22 +22,19 @@ namespace geopop {
 class GeoGrid;
 
 /**
- * A model of a Secondary Community (as a ContactCenter)
+ * Models a Daycare as ContactCenter.
  */
-class SecondaryCommunity : public ContactCenter
+class DaycareCenter : public ContactCenter
 {
 public:
-        /// Construct community with assigned ID.
-        explicit SecondaryCommunity(unsigned int id) : ContactCenter(id) {}
+        /// Construct daycare with assigned ID.
+        explicit DaycareCenter(unsigned int id) : ContactCenter(id) {}
 
         /// See ContactCenter::Fill.
-        void Fill(const GeoGridConfig& geoGridConfig, const std::shared_ptr<GeoGrid>& geoGrid) override;
+        void SetupPools(const GeoGridConfig& geoGridConfig, stride::Population* pop) override;
 
         /// See ContactCenter::GetContactPoolType.
-        stride::ContactType::Id GetContactPoolType() const override
-        {
-                return stride::ContactType::Id::SecondaryCommunity;
-        }
+        stride::ContactType::Id GetContactPoolType() const override { return stride::ContactType::Id::Daycare; }
 };
 
 } // namespace geopop

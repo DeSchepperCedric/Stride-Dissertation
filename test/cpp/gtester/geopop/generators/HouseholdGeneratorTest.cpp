@@ -18,7 +18,7 @@
 #include "../../createlogger.h"
 #include "geopop/GeoGrid.h"
 #include "geopop/GeoGridConfig.h"
-#include "geopop/Household.h"
+#include "geopop/HouseholdCenter.h"
 #include "geopop/Location.h"
 #include "pop/Population.h"
 #include "util/RnMan.h"
@@ -28,87 +28,94 @@
 using namespace std;
 using namespace geopop;
 using namespace stride;
+using namespace stride::ContactType;
 using namespace stride::util;
 
 namespace {
 
 TEST(HouseholdGeneratorTest, OneLocationTest)
 {
-        RnMan              rnMan{RnMan::Info()}; // Default random number manager.
+        RnMan              rnMan{RnInfo()}; // Default random number manager.
         HouseholdGenerator householdGenerator(rnMan, CreateTestLogger());
         GeoGridConfig      config{};
-        auto               contactCenterCounter = 1U;
-        config.popInfo.count_households         = 4;
+
+        ContactType::IdSubscriptArray<unsigned int> contactCenterCounter(1U);
+
+        config.popInfo.count_households = 4;
 
         auto pop     = Population::Create();
-        auto geoGrid = make_shared<GeoGrid>(pop.get());
-        auto loc1    = make_shared<Location>(1, 4, 2500, Coordinate(0, 0), "Antwerpen");
-        geoGrid->AddLocation(loc1);
+        auto geoGrid = GeoGrid(pop.get());
+        auto loc1    = make_shared<Location>(1, 4, Coordinate(0, 0), "Antwerpen", 2500);
+        geoGrid.AddLocation(loc1);
 
         householdGenerator.Apply(geoGrid, config, contactCenterCounter);
 
-        const auto& centersOfLoc1 = loc1->GetContactCenters();
+        const auto& centersOfLoc1 = loc1->RefCenters(Id::Household);
         EXPECT_EQ(centersOfLoc1.size(), 4);
 }
 
 TEST(HouseholdGeneratorTest, ZeroLocationTest)
 {
-        RnMan              rnMan{RnMan::Info()}; // Default random number manager.
+        RnMan              rnMan{RnInfo()}; // Default random number manager.
         HouseholdGenerator householdGenerator(rnMan, CreateTestLogger());
         GeoGridConfig      config{};
-        auto               contactCenterCounter = 1U;
-        config.popInfo.count_households         = 4;
+
+        ContactType::IdSubscriptArray<unsigned int> contactCenterCounter(1U);
+
+        config.popInfo.count_households = 4;
 
         auto pop     = Population::Create();
-        auto geoGrid = make_shared<GeoGrid>(pop.get());
+        auto geoGrid = GeoGrid(pop.get());
         householdGenerator.Apply(geoGrid, config, contactCenterCounter);
 
-        EXPECT_EQ(geoGrid->size(), 0);
+        EXPECT_EQ(geoGrid.size(), 0);
 }
 
 TEST(HouseholdGeneratorTest, FiveLocationsTest)
 {
-        RnMan              rnMan{RnMan::Info()}; // Default random number manager.
+        RnMan              rnMan{RnInfo()}; // Default random number manager.
         HouseholdGenerator householdGenerator(rnMan, CreateTestLogger());
         GeoGridConfig      config{};
-        auto               contactCenterCounter = 1U;
-        config.popInfo.count_households         = 4000;
-        config.input.pop_size                   = 37542 * 100;
+
+        ContactType::IdSubscriptArray<unsigned int> contactCenterCounter(1U);
+
+        config.popInfo.count_households = 4000;
+        config.input.pop_size           = 37542 * 100;
 
         auto pop     = Population::Create();
-        auto geoGrid = make_shared<GeoGrid>(pop.get());
-        auto loc1    = make_shared<Location>(1, 4, 10150 * 100, Coordinate(0, 0), "Antwerpen");
-        auto loc2    = make_shared<Location>(2, 4, 10040 * 100, Coordinate(0, 0), "Vlaams-Brabant");
-        auto loc3    = make_shared<Location>(3, 4, 7460 * 100, Coordinate(0, 0), "Henegouwen");
-        auto loc4    = make_shared<Location>(4, 4, 3269 * 100, Coordinate(0, 0), "Limburg");
-        auto loc5    = make_shared<Location>(5, 4, 4123 * 100, Coordinate(0, 0), "Luxemburg");
+        auto geoGrid = GeoGrid(pop.get());
+        auto loc1    = make_shared<Location>(1, 4, Coordinate(0, 0), "Antwerpen", 10150 * 100);
+        auto loc2    = make_shared<Location>(2, 4, Coordinate(0, 0), "Vlaams-Brabant", 10040 * 100);
+        auto loc3    = make_shared<Location>(3, 4, Coordinate(0, 0), "Henegouwen", 7460 * 100);
+        auto loc4    = make_shared<Location>(4, 4, Coordinate(0, 0), "Limburg", 3269 * 100);
+        auto loc5    = make_shared<Location>(5, 4, Coordinate(0, 0), "Luxemburg", 4123 * 100);
 
-        geoGrid->AddLocation(loc1);
-        geoGrid->AddLocation(loc2);
-        geoGrid->AddLocation(loc3);
-        geoGrid->AddLocation(loc4);
-        geoGrid->AddLocation(loc5);
+        geoGrid.AddLocation(loc1);
+        geoGrid.AddLocation(loc2);
+        geoGrid.AddLocation(loc3);
+        geoGrid.AddLocation(loc4);
+        geoGrid.AddLocation(loc5);
 
-        for (const shared_ptr<Location>& loc : *geoGrid) {
-                loc->SetRelativePopulation(static_cast<double>(loc->GetPopCount()) /
-                                           static_cast<double>(config.input.pop_size));
+        for (const shared_ptr<Location>& loc : geoGrid) {
+                loc->SetRelativePop(static_cast<double>(loc->GetPopCount()) /
+                                    static_cast<double>(config.input.pop_size));
         }
 
         householdGenerator.Apply(geoGrid, config, contactCenterCounter);
 
-        const auto& centersOfLoc1 = loc1->GetContactCenters();
+        const auto& centersOfLoc1 = loc1->RefCenters(Id::Household);
         EXPECT_EQ(centersOfLoc1.size(), 1179);
 
-        const auto& centersOfLoc2 = loc2->GetContactCenters();
+        const auto& centersOfLoc2 = loc2->RefCenters(Id::Household);
         EXPECT_EQ(centersOfLoc2.size(), 1137);
 
-        const auto& centersOfLoc3 = loc3->GetContactCenters();
+        const auto& centersOfLoc3 = loc3->RefCenters(Id::Household);
         EXPECT_EQ(centersOfLoc3.size(), 868);
 
-        const auto& centersOfLoc4 = loc4->GetContactCenters();
+        const auto& centersOfLoc4 = loc4->RefCenters(Id::Household);
         EXPECT_EQ(centersOfLoc4.size(), 358);
 
-        const auto& centersOfLoc5 = loc5->GetContactCenters();
+        const auto& centersOfLoc5 = loc5->RefCenters(Id::Household);
         EXPECT_EQ(centersOfLoc5.size(), 458);
 }
 

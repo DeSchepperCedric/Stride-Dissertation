@@ -15,21 +15,19 @@
 
 #include "DaycareGenerator.h"
 
-#include "geopop/Daycare.h"
+#include "geopop/DaycareCenter.h"
 #include "geopop/GeoGrid.h"
 #include "geopop/GeoGridConfig.h"
 #include "geopop/Location.h"
 #include "util/RnMan.h"
 
-#include <trng/discrete_dist.hpp>
-#include <geopop/GeoGridConfig.h>
-
 namespace geopop {
 
 using namespace std;
+using namespace stride::ContactType;
 
-void DaycareGenerator::Apply(shared_ptr<GeoGrid> geoGrid, const GeoGridConfig& geoGridConfig,
-                             unsigned int& contactCenterCounter)
+void DaycareGenerator::Apply(GeoGrid& geoGrid, const GeoGridConfig& geoGridConfig,
+                             IdSubscriptArray<unsigned int>& ccCounter)
 {
         // 1. given the number of persons of daycare age, calculate number of daycares; daycares
         //    have 3 pupils on average
@@ -42,8 +40,8 @@ void DaycareGenerator::Apply(shared_ptr<GeoGrid> geoGrid, const GeoGridConfig& g
             static_cast<unsigned int>(ceil(pupilCount / static_cast<double>(geoGridConfig.pools.daycare_size)));
 
         vector<double> weights;
-        for (const auto& loc : *geoGrid) {
-                weights.push_back(loc->GetRelativePopulationSize());
+        for (const auto& loc : geoGrid) {
+                weights.push_back(loc->GetRelativePop());
         }
 
         if (weights.empty()) {
@@ -51,13 +49,13 @@ void DaycareGenerator::Apply(shared_ptr<GeoGrid> geoGrid, const GeoGridConfig& g
                 return;
         }
 
-        const auto dist = m_rnManager[0].variate_generator(trng::discrete_dist(weights.begin(), weights.end()));
+        const auto dist = m_rn_man.GetDiscreteGenerator(weights, 0U);
 
         for (auto i = 0U; i < schoolCount; i++) {
-                const auto loc = (*geoGrid)[dist()];
-                const auto day = make_shared<Daycare>(contactCenterCounter++);
-                day->Fill(geoGridConfig, geoGrid);
-                loc->AddContactCenter(day);
+                const auto loc = geoGrid[dist()];
+                const auto day = make_shared<DaycareCenter>(ccCounter[Id::Daycare]++);
+                day->SetupPools(geoGridConfig, geoGrid.GetPopulation());
+                loc->AddCenter(day);
         }
 }
 
