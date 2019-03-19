@@ -176,7 +176,10 @@ include(CheckIPOSupported)
 # Build the stride binary.
 #============================================================================
 add_executable(stride execs/stride.cpp)
+add_executable(JSONproto prototypes/JSONArchPrototype.cpp)
 target_link_libraries(stride libstride)
+target_link_libraries(JSONproto libstride)
 install(TARGETS stride DESTINATION ${BIN_INSTALL_LOCATION})
+install(TARGETS JSONproto DESTINATION ${BIN_INSTALL_LOCATION})
 
 #############################################################################
