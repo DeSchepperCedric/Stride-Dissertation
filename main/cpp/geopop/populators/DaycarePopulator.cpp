@@ -13,7 +13,7 @@
  *  Copyright 2018, 2019, Jan Broeckhove and Bistromatics group.
  */
 
-#include "PreSchoolPopulator.h"
+#include "DaycarePopulator.h"
 
 #include "contact/AgeBrackets.h"
 #include "geopop/Daycare.h"
