@@ -13,31 +13,24 @@
  *  Copyright 2018, 2019, Jan Broeckhove and Bistromatics group.
  */
 
-#pragma once
+#include "HouseholdCenter.h"
 
-#include "ContactCenter.h"
+#include "GeoGrid.h"
+#include "GeoGridConfig.h"
+#include "pop/Population.h"
+
+using namespace stride::ContactType;
 
 namespace geopop {
 
-class GeoGrid;
-
-/**
- * A model of a Primary Community (as a ContactCenter)
- */
-class PrimaryCommunity : public ContactCenter
+void HouseholdCenter::SetupPools(const GeoGridConfig& geoGridConfig, stride::Population* pop)
 {
-public:
-        /// Construct community with assigned ID.
-        explicit PrimaryCommunity(unsigned int id) : ContactCenter(id) {}
+        auto& poolSys = pop->RefPoolSys();
 
-        /// See ContactCenter::Fill.
-        void Fill(const GeoGridConfig& geoGridConfig, const std::shared_ptr<GeoGrid>& geoGrid) override;
-
-        /// See ContactCenter::GetContactPoolType.
-        stride::ContactType::Id GetContactPoolType() const override
-        {
-                return stride::ContactType::Id::PrimaryCommunity;
+        for (auto i = 0U; i < geoGridConfig.pools.pools_per_houselhold; ++i) {
+                const auto p = poolSys.CreateContactPool(stride::ContactType::Id::Household);
+                RegisterPool(p);
         }
-};
+}
 
 } // namespace geopop

@@ -15,27 +15,31 @@
 
 #include "GeoGridProtoWriter.h"
 
+#include "contact/ContactPool.h"
 #include "contact/ContactType.h"
 #include "geogrid.pb.h"
 #include "geopop/ContactCenter.h"
 #include "geopop/GeoGrid.h"
+#include "pop/Person.h"
 #include "util/Exception.h"
 
 #include <iostream>
+#include <map>
 #include <omp.h>
 
 namespace geopop {
 
 using namespace std;
+using namespace stride::ContactType;
 
 GeoGridProtoWriter::GeoGridProtoWriter() : m_persons_found() {}
 
-void GeoGridProtoWriter::Write(shared_ptr<geopop::GeoGrid> geoGrid, ostream& stream)
+void GeoGridProtoWriter::Write(GeoGrid& geoGrid, ostream& stream)
 {
         GOOGLE_PROTOBUF_VERIFY_VERSION;
 
         proto::GeoGrid protoGrid;
-        for (const auto& location : *geoGrid) {
+        for (const auto& location : geoGrid) {
                 WriteLocation(location, protoGrid.add_locations());
         }
         for (const auto& person : m_persons_found) {
@@ -53,8 +57,6 @@ void GeoGridProtoWriter::Write(shared_ptr<geopop::GeoGrid> geoGrid, ostream& str
 void GeoGridProtoWriter::WriteContactCenter(shared_ptr<ContactCenter>              contactCenter,
                                             proto::GeoGrid_Location_ContactCenter* protoContactCenter)
 {
-        using namespace stride::ContactType;
-
         map<Id, proto::GeoGrid_Location_ContactCenter_Type> types = {
             {Id::K12School, proto::GeoGrid_Location_ContactCenter_Type_K12School},
             {Id::PrimaryCommunity, proto::GeoGrid_Location_ContactCenter_Type_PrimaryCommunity},
@@ -97,15 +99,17 @@ void GeoGridProtoWriter::WriteLocation(shared_ptr<Location> location, proto::Geo
         WriteCoordinate(location->GetCoordinate(), coordinate);
         protoLocation->set_allocated_coordinate(coordinate);
 
-        auto commutes = location->GetOutgoingCommutingCities();
+        auto commutes = location->CRefOutgoingCommutes();
         for (auto commute_pair : commutes) {
                 auto commute = protoLocation->add_commutes();
                 commute->set_to(commute_pair.first->GetID());
                 commute->set_proportion(commute_pair.second);
         }
 
-        for (const auto& contactCenter : *location) {
-                WriteContactCenter(contactCenter, protoLocation->add_contactcenters());
+        for (Id typ : IdList) {
+                for (const auto& c : location->RefCenters(typ)) {
+                        WriteContactCenter(c, protoLocation->add_contactcenters());
+                }
         }
 }
 

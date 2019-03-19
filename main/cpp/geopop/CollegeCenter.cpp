@@ -13,17 +13,23 @@
  *  Copyright 2018, 2019, Jan Broeckhove and Bistromatics group.
  */
 
-#include "K12School.h"
+#include "CollegeCenter.h"
 
-#include "GeoGrid.h"
-#include "GeoGridConfig.h"
+#include "geopop/GeoGrid.h"
+#include "geopop/GeoGridConfig.h"
+#include "pop/Population.h"
+
+using namespace stride;
+using namespace stride::ContactType;
 
 namespace geopop {
 
-void K12School::Fill(const GeoGridConfig& geoGridConfig, const std::shared_ptr<GeoGrid>& geoGrid)
+void CollegeCenter::SetupPools(const GeoGridConfig& geoGridConfig, Population* pop)
 {
-        for (auto i = 0U; i < geoGridConfig.pools.pools_per_k12school; ++i) {
-                const auto p = geoGrid->CreateContactPool(stride::ContactType::Id::K12School);
+        auto& poolSys = pop->RefPoolSys();
+
+        for (auto i = 0U; i < geoGridConfig.pools.pools_per_college; ++i) {
+                const auto p = poolSys.CreateContactPool(stride::ContactType::Id::College);
                 RegisterPool(p);
         }
 }

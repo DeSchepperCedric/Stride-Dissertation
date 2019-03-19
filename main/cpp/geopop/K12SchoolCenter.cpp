@@ -1,4 +1,3 @@
-#pragma once
 /*
  *  This is free software: you can redistribute it and/or modify it
  *  under the terms of the GNU General Public License as published by
@@ -11,26 +10,25 @@
  *  You should have received a copy of the GNU General Public License
  *  along with the software. If not, see <http://www.gnu.org/licenses/>.
  *
- *  Copyright 2019, Jan Broeckhove and Bistromatics group.
+ *  Copyright 2018, 2019, Jan Broeckhove and Bistromatics group.
  */
 
-#include <string>
+#include "K12SchoolCenter.h"
+
+#include "GeoGrid.h"
+#include "GeoGridConfig.h"
+#include "pop/Population.h"
 
 namespace geopop {
 
-class GeoGridConfig;
-
-/**
- * Controls the complete generation and population of a GeoGrid.
- */
-class GeoGridConfigBuilder
+void K12SchoolCenter::SetupPools(const GeoGridConfig& geoGridConfig, stride::Population* pop)
 {
-public:
-        /// Create a GenGeoPopController.
-        GeoGridConfigBuilder() = default;
+        auto& poolSys = pop->RefPoolSys();
 
-        /// Reads the househould data file, parse it and set data.
-        void SetData(GeoGridConfig& geoGridConfig, const std::string& householdsFileName);
-};
+        for (auto i = 0U; i < geoGridConfig.pools.pools_per_k12school; ++i) {
+                const auto p = poolSys.CreateContactPool(stride::ContactType::Id::K12School);
+                RegisterPool(p);
+        }
+}
 
 } // namespace geopop

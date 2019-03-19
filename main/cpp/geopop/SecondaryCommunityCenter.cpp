@@ -13,20 +13,27 @@
  *  Copyright 2018, 2019, Jan Broeckhove and Bistromatics group.
  */
 
-#include "Workplace.h"
+#include "SecondaryCommunityCenter.h"
 
 #include "GeoGrid.h"
 #include "GeoGridConfig.h"
+#include "pop/Population.h"
+
+using namespace stride::ContactType;
 
 namespace geopop {
 
-void Workplace::Fill(const GeoGridConfig& /* geoGridConfig */, const std::shared_ptr<GeoGrid>& geoGrid)
+void SecondaryCommunityCenter::SetupPools(const GeoGridConfig& /* geoGridConfig */, stride::Population* pop)
 {
+        auto& poolSys = pop->RefPoolSys();
+
         // TODO CheckThisAlgorithm
-        // for (std::size_t i = 0; i < geoGridConfig.pools.pools_per_workplace; ++i) {
-        const auto p = geoGrid->CreateContactPool(stride::ContactType::Id::Workplace);
-        RegisterPool(p);
-        //}
+        // for (std::size_t i = 0; i < geoGridConfig.pools.pools_per_community; ++i) {
+        if (m_pools.empty()) {
+
+                const auto p = poolSys.CreateContactPool(stride::ContactType::Id::SecondaryCommunity);
+                RegisterPool(p);
+        }
 }
 
 } // namespace geopop
