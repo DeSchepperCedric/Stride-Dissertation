@@ -53,7 +53,7 @@ public:
                 double participation_daycare;
 
                 /// Participation of preschool (fraction of people of preschool age going to preschool).
-                double particpation_preschool;
+                double participation_preschool;
 
                 /// Participation of college (fraction of people of college age going to college).
                 double participation_college;

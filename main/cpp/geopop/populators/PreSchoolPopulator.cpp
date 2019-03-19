@@ -58,7 +58,7 @@ void PreSchoolPopulator::Apply(std::shared_ptr<geopop::GeoGrid> geoGrid, const g
                         found.insert(contactPool);
                         for (Person* p : *contactPool) {
                                 if (AgeBrackets::PreSchool::HasAge(p->GetAge()) &&
-                                    MakeChoice(geoGridConfig.input.particpation_preschool)) {
+                                    MakeChoice(geoGridConfig.input.participation_preschool)) {
                                         // this person is a student
                                         auto& c = nearByPreSchools[dist()];
                                         c->AddMember(p);
