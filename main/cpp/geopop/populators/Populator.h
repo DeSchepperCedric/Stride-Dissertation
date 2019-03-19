@@ -36,6 +36,8 @@ class K12School;
 class PrimaryCommunity;
 class SecondaryCommunity;
 class Workplace;
+class PreSchool;
+class Daycare;
 
 /**
  * Interface for populators. They generate some data and apply it to the GeoGrid.
@@ -86,6 +88,12 @@ extern template std::vector<stride::ContactPool*> Populator::GetNearbyPools<Seco
     const std::shared_ptr<GeoGrid>& geoGrid, const std::shared_ptr<Location>& start, double startRadius) const;
 
 extern template std::vector<stride::ContactPool*> Populator::GetNearbyPools<Workplace>(
+    const std::shared_ptr<GeoGrid>& geoGrid, const std::shared_ptr<Location>& start, double startRadius) const;
+
+extern template std::vector<stride::ContactPool*> Populator::GetNearbyPools<Daycare>(
+    const std::shared_ptr<GeoGrid>& geoGrid, const std::shared_ptr<Location>& start, double startRadius) const;
+
+extern template std::vector<stride::ContactPool*> Populator::GetNearbyPools<PreSchool>(
     const std::shared_ptr<GeoGrid>& geoGrid, const std::shared_ptr<Location>& start, double startRadius) const;
 
 } // namespace geopop

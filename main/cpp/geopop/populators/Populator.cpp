@@ -16,11 +16,13 @@
 #include "Populator.h"
 
 #include "geopop/College.h"
+#include "geopop/Daycare.h"
 #include "geopop/GeoGrid.h"
 #include "geopop/GeoGridConfig.h"
 #include "geopop/Household.h"
 #include "geopop/K12School.h"
 #include "geopop/Location.h"
+#include "geopop/PreSchool.h"
 #include "geopop/PrimaryCommunity.h"
 #include "geopop/SecondaryCommunity.h"
 #include "geopop/Workplace.h"
@@ -92,6 +94,14 @@ template vector<ContactPool*> Populator::GetNearbyPools<SecondaryCommunity>(cons
                                                                             double startRadius) const;
 
 template vector<ContactPool*> Populator::GetNearbyPools<Workplace>(const shared_ptr<GeoGrid>&  geoGrid,
+                                                                   const shared_ptr<Location>& start,
+                                                                   double                      startRadius) const;
+
+template vector<ContactPool*> Populator::GetNearbyPools<Daycare>(const shared_ptr<GeoGrid>&  geoGrid,
+                                                                 const shared_ptr<Location>& start,
+                                                                 double                      startRadius) const;
+
+template vector<ContactPool*> Populator::GetNearbyPools<PreSchool>(const shared_ptr<GeoGrid>&  geoGrid,
                                                                    const shared_ptr<Location>& start,
                                                                    double                      startRadius) const;
 

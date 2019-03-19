@@ -27,13 +27,13 @@
 #include "geopop/generators/WorkplaceGenerator.h"
 #include "geopop/io/ReaderFactory.h"
 #include "geopop/populators/CollegePopulator.h"
+#include "geopop/populators/DaycarePopulator.h"
 #include "geopop/populators/HouseholdPopulator.h"
 #include "geopop/populators/K12SchoolPopulator.h"
+#include "geopop/populators/PreSchoolPopulator.h"
 #include "geopop/populators/PrimaryCommunityPopulator.h"
 #include "geopop/populators/SecondaryCommunityPopulator.h"
 #include "geopop/populators/WorkplacePopulator.h"
-#include "geopop/populators/DaycarePopulator.h"
-#include "geopop/populators/PreSchoolPopulator.h"
 
 #include <spdlog/logger.h>
 #include <utility>
