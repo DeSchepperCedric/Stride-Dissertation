@@ -20,8 +20,10 @@
 #include "geopop/GeoGridConfigBuilder.h"
 #include "geopop/generators/CollegeGenerator.h"
 #include "geopop/generators/CommunityGenerator.h"
+#include "geopop/generators/DaycareGenerator.h"
 #include "geopop/generators/HouseholdGenerator.h"
 #include "geopop/generators/K12SchoolGenerator.h"
+#include "geopop/generators/PreSchoolGenerator.h"
 #include "geopop/generators/WorkplaceGenerator.h"
 #include "geopop/io/ReaderFactory.h"
 #include "geopop/populators/CollegePopulator.h"
@@ -30,6 +32,8 @@
 #include "geopop/populators/PrimaryCommunityPopulator.h"
 #include "geopop/populators/SecondaryCommunityPopulator.h"
 #include "geopop/populators/WorkplacePopulator.h"
+#include "geopop/populators/DaycarePopulator.h"
+#include "geopop/populators/PreSchoolPopulator.h"
 
 #include <spdlog/logger.h>
 #include <utility>
@@ -68,7 +72,9 @@ void GeoGridBuilder::GenCities(const GeoGridConfig& geoGridConfig, const string&
 
 void GeoGridBuilder::GenGeo(const GeoGridConfig& geoGridConfig)
 {
-        vector<shared_ptr<Generator>> generators{make_shared<K12SchoolGenerator>(m_rnManager, m_logger),
+        vector<shared_ptr<Generator>> generators{make_shared<DaycareGenerator>(m_rnManager, m_logger),
+                                                 make_shared<PreSchoolGenerator>(m_rnManager, m_logger),
+                                                 make_shared<K12SchoolGenerator>(m_rnManager, m_logger),
                                                  make_shared<CollegeGenerator>(m_rnManager, m_logger),
                                                  make_shared<WorkplaceGenerator>(m_rnManager, m_logger),
                                                  make_shared<CommunityGenerator>(m_rnManager, m_logger),
@@ -82,6 +88,8 @@ void GeoGridBuilder::GenGeo(const GeoGridConfig& geoGridConfig)
 void GeoGridBuilder::GenPop(const GeoGridConfig& geoGridConfig)
 {
         vector<shared_ptr<Populator>> populators{make_shared<HouseholdPopulator>(m_rnManager, m_logger),
+                                                 make_shared<DaycarePopulator>(m_rnManager, m_logger),
+                                                 make_shared<PreSchoolPopulator>(m_rnManager, m_logger),
                                                  make_shared<K12SchoolPopulator>(m_rnManager, m_logger),
                                                  make_shared<CollegePopulator>(m_rnManager, m_logger),
                                                  make_shared<PrimaryCommunityPopulator>(m_rnManager, m_logger),
