@@ -18,34 +18,25 @@
  * Initialize populations: implementation.
  */
 
-#include "ImportPopBuilder.h"
+#include "AbstractPopBuilder.h"
 
-#include "geopop/GeoGrid.h"
-#include "geopop/io/GeoGridReader.h"
-#include "geopop/io/GeoGridReaderFactory.h"
-#include "pop/Population.h"
 #include "util/LogUtils.h"
 
 #include <boost/property_tree/ptree.hpp>
-#include <spdlog/logger.h>
+#include <spdlog/common.h>
 
 namespace stride {
 
 using namespace std;
 using namespace boost::property_tree;
-using namespace geopop;
 
-shared_ptr<Population> ImportPopBuilder::Build(shared_ptr<Population> pop)
+AbstractPopBuilder::AbstractPopBuilder(const boost::property_tree::ptree& config, util::RnMan& rnMan,
+                                       std::shared_ptr<spdlog::logger> strideLogger)
+    : m_config(config), m_rn_man(rnMan), m_stride_logger(std::move(strideLogger))
 {
-        const auto importFile = m_config.get<string>("run.population_file");
-        m_stride_logger->info("Importing population from file {}.", importFile);
-
-        GeoGridReaderFactory geoGridReaderFactory;
-        const auto&          reader = geoGridReaderFactory.CreateReader(importFile, pop.get());
-        reader->Read();
-        pop->RefGeoGrid().Finalize();
-
-        return pop;
+        if (!m_stride_logger) {
+                m_stride_logger = util::LogUtils::CreateNullLogger("PopBuilder_logger");
+        }
 }
 
 } // namespace stride
