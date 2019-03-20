@@ -58,11 +58,20 @@ void GeoGridConfig::SetData(const string& householdsFileName)
         const auto ref_p_count   = refHH.person_count;
         const auto averageHhSize = static_cast<double>(ref_p_count) / static_cast<double>(refHH.ages.size());
 
+        auto ref_daycare = 0U;
+        auto ref_preschool = 0U;
         auto ref_k12school = 0U;
         auto ref_college   = 0U;
         auto ref_workplace = 0U;
+
         for (const auto& hhAgeProfile : refHH.ages) {
                 for (const auto& age : hhAgeProfile) {
+                        if (Daycare::HasAge(age)) {
+                                ref_daycare++;
+                        }
+                        if (PreSchool::HasAge(age)) {
+                                ref_preschool++;
+                        }
                         if (K12School::HasAge(age)) {
                                 ref_k12school++;
                         }
@@ -77,13 +86,21 @@ void GeoGridConfig::SetData(const string& householdsFileName)
         //----------------------------------------------------------------
         // Scale up to the generated population size.
         //----------------------------------------------------------------
+        const auto fraction_daycare_age = static_cast<double>(ref_daycare) / static_cast<double>(ref_p_count);
+        const auto fraction_preschool_age = static_cast<double>(ref_preschool) / static_cast<double>(ref_p_count);
         const auto fraction_k12school_age = static_cast<double>(ref_k12school) / static_cast<double>(ref_p_count);
         const auto fraction_college_age   = static_cast<double>(ref_college) / static_cast<double>(ref_p_count);
         const auto fraction_workplace_age = static_cast<double>(ref_workplace) / static_cast<double>(ref_p_count);
 
+        const auto age_count_daycare = static_cast<unsigned int>(floor(popSize * fraction_daycare_age));
+        const auto age_count_preschool = static_cast<unsigned int>(floor(popSize * fraction_preschool_age));
         const auto age_count_k12school = static_cast<unsigned int>(floor(popSize * fraction_k12school_age));
         const auto age_count_college   = static_cast<unsigned int>(floor(popSize * fraction_college_age));
         const auto age_count_workplace = static_cast<unsigned int>(floor(popSize * fraction_workplace_age));
+
+        popInfo.popcount_daycare = static_cast<unsigned int>(floor(input.participation_daycare * age_count_daycare));
+
+        popInfo.popcount_preschool = static_cast<unsigned int>(floor(input.participation_preschool * age_count_preschool));
 
         popInfo.popcount_k12school = age_count_k12school;
 
