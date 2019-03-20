@@ -36,6 +36,16 @@
                     "id": 5,
                     "type": "Workplace",
                     "pools": ""
+                },
+                {
+                    "id": 6,
+                    "type": "PreSchool",
+                    "pools": ""
+                },
+                {
+                    "id": 7,
+                    "type": "Daycare",
+                    "pools": ""
                 }
             ]
         }

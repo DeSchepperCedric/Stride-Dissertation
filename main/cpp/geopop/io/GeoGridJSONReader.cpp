@@ -17,9 +17,11 @@
 
 #include "ThreadException.h"
 #include "geopop/CollegeCenter.h"
+#include "geopop/DaycareCenter.h"
 #include "geopop/GeoGrid.h"
 #include "geopop/HouseholdCenter.h"
 #include "geopop/K12SchoolCenter.h"
+#include "geopop/PreSchoolCenter.h"
 #include "geopop/PrimaryCommunityCenter.h"
 #include "geopop/SecondaryCommunityCenter.h"
 #include "geopop/WorkplaceCenter.h"
@@ -167,6 +169,12 @@ shared_ptr<ContactCenter> GeoGridJSONReader::ParseContactCenter(boost::property_
         } else if (type == ToString(Id::Workplace)) {
                 result = make_shared<WorkplaceCenter>(id);
                 typeId = Id::Workplace;
+        } else if (type == ToString(Id::Daycare)) {
+                result = make_shared<DaycareCenter>(id);
+                typeId = Id::Daycare;
+        } else if (type == ToString(Id::PreSchool)) {
+                result = make_shared<PreSchoolCenter>(id);
+                typeId = Id::PreSchool;
         } else {
                 throw Exception("No such ContactCenter type: " + type);
         }
@@ -224,8 +232,10 @@ Person* GeoGridJSONReader::ParsePerson(boost::property_tree::ptree& person)
         const auto wpId = boost::lexical_cast<unsigned int>(person.get<string>("Workplace"));
         const auto pcId = boost::lexical_cast<unsigned int>(person.get<string>("PrimaryCommunity"));
         const auto scId = boost::lexical_cast<unsigned int>(person.get<string>("SecondaryCommunity"));
+        const auto dcId = boost::lexical_cast<unsigned int>(person.get<string>("Daycare"));
+        const auto psId = boost::lexical_cast<unsigned int>(person.get<string>("PreSchool"));
 
-        return m_population->CreatePerson(id, age, hhId, ksId, coId, wpId, pcId, scId);
+        return m_population->CreatePerson(id, age, hhId, ksId, coId, wpId, pcId, scId, dcId, psId);
 }
 
 } // namespace geopop

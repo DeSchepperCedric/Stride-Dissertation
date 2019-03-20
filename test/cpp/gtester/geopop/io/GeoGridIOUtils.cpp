@@ -18,9 +18,11 @@
 #include "contact/ContactType.h"
 #include "geogrid.pb.h"
 #include "geopop/CollegeCenter.h"
+#include "geopop/DaycareCenter.h"
 #include "geopop/GeoGridConfig.h"
 #include "geopop/HouseholdCenter.h"
 #include "geopop/K12SchoolCenter.h"
+#include "geopop/PreSchoolCenter.h"
 #include "geopop/PrimaryCommunityCenter.h"
 #include "geopop/SecondaryCommunityCenter.h"
 #include "geopop/WorkplaceCenter.h"
@@ -85,7 +87,8 @@ void CompareContactCenter(const ContactCenter&                         contactCe
             {Id::SecondaryCommunity, proto::GeoGrid_Location_ContactCenter_Type_SecondaryCommunity},
             {Id::College, proto::GeoGrid_Location_ContactCenter_Type_College},
             {Id::Household, proto::GeoGrid_Location_ContactCenter_Type_Household},
-            {Id::Workplace, proto::GeoGrid_Location_ContactCenter_Type_Workplace}};
+            {Id::Workplace, proto::GeoGrid_Location_ContactCenter_Type_Workplace},
+            {Id::Daycare, proto::GeoGrid_Location_ContactCenter_Type_Daycare}};
 
         EXPECT_EQ(contactCenter.GetId(), protoContactCenter.id());
         EXPECT_EQ(types[contactCenter.GetContactPoolType()], protoContactCenter.type());
@@ -160,6 +163,8 @@ void ComparePerson(const proto::GeoGrid_Person& protoPerson)
                   person->GetPoolId(Id::PrimaryCommunity));
         EXPECT_EQ(persons_pools[make_pair(protoPerson.id(), Id::SecondaryCommunity)],
                   person->GetPoolId(Id::SecondaryCommunity));
+        EXPECT_EQ(persons_pools[make_pair(protoPerson.id(), Id::Daycare)], person->GetPoolId(Id::Daycare));
+        EXPECT_EQ(persons_pools[make_pair(protoPerson.id(), Id::PreSchool)], person->GetPoolId(Id::PreSchool));
 }
 
 void CompareGeoGrid(GeoGrid& geoGrid)
@@ -218,14 +223,26 @@ shared_ptr<GeoGrid> GetPopulatedGeoGrid(Population* pop)
         const auto workplacePool = new ContactPool(6, Id::Workplace);
         workplace->RegisterPool(workplacePool);
 
+        const auto daycare = make_shared<DaycareCenter>(6);
+        location->AddCenter(daycare);
+        const auto daycarePool = new ContactPool(8, Id::Daycare);
+        daycare->RegisterPool(daycarePool);
+
+        const auto preschool = make_shared<PreSchoolCenter>(7);
+        location->AddCenter(preschool);
+        const auto preschoolPool = new ContactPool(9, Id::PreSchool);
+        daycare->RegisterPool(preschoolPool);
+
         geoGrid->AddLocation(location);
-        const auto person = geoGrid->GetPopulation()->CreatePerson(1, 18, 5, 2, 4, 6, 3, 7);
+        const auto person = geoGrid->GetPopulation()->CreatePerson(1, 18, 5, 2, 4, 6, 3, 7, 8, 9);
         communityPool->AddMember(person);
         schoolPool->AddMember(person);
         secondaryCommunityPool->AddMember(person);
         collegePool->AddMember(person);
         householdPool->AddMember(person);
         workplacePool->AddMember(person);
+        daycarePool->AddMember(person);
+        preschoolPool->AddMember(person);
         return geoGrid;
 }
 

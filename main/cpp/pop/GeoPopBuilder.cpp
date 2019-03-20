@@ -24,13 +24,17 @@
 #include "geopop/GeoGridConfig.h"
 #include "geopop/generators/CollegeGenerator.h"
 #include "geopop/generators/CommunityGenerator.h"
+#include "geopop/generators/DaycareGenerator.h"
 #include "geopop/generators/HouseholdGenerator.h"
 #include "geopop/generators/K12SchoolGenerator.h"
+#include "geopop/generators/PreSchoolGenerator.h"
 #include "geopop/generators/WorkplaceGenerator.h"
 #include "geopop/io/ReaderFactory.h"
 #include "geopop/populators/CollegePopulator.h"
+#include "geopop/populators/DaycarePopulator.h"
 #include "geopop/populators/HouseholdPopulator.h"
 #include "geopop/populators/K12SchoolPopulator.h"
+#include "geopop/populators/PreSchoolPopulator.h"
 #include "geopop/populators/PrimaryCommunityPopulator.h"
 #include "geopop/populators/SecondaryCommunityPopulator.h"
 #include "geopop/populators/WorkplacePopulator.h"
@@ -129,7 +133,9 @@ void GeoPopBuilder::MakeCenters(GeoGrid& geoGrid, const GeoGridConfig& geoGridCo
                                                  make_shared<CollegeGenerator>(m_rn_man, m_stride_logger),
                                                  make_shared<WorkplaceGenerator>(m_rn_man, m_stride_logger),
                                                  make_shared<CommunityGenerator>(m_rn_man, m_stride_logger),
-                                                 make_shared<HouseholdGenerator>(m_rn_man, m_stride_logger)};
+                                                 make_shared<HouseholdGenerator>(m_rn_man, m_stride_logger),
+                                                 make_shared<DaycareGenerator>(m_rn_man, m_stride_logger),
+                                                 make_shared<PreSchoolGenerator>(m_rn_man, m_stride_logger)};
 
         for (const auto& g : generators) {
                 g->Apply(geoGrid, geoGridConfig, m_cc_counters);
@@ -143,7 +149,9 @@ void GeoPopBuilder::MakePersons(GeoGrid& geoGrid, const GeoGridConfig& geoGridCo
                                                  make_shared<CollegePopulator>(m_rn_man, m_stride_logger),
                                                  make_shared<PrimaryCommunityPopulator>(m_rn_man, m_stride_logger),
                                                  make_shared<SecondaryCommunityPopulator>(m_rn_man, m_stride_logger),
-                                                 make_shared<WorkplacePopulator>(m_rn_man, m_stride_logger)};
+                                                 make_shared<WorkplacePopulator>(m_rn_man, m_stride_logger),
+                                                 make_shared<DaycarePopulator>(m_rn_man, m_stride_logger),
+                                                 make_shared<PreSchoolPopulator>(m_rn_man, m_stride_logger)};
 
         for (shared_ptr<Populator>& p : populators) {
                 p->Apply(geoGrid, geoGridConfig);

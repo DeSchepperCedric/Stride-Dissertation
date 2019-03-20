@@ -48,7 +48,7 @@ TEST(GeoGridJSONReaderTest, locationsTest)
 {
         auto pop = Population::Create();
         getGeoGridFromFile("test0.json", pop.get());
-        auto& geoGrid = pop->RefGeoGrid();
+        auto&                                   geoGrid = pop->RefGeoGrid();
         map<unsigned int, shared_ptr<Location>> locations;
         locations[geoGrid[0]->GetID()] = geoGrid[0];
         locations[geoGrid[1]->GetID()] = geoGrid[1];
@@ -158,13 +158,11 @@ TEST(GeoGridJSONReaderTest, contactCentersTest)
                 }
         }
 
-        map<Id, bool> found = {{Id::K12School, false},
-                               {Id::PrimaryCommunity, false},
-                               {Id::College, false},
-                               {Id::Household, false},
-                               {Id::Workplace, false}};
+        map<Id, bool> found = {{Id::K12School, false}, {Id::PrimaryCommunity, false}, {Id::College, false},
+                               {Id::Household, false}, {Id::Workplace, false},        {Id::PreSchool, false},
+                               {Id::Daycare, false}};
 
-        for (unsigned int i = 0; i < 5; i++) {
+        for (unsigned int i = 0; i < 7; i++) {
                 EXPECT_FALSE(found[centers[i]->GetContactPoolType()]);
                 found[centers[i]->GetContactPoolType()] = true;
         }
@@ -181,7 +179,8 @@ void runPeopleTest(const string& filename)
         auto  location = geoGrid[0];
 
         map<int, string> ids = {{0, "K12School"}, {1, "PrimaryCommunity"}, {2, "SecondaryCommunity"},
-                                {3, "College"},   {4, "Household"},        {5, "Workplace"}};
+                                {3, "College"},   {4, "Household"},        {5, "Workplace"},
+                                {6, "Daycare"},   {7, "PreSchool"}};
 
         EXPECT_EQ(location->GetID(), 1);
         EXPECT_EQ(location->GetName(), "Bavikhove");
@@ -209,6 +208,8 @@ void runPeopleTest(const string& filename)
                 EXPECT_EQ(person->GetPoolId(Id::Workplace), 6);
                 EXPECT_EQ(person->GetPoolId(Id::PrimaryCommunity), 3);
                 EXPECT_EQ(person->GetPoolId(Id::SecondaryCommunity), 7);
+                EXPECT_EQ(person->GetPoolId(Id::Daycare), 8);
+                EXPECT_EQ(person->GetPoolId(Id::PreSchool), 9);
         }
 }
 

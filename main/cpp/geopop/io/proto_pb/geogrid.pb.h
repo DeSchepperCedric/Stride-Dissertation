@@ -92,6 +92,8 @@ enum GeoGrid_Location_ContactCenter_Type {
   GeoGrid_Location_ContactCenter_Type_College = 3,
   GeoGrid_Location_ContactCenter_Type_Household = 4,
   GeoGrid_Location_ContactCenter_Type_Workplace = 5,
+    GeoGrid_Location_ContactCenter_Type_Daycare = 6,
+    GeoGrid_Location_ContactCenter_Type_PreSchool = 7,
   GeoGrid_Location_ContactCenter_Type_GeoGrid_Location_ContactCenter_Type_INT_MIN_SENTINEL_DO_NOT_USE_ = std::numeric_limits<::google::protobuf::int32>::min(),
   GeoGrid_Location_ContactCenter_Type_GeoGrid_Location_ContactCenter_Type_INT_MAX_SENTINEL_DO_NOT_USE_ = std::numeric_limits<::google::protobuf::int32>::max()
 };
