@@ -9,6 +9,7 @@
 #include <nlohmann/json.hpp>
 #include <boost/filesystem/fstream.hpp>
 #include <tclap/CmdLine.h>
+#include <boost/lexical_cast.hpp>
 
 //using json = nlohmann::json;
 using namespace std;
@@ -35,17 +36,45 @@ int main(int argc, char** argv)
         auto file = FileSys::GetDataDir();
         file /= config;
 
+        std::unique_ptr<std::istream> m_inputStream = make_unique<ifstream>(file.string());
 
-        boost::filesystem::ifstream i(file);
         nlohmann::json j;
-        i >> j;
+        *m_inputStream >> j;
 
         //SET
-        j["pi"] = 3.141;
+        j["commutes"] = {{"1", "0.25"}, {"2", "0.75"}};
+        j["test"] = {"1", "2"};
 
         //GET
-        std::cout << j.at("pi") << '\n';
+        std::cout << j.at("commutes") << '\n';
+        auto commutes = j.at("commutes");
+        auto test = j.at("test");
+        for (auto it = test.begin(); it != test.end(); it++){
+            auto person_id = boost::lexical_cast<unsigned int>(it->get<std::string>());
+            std::cout << person_id << std::endl;
+        }
+        for (auto it = commutes.begin(); it != commutes.end(); it++) {
+            unsigned int i = boost::lexical_cast<unsigned int>(it.key());
+            double d = boost::lexical_cast<double>(it->get<std::string>());
+            //double d = it->get<double>();
+            std::cout << i
+                      << " "
+                      << d
+                      << std::endl;
+        }
+// create an array using push_back
+        nlohmann::json json;
+        json.push_back("foo");
+        json.push_back(1);
+        json.push_back(true);
 
+// also use emplace_back
+        json.emplace_back(1.78);
+
+// iterate the array
+        for (nlohmann::json::iterator it = j.begin(); it != j.end(); ++it) {
+            std::cout << *it << '\n';
+        }
         std::cout << j.dump();
         
     } catch (exception& e) {
