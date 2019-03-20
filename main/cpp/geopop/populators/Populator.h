@@ -38,7 +38,6 @@ class PrimaryCommunityCenter;
 class SecondaryCommunityCenter;
 class WorkplaceCenter;
 
-
 /**
  * Interface for populators. They generate some data and apply it to the GeoGrid.
  */

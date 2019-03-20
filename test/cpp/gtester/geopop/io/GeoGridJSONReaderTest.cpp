@@ -49,7 +49,6 @@ TEST(GeoGridJSONReaderTest, locationsTest)
         auto pop = Population::Create();
         getGeoGridFromFile("test0.json", pop.get());
         auto& geoGrid = pop->RefGeoGrid();
-
         map<unsigned int, shared_ptr<Location>> locations;
         locations[geoGrid[0]->GetID()] = geoGrid[0];
         locations[geoGrid[1]->GetID()] = geoGrid[1];
