@@ -92,14 +92,14 @@ enum GeoGrid_Location_ContactCenter_Type {
   GeoGrid_Location_ContactCenter_Type_College = 3,
   GeoGrid_Location_ContactCenter_Type_Household = 4,
   GeoGrid_Location_ContactCenter_Type_Workplace = 5,
-    GeoGrid_Location_ContactCenter_Type_Daycare = 6,
-    GeoGrid_Location_ContactCenter_Type_PreSchool = 7,
+  GeoGrid_Location_ContactCenter_Type_Daycare = 6,
+  GeoGrid_Location_ContactCenter_Type_PreSchool = 7,
   GeoGrid_Location_ContactCenter_Type_GeoGrid_Location_ContactCenter_Type_INT_MIN_SENTINEL_DO_NOT_USE_ = std::numeric_limits<::google::protobuf::int32>::min(),
   GeoGrid_Location_ContactCenter_Type_GeoGrid_Location_ContactCenter_Type_INT_MAX_SENTINEL_DO_NOT_USE_ = std::numeric_limits<::google::protobuf::int32>::max()
 };
 bool GeoGrid_Location_ContactCenter_Type_IsValid(int value);
 const GeoGrid_Location_ContactCenter_Type GeoGrid_Location_ContactCenter_Type_Type_MIN = GeoGrid_Location_ContactCenter_Type_K12School;
-const GeoGrid_Location_ContactCenter_Type GeoGrid_Location_ContactCenter_Type_Type_MAX = GeoGrid_Location_ContactCenter_Type_Workplace;
+const GeoGrid_Location_ContactCenter_Type GeoGrid_Location_ContactCenter_Type_Type_MAX = GeoGrid_Location_ContactCenter_Type_PreSchool;
 const int GeoGrid_Location_ContactCenter_Type_Type_ARRAYSIZE = GeoGrid_Location_ContactCenter_Type_Type_MAX + 1;
 
 const ::google::protobuf::EnumDescriptor* GeoGrid_Location_ContactCenter_Type_descriptor();
