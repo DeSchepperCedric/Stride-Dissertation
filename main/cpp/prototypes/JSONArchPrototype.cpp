@@ -32,23 +32,23 @@ int main(int argc, char** argv)
     int exitStatus = EXIT_SUCCESS;
 
     try {
-        CmdLine cmd("JSONproto", ' ', "1.0");
+        //CmdLine cmd("JSONproto", ' ', "1.0");
 
-        string js = "name of the json file";
-        ValueArg<string> s("j", "json", js, false, "holidays_flanders_2016.json", "CONFIGURATION", cmd);
+        //string js = "name of the json file";
+        //ValueArg<string> s("j", "json", js, false, "holidays_flanders_2016.json", "CONFIGURATION", cmd);
 
-        cmd.parse(argc, static_cast<const char* const*>(argv));
+        //cmd.parse(argc, static_cast<const char* const*>(argv));
 
-        auto config = s.getValue();
+        //auto config = s.getValue();
 
-        auto file = FileSys::GetDataDir();
-        file /= config;
+        //auto file = FileSys::GetDataDir();
+        //file /= config;
 
-        std::unique_ptr<std::istream> m_inputStream = make_unique<ifstream>(file.string());
-        auto              instream = make_unique<istringstream>("");
+        //std::unique_ptr<std::istream> m_inputStream = make_unique<ifstream>(file.string());
+        //auto              instream = make_unique<istringstream>("");
 
         nlohmann::json j;
-        *m_inputStream >> j;
+        //*m_inputStream >> j;
 
         //SET
         j["commutes"] = {{"1", "0.25"}, {"2", 0.75}};
