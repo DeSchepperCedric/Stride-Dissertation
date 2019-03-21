@@ -171,4 +171,16 @@ if(NOT OPENMP_FOUND)
     include_directories(${CMAKE_HOME_DIRECTORY}/main/resources/lib/domp/include)
 endif()
 
+#----------------------------------------------------------------------------
+# HDF5
+#----------------------------------------------------------------------------
+if(NOT STRIDE_FORCE_NO_HDF5)
+    find_package(HDF5 1.10.5 COMPONENTS CXX HL)
+endif()
+if(HDF5_FOUND)
+    include_directories(SYSTEM ${HDF5_CXX_INCLUDE_DIRS})
+else()
+		include_directories(SYSTEM ${CMAKE_HOME_DIRECTORY}/main/resources/lib/hdf5)
+endif()
+
 #############################################################################

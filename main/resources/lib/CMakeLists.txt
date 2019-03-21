@@ -1,8 +1,8 @@
 #############################################################################
-#  This file is part of the Stride software. 
+#  This file is part of the Stride software.
 #  It is free software: you can redistribute it and/or modify
-#  it under the terms of the GNU General Public License as published by 
-#  the Free Software Foundation, either version 3 of the License, or any 
+#  it under the terms of the GNU General Public License as published by
+#  the Free Software Foundation, either version 3 of the License, or any
 #  later version.
 #  The software is distributed in the hope that it will be useful,
 #  but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -20,6 +20,11 @@
 #============================================================================
 if(NOT Protobuf_FOUND)
     add_subdirectory(protobuf)
+endif()
+if(NOT HDF5_FOUND)
+    set(HDF5_EXTERNALLY_CONFIGURED 1)
+    set(HDF5_EXPORTED_TARGETS libstride)
+    add_subdirectory(hdf5)
 endif()
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -w")
 add_subdirectory(sha1)

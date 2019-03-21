@@ -143,6 +143,8 @@ set(STRIDE_SRC
     viewers/CliViewer.cpp
     viewers/PersonsFileViewer.cpp
     viewers/SummaryFileViewer.cpp
+    #---
+    prototypes/h5tutr_crtgrpd.cpp
 )
 
 #============================================================================
@@ -156,6 +158,11 @@ if(Protobuf_FOUND)
     target_link_libraries(libstride PRIVATE ${Protobuf_LIBRARIES})
 else()
     target_link_libraries(libstride PRIVATE libprotobuf)
+endif()
+if(HDF5_FOUND)
+    #target_link_libraries(libstride PRIVATE ${HDF5_CXX_LIBRARIES} ${HDF5_CXX_HL_LIBRARIES})
+else()
+    #target_link_libraries(libstride PRIVATE hdf5-static hdf5_hl-static hdf5_cpp-static hdf5_hl_cpp-static)
 endif()
 set_target_properties(libstride
     PROPERTIES
