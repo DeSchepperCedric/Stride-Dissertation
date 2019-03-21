@@ -231,7 +231,7 @@ shared_ptr<GeoGrid> GetPopulatedGeoGrid(Population* pop)
         const auto preschool = make_shared<PreSchoolCenter>(7);
         location->AddCenter(preschool);
         const auto preschoolPool = new ContactPool(9, Id::PreSchool);
-        daycare->RegisterPool(preschoolPool);
+        preschool->RegisterPool(preschoolPool);
 
         geoGrid->AddLocation(location);
         const auto person = geoGrid->GetPopulation()->CreatePerson(1, 18, 5, 2, 4, 6, 3, 7, 8, 9);

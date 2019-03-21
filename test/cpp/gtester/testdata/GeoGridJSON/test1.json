@@ -37,12 +37,12 @@
                 },
                 {
                     "id": "5",
-                    "type": "PreSchool",
+                    "type": "Daycare",
                     "pools": ""
                 },
                 {
                     "id": "6",
-                    "type": "Daycare",
+                    "type": "PreSchool",
                     "pools": ""
                 }
             ]

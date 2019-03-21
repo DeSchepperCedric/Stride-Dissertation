@@ -47,9 +47,7 @@ void DaycarePopulator::Apply(GeoGrid& geoGrid, const GeoGridConfig& geoGridConfi
                 const vector<ContactPool*>& nearByDaycares = GetNearbyPools(Id::Daycare, geoGrid, *loc);
 
                 AssertThrow(!nearByDaycares.empty(), "No Daycare found!", m_logger);
-                if(nearByDaycares.size() == 0){
-                    continue;
-                }
+
                 auto dist = m_rn_man.GetUniformIntGenerator(0, static_cast<int>(nearByDaycares.size()), 0U);
 
                 // 2. for every student assign a class

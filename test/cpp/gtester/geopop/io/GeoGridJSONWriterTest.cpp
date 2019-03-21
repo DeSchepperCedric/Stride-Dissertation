@@ -16,9 +16,11 @@
 #include "GeoGridIOUtils.h"
 
 #include "geopop/CollegeCenter.h"
+#include "geopop/DaycareCenter.h"
 #include "geopop/GeoGridConfig.h"
 #include "geopop/HouseholdCenter.h"
 #include "geopop/K12SchoolCenter.h"
+#include "geopop/PreSchoolCenter.h"
 #include "geopop/PrimaryCommunityCenter.h"
 #include "geopop/WorkplaceCenter.h"
 #include "geopop/io/GeoGridJSONWriter.h"
@@ -101,6 +103,8 @@ TEST(GeoGridJSONWriterTest, contactCentersTest)
         location->AddCenter(make_shared<CollegeCenter>(2));
         location->AddCenter(make_shared<HouseholdCenter>(3));
         location->AddCenter(make_shared<WorkplaceCenter>(4));
+        location->AddCenter(make_shared<DaycareCenter>(5));
+        location->AddCenter(make_shared<PreSchoolCenter>(6));
         geoGrid.AddLocation(location);
 
         EXPECT_TRUE(compareGeoGrid(geoGrid, "test1.json"));

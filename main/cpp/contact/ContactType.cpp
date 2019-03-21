@@ -34,8 +34,8 @@ bool IsId(const string& s)
 {
         static map<string, Id> ids{
             make_pair("HOUSEHOLD", Id::Household),
-            make_pair("DAYCARE", Id::Daycare),
-            make_pair("PRESCHOOL", Id::PreSchool),
+            make_pair("SCHOOL", Id::Daycare),
+            make_pair("SCHOOL", Id::PreSchool),
             make_pair("SCHOOL", Id::K12School),
             make_pair("SCHOOL", Id::College),
             make_pair("WORKPLACE", Id::Workplace),
