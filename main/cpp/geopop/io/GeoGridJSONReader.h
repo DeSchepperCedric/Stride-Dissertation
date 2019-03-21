@@ -20,7 +20,7 @@
 #include "contact/ContactType.h"
 #include "geopop/Location.h"
 
-//#include <boost/property_tree/ptree_fwd.hpp>
+#include <boost/lexical_cast.hpp>
 #include <nlohmann/json.hpp>
 
 namespace geopop {
@@ -61,6 +61,19 @@ private:
 
         /// Create a Person based on the information stored in the provided boost property tree.
         stride::Person* ParsePerson(nlohmann::json& person);
+
+        /// Get numerical data from a json node
+        template<typename T>
+        T ParseNumerical(nlohmann::json& node){
+            if (node.type() == nlohmann::json::value_t::string) {
+                return boost::lexical_cast<T>(node.get<std::string>());
+            } else {
+                return node.get<T>();
+            }
+        }
+
+        /// Get an array from a json node
+        nlohmann::json ParseArray(nlohmann::json& node);
 };
 
 } // namespace geopop

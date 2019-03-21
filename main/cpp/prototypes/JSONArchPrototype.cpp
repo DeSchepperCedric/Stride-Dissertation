@@ -17,6 +17,14 @@ using namespace stride;
 using namespace stride::util;
 using namespace TCLAP;
 
+double getDouble(const nlohmann::json & j){
+    if (j.type() == nlohmann::json::value_t::string) {
+        return boost::lexical_cast<double>(j.get<std::string>());
+    }else{
+        return j.get<double>();
+    }
+}
+
 
 /// Testing if the JSON parser of nlohmann can be used.
 int main(int argc, char** argv)
@@ -37,12 +45,13 @@ int main(int argc, char** argv)
         file /= config;
 
         std::unique_ptr<std::istream> m_inputStream = make_unique<ifstream>(file.string());
+        auto              instream = make_unique<istringstream>("");
 
         nlohmann::json j;
-        *m_inputStream >> j;
+        *instream >> j;
 
         //SET
-        j["commutes"] = {{"1", "0.25"}, {"2", "0.75"}};
+        j["commutes"] = {{"1", "0.25"}, {"2", 0.75}};
         j["test"] = {"1", "2"};
 
         //GET
@@ -55,7 +64,7 @@ int main(int argc, char** argv)
         }
         for (auto it = commutes.begin(); it != commutes.end(); it++) {
             unsigned int i = boost::lexical_cast<unsigned int>(it.key());
-            double d = boost::lexical_cast<double>(it->get<std::string>());
+            double d = getDouble(*it);
             //double d = it->get<double>();
             std::cout << i
                       << " "
