@@ -50,6 +50,57 @@ int main(/*int argc, char** argv*/)
         //SET
         j["commutes"] = {{"1", "0.25"}, {"2", 0.75}};
         j["test"] = {"1", "2"};
+        j["test2"] = {{1, "2"}, {"1",2,3}};
+        nlohmann::json testing =
+                R"(
+{
+	"households_name": "test_household",
+	"households_list": [
+		[42,38,15],
+		[70,68],
+		[40,39,9,6],
+		[43,42],
+		[55,54],
+		[40,40,3,3],
+		[35,32,6,3],
+		[78,75]
+	]
+}
+)"_json;
+        nlohmann::json households = testing.at("households_list");
+
+        for (auto household = households.begin(); household != households.end(); household++) {
+
+            vector<unsigned int> temp;
+            for (auto person = household->begin(); person != household->end(); person++) {
+                std::cout << (*person) << std::endl;
+                unsigned int age;
+                if (person->type() == nlohmann::json::value_t::string){
+                    age = boost::lexical_cast<unsigned int>(person->get<std::string>());
+                }else{
+                    age = person->get<unsigned int>();
+                }
+                temp.emplace_back(age);
+            }
+        }
+        std::cout << testing.at("households_name").get<std::string>() << std::endl;
+        for (auto household = j["test2"].begin(); household != j["test2"].end(); household++) {
+
+            vector<unsigned int> temp;
+            for (auto person = household->begin(); person != household->end(); person++) {
+                unsigned int age;
+                if (person->type() == nlohmann::json::value_t::string){
+                    age = boost::lexical_cast<unsigned int>(person->get<std::string>());
+                }else{
+                    age = person->get<unsigned int>();
+                }
+                temp.emplace_back(age);
+                std::cout << (age) << std::endl;
+            }
+            for (auto it:temp){
+                std::cout << it << std::endl;
+            }
+        }
 
         //GET
         std::cout << j.at("commutes") << '\n';
