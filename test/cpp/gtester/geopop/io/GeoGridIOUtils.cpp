@@ -89,8 +89,7 @@ void CompareContactCenter(const ContactCenter&                         contactCe
             {Id::Household, proto::GeoGrid_Location_ContactCenter_Type_Household},
             {Id::Workplace, proto::GeoGrid_Location_ContactCenter_Type_Workplace},
             {Id::Daycare, proto::GeoGrid_Location_ContactCenter_Type_Daycare},
-            {Id::PreSchool, proto::GeoGrid_Location_ContactCenter_Type_PreSchool}
-            };
+            {Id::PreSchool, proto::GeoGrid_Location_ContactCenter_Type_PreSchool}};
 
         EXPECT_EQ(contactCenter.GetId(), protoContactCenter.id());
         EXPECT_EQ(types[contactCenter.GetContactPoolType()], protoContactCenter.type());
