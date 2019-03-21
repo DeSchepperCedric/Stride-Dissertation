@@ -16,15 +16,8 @@
 #include "GeoGridJSONReader.h"
 
 #include "ThreadException.h"
-#include "geopop/CollegeCenter.h"
-#include "geopop/DaycareCenter.h"
+#include "geopop/ContactCenter.h"
 #include "geopop/GeoGrid.h"
-#include "geopop/HouseholdCenter.h"
-#include "geopop/K12SchoolCenter.h"
-#include "geopop/PreSchoolCenter.h"
-#include "geopop/PrimaryCommunityCenter.h"
-#include "geopop/SecondaryCommunityCenter.h"
-#include "geopop/WorkplaceCenter.h"
 #include "pop/Population.h"
 #include "util/Exception.h"
 
@@ -149,35 +142,27 @@ shared_ptr<ContactCenter> GeoGridJSONReader::ParseContactCenter(boost::property_
         const auto type = contactCenter.get<string>("type");
         const auto id   = boost::lexical_cast<unsigned int>(contactCenter.get<string>("id"));
 
-        shared_ptr<ContactCenter> result;
-        ContactType::Id           typeId;
+        ContactType::Id typeId;
         if (type == ToString(Id::K12School)) {
-                result = make_shared<K12SchoolCenter>(id);
                 typeId = Id::K12School;
         } else if (type == ToString(Id::College)) {
-                result = make_shared<CollegeCenter>(id);
                 typeId = Id::College;
         } else if (type == ToString(Id::Household)) {
-                result = make_shared<HouseholdCenter>(id);
                 typeId = Id::Household;
         } else if (type == ToString(Id::PrimaryCommunity)) {
-                result = make_shared<PrimaryCommunityCenter>(id);
                 typeId = Id::PrimaryCommunity;
         } else if (type == ToString(Id::SecondaryCommunity)) {
-                result = make_shared<SecondaryCommunityCenter>(id);
                 typeId = Id::SecondaryCommunity;
         } else if (type == ToString(Id::Workplace)) {
-                result = make_shared<WorkplaceCenter>(id);
                 typeId = Id::Workplace;
         } else if (type == ToString(Id::Daycare)) {
-                result = make_shared<DaycareCenter>(id);
                 typeId = Id::Daycare;
         } else if (type == ToString(Id::PreSchool)) {
-                result = make_shared<PreSchoolCenter>(id);
                 typeId = Id::PreSchool;
         } else {
                 throw Exception("No such ContactCenter type: " + type);
         }
+        auto result = make_shared<ContactCenter>(id, typeId);
 
         auto contactPools = contactCenter.get_child("pools");
         auto e            = make_shared<ThreadException>();

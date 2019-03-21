@@ -63,32 +63,29 @@ set(STRIDE_SRC
     execs/SimController.cpp
     execs/StanController.cpp
     #---
-    geopop/CollegeCenter.cpp
+    #geopop/CollegeCenter.cpp
     geopop/ContactCenter.cpp
     geopop/Coordinate.h
     geopop/GeoGrid.cpp
     geopop/GeoGridConfig.cpp
-    geopop/HouseholdCenter.cpp
-    geopop/K12SchoolCenter.cpp
+    #geopop/HouseholdCenter.cpp
+    #geopop/K12SchoolCenter.cpp
     geopop/Location.cpp
-    geopop/PrimaryCommunityCenter.cpp
-    geopop/SecondaryCommunityCenter.cpp
-    geopop/WorkplaceCenter.cpp
-    geopop/DaycareCenter.cpp
-    geopop/PreSchoolCenter.cpp
     #---
     geopop/geo/GeoGridKdTree.cpp
     geopop/geo/KdTree2DPoint.cpp
     #---
     geopop/generators/CollegeGenerator.cpp
-    geopop/generators/CommunityGenerator.cpp
+    geopop/generators/Generator.cpp
     geopop/generators/HouseholdGenerator.cpp
     geopop/generators/K12SchoolGenerator.cpp
+    geopop/generators/PrimaryCommunityGenerator.cpp
+    geopop/generators/SecondaryCommunityGenerator.cpp
     geopop/generators/WorkplaceGenerator.cpp
     geopop/generators/PreSchoolGenerator.cpp
     geopop/generators/DaycareGenerator.cpp
     #---
-    geopop/io/CitiesCSVReader.cpp
+    geopop/io/LocationsCSVReader.cpp
     geopop/io/CommutesCSVReader.cpp
     geopop/io/GeoGridJSONReader.cpp
     geopop/io/GeoGridJSONWriter.cpp

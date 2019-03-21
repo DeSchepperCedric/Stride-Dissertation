@@ -13,27 +13,17 @@
  *  Copyright 2018, 2019, Jan Broeckhove and Bistromatics group.
  */
 
-#include "SecondaryCommunityCenter.h"
+#include "Generator.h"
 
-#include "GeoGrid.h"
-#include "GeoGridConfig.h"
-#include "pop/Population.h"
-
-using namespace stride::ContactType;
+#include "util/LogUtils.h"
 
 namespace geopop {
 
-void SecondaryCommunityCenter::SetupPools(const GeoGridConfig& /* geoGridConfig */, stride::Population* pop)
+Generator::Generator(stride::util::RnMan rnMan, std::shared_ptr<spdlog::logger> logger)
+    : m_rn_man(std::move(rnMan)), m_logger(std::move(logger))
 {
-        auto& poolSys = pop->RefPoolSys();
-
-        // TODO CheckThisAlgorithm
-        // for (std::size_t i = 0; i < geoGridConfig.pools.pools_per_community; ++i) {
-        if (m_pools.empty()) {
-
-                const auto p = poolSys.CreateContactPool(stride::ContactType::Id::SecondaryCommunity);
-                RegisterPool(p);
-        }
+        if (!m_logger)
+                m_logger = stride::util::LogUtils::CreateNullLogger();
 }
 
 } // namespace geopop

@@ -114,31 +114,42 @@ public:
         struct
         {
                 /// Every houselhold constitutes a single ContactPool.
-                unsigned int pools_per_houselhold = 1U;
+                unsigned int pools_per_household = 1U;
 
                 /// Used to calculate the number of Daycares.
                 unsigned int daycare_size      = 3U;
                 unsigned int pools_per_daycare = 1U;
+                unsigned int daycare_pool_size = 3U;
 
                 /// Used to calculate the number of PreSchools.
                 unsigned int preschool_size      = 120U;
                 unsigned int pools_per_preschool = 6U;
+                unsigned int pre_pool_size       = 20U;
 
                 /// Used to calculate the number of K12Schools.
                 unsigned int k12school_size      = 500U;
                 unsigned int pools_per_k12school = 25U;
+                unsigned int k12_pool_size       = 20U;
 
                 /// Used to calculate the number of Colleges.
                 unsigned int college_size      = 3000U;
                 unsigned int pools_per_college = 20U;
+                unsigned int college_pool_size = 150U;
 
-                /// Used to calculate the number of Communities.
-                unsigned int community_size      = 2000U;
-                unsigned int pools_per_community = 1U;
+                /// Used to calculate the number of PrimaryCommunities.
+                unsigned int primary_community_size      = 2000U;
+                unsigned int pools_per_primary_community = 1U;
+                unsigned int primary_community_pool_size = 2000U;
+
+                /// Used to calculate the number of SecondaryCommunities.
+                unsigned int secondary_community_size      = 2000U;
+                unsigned int pools_per_secondary_community = 1U;
+                unsigned int secondary_community_pool_size = 2000U;
 
                 /// Used to calculate the number of Workplaces.
                 unsigned int workplace_size      = 20U;
                 unsigned int pools_per_workplace = 1U;
+                unsigned int workplace_pool_size = 20U;
         } pools;
 
         /// Read the househould data file, parse it and set data.
