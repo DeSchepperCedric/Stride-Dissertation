@@ -30,6 +30,7 @@
 #include <gtest/gtest.h>
 #include <iostream>
 #include <sstream>
+#include <nlohmann/json.hpp>
 
 using namespace std;
 using namespace geopop;
@@ -39,15 +40,15 @@ using boost::property_tree::ptree;
 
 namespace {
 
-void sortContactCenters(ptree& pt)
+void sortContactCenters(nlohmann::json& json)
 {
-        auto& contactCenters       = pt.get_child("contactCenters");
-        auto  compareContactCenter = [](const pair<string, ptree>& a, const pair<string, ptree>& b) {
-                return a.second.get<string>("type") < b.second.get<string>("type");
+        auto& contactCenters       = json.at("contactCenters");
+        auto  compareContactCenter = [](const nlohmann::json& a, const nlohmann::json& b) {
+                return a.at("type") < b.at("type");
         };
-        contactCenters.sort<decltype(compareContactCenter)>(compareContactCenter);
+        std::sort(contactCenters.begin(), contactCenters.end(), compareContactCenter);
 }
-
+/*
 void sortTree(ptree& tree)
 {
         auto compareLocation = [](const pair<string, ptree>& a, const pair<string, ptree>& b) {
@@ -60,25 +61,36 @@ void sortTree(ptree& tree)
                 sortContactCenters(it->second.get_child(""));
         }
 }
+*/
+void sortJSON(nlohmann::json& json)
+{
+    auto compareLocation = [](const nlohmann::json& a, const nlohmann::json& b) {
+        return a.at("id") < b.at("id");
+    };
+    auto& locations = json.at("locations");
+    std::sort(locations.begin(), locations.end(), compareLocation);
+
+    for (auto it = locations.begin(); it != locations.end(); it++) {
+        sortContactCenters(*it);
+    }
+}
 
 bool compareGeoGrid(GeoGrid& geoGrid, const string& testname)
 {
         GeoGridJSONWriter writer;
         stringstream      ss;
         writer.Write(geoGrid, ss);
-        ptree result;
-        read_json(ss, result);
-        sortTree(result);
+        nlohmann::json result;
+        ss >> result;
+        sortJSON(result);
 
-        ptree expected;
-        read_json(FileSys::GetTestsDir().string() + "/testdata/GeoGridJSON/" + testname, expected);
-        sortTree(expected);
+        nlohmann::json expected;
+        std::ifstream inputStream(FileSys::GetTestsDir().string() + "/testdata/GeoGridJSON/writerJSON/" + testname);
 
-        ostringstream oss1, oss2;
-        boost::property_tree::xml_parser::write_xml(oss1, result);
-        boost::property_tree::xml_parser::write_xml(oss2, expected);
-        // return result == expected;
-        return oss1.str() == oss2.str();
+        inputStream >> expected;
+        sortJSON(expected);
+
+        return result == expected;
 }
 
 TEST(GeoGridJSONWriterTest, locationTest)

@@ -48,7 +48,7 @@ int main(int argc, char** argv)
         auto              instream = make_unique<istringstream>("");
 
         nlohmann::json j;
-        *instream >> j;
+        *m_inputStream >> j;
 
         //SET
         j["commutes"] = {{"1", "0.25"}, {"2", 0.75}};
@@ -85,6 +85,12 @@ int main(int argc, char** argv)
             std::cout << *it << '\n';
         }
         std::cout << j.dump();
+
+        nlohmann::json j1 =  R"({"locations":[{"contactCenters":[],"coordinate":{"latitude":0.0,"longitude":0.0},"id":1,"name":"Bavikhove","population":2500,"province":4},{"contactCenters":[],"coordinate":{"latitude":0.0,"longitude":0.0},"id":3,"name":"Mons","population":2500,"province":2},{"contactCenters":[],"coordinate":{"latitude":0.0,"longitude":0.0},"id":2,"name":"Gent","population":5000,"province":3}],"persons":[]})"_json;
+        nlohmann::json j2 =  R"({"locations":[{"contactCenters":[],"coordinate":{"latitude":0.0,"longitude":0.0},"id":1,"name":"Bavikhove","population":2500,"province":4},{"contactCenters":[],"coordinate":{"latitude":0.0,"longitude":0.0},"id":2,"name":"Gent","population":5000,"province":3},{"contactCenters":[],"coordinate":{"latitude":0.0,"longitude":0.0},"id":3,"name":"Mons","population":2500,"province":2}],"persons":[]})"_json;
+
+        std::cout << std::endl << (j1 == j2) << std::endl;
+
         
     } catch (exception& e) {
         exitStatus = EXIT_FAILURE;
