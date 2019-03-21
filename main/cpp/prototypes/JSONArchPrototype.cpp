@@ -3,12 +3,9 @@
 //
 #include "util/FileSys.h"
 
-#include <boost/property_tree/ptree.hpp>
 #include <tclap/CmdLine.h>
 #include <regex>
 #include <nlohmann/json.hpp>
-#include <boost/filesystem/fstream.hpp>
-#include <tclap/CmdLine.h>
 #include <boost/lexical_cast.hpp>
 
 //using json = nlohmann::json;
@@ -27,7 +24,7 @@ double getDouble(const nlohmann::json & j){
 
 
 /// Testing if the JSON parser of nlohmann can be used.
-int main(int argc, char** argv)
+int main(/*int argc, char** argv*/)
 {
     int exitStatus = EXIT_SUCCESS;
 
