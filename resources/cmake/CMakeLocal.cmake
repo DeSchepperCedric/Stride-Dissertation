@@ -28,7 +28,6 @@ message(STATUS "\nReading compiler settings from CMakeLocal.cmake! \n")
 #============================================================================
 set(STRIDE_INCLUDE_DOC      OFF)
 set(STRIDE_FORCE_NO_BOOST   OFF)
-set(STRIDE_FORCE_NO_HDF5   OFF)
 set(STRIDE_FORCE_NO_OPENMP  OFF)
 set(STRIDE_FORCE_NO_PROTOC  OFF)
 set(STRIDE_FORCE_NO_PYTHON  OFF)
