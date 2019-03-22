@@ -175,12 +175,13 @@ endif()
 # HDF5
 #----------------------------------------------------------------------------
 if(NOT STRIDE_FORCE_NO_HDF5)
-    find_package(HDF5 1.10.5 COMPONENTS CXX HL)
+    find_package(HDF5 1.10.5 COMPONENTS CXX)
 endif()
 if(HDF5_FOUND)
     include_directories(SYSTEM ${HDF5_CXX_INCLUDE_DIRS})
 else()
-		include_directories(SYSTEM ${CMAKE_HOME_DIRECTORY}/main/resources/lib/hdf5)
+		include_directories(SYSTEM ${CMAKE_HOME_DIRECTORY}/main/resources/lib/hdf5/src)
+		include_directories(SYSTEM ${CMAKE_HOME_DIRECTORY}/main/resources/lib/hdf5/c++/src)
 endif()
 
 #############################################################################

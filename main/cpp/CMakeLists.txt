@@ -160,9 +160,9 @@ else()
     target_link_libraries(libstride PRIVATE libprotobuf)
 endif()
 if(HDF5_FOUND)
-    #target_link_libraries(libstride PRIVATE ${HDF5_CXX_LIBRARIES} ${HDF5_CXX_HL_LIBRARIES})
+    #target_link_libraries(libstride PRIVATE ${HDF5_CXX_LIBRARIES})
 else()
-    #target_link_libraries(libstride PRIVATE hdf5-static hdf5_hl-static hdf5_cpp-static hdf5_hl_cpp-static)
+    #target_link_libraries(libstride PRIVATE hdf5-static hdf5_cpp-static)
 endif()
 set_target_properties(libstride
     PROPERTIES
