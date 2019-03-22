@@ -13,19 +13,17 @@
  *  Copyright 2018, 2019, Jan Broeckhove and Bistromatics group.
  */
 
-#include "K12School.h"
+#include "Generator.h"
 
-#include "GeoGrid.h"
-#include "GeoGridConfig.h"
+#include "util/LogUtils.h"
 
 namespace geopop {
 
-void K12School::Fill(const GeoGridConfig& geoGridConfig, const std::shared_ptr<GeoGrid>& geoGrid)
+Generator::Generator(stride::util::RnMan rnMan, std::shared_ptr<spdlog::logger> logger)
+    : m_rn_man(std::move(rnMan)), m_logger(std::move(logger))
 {
-        for (auto i = 0U; i < geoGridConfig.pools.pools_per_k12school; ++i) {
-                const auto p = geoGrid->CreateContactPool(stride::ContactType::Id::K12School);
-                RegisterPool(p);
-        }
+        if (!m_logger)
+                m_logger = stride::util::LogUtils::CreateNullLogger();
 }
 
 } // namespace geopop

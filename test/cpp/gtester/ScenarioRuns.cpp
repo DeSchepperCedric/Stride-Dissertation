@@ -19,6 +19,7 @@
  */
 
 #include "ScenarioData.h"
+#include "geopop/Location.h"
 #include "pop/Population.h"
 #include "sim/Sim.h"
 #include "sim/SimRunner.h"
@@ -72,21 +73,21 @@ void RunTest(const string& testTag, tuple<ptree, unsigned int, double> d, unsign
         // -----------------------------------------------------------------------------------------
         // Scenario configuration and target numbers.
         // -----------------------------------------------------------------------------------------
-        auto       configPt = get<0>(d);
-        const auto target   = get<1>(d);
-        const auto margin   = get<2>(d);
-        configPt.put("run.num_threads", numThreads);
+        auto       config = get<0>(d);
+        const auto target = get<1>(d);
+        const auto margin = get<2>(d);
+        config.put("run.num_threads", numThreads);
         auto logger = spdlog::get("gtester_logger");
 
         // -----------------------------------------------------------------------------------------
         // Actual simulator run.
         // -----------------------------------------------------------------------------------------
-        stride::util::RnMan rn_manager;
-        rn_manager.Initialize(RnMan::Info{configPt.get<string>("run.rng_seed", "1,2,3,4"),
-                                          configPt.get<string>("run.rng_state", ""),
-                                          configPt.get<unsigned int>("run.num_threads")});
-        auto pop    = Population::Create(configPt, rn_manager);
-        auto runner = make_shared<SimRunner>(configPt, pop, rn_manager);
+        stride::util::RnMan rnMan;
+        rnMan.Initialize(RnInfo{config.get<string>("run.rng_seed", "1,2,3,4"), config.get<string>("run.rng_state", ""),
+                                config.get<unsigned int>("run.num_threads")});
+        auto pop    = Population::Create(config, rnMan);
+        auto sim    = Sim::Create(config, pop, rnMan);
+        auto runner = make_shared<SimRunner>(config, sim);
         runner->Run();
 
         // -----------------------------------------------------------------------------------------
@@ -104,6 +105,20 @@ void RunTest(const string& testTag, tuple<ptree, unsigned int, double> d, unsign
         logger->flush();
         EXPECT_NEAR(res, target, target * margin)
             << "Failure at scenario: " << testTag << " with number of threads: " << numThreads << endl;
+
+        // -----------------------------------------------------------------------------------------
+        // For geopop runs: check infected count summed over locations equals that from population.
+        // -----------------------------------------------------------------------------------------
+        bool geopop = testTag.size() > string("geopop").size() &&
+                testTag.substr(testTag.size() - string("geopop").size(), testTag.size() - 1) == "geopop";
+        if (geopop) {
+                auto& geoGrid = pop->RefGeoGrid();
+                auto infectedCount = 0U;
+                for (const auto& loc : geoGrid) {
+                       infectedCount += loc->GetInfectedCount();
+                }
+                EXPECT_EQ(res, infectedCount);
+        }
 }
 
 TEST_P(RunsDefault, SingleThread)

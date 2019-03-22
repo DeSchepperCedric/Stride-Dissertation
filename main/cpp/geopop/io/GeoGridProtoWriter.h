@@ -48,7 +48,7 @@ public:
         GeoGridProtoWriter();
 
         /// Write the GeoGrid to the ostream in Protobuf format.
-        void Write(std::shared_ptr<GeoGrid> geoGrid, std::ostream& stream) override;
+        void Write(GeoGrid& geoGrid, std::ostream& stream) override;
 
 private:
         /// Create a ProtoBuf ContactCenter containing all the information needed to reconstruct a ContactCenter.
@@ -63,7 +63,7 @@ private:
         void WriteCoordinate(const Coordinate& coordinate, proto::GeoGrid_Location_Coordinate* protoCoordinate);
 
         /// Create a ProtoBuf Location containing all the info needed to reconstruct a Location.
-        void WriteLocation(std::shared_ptr<Location> location, proto::GeoGrid_Location* protoLocation);
+        void WriteLocation(const Location& location, proto::GeoGrid_Location* protoLocation);
 
         /// Create a ProtoBuf Person containing all the info needed to reconstruct a Person.
         void WritePerson(stride::Person* person, proto::GeoGrid_Person* protoPerson);

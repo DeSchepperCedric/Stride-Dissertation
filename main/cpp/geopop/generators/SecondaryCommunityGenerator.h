@@ -10,17 +10,29 @@
  *  You should have received a copy of the GNU General Public License
  *  along with the software. If not, see <http://www.gnu.org/licenses/>.
  *
- *  Copyright 2018, Jan Broeckhove and Bistromatics group.
+ *  Copyright 2019, Jan Broeckhove.
  */
 
 #pragma once
 
-#include "util/LogUtils.h"
+#include "Generator.h"
 
-#include <spdlog/logger.h>
+namespace geopop {
 
-inline std::shared_ptr<spdlog::logger> CreateTestLogger()
+/**
+ * Generates ContactCenters and pools for ContactType PrimaryCommunity.
+ */
+class SecondaryCommunityGenerator : public Generator
 {
-        std::shared_ptr<spdlog::logger> logger = stride::util::LogUtils::CreateNullLogger("test_logger");
-        return logger;
-}
+public:
+        using Generator::Generator;
+
+        /// See @Generator::Apply.
+        void Apply(GeoGrid& geogrid, const GeoGridConfig& geoGridConfig, unsigned int& ccCounter) override;
+
+        /// see @Generator::SetupPools.
+        void SetupPools(Location& loc, ContactCenter& center, const GeoGridConfig& geoGridConfig,
+                        stride::Population* pop) override;
+};
+
+} // namespace geopop

@@ -15,16 +15,20 @@
 
 #include "createGeogrid.h"
 
-#include "geopop/Household.h"
-#include "geopop/K12School.h"
+#include "geopop/ContactCenter.h"
 #include "geopop/Location.h"
+#include "geopop/generators/HouseholdGenerator.h"
+#include "geopop/generators/K12SchoolGenerator.h"
+#include "pop/Population.h"
+#include "util/RnMan.h"
 
 using namespace std;
 using namespace stride;
+using namespace stride::util;
+using namespace stride::ContactType;
 using namespace geopop;
 
-shared_ptr<GeoGrid> CreateGeoGrid(int locCount, int locPop, int k12SchoolCount, int houseHoldCount, int personCount,
-                                  Population* pop)
+void SetupGeoGrid(int locCount, int locPop, int schoolCount, int houseHoldCount, int personCount, Population* pop)
 {
         vector<unsigned int> populationSample = {
             17, 27, 65, 40, 29, 76, 27, 50, 28, 62, 50, 14, 30, 36, 12, 31, 25, 72, 62, 4,  40, 52, 55, 50, 62,
@@ -40,36 +44,39 @@ shared_ptr<GeoGrid> CreateGeoGrid(int locCount, int locPop, int k12SchoolCount, 
             76, 73, 9,  27, 5,  68, 25, 16, 29, 58, 78, 75, 40, 8,  37, 63, 63, 76, 55, 47, 18, 4,  21, 39, 45,
             42, 20, 41, 40, 37, 38, 30, 48, 9,  40, 23, 68, 77, 21, 50, 18, 27, 54, 1,  32, 67, 27, 14, 4,  78};
 
-        const auto    populationSize{populationSample.size()};
-        GeoGridConfig config{};
-        auto          geoGrid = make_shared<GeoGrid>(pop);
+        const auto                     populationSize{populationSample.size()};
+        GeoGridConfig                  config{};
+        auto&                          geoGrid = pop->RefGeoGrid();
+        RnMan                          rnMan(RnInfo{});
+        K12SchoolGenerator             k12Gen(rnMan);
+        HouseholdGenerator             hhGen(rnMan);
 
         size_t sampleId = 0;
-        int    personId = 0;
+        auto   personId = 0U;
         for (int locI = 0; locI < locCount; locI++) {
-                auto loc = make_shared<Location>(locI, 1, locPop);
+                auto loc = make_shared<Location>(locI, 1, Coordinate(0.0, 0.0), "", locPop);
 
-                for (int schI = 0; schI < k12SchoolCount; schI++) {
-                        auto k12School = make_shared<K12School>(stoi(to_string(locI) + to_string(schI)));
-                        k12School->Fill(config, geoGrid);
-                        loc->AddContactCenter(k12School);
+                for (int schI = 0; schI < schoolCount; schI++) {
+                        auto k12School =
+                            make_shared<ContactCenter>(stoi(to_string(locI) + to_string(schI)), Id::K12School);
+                        k12Gen.SetupPools(*loc, *k12School, config, pop);
+                        loc->AddCenter(k12School);
                 }
 
                 for (int hI = 0; hI < houseHoldCount; hI++) {
-                        auto household = make_shared<Household>(stoi(to_string(locI) + to_string(hI)));
-                        household->Fill(config, geoGrid);
-                        auto contactPool = household->GetPools()[0];
+                        auto hCenter = make_shared<ContactCenter>(stoi(to_string(locI) + to_string(hI)), Id::Household);
+                        hhGen.SetupPools(*loc, *hCenter, config, pop);
+                        auto contactPool = (*hCenter)[0];
 
                         for (int i = 0; i < personCount; i++) {
                                 auto sample = populationSample[sampleId % populationSize];
-                                auto p = geoGrid->CreatePerson(personId, sample, household->GetId(), 0, 0, 0, 0, 0);
+                                auto p      = pop->CreatePerson(personId, sample, hCenter->GetId(), 0, 0, 0, 0, 0);
                                 contactPool->AddMember(p);
                                 sampleId++;
                                 personId++;
                         }
-                        loc->AddContactCenter(household);
+                        loc->AddCenter(hCenter);
                 }
-                geoGrid->AddLocation(loc);
+                geoGrid.AddLocation(loc);
         }
-        return geoGrid;
 }

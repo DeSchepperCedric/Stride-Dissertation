@@ -10,23 +10,32 @@
  *  You should have received a copy of the GNU General Public License
  *  along with the software. If not, see <http://www.gnu.org/licenses/>.
  *
- *  Copyright 2018, 2019, Jan Broeckhove and Bistromatics group.
+ *  Copyright 2017, 2018, Kuylen E, Willem L, Broeckhove J
  */
 
-#include "Workplace.h"
+/**
+ * @file
+ * Core Population class.
+ */
 
-#include "GeoGrid.h"
-#include "GeoGridConfig.h"
+#include "ContactPoolSys.h"
 
-namespace geopop {
+using namespace std;
+using namespace stride::ContactType;
 
-void Workplace::Fill(const GeoGridConfig& /* geoGridConfig */, const std::shared_ptr<GeoGrid>& geoGrid)
+namespace stride {
+
+ContactPoolSys::ContactPoolSys() : m_currentContactPoolId(), m_sys()
 {
-        // TODO CheckThisAlgorithm
-        // for (std::size_t i = 0; i < geoGridConfig.pools.pools_per_workplace; ++i) {
-        const auto p = geoGrid->CreateContactPool(stride::ContactType::Id::Workplace);
-        RegisterPool(p);
-        //}
+        for (Id typ : IdList) {
+                m_sys[typ].emplace_back(ContactPool(0U, typ));
+                m_currentContactPoolId[typ] = 1;
+        }
 }
 
-} // namespace geopop
+ContactPool* ContactPoolSys::CreateContactPool(ContactType::Id typeId)
+{
+        return m_sys[typeId].emplace_back(m_currentContactPoolId[typeId]++, typeId);
+}
+
+} // namespace stride

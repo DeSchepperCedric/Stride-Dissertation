@@ -13,7 +13,8 @@
  *  Copyright 2018, Jan Broeckhove and Bistromatics group.
  */
 
-#include "geopop/io/CitiesCSVReader.h"
+#include "geopop/io/LocationsCSVReader.h"
+#include "pop/Population.h"
 
 #include <gtest/gtest.h>
 
@@ -34,13 +35,13 @@ shared_ptr<GeoGrid> getExpectedGeoGrid()
         auto loc6    = make_shared<Location>(73107, 7, Coordinate(5.70979219, 50.96991794), "MAASMECHELEN");
         auto loc7    = make_shared<Location>(73109, 7, Coordinate(5.806343076, 50.74921941), "VOEREN-'S GRAVENVOEREN");
 
-        loc1->SetRelativePopulation(0.76599210042448873);
-        loc2->SetRelativePopulation(0.018849454066692393);
-        loc3->SetRelativePopulation(0.065934783102172378);
-        loc4->SetRelativePopulation(0.04604396976369373);
-        loc5->SetRelativePopulation(0.029663133044287561);
-        loc6->SetRelativePopulation(0.06618731981930856);
-        loc7->SetRelativePopulation(0.0073292397793566838);
+        loc1->SetPopFraction(0.76599210042448873);
+        loc2->SetPopFraction(0.018849454066692393);
+        loc3->SetPopFraction(0.065934783102172378);
+        loc4->SetPopFraction(0.04604396976369373);
+        loc5->SetPopFraction(0.029663133044287561);
+        loc6->SetPopFraction(0.06618731981930856);
+        loc7->SetPopFraction(0.0073292397793566838);
 
         geoGrid->AddLocation(loc1);
         geoGrid->AddLocation(loc2);
@@ -67,16 +68,15 @@ TEST(CitiesCSVReaderTest, test1)
 
         const auto expectedGeoGrid = getExpectedGeoGrid();
         auto       pop             = Population::Create();
-        const auto geoGrid         = make_shared<GeoGrid>(pop.get());
+        auto&      geoGrid         = pop->RefGeoGrid();
         auto       instream        = make_unique<istringstream>(csvString);
 
-        CitiesCSVReader reader(move(instream));
+        LocationsCSVReader reader(move(instream));
         reader.FillGeoGrid(geoGrid);
 
-        for (const auto& loc : *geoGrid) {
+        for (const auto& loc : geoGrid) {
                 EXPECT_EQ(*loc, *(expectedGeoGrid->GetById(loc->GetID())));
-                EXPECT_DOUBLE_EQ(loc->GetRelativePopulationSize(),
-                                 (expectedGeoGrid->GetById(loc->GetID()))->GetRelativePopulationSize());
+                EXPECT_DOUBLE_EQ(loc->GetPopFraction(), (expectedGeoGrid->GetById(loc->GetID()))->GetPopFraction());
         }
 }
 
