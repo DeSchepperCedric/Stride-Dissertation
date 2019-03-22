@@ -56,8 +56,8 @@ void PrimaryCommunityGenerator::Apply(GeoGrid& geoGrid, const GeoGridConfig& geo
                 return;
         }
 
-        const auto dist = m_rn_man.GetDiscreteGenerator(weights, 0U);
-        auto& poolSys = geoGrid.GetPopulation()->RefPoolSys();
+        const auto dist    = m_rn_man.GetDiscreteGenerator(weights, 0U);
+        auto&      poolSys = geoGrid.GetPopulation()->RefPoolSys();
 
         for (auto i = 0U; i < communityCount; i++) {
                 const auto loc = geoGrid[dist()];

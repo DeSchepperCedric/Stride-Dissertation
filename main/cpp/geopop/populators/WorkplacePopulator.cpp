@@ -33,7 +33,7 @@ using namespace util;
 
 WorkplacePopulator::WorkplacePopulator(RnMan& rnMan, shared_ptr<spdlog::logger> logger)
     : Populator(rnMan, move(logger)), m_geogrid_config(), m_wp_at_location(), m_nearby_wp(), m_gen_non_commute(),
-    m_commuting_locations(), m_gen_commute()
+      m_commuting_locations(), m_gen_commute()
 {
 }
 
@@ -100,7 +100,7 @@ void WorkplacePopulator::AssignActive(Person* person)
         }
 }
 
-void WorkplacePopulator::CommutingLocations(const std::shared_ptr<Location> &loc, double fractionCommuteStudents)
+void WorkplacePopulator::CommutingLocations(const std::shared_ptr<Location>& loc, double fractionCommuteStudents)
 {
         // find all Workplaces were employees from this location commute to
         m_commuting_locations.clear();
@@ -135,13 +135,13 @@ double WorkplacePopulator::FractionCommutingStudents()
         return fraction;
 }
 
-void WorkplacePopulator::NearbyWorkspacePools(GeoGrid &geoGrid, std::shared_ptr<Location> loc)
+void WorkplacePopulator::NearbyWorkspacePools(GeoGrid& geoGrid, std::shared_ptr<Location> loc)
 {
-        m_nearby_wp = GetNearbyPools(Id::Workplace, geoGrid, *loc);
+        m_nearby_wp       = GetNearbyPools(Id::Workplace, geoGrid, *loc);
         m_gen_non_commute = m_rn_man.GetUniformIntGenerator(0, static_cast<int>(m_nearby_wp.size()), 0U);
 }
 
-void WorkplacePopulator::WorkplacePoolsAtLocation(GeoGrid &geoGrid)
+void WorkplacePopulator::WorkplacePoolsAtLocation(GeoGrid& geoGrid)
 {
         for (const auto& loc : geoGrid) {
                 vector<ContactPool*> contactPools;

@@ -60,8 +60,8 @@ void WorkplaceGenerator::Apply(GeoGrid& geoGrid, const GeoGridConfig& geoGridCon
                 return;
         }
 
-        const auto dist = m_rn_man.GetDiscreteGenerator(weights, 0U);
-        auto& poolSys = geoGrid.GetPopulation()->RefPoolSys();
+        const auto dist    = m_rn_man.GetDiscreteGenerator(weights, 0U);
+        auto&      poolSys = geoGrid.GetPopulation()->RefPoolSys();
 
         for (auto i = 0U; i < WorkplacesCount; i++) {
                 const auto loc = geoGrid[dist()];

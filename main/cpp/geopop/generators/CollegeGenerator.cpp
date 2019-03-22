@@ -56,8 +56,8 @@ void CollegeGenerator::Apply(GeoGrid& geoGrid, const GeoGridConfig& geoGridConfi
                 weights.push_back(weight);
         }
 
-        const auto dist = m_rn_man.GetDiscreteGenerator(weights, 0U);
-        auto& poolSys = geoGrid.GetPopulation()->RefPoolSys();
+        const auto dist    = m_rn_man.GetDiscreteGenerator(weights, 0U);
+        auto&      poolSys = geoGrid.GetPopulation()->RefPoolSys();
 
         for (auto i = 0U; i < collegeCount; i++) {
                 auto loc     = cities[dist()];

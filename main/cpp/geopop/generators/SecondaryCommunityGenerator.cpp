@@ -56,12 +56,12 @@ void SecondaryCommunityGenerator::Apply(GeoGrid& geoGrid, const GeoGridConfig& g
                 return;
         }
 
-        const auto dist = m_rn_man.GetDiscreteGenerator(weights, 0U);
-        auto& poolSys = geoGrid.GetPopulation()->RefPoolSys();
+        const auto dist    = m_rn_man.GetDiscreteGenerator(weights, 0U);
+        auto&      poolSys = geoGrid.GetPopulation()->RefPoolSys();
 
         for (auto i = 0U; i < communityCount; i++) {
                 const auto loc = geoGrid[dist()];
-                const auto c = make_shared<ContactCenter>(ccCounter++, Id::SecondaryCommunity);
+                const auto c   = make_shared<ContactCenter>(ccCounter++, Id::SecondaryCommunity);
 
                 // TODO CheckThisAlgorithm
                 // for (std::size_t j = 0; j < geoGridConfig.pools.pools_per_community; ++j) {

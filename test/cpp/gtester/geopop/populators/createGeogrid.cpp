@@ -44,12 +44,12 @@ void SetupGeoGrid(int locCount, int locPop, int schoolCount, int houseHoldCount,
             76, 73, 9,  27, 5,  68, 25, 16, 29, 58, 78, 75, 40, 8,  37, 63, 63, 76, 55, 47, 18, 4,  21, 39, 45,
             42, 20, 41, 40, 37, 38, 30, 48, 9,  40, 23, 68, 77, 21, 50, 18, 27, 54, 1,  32, 67, 27, 14, 4,  78};
 
-        const auto                     populationSize{populationSample.size()};
-        GeoGridConfig                  config{};
-        auto&                          geoGrid = pop->RefGeoGrid();
-        RnMan                          rnMan(RnInfo{});
-        K12SchoolGenerator             k12Gen(rnMan);
-        HouseholdGenerator             hhGen(rnMan);
+        const auto         populationSize{populationSample.size()};
+        GeoGridConfig      config{};
+        auto&              geoGrid = pop->RefGeoGrid();
+        RnMan              rnMan(RnInfo{});
+        K12SchoolGenerator k12Gen(rnMan);
+        HouseholdGenerator hhGen(rnMan);
 
         size_t sampleId = 0;
         auto   personId = 0U;

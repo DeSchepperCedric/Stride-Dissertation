@@ -32,27 +32,28 @@ using namespace stride::util;
 
 namespace {
 
-class SecondaryCommunityGeneratorTest : public testing::Test {
+class SecondaryCommunityGeneratorTest : public testing::Test
+{
 public:
         SecondaryCommunityGeneratorTest()
-                : m_rn_man(RnInfo()), m_secondary_community_generator(m_rn_man), m_geogrid_config(),
-                  m_pop(Population::Create()), m_geo_grid(m_pop.get())
+            : m_rn_man(RnInfo()), m_secondary_community_generator(m_rn_man), m_geogrid_config(),
+              m_pop(Population::Create()), m_geo_grid(m_pop.get())
         {
         }
 
 protected:
-        RnMan                        m_rn_man;
-        SecondaryCommunityGenerator  m_secondary_community_generator;
-        GeoGridConfig                m_geogrid_config;
-        shared_ptr<Population>       m_pop;
-        GeoGrid                      m_geo_grid;
+        RnMan                       m_rn_man;
+        SecondaryCommunityGenerator m_secondary_community_generator;
+        GeoGridConfig               m_geogrid_config;
+        shared_ptr<Population>      m_pop;
+        GeoGrid                     m_geo_grid;
 };
 
 TEST_F(SecondaryCommunityGeneratorTest, OneLocationTest)
 {
         m_geogrid_config.input.pop_size = 10000;
-;
-        auto loc1    = make_shared<Location>(1, 4, Coordinate(0, 0), "Antwerpen", 2500);
+        ;
+        auto loc1 = make_shared<Location>(1, 4, Coordinate(0, 0), "Antwerpen", 2500);
         m_geo_grid.AddLocation(loc1);
 
         const auto& c1 = loc1->CRefCenters(Id::SecondaryCommunity);
@@ -61,9 +62,9 @@ TEST_F(SecondaryCommunityGeneratorTest, OneLocationTest)
         const auto& p1 = loc1->CRefPools(Id::SecondaryCommunity);
         EXPECT_EQ(p1.size(), 0);
 
-        unsigned int                scCounter{1U};
+        unsigned int scCounter{1U};
         m_secondary_community_generator.Apply(m_geo_grid, m_geogrid_config, scCounter);
-        
+
         EXPECT_EQ(c1.size(), 5);
         EXPECT_EQ(p1.size(), 5 * m_geogrid_config.pools.pools_per_secondary_community);
 }
@@ -77,7 +78,7 @@ TEST_F(SecondaryCommunityGeneratorTest, EqualLocationTest)
                     make_shared<Location>(1, 4, Coordinate(0, 0), "Location " + to_string(i), 10 * 1000 * 1000));
         }
 
-        unsigned int                scCounter{1U};
+        unsigned int scCounter{1U};
         m_secondary_community_generator.Apply(m_geo_grid, m_geogrid_config, scCounter);
 
         vector<unsigned int> expected{546, 495, 475, 500, 463, 533, 472, 539, 496, 481};
@@ -91,7 +92,7 @@ TEST_F(SecondaryCommunityGeneratorTest, ZeroLocationTest)
 {
         m_geogrid_config.input.pop_size = 10000;
 
-        unsigned int                scCounter{1U};
+        unsigned int scCounter{1U};
         m_secondary_community_generator.Apply(m_geo_grid, m_geogrid_config, scCounter);
 
         EXPECT_EQ(m_geo_grid.size(), 0);
@@ -102,11 +103,11 @@ TEST_F(SecondaryCommunityGeneratorTest, FiveLocationsTest)
         m_geogrid_config.input.pop_size             = 37542 * 100;
         m_geogrid_config.popInfo.popcount_k12school = 750840;
 
-        auto loc1    = make_shared<Location>(1, 4, Coordinate(0, 0), "Antwerpen", 10150 * 100);
-        auto loc2    = make_shared<Location>(1, 4, Coordinate(0, 0), "Vlaams-Brabant", 10040 * 100);
-        auto loc3    = make_shared<Location>(1, 4, Coordinate(0, 0), "Henegouwen", 7460 * 100);
-        auto loc4    = make_shared<Location>(1, 4, Coordinate(0, 0), "Limburg", 3269 * 100);
-        auto loc5    = make_shared<Location>(1, 4, Coordinate(0, 0), "Luxemburg", 4123 * 100);
+        auto loc1 = make_shared<Location>(1, 4, Coordinate(0, 0), "Antwerpen", 10150 * 100);
+        auto loc2 = make_shared<Location>(1, 4, Coordinate(0, 0), "Vlaams-Brabant", 10040 * 100);
+        auto loc3 = make_shared<Location>(1, 4, Coordinate(0, 0), "Henegouwen", 7460 * 100);
+        auto loc4 = make_shared<Location>(1, 4, Coordinate(0, 0), "Limburg", 3269 * 100);
+        auto loc5 = make_shared<Location>(1, 4, Coordinate(0, 0), "Luxemburg", 4123 * 100);
 
         m_geo_grid.AddLocation(loc1);
         m_geo_grid.AddLocation(loc2);
@@ -114,7 +115,7 @@ TEST_F(SecondaryCommunityGeneratorTest, FiveLocationsTest)
         m_geo_grid.AddLocation(loc4);
         m_geo_grid.AddLocation(loc5);
 
-        unsigned int                scCounter{1U};
+        unsigned int scCounter{1U};
         m_secondary_community_generator.Apply(m_geo_grid, m_geogrid_config, scCounter);
 
         vector<int> expectedCount{553, 518, 410, 173, 224};
