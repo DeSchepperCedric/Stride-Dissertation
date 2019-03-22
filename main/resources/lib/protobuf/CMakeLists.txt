@@ -164,7 +164,7 @@ set(libprotobuf_lite_includes
 )
 
 set(CMAKE_CXX_FLAGS       "${CMAKE_CXX_FLAGS} -w")
-add_library(libprotobuf
+add_library(libprotobuf STATIC
     ${libprotobuf_files} ${libprotobuf_includes}
     ${libprotobuf_lite_files} ${libprotobuf_lite_includes}
 )
