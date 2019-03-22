@@ -179,7 +179,7 @@ endif()
 # HDF5
 #----------------------------------------------------------------------------
 if(NOT STRIDE_FORCE_NO_HDF5)
-    find_package(HDF5 COMPONENTS CXX HL)
+    find_package(HDF5 1.10.5 COMPONENTS CXX HL)
 endif()
 if(HDF5_FOUND)
     include_directories(SYSTEM ${HDF5_CXX_INCLUDE_DIRS})
