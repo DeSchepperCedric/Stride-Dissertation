@@ -17,17 +17,17 @@
 
 #include "geopop/GeoGrid.h"
 #include "geopop/GeoGridConfig.h"
-#include "geopop/K12SchoolCenter.h"
 #include "geopop/Location.h"
+#include "pop/Population.h"
 #include "util/RnMan.h"
 
 namespace geopop {
 
 using namespace std;
+using namespace stride;
 using namespace stride::ContactType;
 
-void K12SchoolGenerator::Apply(GeoGrid& geoGrid, const GeoGridConfig& geoGridConfig,
-                               IdSubscriptArray<unsigned int>& ccCounter)
+void K12SchoolGenerator::Apply(GeoGrid& geoGrid, const GeoGridConfig& geoGridConfig)
 {
         // 1. given the number of persons of school age, calculate number of schools; schools
         //    have 500 pupils on average
@@ -41,7 +41,7 @@ void K12SchoolGenerator::Apply(GeoGrid& geoGrid, const GeoGridConfig& geoGridCon
 
         vector<double> weights;
         for (const auto& loc : geoGrid) {
-                weights.push_back(loc->GetRelativePop());
+                weights.push_back(loc->GetPopFraction());
         }
 
         if (weights.empty()) {
@@ -50,12 +50,20 @@ void K12SchoolGenerator::Apply(GeoGrid& geoGrid, const GeoGridConfig& geoGridCon
         }
 
         const auto dist = m_rn_man.GetDiscreteGenerator(weights, 0U);
+        auto       pop  = geoGrid.GetPopulation();
 
         for (auto i = 0U; i < schoolCount; i++) {
                 const auto loc = geoGrid[dist()];
-                const auto k12 = make_shared<K12SchoolCenter>(ccCounter[Id::K12School]++);
-                k12->SetupPools(geoGridConfig, geoGrid.GetPopulation());
-                loc->AddCenter(k12);
+                AddPools(*loc, pop, geoGridConfig.pools.pools_per_k12school);
+        }
+}
+
+void K12SchoolGenerator::AddPools(Location& loc, Population* pop, unsigned int number)
+{
+        auto& poolSys = pop->RefPoolSys();
+        for (auto i = 0U; i < number; ++i) {
+                const auto p = poolSys.CreateContactPool(Id::K12School);
+                loc.RegisterPool<Id::K12School>(p);
         }
 }
 

@@ -23,9 +23,10 @@
 #include "geopop/GeoGrid.h"
 #include "geopop/GeoGridConfig.h"
 #include "geopop/generators/CollegeGenerator.h"
-#include "geopop/generators/CommunityGenerator.h"
 #include "geopop/generators/HouseholdGenerator.h"
 #include "geopop/generators/K12SchoolGenerator.h"
+#include "geopop/generators/PrimaryCommunityGenerator.h"
+#include "geopop/generators/SecondaryCommunityGenerator.h"
 #include "geopop/generators/WorkplaceGenerator.h"
 #include "geopop/io/ReaderFactory.h"
 #include "geopop/populators/CollegePopulator.h"
@@ -42,18 +43,21 @@
 #include "util/StringUtils.h"
 
 #include <boost/property_tree/ptree.hpp>
+#include <contact/ContactType.h>
 #include <spdlog/logger.h>
 
 namespace stride {
 
 using namespace std;
 using namespace util;
+using namespace ContactType;
 using namespace boost::property_tree;
 using namespace geopop;
 
 GeoPopBuilder::GeoPopBuilder(const ptree& config, RnMan& rnMan, shared_ptr<spdlog::logger> strideLogger)
-        : AbstractPopBuilder(config, rnMan, move(strideLogger)), m_cc_counters(1U)
-{}
+    : AbstractPopBuilder(config, rnMan, move(strideLogger))
+{
+}
 
 shared_ptr<Population> GeoPopBuilder::Build(shared_ptr<Population> pop)
 {
@@ -86,9 +90,9 @@ shared_ptr<Population> GeoPopBuilder::Build(shared_ptr<Population> pop)
         // --------------------------------------------------------------
         // Generate Geo.
         // --------------------------------------------------------------
-        m_stride_logger->trace("Starting MakeCenters");
-        MakeCenters(geoGrid, ggConfig);
-        m_stride_logger->trace("Finished MakeCenters");
+        m_stride_logger->trace("Starting MakePools");
+        MakePools(geoGrid, ggConfig);
+        m_stride_logger->trace("Finished MakePools");
 
         // --------------------------------------------------------------
         // Generate Pop.
@@ -122,16 +126,17 @@ void GeoPopBuilder::MakeLocations(GeoGrid& geoGrid, const GeoGridConfig& geoGrid
         geoGrid.Finalize();
 }
 
-void GeoPopBuilder::MakeCenters(GeoGrid& geoGrid, const GeoGridConfig& geoGridConfig)
+void GeoPopBuilder::MakePools(GeoGrid& geoGrid, const GeoGridConfig& geoGridConfig)
 {
         vector<shared_ptr<Generator>> generators{make_shared<K12SchoolGenerator>(m_rn_man, m_stride_logger),
                                                  make_shared<CollegeGenerator>(m_rn_man, m_stride_logger),
                                                  make_shared<WorkplaceGenerator>(m_rn_man, m_stride_logger),
-                                                 make_shared<CommunityGenerator>(m_rn_man, m_stride_logger),
+                                                 make_shared<PrimaryCommunityGenerator>(m_rn_man, m_stride_logger),
+                                                 make_shared<SecondaryCommunityGenerator>(m_rn_man, m_stride_logger),
                                                  make_shared<HouseholdGenerator>(m_rn_man, m_stride_logger)};
 
         for (const auto& g : generators) {
-                g->Apply(geoGrid, geoGridConfig, m_cc_counters);
+                g->Apply(geoGrid, geoGridConfig);
         }
 }
 

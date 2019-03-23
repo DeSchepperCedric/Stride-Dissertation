@@ -10,7 +10,7 @@
  *  You should have received a copy of the GNU General Public License
  *  along with the software. If not, see <http://www.gnu.org/licenses/>.
  *
- *  Copyright 2018, Jan Broeckhove and Bistromatics group.
+ *  Copyright 2018, 2019, Jan Broeckhove and Bistromatics group.
  */
 
 #include "GeoGridJSONWriter.h"
@@ -29,6 +29,7 @@ namespace geopop {
 using namespace std;
 using namespace stride;
 using namespace stride::ContactType;
+using namespace boost::property_tree;
 
 GeoGridJSONWriter::GeoGridJSONWriter() : m_persons_found() {}
 
@@ -37,42 +38,25 @@ void GeoGridJSONWriter::Write(GeoGrid& geoGrid, ostream& stream)
         nlohmann::json root;
         nlohmann::json locations = nlohmann::json::array();
 
-#pragma omp parallel
-#pragma omp single
-        {
-                for (const auto& location : geoGrid) {
-                        nlohmann::json child;
-#pragma omp task firstprivate(location)
-                        {
-                                child = WriteLocation(location);
-#pragma omp critical
-
-                                locations.push_back(move(child));
-                        }
-                }
-#pragma omp taskwait
+        for (const auto& location : geoGrid) {
+                nlohmann::json child;
+                child = WriteLocation(*location);
+                locations.push_back(move(child));
         }
 
         root["locations"] = locations;
 
         nlohmann::json persons = nlohmann::json::array();
-#pragma omp parallel
-#pragma omp single
-        {
-                for (const auto& person : m_persons_found) {
-                        nlohmann::json child;
-#pragma omp task firstprivate(person)
-                        {
-                                child = WritePerson(person);
-#pragma omp critical
-                                persons.push_back(move(child));
-                        }
-                }
-#pragma omp taskwait
+
+        for (const auto& person : m_persons_found) {
+                nlohmann::json child;
+                child = WritePerson(person);
+                persons.push_back(move(child));
         }
         root["persons"] = persons;
 
         m_persons_found.clear();
+
         stream << root;
 }
 
@@ -82,19 +66,10 @@ nlohmann::json GeoGridJSONWriter::WriteContactCenter(shared_ptr<ContactCenter> c
         contactCenter_root["id"] = contactCenter->GetId();
         contactCenter_root["type"] = ToString(contactCenter->GetContactPoolType());
         nlohmann::json pools = nlohmann::json::array();
-#pragma omp parallel
-#pragma omp single
-        {
-                for (const auto& pool : *contactCenter) {
-                        nlohmann::json child;
-#pragma omp task firstprivate(pool)
-                        {
-                                child = WriteContactPool(pool);
-#pragma omp critical
-                                pools.push_back(move(child));
-                        }
-                }
-#pragma omp taskwait
+        for (const auto& pool : *contactCenter) {
+                nlohmann::json child;
+                child = WriteContactPool(pool);
+                pools.push_back(move(child));
         }
         contactCenter_root["pools"] = pools;
         return contactCenter_root;
@@ -108,7 +83,6 @@ nlohmann::json GeoGridJSONWriter::WriteContactPool(ContactPool* contactPool)
         // people is an array of ID's
         nlohmann::json people = nlohmann::json::array();
         for (auto person : *contactPool) {
-#pragma omp critical
                 m_persons_found.insert(person);
                 people.push_back(person->GetId());
         }
@@ -124,16 +98,16 @@ nlohmann::json GeoGridJSONWriter::WriteCoordinate(const Coordinate& coordinate)
         return coordinate_root;
 }
 
-nlohmann::json GeoGridJSONWriter::WriteLocation(shared_ptr<Location> location)
+nlohmann::json GeoGridJSONWriter::WriteLocation(const Location& location)
 {
         nlohmann::json location_root;
-        location_root["id"] = location->GetID();
-        location_root["name"] = location->GetName();
-        location_root["province"] = location->GetProvince();
-        location_root["population"] = location->GetPopCount();
-        location_root["coordinate"] = WriteCoordinate(location->GetCoordinate());
+        location_root["id"] = location.GetID();
+        location_root["name"] = location.GetName();
+        location_root["province"] = location.GetProvince();
+        location_root["population"] = location.GetPopCount();
+        location_root["coordinate"] = WriteCoordinate(location.GetCoordinate());
 
-        auto commutes = location->CRefOutgoingCommutes();
+        auto commutes = location.CRefOutgoingCommutes();
         if (!commutes.empty()) {
                 nlohmann::json commutes_root;
                 for (auto commute_pair : commutes) {
@@ -142,8 +116,7 @@ nlohmann::json GeoGridJSONWriter::WriteLocation(shared_ptr<Location> location)
                 location_root["commutes"] = commutes_root;
         }
 
-        nlohmann::json                    contactCenters = nlohmann::json::array();
-        vector<shared_ptr<ContactCenter>> centers;
+        nlohmann::json contactCenters = nlohmann::json::array();
         for (Id typ : IdList) {
                 for (const auto& c : location->RefCenters(typ)) {
                         nlohmann::json child;

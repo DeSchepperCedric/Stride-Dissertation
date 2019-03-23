@@ -54,7 +54,9 @@ private:
         nlohmann::json WriteCoordinate(const Coordinate& coordinate);
 
         /// Create a JSON Structure containing all info needed to reconstruct a Location.
-        nlohmann::json WriteLocation(std::shared_ptr<Location> location);
+        nlohmann::json WriteLocation(const Location& location);
+//        /// Create a Boost Property Tree containing all info needed to reconstruct a Location.
+//        boost::property_tree::ptree WriteLocation(const Location& location);
 
         /// Create a JSON Structure containing all info needed to reconstruct a Person.
         nlohmann::json WritePerson(stride::Person* person);

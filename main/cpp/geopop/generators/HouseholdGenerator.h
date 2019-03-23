@@ -16,21 +16,22 @@
 #pragma once
 
 #include "Generator.h"
-#include "geopop/GeoGridConfig.h"
 
 namespace geopop {
 
 /**
- * Generator Household contact pools.
+ * Generates ContactPools for ContactType Household.
  */
-
 class HouseholdGenerator : public Generator
 {
 public:
         using Generator::Generator;
 
-        void Apply(GeoGrid& geogrid, const GeoGridConfig& geoGridConfig,
-                   stride::ContactType::IdSubscriptArray<unsigned int>& ccCounter) override;
+        /// See @Generator::Apply.
+        void Apply(GeoGrid& geogrid, const GeoGridConfig& geoGridConfig) override;
+
+        /// @see Generator::AddPools.
+        void AddPools(Location& loc, stride::Population* pop, unsigned int number) override;
 };
 
 } // namespace geopop
