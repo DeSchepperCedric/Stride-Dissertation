@@ -14,9 +14,7 @@
  */
 
 #include "PreSchoolGenerator.h"
-#include <geopop/GeoGridConfig.h>
 
-#include "geopop/ContactCenter.h"
 #include "geopop/GeoGrid.h"
 #include "geopop/GeoGridConfig.h"
 #include "geopop/Location.h"
@@ -26,9 +24,10 @@
 namespace geopop {
 
 using namespace std;
+using namespace stride;
 using namespace stride::ContactType;
 
-void PreSchoolGenerator::Apply(GeoGrid& geoGrid, const GeoGridConfig& geoGridConfig, unsigned int& ccCounter)
+void PreSchoolGenerator::Apply(GeoGrid& geoGrid, const GeoGridConfig& geoGridConfig)
 {
         // 1. given the number of persons of school age, calculate number of schools; schools
         //    have 120 pupils on average
@@ -50,31 +49,20 @@ void PreSchoolGenerator::Apply(GeoGrid& geoGrid, const GeoGridConfig& geoGridCon
                 return;
         }
 
-        const auto dist    = m_rn_man.GetDiscreteGenerator(weights, 0U);
-        auto&      poolSys = geoGrid.GetPopulation()->RefPoolSys();
+        const auto dist = m_rn_man.GetDiscreteGenerator(weights, 0U);
+        auto       pop  = geoGrid.GetPopulation();
 
         for (auto i = 0U; i < schoolCount; i++) {
                 const auto loc = geoGrid[dist()];
-                const auto pre = make_shared<ContactCenter>(ccCounter++, Id::PreSchool);
-
-                for (auto j = 0U; j < geoGridConfig.pools.pools_per_preschool; ++j) {
-                        const auto p = poolSys.CreateContactPool(Id::PreSchool);
-                        pre->RegisterPool(p);
-                        loc->RegisterPool<Id::PreSchool>(p);
-                }
-
-                loc->AddCenter(pre);
+                AddPools(*loc, pop, geoGridConfig.pools.pools_per_preschool);
         }
 }
 
-void PreSchoolGenerator::SetupPools(Location& loc, ContactCenter& center, const GeoGridConfig& geoGridConfig,
-                                    stride::Population* pop)
+void PreSchoolGenerator::AddPools(Location& loc, Population* pop, unsigned int number)
 {
         auto& poolSys = pop->RefPoolSys();
-
-        for (auto i = 0U; i < geoGridConfig.pools.pools_per_preschool; ++i) {
-                const auto p = poolSys.CreateContactPool(stride::ContactType::Id::PreSchool);
-                center.RegisterPool(p);
+        for (auto i = 0U; i < number; ++i) {
+                const auto p = poolSys.CreateContactPool(Id::PreSchool);
                 loc.RegisterPool<Id::PreSchool>(p);
         }
 }

@@ -60,9 +60,9 @@ include(CMakeCPP.cmake)
 # Configuration for Swig & Python.
 #============================================================================
 if(NOT STRIDE_FORCE_NO_PYTHON)
-	find_package(SWIG)
-	find_package(PythonInterp 3)
-	find_package(PythonLibs 3)
+    find_package(SWIG)
+    find_package(PythonInterp 3)
+    find_package(PythonLibs 3)
 endif()
 
 #============================================================================
@@ -78,7 +78,7 @@ endif()
 add_subdirectory(main)
 add_subdirectory(test)
 if(STRIDE_INCLUDE_DOC)
-	add_subdirectory(doc)
+    add_subdirectory(doc)
 endif()
 
 #============================================================================

@@ -57,11 +57,7 @@ TEST_F(PreSchoolGeneratorTest, OneLocationTest)
         auto loc1 = make_shared<Location>(1, 4, Coordinate(0, 0), "Antwerpen", m_geogrid_config.input.pop_size);
         m_geo_grid.AddLocation(loc1);
 
-        unsigned int ccCounter{1U};
-        m_preschool_generator.Apply(m_geo_grid, m_geogrid_config, ccCounter);
-
-        const auto& centersOfLoc1 = loc1->CRefCenters(Id::PreSchool);
-        EXPECT_EQ(centersOfLoc1.size(), 3);
+        m_preschool_generator.Apply(m_geo_grid, m_geogrid_config);
 
         const auto& poolsOfLoc1 = loc1->CRefPools<Id::PreSchool>();
         EXPECT_EQ(poolsOfLoc1.size(), 3 * m_geogrid_config.pools.pools_per_preschool);
@@ -72,8 +68,7 @@ TEST_F(PreSchoolGeneratorTest, ZeroLocationTest)
         m_geogrid_config.input.pop_size             = 10000;
         m_geogrid_config.popInfo.popcount_preschool = 300;
 
-        unsigned int ccCounter{1U};
-        m_preschool_generator.Apply(m_geo_grid, m_geogrid_config, ccCounter);
+        m_preschool_generator.Apply(m_geo_grid, m_geogrid_config);
 
         EXPECT_EQ(m_geo_grid.size(), 0);
 }
@@ -100,12 +95,10 @@ TEST_F(PreSchoolGeneratorTest, FiveLocationsTest)
                                     static_cast<double>(m_geogrid_config.input.pop_size));
         }
 
-        unsigned int ccCounter{1U};
-        m_preschool_generator.Apply(m_geo_grid, m_geogrid_config, ccCounter);
+        m_preschool_generator.Apply(m_geo_grid, m_geogrid_config);
 
         vector<unsigned int> sizes{295, 284, 240, 97, 127};
         for (size_t i = 0; i < sizes.size(); i++) {
-                EXPECT_EQ(sizes[i], m_geo_grid[i]->CRefCenters(Id::PreSchool).size());
                 EXPECT_EQ(sizes[i] * m_geogrid_config.pools.pools_per_preschool,
                           m_geo_grid[i]->CRefPools(Id::PreSchool).size());
         }

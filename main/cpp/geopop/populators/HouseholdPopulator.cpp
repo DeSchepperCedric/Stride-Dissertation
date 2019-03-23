@@ -1,3 +1,4 @@
+
 /*
  *  This is free software: you can redistribute it and/or modify it
  *  under the terms of the GNU General Public License as published by
@@ -34,29 +35,14 @@ void HouseholdPopulator::Apply(GeoGrid& geoGrid, const GeoGridConfig& geoGridCon
         auto pop       = geoGrid.GetPopulation();
 
         for (const shared_ptr<Location>& loc : geoGrid) {
-                const auto& hh_centers = loc->RefCenters(Id::Household);
-                for (const auto& h : hh_centers) {
-                        auto hPool = (*h)[0];
-                        auto hDraw = static_cast<unsigned int>(hh_dist());
-
-                        for (const auto& age : geoGridConfig.refHH.ages[hDraw]) {
-                                const auto p = pop->CreatePerson(person_id++, age, hPool->GetId(), 0, 0, 0, 0, 0, 0, 0);
-                                hPool->AddMember(p);
-                        }
-                }
-        }
-
-        /* To replaced by:
-         *         for (const shared_ptr<Location>& loc : geoGrid) {
                 for (auto& pool : loc->RefPools(Id::Household)) {
                         const auto hDraw = static_cast<unsigned int>(hh_dist());
                         for (const auto& age : geoGridConfig.refHH.ages[hDraw]) {
-                                const auto p = pop->CreatePerson(person_id++, age, pool->GetId(), 0, 0, 0, 0, 0);
+                                const auto p = pop->CreatePerson(person_id++, age, pool->GetId(), 0, 0, 0, 0, 0, 0, 0);
                                 pool->AddMember(p);
                         }
                 }
         }
-        */
 
         m_logger->trace("Done populating Households");
 }

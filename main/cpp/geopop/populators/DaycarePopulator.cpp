@@ -32,8 +32,6 @@ using namespace stride::ContactType;
 void DaycarePopulator::Apply(GeoGrid& geoGrid, const GeoGridConfig& geoGridConfig)
 {
         m_logger->info("Starting to populate Daycares");
-        set<ContactPool*> found;
-        unsigned int      pupils = 0U;
 
         // for every location
         for (const auto& loc : geoGrid) {
@@ -49,11 +47,8 @@ void DaycarePopulator::Apply(GeoGrid& geoGrid, const GeoGridConfig& geoGridConfi
                 auto dist = m_rn_man.GetUniformIntGenerator(0, static_cast<int>(nearByDaycares.size()), 0U);
 
                 // 2. for every student assign a class
-                for (const auto& hhCenter : loc->RefCenters(Id::Household)) {
-                        ContactPool* const contactPool = (*hhCenter)[0];
-                        found.insert(contactPool);
-
-                        for (Person* p : *contactPool) {
+                for (const auto& hhPool : loc->RefPools(Id::Household)) {
+                        for (Person* p : *hhPool) {
                                 if (AgeBrackets::Daycare::HasAge(p->GetAge()) &&
                                     MakeChoice(geoGridConfig.input.participation_daycare)) {
                                         // this person is a student
@@ -61,14 +56,11 @@ void DaycarePopulator::Apply(GeoGrid& geoGrid, const GeoGridConfig& geoGridConfi
 
                                         c->AddMember(p);
                                         p->SetPoolId(Id::Daycare, c->GetId());
-                                        pupils++;
                                 }
                         }
                 }
         }
 
-        m_logger->info("Number of pupils in daycares: {}", pupils);
-        m_logger->info("Number of different classes: {}", found.size());
         m_logger->trace("Done populating Daycares");
 }
 

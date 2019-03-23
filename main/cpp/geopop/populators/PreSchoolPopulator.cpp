@@ -31,9 +31,7 @@ using namespace stride::ContactType;
 
 void PreSchoolPopulator::Apply(GeoGrid& geoGrid, const GeoGridConfig& geoGridConfig)
 {
-        m_logger->info("Starting to populate Schools");
-        set<ContactPool*> found;
-        unsigned int      pupils = 0U;
+        m_logger->info("Starting to populate PreSchools");
 
         // for every location
         for (const auto& loc : geoGrid) {
@@ -49,24 +47,20 @@ void PreSchoolPopulator::Apply(GeoGrid& geoGrid, const GeoGridConfig& geoGridCon
                 auto dist = m_rn_man.GetUniformIntGenerator(0, static_cast<int>(classes.size()), 0U);
 
                 // 2. for every student assign a class
-                for (const auto& hhCenter : loc->RefCenters(Id::Household)) {
-                        ContactPool* const contactPool = (*hhCenter)[0];
-                        found.insert(contactPool);
-                        for (Person* p : *contactPool) {
+                for (const auto& hhPool : loc->RefPools(Id::Household)) {
+                        for (Person* p : *hhPool) {
                                 if (AgeBrackets::PreSchool::HasAge(p->GetAge()) &&
                                     MakeChoice(geoGridConfig.input.participation_preschool)) {
                                         // this person is a student
                                         auto& c = classes[dist()];
                                         c->AddMember(p);
                                         p->SetPoolId(Id::PreSchool, c->GetId());
-                                        pupils++;
                                 }
                         }
                 }
         }
 
-        m_logger->info("Number of pupils in schools: {}", pupils);
-        m_logger->info("Number of different classes: {}", found.size());
+        m_logger->trace("Done populating PreSchools");
 }
 
 } // namespace geopop

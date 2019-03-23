@@ -58,11 +58,7 @@ TEST_F(DaycareGeneratorTest, OneLocationTest)
         auto loc1 = make_shared<Location>(1, 4, Coordinate(0, 0), "Antwerpen", m_geogrid_config.input.pop_size);
         m_geo_grid.AddLocation(loc1);
 
-        unsigned int ccCounter{1U};
-        m_daycare_generator.Apply(m_geo_grid, m_geogrid_config, ccCounter);
-
-        const auto& centersOfLoc1 = loc1->CRefCenters(Id::Daycare);
-        EXPECT_EQ(centersOfLoc1.size(), 100);
+        m_daycare_generator.Apply(m_geo_grid, m_geogrid_config);
 
         const auto& poolsOfLoc1 = loc1->CRefPools<Id::Daycare>();
         EXPECT_EQ(poolsOfLoc1.size(), 100 * m_geogrid_config.pools.pools_per_daycare);
@@ -74,8 +70,7 @@ TEST_F(DaycareGeneratorTest, ZeroLocationTest)
         m_geogrid_config.input.pop_size           = 10000;
         m_geogrid_config.popInfo.popcount_daycare = 300;
 
-        unsigned int ccCounter{1U};
-        m_daycare_generator.Apply(m_geo_grid, m_geogrid_config, ccCounter);
+        m_daycare_generator.Apply(m_geo_grid, m_geogrid_config);
 
         EXPECT_EQ(m_geo_grid.size(), 0);
 }
@@ -102,12 +97,10 @@ TEST_F(DaycareGeneratorTest, FiveLocationsTest)
                                     static_cast<double>(m_geogrid_config.input.pop_size));
         }
 
-        unsigned int ccCounter{1U};
-        m_daycare_generator.Apply(m_geo_grid, m_geogrid_config, ccCounter);
+        m_daycare_generator.Apply(m_geo_grid, m_geogrid_config);
 
         vector<unsigned int> sizes{12193, 11784, 8890, 3934, 4913};
         for (size_t i = 0; i < sizes.size(); i++) {
-                EXPECT_EQ(sizes[i], m_geo_grid[i]->CRefCenters(Id::Daycare).size());
                 EXPECT_EQ(sizes[i] * m_geogrid_config.pools.pools_per_daycare,
                           m_geo_grid[i]->CRefPools(Id::Daycare).size());
         }

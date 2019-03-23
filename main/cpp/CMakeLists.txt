@@ -26,128 +26,125 @@ else()
 endif()
 
 set_source_files_properties(
-    geopop/io/GeoGridProtoReader.cpp
-    geopop/io/GeoGridProtoWriter.cpp
-    PROPERTIES
-    COMPILE_FLAGS "-I${Protobuf_PBS_DIR}"
+        geopop/io/GeoGridProtoReader.cpp
+        geopop/io/GeoGridProtoWriter.cpp
+        PROPERTIES
+        COMPILE_FLAGS "-I${Protobuf_PBS_DIR}"
 )
 
 set_property(SOURCE ${PROTO_HDR} ${PROTO_SRC}
-    PROPERTY
-    COMPILE_FLAGS "-Wno-all -Wno-effc++ -Wno-extra -Wno-pedantic"
-)
+        PROPERTY
+        COMPILE_FLAGS "-Wno-all -Wno-effc++ -Wno-extra -Wno-pedantic"
+        )
 
 #============================================================================
 # Sources.
 #============================================================================
 set(STRIDE_SRC
-    #---
-    calendar/Calendar.cpp
-    #---
-    contact/AgeContactProfile.cpp
-    contact/ContactLogMode.cpp
-    contact/ContactPool.cpp
-    contact/ContactPoolSys.cpp
-    contact/ContactType.cpp
-    contact/Infector.cpp
-    contact/TransmissionProfile.cpp
-    #---
-    disease/DiseaseSeeder.cpp
-    disease/Health.cpp
-    disease/HealthSeeder.cpp
-    disease/Immunizer.cpp
-    disease/PublicHealthAgency.cpp
-    #---
-    execs/ControlHelper.cpp
-    execs/GenPopController.cpp
-    execs/SimController.cpp
-    execs/StanController.cpp
-    #---
-    #geopop/CollegeCenter.cpp
-    geopop/ContactCenter.cpp
-    geopop/Coordinate.h
-    geopop/GeoGrid.cpp
-    geopop/GeoGridConfig.cpp
-    #geopop/HouseholdCenter.cpp
-    #geopop/K12SchoolCenter.cpp
-    geopop/Location.cpp
-    #---
-    geopop/geo/GeoGridKdTree.cpp
-    geopop/geo/KdTree2DPoint.cpp
-    #---
-    geopop/generators/CollegeGenerator.cpp
-    geopop/generators/Generator.cpp
-    geopop/generators/HouseholdGenerator.cpp
-    geopop/generators/K12SchoolGenerator.cpp
-    geopop/generators/PrimaryCommunityGenerator.cpp
-    geopop/generators/SecondaryCommunityGenerator.cpp
-    geopop/generators/WorkplaceGenerator.cpp
-    geopop/generators/PreSchoolGenerator.cpp
-    geopop/generators/DaycareGenerator.cpp
-    #---
-    geopop/io/LocationsCSVReader.cpp
-    geopop/io/CommutesCSVReader.cpp
-    geopop/io/GeoGridJSONReader.cpp
-    geopop/io/GeoGridJSONWriter.cpp
-    geopop/io/GeoGridProtoReader.cpp
-    geopop/io/GeoGridProtoReader.h
-    geopop/io/GeoGridProtoWriter.cpp
-    geopop/io/GeoGridProtoWriter.h
-    geopop/io/GeoGridReader.cpp
-    geopop/io/GeoGridReaderFactory.cpp
-    geopop/io/GeoGridReaderFactory.h
-    geopop/io/GeoGridWriterFactory.cpp
-    geopop/io/GeoGridWriterFactory.h
-    geopop/io/HouseholdCSVReader.cpp
-    geopop/io/ReaderFactory.cpp
-    geopop/populators/CollegePopulator.cpp
-    geopop/populators/HouseholdPopulator.cpp
-    geopop/populators/K12SchoolPopulator.cpp
-    geopop/populators/Populator.cpp
-    geopop/populators/PrimaryCommunityPopulator.cpp
-    geopop/populators/SecondaryCommunityPopulator.cpp
-    geopop/populators/WorkplacePopulator.cpp
-    geopop/populators/PreSchoolPopulator.cpp
-    geopop/populators/DaycarePopulator.cpp
-    #---
-    ${PROTO_HEADER}
-    ${PROTO_SRC}
-    #---
-    viewers/InfectedFile.cpp
-    viewers/PersonsFile.cpp
-    viewers/SummaryFile.cpp
-    #---
-    pop/AbstractPopBuilder.cpp
-    pop/Person.cpp
-    pop/Population.cpp
-    pop/DefaultPopBuilder.cpp
-    pop/GeoPopBuilder.cpp
-    pop/ImportPopBuilder.cpp
-    pop/SurveySeeder.cpp
-    #---
-    sim/SimRunner.cpp
-    sim/Sim.cpp
-    sim/SimBuilder.cpp
-    sim/event/Id.cpp
-    sim/event/Subject.cpp
-    #---
-    util/ConfigInfo.cpp
-    util/CSV.cpp
-    util/CSVRow.cpp
-    util/FileSys.cpp
-    util/LogUtils.cpp
-    util/Rn.cpp
-    util/RnMan.cpp
-    util/RunConfigManager.cpp
-    util/TimeStamp.cpp
-    util/TimeToString.cpp
-    #---
-    viewers/CliViewer.cpp
-    viewers/InfectedFileViewer.cpp
-    viewers/InfectedViewer.cpp
-    viewers/PersonsFileViewer.cpp
-    viewers/SummaryFileViewer.cpp
-)
+        #---
+        calendar/Calendar.cpp
+        #---
+        contact/AgeContactProfile.cpp
+        contact/ContactLogMode.cpp
+        contact/ContactPool.cpp
+        contact/ContactPoolSys.cpp
+        contact/ContactType.cpp
+        contact/Infector.cpp
+        contact/TransmissionProfile.cpp
+        #---
+        disease/DiseaseSeeder.cpp
+        disease/Health.cpp
+        disease/HealthSeeder.cpp
+        disease/Immunizer.cpp
+        disease/PublicHealthAgency.cpp
+        #---
+        execs/ControlHelper.cpp
+        execs/GenPopController.cpp
+        execs/SimController.cpp
+        execs/StanController.cpp
+        #---
+        #geopop/ContactCenter.cpp
+        geopop/Coordinate.h
+        geopop/GeoGrid.cpp
+        geopop/GeoGridConfig.cpp
+        geopop/Location.cpp
+        #---
+        geopop/geo/GeoGridKdTree.cpp
+        geopop/geo/KdTree2DPoint.cpp
+        #---
+        geopop/generators/CollegeGenerator.cpp
+        geopop/generators/Generator.cpp
+        geopop/generators/HouseholdGenerator.cpp
+        geopop/generators/K12SchoolGenerator.cpp
+        geopop/generators/PrimaryCommunityGenerator.cpp
+        geopop/generators/SecondaryCommunityGenerator.cpp
+        geopop/generators/WorkplaceGenerator.cpp
+        geopop/generators/DaycareGenerator.cpp
+        geopop/generators/PreSchoolGenerator.cpp
+        #---
+        geopop/io/LocationsCSVReader.cpp
+        geopop/io/CommutesCSVReader.cpp
+        #geopop/io/GeoGridJSONReader.cpp
+        #geopop/io/GeoGridJSONWriter.cpp
+        geopop/io/GeoGridProtoReader.cpp
+        geopop/io/GeoGridProtoReader.h
+        geopop/io/GeoGridProtoWriter.cpp
+        geopop/io/GeoGridProtoWriter.h
+        geopop/io/GeoGridReader.cpp
+        geopop/io/GeoGridReaderFactory.cpp
+        geopop/io/GeoGridReaderFactory.h
+        geopop/io/GeoGridWriterFactory.cpp
+        geopop/io/GeoGridWriterFactory.h
+        geopop/io/HouseholdCSVReader.cpp
+        geopop/io/ReaderFactory.cpp
+        geopop/populators/CollegePopulator.cpp
+        geopop/populators/HouseholdPopulator.cpp
+        geopop/populators/K12SchoolPopulator.cpp
+        geopop/populators/Populator.cpp
+        geopop/populators/PrimaryCommunityPopulator.cpp
+        geopop/populators/SecondaryCommunityPopulator.cpp
+        geopop/populators/WorkplacePopulator.cpp
+        geopop/populators/DaycarePopulator.cpp
+        geopop/populators/PreSchoolPopulator.cpp
+        #---
+        ${PROTO_HEADER}
+        ${PROTO_SRC}
+        #---
+        viewers/InfectedFile.cpp
+        viewers/PersonsFile.cpp
+        viewers/SummaryFile.cpp
+        #---
+        pop/AbstractPopBuilder.cpp
+        pop/Person.cpp
+        pop/Population.cpp
+        pop/DefaultPopBuilder.cpp
+        pop/GeoPopBuilder.cpp
+        pop/ImportPopBuilder.cpp
+        pop/SurveySeeder.cpp
+        #---
+        sim/SimRunner.cpp
+        sim/Sim.cpp
+        sim/SimBuilder.cpp
+        sim/event/Id.cpp
+        sim/event/Subject.cpp
+        #---
+        util/ConfigInfo.cpp
+        util/CSV.cpp
+        util/CSVRow.cpp
+        util/FileSys.cpp
+        util/LogUtils.cpp
+        util/Rn.cpp
+        util/RnMan.cpp
+        util/RunConfigManager.cpp
+        util/TimeStamp.cpp
+        util/TimeToString.cpp
+        #---
+        viewers/CliViewer.cpp
+        viewers/InfectedFileViewer.cpp
+        viewers/InfectedViewer.cpp
+        viewers/PersonsFileViewer.cpp
+        viewers/SummaryFileViewer.cpp
+        )
 
 #============================================================================
 # Build the Stride library.
@@ -162,10 +159,10 @@ else()
     target_link_libraries(libstride PRIVATE libprotobuf)
 endif()
 set_target_properties(libstride
-    PROPERTIES
+        PROPERTIES
         POSITION_INDEPENDENT_CODE ON
         PREFIX ""
-)
+        )
 include(CheckIPOSupported)
 
 # For future use: inter procedural optimization
