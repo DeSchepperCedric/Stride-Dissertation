@@ -15,7 +15,6 @@
 
 #include "geopop/generators/K12SchoolGenerator.h"
 
-#include "geopop/ContactCenter.h"
 #include "geopop/GeoGrid.h"
 #include "geopop/GeoGridConfig.h"
 #include "geopop/Location.h"
@@ -58,11 +57,7 @@ TEST_F(K12SchoolGeneratorTest, OneLocationTest)
         auto loc1 = make_shared<Location>(1, 4, Coordinate(0, 0), "Antwerpen", 2500);
         m_geo_grid.AddLocation(loc1);
 
-        unsigned int ccCounter{1U};
-        m_k12school_generator.Apply(m_geo_grid, m_geogrid_config, ccCounter);
-
-        const auto& centersOfLoc1 = loc1->CRefCenters(Id::K12School);
-        EXPECT_EQ(centersOfLoc1.size(), 4);
+        m_k12school_generator.Apply(m_geo_grid, m_geogrid_config);
 
         const auto& poolsOfLoc1 = loc1->CRefPools(Id::K12School);
         EXPECT_EQ(poolsOfLoc1.size(), 4 * m_geogrid_config.pools.pools_per_k12school);
@@ -71,12 +66,10 @@ TEST_F(K12SchoolGeneratorTest, OneLocationTest)
 // Check that generator can handle empty GeoGrid.
 TEST_F(K12SchoolGeneratorTest, ZeroLocationTest)
 {
-        GeoGridConfig config{};
-        config.input.pop_size             = 10000;
-        config.popInfo.popcount_k12school = 2000;
+        m_geogrid_config.input.pop_size             = 10000;
+        m_geogrid_config.popInfo.popcount_k12school = 2000;
 
-        unsigned int ccCounter{1U};
-        m_k12school_generator.Apply(m_geo_grid, config, ccCounter);
+        m_k12school_generator.Apply(m_geo_grid, m_geogrid_config);
 
         EXPECT_EQ(m_geo_grid.size(), 0);
 }
@@ -104,12 +97,10 @@ TEST_F(K12SchoolGeneratorTest, FiveLocationsTest)
                                     static_cast<double>(m_geogrid_config.input.pop_size));
         }
 
-        unsigned int ccCounter{1U};
-        m_k12school_generator.Apply(m_geo_grid, m_geogrid_config, ccCounter);
+        m_k12school_generator.Apply(m_geo_grid, m_geogrid_config);
 
         vector<unsigned int> sizes{444, 416, 330, 133, 179};
         for (size_t i = 0; i < sizes.size(); i++) {
-                EXPECT_EQ(sizes[i], m_geo_grid[i]->CRefCenters(Id::K12School).size());
                 EXPECT_EQ(sizes[i] * m_geogrid_config.pools.pools_per_k12school,
                           m_geo_grid[i]->CRefPools(Id::K12School).size());
         }

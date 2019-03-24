@@ -15,7 +15,6 @@
 
 #include "geopop/generators/CollegeGenerator.h"
 
-#include "geopop/ContactCenter.h"
 #include "geopop/GeoGrid.h"
 #include "geopop/GeoGridConfig.h"
 #include "geopop/Location.h"
@@ -58,11 +57,7 @@ TEST_F(CollegeGeneratorTest, OneLocationTest)
         auto loc1 = make_shared<Location>(1, 4, Coordinate(0, 0), "Antwerpen", m_geogrid_config.input.pop_size);
         m_geo_grid.AddLocation(loc1);
 
-        unsigned int ccCounter{1U};
-        m_college_generator.Apply(m_geo_grid, m_geogrid_config, ccCounter);
-
-        const auto& centersOfLoc1 = loc1->CRefCenters(Id::College);
-        EXPECT_EQ(centersOfLoc1.size(), 3);
+        m_college_generator.Apply(m_geo_grid, m_geogrid_config);
 
         const auto& poolsOfLoc1 = loc1->CRefPools<Id::College>();
         EXPECT_EQ(poolsOfLoc1.size(), 3 * m_geogrid_config.pools.pools_per_college);
@@ -74,8 +69,7 @@ TEST_F(CollegeGeneratorTest, ZeroLocationTest)
         m_geogrid_config.input.pop_size           = 10000;
         m_geogrid_config.popInfo.popcount_college = 2000;
 
-        unsigned int ccCounter{1U};
-        m_college_generator.Apply(m_geo_grid, m_geogrid_config, ccCounter);
+        m_college_generator.Apply(m_geo_grid, m_geogrid_config);
 
         EXPECT_EQ(m_geo_grid.size(), 0);
 }
@@ -92,12 +86,10 @@ TEST_F(CollegeGeneratorTest, MultipleLocationsTest)
                 const auto loc = make_shared<Location>(1, 4, Coordinate(0, 0), "Size: " + to_string(size), size);
                 m_geo_grid.AddLocation(loc);
         }
-        unsigned int ccCounter{1U};
-        m_college_generator.Apply(m_geo_grid, m_geogrid_config, ccCounter);
+        m_college_generator.Apply(m_geo_grid, m_geogrid_config);
 
         vector<int> expected{2, 2, 5, 2, 3, 0, 0, 0, 0, 2, 2, 0, 3, 3, 3};
         for (size_t i = 0; i < sizes.size(); i++) {
-                EXPECT_EQ(expected[i], m_geo_grid[i]->CRefCenters(Id::College).size());
                 EXPECT_EQ(expected[i] * m_geogrid_config.pools.pools_per_college,
                           m_geo_grid[i]->CRefPools<Id::College>().size());
         }
