@@ -140,8 +140,6 @@ set(STRIDE_SRC
     viewers/InfectedViewer.cpp
     viewers/PersonsFileViewer.cpp
     viewers/SummaryFileViewer.cpp
-    #---
-    prototypes/h5tutr_crtgrpd.cpp
 )
 
 #============================================================================
@@ -180,7 +178,10 @@ include(CheckIPOSupported)
 # Build the stride binary.
 #============================================================================
 add_executable(stride execs/stride.cpp)
+add_executable(HDF5proto prototypes/h5tutr_crtgrpd.cpp)
 target_link_libraries(stride libstride)
+target_link_libraries(HDF5proto libstride)
 install(TARGETS stride DESTINATION ${BIN_INSTALL_LOCATION})
+install(TARGETS HDF5proto DESTINATION ${BIN_INSTALL_LOCATION})
 
 #############################################################################
