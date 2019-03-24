@@ -15,44 +15,41 @@
 
 #include "geopop/io/GeoGridProtoWriter.h"
 #include "GeoGridIOUtils.h"
-#include "geopop/College.h"
 #include "geopop/GeoGridConfig.h"
-#include "geopop/Household.h"
-#include "geopop/K12School.h"
-#include "geopop/PrimaryCommunity.h"
-#include "geopop/SecondaryCommunity.h"
-#include "geopop/Workplace.h"
-#include "util/FileSys.h"
+#include "pop/Population.h"
 
 #include <gtest/gtest.h>
 
 using namespace std;
 using namespace geopop;
 using namespace stride;
+using namespace stride::ContactType;
 
 namespace {
 
 TEST(GeoGridProtoWriterTest, locationTest)
 {
         const auto pop     = Population::Create();
-        const auto geoGrid = make_shared<GeoGrid>(pop.get());
-        geoGrid->AddLocation(make_shared<Location>(1, 4, 2500, Coordinate(0, 0), "Bavikhove"));
-        geoGrid->AddLocation(make_shared<Location>(2, 3, 5000, Coordinate(0, 0), "Gent"));
-        geoGrid->AddLocation(make_shared<Location>(3, 2, 2500, Coordinate(0, 0), "Mons"));
+        auto&      geoGrid = pop->RefGeoGrid();
+        geoGrid.AddLocation(make_shared<Location>(1, 4, Coordinate(0, 0), "Bavikhove", 2500));
+        geoGrid.AddLocation(make_shared<Location>(2, 3, Coordinate(0, 0), "Gent", 5000));
+        geoGrid.AddLocation(make_shared<Location>(3, 2, Coordinate(0, 0), "Mons", 2500));
 
         CompareGeoGrid(geoGrid);
 }
-TEST(GeoGridProtoWriterTest, contactCentersTest)
+
+TEST(GeoGridProtoWriterTest, contactPoolsTest)
 {
-        const auto pop      = Population::Create();
-        const auto geoGrid  = make_shared<GeoGrid>(pop.get());
-        const auto location = make_shared<Location>(1, 4, 2500, Coordinate(0, 0), "Bavikhove");
-        location->AddContactCenter(make_shared<K12School>(0));
-        location->AddContactCenter(make_shared<PrimaryCommunity>(1));
-        location->AddContactCenter(make_shared<College>(2));
-        location->AddContactCenter(make_shared<Household>(3));
-        location->AddContactCenter(make_shared<Workplace>(4));
-        geoGrid->AddLocation(location);
+        const auto pop     = Population::Create();
+        auto&      geoGrid = pop->RefGeoGrid();
+        const auto loc     = make_shared<Location>(1, 4, Coordinate(0, 0), "Bavikhove", 2500);
+
+        loc->RefPools(Id::K12School).emplace_back(pop->RefPoolSys().CreateContactPool(Id::K12School));
+        loc->RefPools(Id::PrimaryCommunity).emplace_back(pop->RefPoolSys().CreateContactPool(Id::PrimaryCommunity));
+        loc->RefPools(Id::College).emplace_back(pop->RefPoolSys().CreateContactPool(Id::College));
+        loc->RefPools(Id::Household).emplace_back(pop->RefPoolSys().CreateContactPool(Id::Household));
+        loc->RefPools(Id::Workplace).emplace_back(pop->RefPoolSys().CreateContactPool(Id::Workplace));
+        geoGrid.AddLocation(loc);
 
         CompareGeoGrid(geoGrid);
 }
@@ -60,13 +57,13 @@ TEST(GeoGridProtoWriterTest, contactCentersTest)
 TEST(GeoGridProtoWriterTest, peopleTest)
 {
         auto pop = Population::Create();
-        CompareGeoGrid(GetPopulatedGeoGrid(pop.get()));
+        CompareGeoGrid(*GetPopulatedGeoGrid(pop.get()));
 }
 
 TEST(GeoGridProtoWriterTest, commutesTest)
 {
         auto pop = Population::Create();
-        CompareGeoGrid(GetCommutesGeoGrid(pop.get()));
+        CompareGeoGrid(*GetCommutesGeoGrid(pop.get()));
 }
 
 } // namespace

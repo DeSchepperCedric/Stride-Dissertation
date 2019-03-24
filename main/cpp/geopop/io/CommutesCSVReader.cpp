@@ -29,7 +29,7 @@ using namespace stride::util;
 
 CommutesCSVReader::CommutesCSVReader(unique_ptr<istream> inputStream) : CommutesReader(move(inputStream)) {}
 
-void CommutesCSVReader::FillGeoGrid(shared_ptr<GeoGrid> geoGrid) const
+void CommutesCSVReader::FillGeoGrid(GeoGrid& geoGrid) const
 {
         // flanders_commuting format
         // kolom: stad van vertrek (headers = id)
@@ -59,8 +59,8 @@ void CommutesCSVReader::FillGeoGrid(shared_ptr<GeoGrid> geoGrid) const
                 for (auto columnIndex = 0U; columnIndex < columnCount; columnIndex++) {
                         auto abs = row.GetValue<double>(columnIndex);
                         if (abs != 0 && columnIndex != rowIndex) {
-                                const auto& locFrom    = geoGrid->GetById(header[columnIndex]);
-                                const auto& locTo      = geoGrid->GetById(header[rowIndex]);
+                                const auto& locFrom    = geoGrid.GetById(header[columnIndex]);
+                                const auto& locTo      = geoGrid.GetById(header[rowIndex]);
                                 const auto& total      = sizes[columnIndex];
                                 double      proportion = abs / total;
 
@@ -69,8 +69,8 @@ void CommutesCSVReader::FillGeoGrid(shared_ptr<GeoGrid> geoGrid) const
                                                         " to " + to_string(locTo->GetID()) +
                                                         " is invalid (0 <= proportion <= 1)");
                                 }
-                                locFrom->AddOutgoingCommutingLocation(locTo, proportion);
-                                locTo->AddIncomingCommutingLocation(locFrom, proportion);
+                                locFrom->AddOutgoingCommute(locTo, proportion);
+                                locTo->AddIncomingCommute(locFrom, proportion);
                         }
                 }
                 rowIndex++;

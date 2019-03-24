@@ -47,6 +47,7 @@ set(STRIDE_SRC
     contact/AgeContactProfile.cpp
     contact/ContactLogMode.cpp
     contact/ContactPool.cpp
+    contact/ContactPoolSys.cpp
     contact/ContactType.cpp
     contact/Infector.cpp
     contact/TransmissionProfile.cpp
@@ -62,33 +63,27 @@ set(STRIDE_SRC
     execs/SimController.cpp
     execs/StanController.cpp
     #---
-    geopop/College.cpp
-    geopop/ContactCenter.cpp
+    #geopop/ContactCenter.cpp
     geopop/Coordinate.h
     geopop/GeoGrid.cpp
-    geopop/GeoGridBuilder.cpp
     geopop/GeoGridConfig.cpp
-    geopop/GeoGridConfigBuilder.cpp
-    geopop/Household.cpp
-    geopop/K12School.cpp
     geopop/Location.cpp
-    geopop/PrimaryCommunity.cpp
-    geopop/SecondaryCommunity.cpp
-    geopop/Workplace.cpp
     #---
     geopop/geo/GeoGridKdTree.cpp
     geopop/geo/KdTree2DPoint.cpp
     #---
     geopop/generators/CollegeGenerator.cpp
-    geopop/generators/CommunityGenerator.cpp
+    geopop/generators/Generator.cpp
     geopop/generators/HouseholdGenerator.cpp
     geopop/generators/K12SchoolGenerator.cpp
+    geopop/generators/PrimaryCommunityGenerator.cpp
+    geopop/generators/SecondaryCommunityGenerator.cpp
     geopop/generators/WorkplaceGenerator.cpp
     #---
-    geopop/io/CitiesCSVReader.cpp
+    geopop/io/LocationsCSVReader.cpp
     geopop/io/CommutesCSVReader.cpp
-    geopop/io/GeoGridJSONReader.cpp
-    geopop/io/GeoGridJSONWriter.cpp
+    #geopop/io/GeoGridJSONReader.cpp
+    #geopop/io/GeoGridJSONWriter.cpp
     geopop/io/GeoGridProtoReader.cpp
     geopop/io/GeoGridProtoReader.h
     geopop/io/GeoGridProtoWriter.cpp
@@ -115,6 +110,7 @@ set(STRIDE_SRC
     viewers/PersonsFile.cpp
     viewers/SummaryFile.cpp
     #---
+    pop/AbstractPopBuilder.cpp
     pop/Person.cpp
     pop/Population.cpp
     pop/DefaultPopBuilder.cpp
@@ -128,19 +124,20 @@ set(STRIDE_SRC
     sim/event/Id.cpp
     sim/event/Subject.cpp
     #---
+    util/ConfigInfo.cpp
+    util/CSV.cpp
     util/CSVRow.cpp
+    util/FileSys.cpp
     util/LogUtils.cpp
     util/Rn.cpp
-    util/CSV.cpp
-    util/ConfigInfo.cpp
-    util/FileSys.cpp
+    util/RnMan.cpp
     util/RunConfigManager.cpp
     util/TimeStamp.cpp
     util/TimeToString.cpp
     #---
+    viewers/CliViewer.cpp
     viewers/InfectedFileViewer.cpp
     viewers/InfectedViewer.cpp
-    viewers/CliViewer.cpp
     viewers/PersonsFileViewer.cpp
     viewers/SummaryFileViewer.cpp
 )

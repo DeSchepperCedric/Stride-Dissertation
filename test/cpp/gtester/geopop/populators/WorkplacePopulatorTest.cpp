@@ -10,21 +10,16 @@
  *  You should have received a copy of the GNU General Public License
  *  along with the software. If not, see <http://www.gnu.org/licenses/>.
  *
- *  Copyright 2018, 2019, Jan Broeckhove and Bistromatics group.
+ *  Copyright 2019, Jan Broeckhove.
  */
 
 #include "geopop/populators/WorkplacePopulator.h"
 
+#include "MakeGeoGrid.h"
 #include "contact/AgeBrackets.h"
-#include "createGeogrid.h"
-#include "geopop/College.h"
-#include "geopop/GeoGridConfig.h"
-#include "geopop/Household.h"
-#include "geopop/K12School.h"
 #include "geopop/Location.h"
-#include "geopop/Workplace.h"
-#include "geopop/populators/CollegePopulator.h"
-#include "util/LogUtils.h"
+#include "geopop/generators/WorkplaceGenerator.h"
+#include "pop/Population.h"
 #include "util/RnMan.h"
 
 #include <gtest/gtest.h>
@@ -37,99 +32,95 @@ using namespace stride::util;
 
 namespace {
 
-TEST(WorkplacePopulatorTest, NoPopulation)
+class WorkplacePopulatorTest : public testing::Test
 {
-        auto rnManager = RnMan{RnMan::Info{}}; // Default random number manager.
-        auto pop       = Population::Create();
-        auto geoGrid   = make_shared<GeoGrid>(pop.get());
+public:
+        WorkplacePopulatorTest()
+            : m_rn_man(RnInfo()), m_workplace_populator(m_rn_man), m_geogrid_config(), m_pop(Population::Create()),
+              m_geo_grid(m_pop->RefGeoGrid()), m_workplace_generator(m_rn_man)
+        {
+        }
 
-        geoGrid->AddLocation(make_shared<Location>(0, 0, 0));
-        WorkplacePopulator workplacePopulator(rnManager);
-        GeoGridConfig      config{};
-        geoGrid->Finalize();
+protected:
+        RnMan                  m_rn_man;
+        WorkplacePopulator     m_workplace_populator;
+        GeoGridConfig          m_geogrid_config;
+        shared_ptr<Population> m_pop;
+        GeoGrid&               m_geo_grid;
+        WorkplaceGenerator     m_workplace_generator;
+        const unsigned int     m_ppwp = GeoGridConfig{}.pools.pools_per_workplace;
+};
 
-        EXPECT_NO_THROW(workplacePopulator.Apply(geoGrid, config));
+TEST_F(WorkplacePopulatorTest, NoPopulation)
+{
+        m_geo_grid.AddLocation(make_shared<Location>(0, 0, Coordinate(0.0, 0.0), "", 0));
+        m_geo_grid.Finalize();
+
+        EXPECT_NO_THROW(m_workplace_populator.Apply(m_geo_grid, m_geogrid_config));
 }
 
-TEST(WorkplacePopulatorTest, NoActive)
+TEST_F(WorkplacePopulatorTest, NoActive)
 {
-        auto rnManager = RnMan(RnMan::Info{}); // Default random number manager.
-        auto pop       = Population::Create();
-        auto geoGrid   = CreateGeoGrid(3, 100, 3, 33, 3, pop.get());
+        MakeGeoGrid(m_geogrid_config, 3, 100, 3, 33, 3, m_pop.get());
 
-        WorkplacePopulator workplacePopulator(rnManager);
-        GeoGridConfig      config{};
-        config.input.particpation_workplace = 0;
-        config.input.participation_college  = 1;
+        m_geogrid_config.input.particpation_workplace = 0;
+        m_geogrid_config.input.participation_college  = 1;
 
-        auto location = *geoGrid->begin();
-        // Brasschaat and Schoten are close to each other
-        // There is no commuting, but since they will still receive students from each other
-        // Kortrijk will only receive students from Kortrijik
-        auto brasschaat = *geoGrid->begin();
+        // Nobody works, everybody in the student age bracket goes to college: so workplace is empty.
+        // Brasschaat and Schoten are close to each other. There is no commuting, but they are so close
+        // they will receive students from each other. Kortrijk will only receive students from Kortrijk.
+        auto brasschaat = *m_geo_grid.begin();
         brasschaat->SetCoordinate(Coordinate(51.29227, 4.49419));
-        auto schoten = *(geoGrid->begin() + 1);
+
+        auto schoten = *(m_geo_grid.begin() + 1);
         schoten->SetCoordinate(Coordinate(51.2497532, 4.4977063));
-        auto kortrijk = *(geoGrid->begin() + 2);
+
+        auto kortrijk = *(m_geo_grid.begin() + 2);
         kortrijk->SetCoordinate(Coordinate(50.82900246, 3.264406009));
 
-        geoGrid->Finalize();
-        workplacePopulator.Apply(geoGrid, config);
+        m_geo_grid.Finalize();
+        m_workplace_populator.Apply(m_geo_grid, m_geogrid_config);
 
-        for (const Person& p : *geoGrid->GetPopulation()) {
+        for (const Person& p : *m_geo_grid.GetPopulation()) {
                 EXPECT_EQ(0, p.GetPoolId(Id::Workplace));
         }
 }
 
-TEST(WorkplacePopulatorTest, NoCommuting)
+TEST_F(WorkplacePopulatorTest, NoCommuting)
 {
-        auto rnManager = RnMan(RnMan::Info{}); // Default random number manager.
-        auto pop       = Population::Create();
-        auto geoGrid   = CreateGeoGrid(3, 100, 3, 33, 3, pop.get());
+        MakeGeoGrid(m_geogrid_config, 3, 100, 3, 33, 3, m_pop.get());
 
-        WorkplacePopulator workplacePopulator(rnManager);
-        GeoGridConfig      config{};
-        unsigned int       contactCenterCounter   = 1;
-        config.input.fraction_workplace_commuters = 0;
-        config.input.particpation_workplace       = 1;
-        config.input.participation_college        = 0.5;
+        m_geogrid_config.input.fraction_workplace_commuters = 0;
+        m_geogrid_config.input.particpation_workplace       = 1;
+        m_geogrid_config.input.participation_college        = 0.5;
 
         // Brasschaat and Schoten are close to each other
         // There is no commuting, but since they will still receive students from each other
         // Kortrijk will only receive students from Kortrijik
-        auto brasschaat = *geoGrid->begin();
-        brasschaat->SetCoordinate(Coordinate(51.29227, 4.49419));
-        auto workBra1 = make_shared<Workplace>(contactCenterCounter++);
-        workBra1->Fill(config, geoGrid);
-        brasschaat->AddContactCenter(workBra1);
-        auto workBra2 = make_shared<Workplace>(contactCenterCounter++);
-        workBra2->Fill(config, geoGrid);
-        brasschaat->AddContactCenter(workBra2);
-        auto schoten = *(geoGrid->begin() + 1);
-        schoten->SetCoordinate(Coordinate(51.2497532, 4.4977063));
-        auto workScho1 = make_shared<Workplace>(contactCenterCounter++);
-        workScho1->Fill(config, geoGrid);
-        schoten->AddContactCenter(workScho1);
-        auto workScho2 = make_shared<Workplace>(contactCenterCounter++);
-        workScho2->Fill(config, geoGrid);
-        schoten->AddContactCenter(workScho2);
-        auto kortrijk = *(geoGrid->begin() + 2);
-        kortrijk->SetCoordinate(Coordinate(50.82900246, 3.264406009));
-        auto workKor1 = make_shared<Workplace>(contactCenterCounter++);
-        workKor1->Fill(config, geoGrid);
-        kortrijk->AddContactCenter(workKor1);
-        auto workKor2 = make_shared<Workplace>(contactCenterCounter++);
-        workKor2->Fill(config, geoGrid);
-        kortrijk->AddContactCenter(workKor2);
 
-        geoGrid->Finalize();
-        workplacePopulator.Apply(geoGrid, config);
+        auto brasschaat = *m_geo_grid.begin();
+        brasschaat->SetCoordinate(Coordinate(51.29227, 4.49419));
+        m_workplace_generator.AddPools(*brasschaat, m_pop.get(), m_ppwp);
+        m_workplace_generator.AddPools(*brasschaat, m_pop.get(), m_ppwp);
+
+        auto schoten = *(m_geo_grid.begin() + 1);
+        schoten->SetCoordinate(Coordinate(51.2497532, 4.4977063));
+        m_workplace_generator.AddPools(*schoten, m_pop.get(), m_ppwp);
+        m_workplace_generator.AddPools(*schoten, m_pop.get(), m_ppwp);
+
+        auto kortrijk = *(m_geo_grid.begin() + 2);
+        kortrijk->SetCoordinate(Coordinate(50.82900246, 3.264406009));
+        m_workplace_generator.AddPools(*kortrijk, m_pop.get(), m_ppwp);
+        m_workplace_generator.AddPools(*kortrijk, m_pop.get(), m_ppwp);
+
+        m_geo_grid.Finalize();
+        m_workplace_populator.Apply(m_geo_grid, m_geogrid_config);
 
         const auto pwc = GeoGridConfig().pools.pools_per_workplace;
 
         // Assert that persons of Schoten only go to Schoten or Brasschaat
-        for (const auto& household : schoten->GetContactCentersOfType<Household>()) {
-                for (auto p : *household->GetPools()[0]) {
+        for (const auto& hPool : schoten->RefPools(Id::Household)) {
+                for (auto p : hPool[0]) {
                         const auto workId = p->GetPoolId(Id::Workplace);
                         if (AgeBrackets::Workplace::HasAge(p->GetAge()) && !AgeBrackets::College::HasAge(p->GetAge())) {
                                 EXPECT_TRUE(workId >= 1 && workId <= 4 * pwc);
@@ -142,8 +133,8 @@ TEST(WorkplacePopulatorTest, NoCommuting)
         }
 
         // Assert that persons of Brasschaat only go to Schoten or Brasschaat
-        for (const auto& household : brasschaat->GetContactCentersOfType<Household>()) {
-                for (auto p : *household->GetPools()[0]) {
+        for (const auto& hPool : brasschaat->RefPools(Id::Household)) {
+                for (auto p : hPool[0]) {
                         const auto workId = p->GetPoolId(Id::Workplace);
                         if (AgeBrackets::Workplace::HasAge(p->GetAge()) && !AgeBrackets::College::HasAge(p->GetAge())) {
                                 EXPECT_TRUE(workId >= 1 && workId <= 4 * pwc);
@@ -156,8 +147,8 @@ TEST(WorkplacePopulatorTest, NoCommuting)
         }
 
         // Assert that persons of Kortrijk only go to Kortijk
-        for (const auto& household : kortrijk->GetContactCentersOfType<Household>()) {
-                for (auto p : *household->GetPools()[0]) {
+        for (const auto& hPool : kortrijk->RefPools(Id::Household)) {
+                for (auto p : hPool[0]) {
                         const auto workId = p->GetPoolId(Id::Workplace);
                         if (AgeBrackets::Workplace::HasAge(p->GetAge()) && !AgeBrackets::College::HasAge(p->GetAge())) {
                                 EXPECT_TRUE(workId > 4 * pwc && workId <= 6 * pwc);
@@ -170,54 +161,42 @@ TEST(WorkplacePopulatorTest, NoCommuting)
         }
 }
 
-TEST(WorkplacePopulatorTest, OnlyCommuting)
+TEST_F(WorkplacePopulatorTest, OnlyCommuting)
 {
-        auto rnManager = RnMan(RnMan::Info{}); // Default random number manager.
-        auto pop       = Population::Create();
-        auto geoGrid   = CreateGeoGrid(3, 100, 3, 33, 3, pop.get());
+        MakeGeoGrid(m_geogrid_config, 3, 100, 3, 33, 3, m_pop.get());
 
-        WorkplacePopulator workplacePopulator(rnManager);
-        GeoGridConfig      config{};
-        unsigned int       contactCenterCounter   = 1;
-        config.input.fraction_workplace_commuters = 0;
-        config.input.fraction_workplace_commuters = 1;
-        config.input.fraction_college_commuters   = 0;
-        config.popInfo.popcount_workplace         = 1;
-        config.input.particpation_workplace       = 1;
-        config.input.participation_college        = 0.5;
+        m_geogrid_config.input.fraction_workplace_commuters = 0;
+        m_geogrid_config.input.fraction_workplace_commuters = 1;
+        m_geogrid_config.input.fraction_college_commuters   = 0;
+        m_geogrid_config.popInfo.popcount_workplace         = 1;
+        m_geogrid_config.input.particpation_workplace       = 1;
+        m_geogrid_config.input.participation_college        = 0.5;
 
         // only commuting
-        auto schoten = *(geoGrid->begin());
+
+        auto schoten = *(m_geo_grid.begin());
         schoten->SetCoordinate(Coordinate(51.2497532, 4.4977063));
+        m_workplace_generator.AddPools(*schoten, m_pop.get(), m_ppwp);
+        m_workplace_generator.AddPools(*schoten, m_pop.get(), m_ppwp);
 
-        auto workScho1 = make_shared<Workplace>(contactCenterCounter++);
-        workScho1->Fill(config, geoGrid);
-        schoten->AddContactCenter(workScho1);
-        auto workScho2 = make_shared<Workplace>(contactCenterCounter++);
-        workScho2->Fill(config, geoGrid);
-        schoten->AddContactCenter(workScho2);
-        auto kortrijk = *(geoGrid->begin() + 1);
+        auto kortrijk = *(m_geo_grid.begin() + 1);
         kortrijk->SetCoordinate(Coordinate(50.82900246, 3.264406009));
-        auto workKor1 = make_shared<Workplace>(contactCenterCounter++);
-        workKor1->Fill(config, geoGrid);
-        kortrijk->AddContactCenter(workKor1);
-        auto workKor2 = make_shared<Workplace>(contactCenterCounter++);
-        workKor2->Fill(config, geoGrid);
-        kortrijk->AddContactCenter(workKor2);
+        m_workplace_generator.AddPools(*kortrijk, m_pop.get(), m_ppwp);
+        m_workplace_generator.AddPools(*kortrijk, m_pop.get(), m_ppwp);
 
-        schoten->AddOutgoingCommutingLocation(kortrijk, 0.5);
-        kortrijk->AddIncomingCommutingLocation(schoten, 0.5);
-        kortrijk->AddOutgoingCommutingLocation(schoten, 0.5);
-        schoten->AddIncomingCommutingLocation(kortrijk, 0.5);
+        schoten->AddOutgoingCommute(kortrijk, 0.5);
+        kortrijk->AddIncomingCommute(schoten, 0.5);
+        kortrijk->AddOutgoingCommute(schoten, 0.5);
+        schoten->AddIncomingCommute(kortrijk, 0.5);
 
-        geoGrid->Finalize();
-        workplacePopulator.Apply(geoGrid, config);
+        m_geo_grid.Finalize();
+        m_workplace_populator.Apply(m_geo_grid, m_geogrid_config);
 
         const auto pwc = GeoGridConfig().pools.pools_per_workplace;
 
         // Assert that persons of Schoten only go to Kortrijk
-        for (const auto& household : schoten->GetContactCentersOfType<Household>()) {
-                for (auto p : *household->GetPools()[0]) {
+        for (const auto& hPool : schoten->RefPools(Id::Household)) {
+                for (auto p : hPool[0]) {
                         const auto workId = p->GetPoolId(Id::Workplace);
                         if (AgeBrackets::Workplace::HasAge(p->GetAge()) && !AgeBrackets::College::HasAge(p->GetAge())) {
                                 EXPECT_TRUE(workId > 2 * pwc && workId <= 4 * pwc);
@@ -230,8 +209,8 @@ TEST(WorkplacePopulatorTest, OnlyCommuting)
         }
 
         // Assert that persons of Kortrijk only go to Schoten
-        for (const auto& household : kortrijk->GetContactCentersOfType<Household>()) {
-                for (auto p : *household->GetPools()[0]) {
+        for (const auto& hPool : kortrijk->RefPools(Id::Household)) {
+                for (auto p : hPool[0]) {
                         const auto workId = p->GetPoolId(Id::Workplace);
                         if (AgeBrackets::Workplace::HasAge(p->GetAge()) && !AgeBrackets::College::HasAge(p->GetAge())) {
                                 EXPECT_TRUE(workId >= 1 && workId <= 2 * pwc);
@@ -244,61 +223,46 @@ TEST(WorkplacePopulatorTest, OnlyCommuting)
         }
 }
 
-TEST(WorkplacePopulatorTest, OnlyCommutingButNoCommutingAvaiable)
+TEST_F(WorkplacePopulatorTest, OnlyCommutingButNoCommutingAvaiable)
 {
-        auto rnManager = RnMan{RnMan::Info{}}; // Default random number manager.
-        auto pop       = Population::Create();
-        auto geoGrid   = CreateGeoGrid(3, 100, 3, 33, 3, pop.get());
+        MakeGeoGrid(m_geogrid_config, 3, 100, 3, 33, 3, m_pop.get());
 
-        WorkplacePopulator workplacePopulator(rnManager, LogUtils::CreateNullLogger("nullLogger"));
-        GeoGridConfig      config{};
-        unsigned int       contactCenterCounter   = 1;
-        config.input.fraction_workplace_commuters = 0;
-        config.input.fraction_workplace_commuters = 1;
-        config.input.fraction_college_commuters   = 0;
-        config.popInfo.popcount_workplace         = 1;
-        config.input.particpation_workplace       = 1;
-        config.input.participation_college        = 0.5;
+        m_geogrid_config.input.fraction_workplace_commuters = 0;
+        m_geogrid_config.input.fraction_workplace_commuters = 1;
+        m_geogrid_config.input.fraction_college_commuters   = 0;
+        m_geogrid_config.popInfo.popcount_workplace         = 1;
+        m_geogrid_config.input.particpation_workplace       = 1;
+        m_geogrid_config.input.participation_college        = 0.5;
 
-        auto brasschaat = *geoGrid->begin();
+        auto brasschaat = *m_geo_grid.begin();
         brasschaat->SetCoordinate(Coordinate(51.29227, 4.49419));
-        auto workBra1 = make_shared<Workplace>(contactCenterCounter++);
-        workBra1->Fill(config, geoGrid);
-        brasschaat->AddContactCenter(workBra1);
-        auto workBra2 = make_shared<Workplace>(contactCenterCounter++);
-        workBra2->Fill(config, geoGrid);
-        brasschaat->AddContactCenter(workBra2);
-        auto schoten = *(geoGrid->begin() + 1);
+        m_workplace_generator.AddPools(*brasschaat, m_pop.get(), m_ppwp);
+        m_workplace_generator.AddPools(*brasschaat, m_pop.get(), m_ppwp);
+
+        auto schoten = *(m_geo_grid.begin() + 1);
         schoten->SetCoordinate(Coordinate(51.2497532, 4.4977063));
-        auto workScho1 = make_shared<Workplace>(contactCenterCounter++);
-        workScho1->Fill(config, geoGrid);
-        schoten->AddContactCenter(workScho1);
-        auto workScho2 = make_shared<Workplace>(contactCenterCounter++);
-        workScho2->Fill(config, geoGrid);
-        schoten->AddContactCenter(workScho2);
-        auto kortrijk = *(geoGrid->begin() + 2);
+        m_workplace_generator.AddPools(*schoten, m_pop.get(), m_ppwp);
+        m_workplace_generator.AddPools(*schoten, m_pop.get(), m_ppwp);
+
+        auto kortrijk = *(m_geo_grid.begin() + 2);
         kortrijk->SetCoordinate(Coordinate(50.82900246, 3.264406009));
-        auto workKor1 = make_shared<Workplace>(contactCenterCounter++);
-        workKor1->Fill(config, geoGrid);
-        kortrijk->AddContactCenter(workKor1);
-        auto workKor2 = make_shared<Workplace>(contactCenterCounter++);
-        workKor2->Fill(config, geoGrid);
-        kortrijk->AddContactCenter(workKor2);
+        m_workplace_generator.AddPools(*kortrijk, m_pop.get(), m_ppwp);
+        m_workplace_generator.AddPools(*kortrijk, m_pop.get(), m_ppwp);
 
         // test case is only commuting but between nobody is commuting from or to Brasschaat
-        schoten->AddOutgoingCommutingLocation(kortrijk, 0.5);
-        kortrijk->AddIncomingCommutingLocation(schoten, 0.5);
-        kortrijk->AddOutgoingCommutingLocation(schoten, 0.5);
-        schoten->AddIncomingCommutingLocation(kortrijk, 0.5);
+        schoten->AddOutgoingCommute(kortrijk, 0.5);
+        kortrijk->AddIncomingCommute(schoten, 0.5);
+        kortrijk->AddOutgoingCommute(schoten, 0.5);
+        schoten->AddIncomingCommute(kortrijk, 0.5);
 
-        geoGrid->Finalize();
-        workplacePopulator.Apply(geoGrid, config);
+        m_geo_grid.Finalize();
+        m_workplace_populator.Apply(m_geo_grid, m_geogrid_config);
 
         const auto pwc = GeoGridConfig().pools.pools_per_workplace;
 
         // Assert that persons of Schoten only go to Kortrijk
-        for (const auto& household : schoten->GetContactCentersOfType<Household>()) {
-                for (auto p : *household->GetPools()[0]) {
+        for (const auto& hPool : schoten->RefPools(Id::Household)) {
+                for (auto p : hPool[0]) {
                         const auto workId = p->GetPoolId(Id::Workplace);
                         if (AgeBrackets::Workplace::HasAge(p->GetAge()) && !AgeBrackets::College::HasAge(p->GetAge())) {
                                 EXPECT_TRUE(workId > 4 * pwc && workId <= 6 * pwc);
@@ -311,8 +275,8 @@ TEST(WorkplacePopulatorTest, OnlyCommutingButNoCommutingAvaiable)
         }
 
         // Assert that persons of Brasschaat only go to Brasschaat or Schoten
-        for (const auto& household : brasschaat->GetContactCentersOfType<Household>()) {
-                for (auto p : *household->GetPools()[0]) {
+        for (const auto& hPool : brasschaat->RefPools(Id::Household)) {
+                for (auto p : hPool[0]) {
                         const auto workId = p->GetPoolId(Id::Workplace);
                         if (AgeBrackets::Workplace::HasAge(p->GetAge()) && !AgeBrackets::College::HasAge(p->GetAge())) {
                                 EXPECT_TRUE(workId >= 1 && workId <= 4 * pwc);
@@ -325,8 +289,8 @@ TEST(WorkplacePopulatorTest, OnlyCommutingButNoCommutingAvaiable)
         }
 
         // Assert that persons of Kortrijk only go to Schoten
-        for (const auto& household : kortrijk->GetContactCentersOfType<Household>()) {
-                for (auto p : *household->GetPools()[0]) {
+        for (const auto& hPool : kortrijk->RefPools(Id::Household)) {
+                for (auto p : hPool[0]) {
                         const auto workId = p->GetPoolId(Id::Workplace);
                         if (AgeBrackets::Workplace::HasAge(p->GetAge()) && !AgeBrackets::College::HasAge(p->GetAge())) {
                                 EXPECT_TRUE(workId > 2 * pwc && workId <= 4 * pwc);

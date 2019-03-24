@@ -15,35 +15,34 @@
 
 #include "CollegeGenerator.h"
 
-#include "geopop/College.h"
 #include "geopop/GeoGrid.h"
 #include "geopop/GeoGridConfig.h"
 #include "geopop/Location.h"
+#include "pop/Population.h"
 #include "util/Assert.h"
 #include "util/RnMan.h"
-
-#include <trng/discrete_dist.hpp>
 
 namespace geopop {
 
 using namespace std;
+using namespace stride;
+using namespace stride::ContactType;
 
-void CollegeGenerator::Apply(shared_ptr<GeoGrid> geoGrid, const GeoGridConfig& geoGridConfig,
-                             unsigned int& contactCenterCounter)
+void CollegeGenerator::Apply(GeoGrid& geoGrid, const GeoGridConfig& geoGridConfig)
 {
-        const auto pupilCount = geoGridConfig.popInfo.popcount_college;
-        const auto schoolCount =
-            static_cast<unsigned int>(ceil(pupilCount / static_cast<double>(geoGridConfig.pools.college_size)));
-        const auto cities = geoGrid->TopK(10);
+        const auto studentCount = geoGridConfig.popInfo.popcount_college;
+        const auto collegeCount =
+            static_cast<unsigned int>(ceil(studentCount / static_cast<double>(geoGridConfig.pools.college_size)));
+        const auto cities = geoGrid.TopK(10);
 
         if (cities.empty()) {
                 // trng can't handle empty vectors
                 return;
         }
 
-        // Aggregate population in cities.
+        // Aggregate population in TopK cities.
         auto totalPop = 0U;
-        for (const shared_ptr<Location>& c : cities) {
+        for (const auto& c : cities) {
                 totalPop += c->GetPopCount();
         }
 
@@ -56,13 +55,21 @@ void CollegeGenerator::Apply(shared_ptr<GeoGrid> geoGrid, const GeoGridConfig& g
                 weights.push_back(weight);
         }
 
-        const auto dist = m_rnManager[0].variate_generator(trng::discrete_dist(weights.begin(), weights.end()));
+        const auto dist = m_rn_man.GetDiscreteGenerator(weights, 0U);
+        auto       pop  = geoGrid.GetPopulation();
 
-        for (auto i = 0U; i < schoolCount; i++) {
-                auto loc     = cities[dist()];
-                auto college = make_shared<College>(contactCenterCounter++);
-                college->Fill(geoGridConfig, geoGrid);
-                loc->AddContactCenter(college);
+        for (auto i = 0U; i < collegeCount; i++) {
+                auto loc = cities[dist()];
+                AddPools(*loc, pop, geoGridConfig.pools.pools_per_college);
+        }
+}
+
+void CollegeGenerator::AddPools(Location& loc, Population* pop, unsigned int number)
+{
+        auto& poolSys = pop->RefPoolSys();
+        for (auto i = 0U; i < number; ++i) {
+                const auto p = poolSys.CreateContactPool(stride::ContactType::Id::College);
+                loc.RegisterPool<Id::College>(p);
         }
 }
 

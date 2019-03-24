@@ -17,6 +17,8 @@
 
 #include "HouseholdReader.h"
 
+#include <vector>
+
 namespace stride {
 
 class ContactPool;
@@ -25,8 +27,6 @@ class Person;
 } // namespace stride
 
 namespace geopop {
-
-class Household;
 
 /**
  * Creates a Reader that retrieves the different Household profiles from a given CSV file.
@@ -38,9 +38,8 @@ public:
         explicit HouseholdCSVReader(std::unique_ptr<std::istream> inputStream);
 
         /// Add the locations to the GeoGrid.
-        void SetReferenceHouseholds(std::vector<std::shared_ptr<Household>>&            ref_households,
-                                    stride::util::SegmentedVector<stride::Person>&      ref_persons,
-                                    stride::util::SegmentedVector<stride::ContactPool>& ref_pools) override;
+        void SetReferenceHouseholds(unsigned int&                           ref_person_count,
+                                    std::vector<std::vector<unsigned int>>& ref_ages) override;
 
 private:
         /// Input stream  connected to input data file.

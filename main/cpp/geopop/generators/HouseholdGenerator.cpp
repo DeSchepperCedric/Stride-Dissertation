@@ -17,20 +17,21 @@
 
 #include "geopop/GeoGrid.h"
 #include "geopop/GeoGridConfig.h"
-#include "geopop/Household.h"
 #include "geopop/Location.h"
+#include "pop/Population.h"
 #include "util/RnMan.h"
 
-#include <trng/discrete_dist.hpp>
+using namespace std;
+using namespace stride;
+using namespace stride::ContactType;
 
 namespace geopop {
 
-void HouseholdGenerator::Apply(std::shared_ptr<GeoGrid> geoGrid, const GeoGridConfig& geoGridConfig,
-                               unsigned int& contactCenterCounter)
+void HouseholdGenerator::Apply(GeoGrid& geoGrid, const GeoGridConfig& geoGridConfig)
 {
-        std::vector<double> weights;
-        for (const auto& loc : *geoGrid) {
-                weights.push_back(loc->GetRelativePopulationSize());
+        vector<double> weights;
+        for (const auto& loc : geoGrid) {
+                weights.push_back(loc->GetPopFraction());
         }
 
         if (weights.empty()) {
@@ -38,13 +39,21 @@ void HouseholdGenerator::Apply(std::shared_ptr<GeoGrid> geoGrid, const GeoGridCo
                 return;
         }
 
-        const auto dist = m_rnManager[0].variate_generator(trng::discrete_dist(weights.begin(), weights.end()));
+        const auto dist = m_rn_man.GetDiscreteGenerator(weights, 0U);
+        auto       pop  = geoGrid.GetPopulation();
 
         for (auto i = 0U; i < geoGridConfig.popInfo.count_households; i++) {
-                const auto loc = (*geoGrid)[dist()];
-                const auto h   = std::make_shared<Household>(contactCenterCounter++);
-                h->Fill(geoGridConfig, geoGrid);
-                loc->AddContactCenter(h);
+                const auto loc = geoGrid[dist()];
+                AddPools(*loc, pop, geoGridConfig.pools.pools_per_household);
+        }
+}
+
+void HouseholdGenerator::AddPools(Location& loc, Population* pop, unsigned int number)
+{
+        auto& poolSys = pop->RefPoolSys();
+        for (auto i = 0U; i < number; ++i) {
+                const auto p = poolSys.CreateContactPool(Id::Household);
+                loc.RegisterPool<Id::Household>(p);
         }
 }
 

@@ -15,13 +15,10 @@
 
 #include "GeoGridIOUtils.h"
 
-#include "geopop/College.h"
+#include "geopop/ContactCenter.h"
 #include "geopop/GeoGridConfig.h"
-#include "geopop/Household.h"
-#include "geopop/K12School.h"
-#include "geopop/PrimaryCommunity.h"
-#include "geopop/Workplace.h"
 #include "geopop/io/GeoGridJSONWriter.h"
+#include "pop/Population.h"
 #include "util/FileSys.h"
 
 #include <boost/property_tree/json_parser.hpp>
@@ -33,6 +30,7 @@
 using namespace std;
 using namespace geopop;
 using namespace stride;
+using namespace stride::ContactType;
 using namespace stride::util;
 using boost::property_tree::ptree;
 
@@ -60,11 +58,11 @@ void sortTree(ptree& tree)
         }
 }
 
-bool compareGeoGrid(shared_ptr<GeoGrid> geoGrid, const string& testname)
+bool compareGeoGrid(GeoGrid& geoGrid, const string& testname)
 {
         GeoGridJSONWriter writer;
         stringstream      ss;
-        writer.Write(move(geoGrid), ss);
+        writer.Write(geoGrid, ss);
         ptree result;
         read_json(ss, result);
         sortTree(result);
@@ -83,24 +81,24 @@ bool compareGeoGrid(shared_ptr<GeoGrid> geoGrid, const string& testname)
 TEST(GeoGridJSONWriterTest, locationTest)
 {
         auto pop     = Population::Create();
-        auto geoGrid = make_shared<GeoGrid>(pop.get());
-        geoGrid->AddLocation(make_shared<Location>(1, 4, 2500, Coordinate(0, 0), "Bavikhove"));
-        geoGrid->AddLocation(make_shared<Location>(2, 3, 5000, Coordinate(0, 0), "Gent"));
-        geoGrid->AddLocation(make_shared<Location>(3, 2, 2500, Coordinate(0, 0), "Mons"));
+        auto geoGrid = GeoGrid(pop.get());
+        geoGrid.AddLocation(make_shared<Location>(1, 4, Coordinate(0, 0), "Bavikhove", 2500));
+        geoGrid.AddLocation(make_shared<Location>(2, 3, Coordinate(0, 0), "Gent", 5000));
+        geoGrid.AddLocation(make_shared<Location>(3, 2, Coordinate(0, 0), "Mons", 2500));
 
         EXPECT_TRUE(compareGeoGrid(geoGrid, "test0.json"));
 }
 TEST(GeoGridJSONWriterTest, contactCentersTest)
 {
         auto pop      = Population::Create();
-        auto geoGrid  = make_shared<GeoGrid>(pop.get());
-        auto location = make_shared<Location>(1, 4, 2500, Coordinate(0, 0), "Bavikhove");
-        location->AddContactCenter(make_shared<K12School>(0));
-        location->AddContactCenter(make_shared<PrimaryCommunity>(1));
-        location->AddContactCenter(make_shared<College>(2));
-        location->AddContactCenter(make_shared<Household>(3));
-        location->AddContactCenter(make_shared<Workplace>(4));
-        geoGrid->AddLocation(location);
+        auto geoGrid  = GeoGrid(pop.get());
+        auto location = make_shared<Location>(1, 4, Coordinate(0, 0), "Bavikhove", 2500);
+        location->AddCenter(make_shared<ContactCenter>(0, Id::K12School));
+        location->AddCenter(make_shared<ContactCenter>(1, Id::PrimaryCommunity));
+        location->AddCenter(make_shared<ContactCenter>(2, Id::College));
+        location->AddCenter(make_shared<ContactCenter>(3, Id::Household));
+        location->AddCenter(make_shared<ContactCenter>(4, Id::Workplace));
+        geoGrid.AddLocation(location);
 
         EXPECT_TRUE(compareGeoGrid(geoGrid, "test1.json"));
 }
@@ -108,13 +106,13 @@ TEST(GeoGridJSONWriterTest, contactCentersTest)
 TEST(GeoGridJSONWriterTest, peopleTest)
 {
         auto pop = Population::Create();
-        EXPECT_TRUE(compareGeoGrid(GetPopulatedGeoGrid(pop.get()), "test2.json"));
+        EXPECT_TRUE(compareGeoGrid(*GetPopulatedGeoGrid(pop.get()), "test2.json"));
 }
 
 TEST(GeoGridJSONWriterTest, commutesTest)
 {
         auto pop = Population::Create();
-        EXPECT_TRUE(compareGeoGrid(GetCommutesGeoGrid(pop.get()), "test7.json"));
+        EXPECT_TRUE(compareGeoGrid(*GetCommutesGeoGrid(pop.get()), "test7.json"));
 }
 
 } // namespace
