@@ -38,7 +38,7 @@ set(SRC
 	src/yarn5s.cc
 )
 
-add_library(trng ${SRC})
+add_library(trng STATIC ${SRC})
 #target_compile_options(trng PUBLIC "-flto")
 set_property(TARGET trng PROPERTY POSITION_INDEPENDENT_CODE ON)
 unset(SRC)

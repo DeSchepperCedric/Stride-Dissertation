@@ -97,7 +97,7 @@ before_install:
     fi
 
 install:
-    #--------- Linux
+  #--------- Linux
   - |
     if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then
       SWIGHOME=$HOME/deps/swig_3.0.12
@@ -126,6 +126,7 @@ install:
     #			STRIDE_BOOST_NO_SYSTEM_PATHS: should be ON to prevent mixing different versions of boost
     if [[ "$TRAVIS_OS_NAME" == "osx" ]] && [[ "$CXX_ID" == "gcc" ]]; then
       export STRIDE_FORCE_NO_BOOST=ON
+    export STRIDE_FORCE_NO_HDF5=ON
       export STRIDE_BOOST_NO_SYSTEM_PATHS=ON
     else
       export BOOST_ROOT=$HOME/deps/boost_1_69_0
@@ -149,7 +150,7 @@ script:
   - make all && if [[ "$MAKE_TEST" = "true" ]]; then make test; fi
 
 after_success:
-    # Generate the docs only if master, the travis_build_docs is true and we can use secure variables
+  # Generate the docs only if master, the travis_build_docs is true and we can use secure variables
   - |
     if [[ "$TRAVIS_BRANCH" = "master" && "$TRAVIS_BUILD_DOCS" = "true" && "$TRAVIS_PULL_REQUEST" = "false" ]]; then
       cd $TRAVIS_BUILD_DIR

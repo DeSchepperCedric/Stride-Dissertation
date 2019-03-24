@@ -145,7 +145,7 @@ set(STRIDE_SRC
 #============================================================================
 # Build the Stride library.
 #============================================================================
-add_library(libstride ${STRIDE_SRC})
+add_library(libstride STATIC ${STRIDE_SRC})
 target_compile_definitions(libstride PUBLIC "-DSTRIDE_GIT_HASH=${STRIDE_WC_REVISION_HASH}")
 target_compile_definitions(libstride PUBLIC "-DPROCCOUNT=${PROCCOUNT}")
 target_link_libraries(libstride PRIVATE ${LIBS})
@@ -153,6 +153,11 @@ if(Protobuf_FOUND)
     target_link_libraries(libstride PRIVATE ${Protobuf_LIBRARIES})
 else()
     target_link_libraries(libstride PRIVATE libprotobuf)
+endif()
+if(HDF5_FOUND)
+    target_link_libraries(libstride PRIVATE ${HDF5_CXX_LIBRARIES} ${HDF5_CXX_HL_LIBRARIES})
+else()
+    target_link_libraries(libstride PRIVATE hdf5-static hdf5_cpp-static hdf5_hl-static hdf5_hl_cpp-static)
 endif()
 set_target_properties(libstride
     PROPERTIES
@@ -173,7 +178,10 @@ include(CheckIPOSupported)
 # Build the stride binary.
 #============================================================================
 add_executable(stride execs/stride.cpp)
+add_executable(HDF5proto prototypes/h5tutr_crtgrpd.cpp)
 target_link_libraries(stride libstride)
+target_link_libraries(HDF5proto libstride)
 install(TARGETS stride DESTINATION ${BIN_INSTALL_LOCATION})
+install(TARGETS HDF5proto DESTINATION ${BIN_INSTALL_LOCATION})
 
 #############################################################################
