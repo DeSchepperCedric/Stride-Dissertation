@@ -17,7 +17,9 @@
 
 #include "CommutesCSVReader.h"
 #include "HouseholdCSVReader.h"
+#include "HouseholdJSONReader.h"
 #include "LocationsCSVReader.h"
+
 #include "util/FileSys.h"
 
 #include <fstream>
@@ -56,7 +58,16 @@ std::shared_ptr<HouseholdReader> ReaderFactory::CreateHouseholdReader(const std:
 
 shared_ptr<HouseholdReader> ReaderFactory::CreateHouseholdReader(const filesys::path& path)
 {
-        return make_shared<HouseholdCSVReader>(OpenFile(path));
+        if (!filesys::exists(path)) {
+                throw runtime_error("File not found: " + path.string());
+        }
+        if (path.extension().string() == ".csv") {
+                return make_shared<HouseholdCSVReader>(make_unique<ifstream>(path.string()));
+        } else if (path.extension().string() == ".json"){
+                return make_shared<HouseholdJSONReader>(make_unique<ifstream>(path.string()));
+        } else {
+              throw runtime_error("Unsupported file extension: " + path.extension().string());
+        }
 }
 
 std::unique_ptr<std::istream> ReaderFactory::OpenFile(const filesys::path& path)
