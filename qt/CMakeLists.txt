@@ -11,9 +11,9 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 find_package(Qt5 COMPONENTS Core Quick Positioning Location REQUIRED)
 
 set(SRC
-        "main.cpp"
-        "backend.cpp"
-        "backend.h"
+        main.cpp
+        backend.cpp
+        backend.h
         "qml.qrc")
 
 #"../main/cpp/viewers/QtViewer.cpp"

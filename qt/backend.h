@@ -15,11 +15,13 @@ public:
     QString userName();
     void setUserName(const QString &userName);
 
+
     signals:
             void userNameChanged();
 
 private:
     QString m_userName;
+
 };
 
 #endif // BACKEND_H
