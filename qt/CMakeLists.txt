@@ -1,26 +1,23 @@
-set(CMAKE_AUTOUIC ON)
+cmake_minimum_required(VERSION 3.1)
+
+project(visiual LANGUAGES CXX)
+
+set(CMAKE_INCLUDE_CURRENT_DIR ON)
 set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTORCC ON)
-set(CMAKE_INCLUDE_CURRENT_DIR ON)
+set(CMAKE_CXX_STANDARD 11)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-include_directories(${Qt5Widgets_INCLUDE_DIRS} ${QTQml_INCLUDE_DIRS})
+find_package(Qt5 COMPONENTS Core Quick Positioning Location REQUIRED)
 
+add_executable(${PROJECT_NAME}
+        "main.cpp"
+        "backend.cpp"
+        "backend.h"
+        "qml.qrc")
+        
 
-set(QTSRC
-        main.cpp
-        mainwindow.cpp
-
-        mainwindow.ui
-        )
-
-#get_filename_component(QRC ${RESOURCES} REALPATH)
-set(QRC ${QRC} PARENT_SCOPE)
-
-add_library(libstrideqt ${QTSRC})
+target_compile_definitions(${PROJECT_NAME} PRIVATE $<$<OR:$<CONFIG:Debug>,$<CONFIG:RelWithDebInfo>>:QT_QML_DEBUG>)
 include_directories(${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}_autogen)
-#target_link_libraries(libstrideqt libstride researchlib Qt5::Widgets Qt5::Quick Qt5::QuickWidgets Qt5::Qml)
-target_link_libraries(libstrideqt Qt5 Qt5::Widgets Qt5::Quick Qt5QuickWidgets Qt5::Qml)
-set(LIBS ${LIBS} libstrideqt)
+target_link_libraries(${PROJECT_NAME} Qt5::Core Qt5::Quick Qt5::Positioning Qt5::Location)
 
-add_executable(qt ${QTSRC})
-target_link_libraries(qt Qt5::Widgets)
