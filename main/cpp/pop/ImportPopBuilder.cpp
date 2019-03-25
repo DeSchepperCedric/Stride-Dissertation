@@ -37,7 +37,7 @@ using namespace geopop;
 
 shared_ptr<Population> ImportPopBuilder::Build(shared_ptr<Population> pop)
 {
-        const auto importFile = m_config.get<string>("run.population_file");
+        const auto importFile = m_config.get<string>("run.geopopulation_file");
         m_stride_logger->info("Importing population from file {}.", importFile);
 
         GeoGridReaderFactory geoGridReaderFactory;

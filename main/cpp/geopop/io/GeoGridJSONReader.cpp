@@ -77,8 +77,7 @@ shared_ptr<Location> GeoGridJSONReader::ParseLocation(nlohmann::json& location)
         auto contactCenters = ParseArray(location.at("contactCenters"));
 
         for (auto it = contactCenters.begin(); it != contactCenters.end(); it++) {
-                const auto center = ParseContactCenter(*it);
-                result->AddCenter(center);
+                ParseContactCenters(*it, result);
         }
 
         if (location.count("commutes")) {
@@ -101,7 +100,7 @@ Coordinate GeoGridJSONReader::ParseCoordinate(nlohmann::json& coordinate)
         return {longitude, latitude};
 }
 
-shared_ptr<ContactCenter> GeoGridJSONReader::ParseContactCenter(nlohmann::json& contactCenter)
+void GeoGridJSONReader::ParseContactCenters(nlohmann::json& contactCenter, shared_ptr<Location> loc)
 {
         const auto type = contactCenter.at("type").get<std::string>();
         const auto id   = ParseNumerical<unsigned int>(contactCenter.at("id"));
@@ -123,31 +122,27 @@ shared_ptr<ContactCenter> GeoGridJSONReader::ParseContactCenter(nlohmann::json& 
                 throw Exception("No such ContactCenter type: " + type);
         }
 
-        auto result = make_shared<ContactCenter>(id, typeId);
+        auto result = make_shared<ContactPool>(id, typeId);
         auto contactPools = ParseArray(contactCenter.at("pools"));
 
 
         for (auto it = contactPools.begin(); it != contactPools.end(); it++) {
-                const auto pool = ParseContactPool(*it, typeId);
-                result->RegisterPool(pool);
+                ParseContactPool(loc, *it, typeId);
         }
-        return result;
 }
 
-ContactPool* GeoGridJSONReader::ParseContactPool(nlohmann::json& contactPool, ContactType::Id typeId)
+void GeoGridJSONReader::ParseContactPool(shared_ptr<Location> loc, nlohmann::json& contactPool, ContactType::Id typeId)
 {
         // Don't use the id of the ContactPool but the let the Population create an id.
         auto result = m_population->RefPoolSys().CreateContactPool(typeId);
+        loc->RefPools(typeId).emplace_back(result);
         auto people = ParseArray(contactPool.at("people"));
             for (auto it = people.begin(); it != people.end(); it++) {
                 auto person_id = ParseNumerical<unsigned int>(*it);
-                if (m_people.count(person_id) == 0) {
-                    throw Exception("No such person: " + to_string(person_id));
-                }
-                result->AddMember(m_people[person_id]);
+                const auto person = m_people.at(person_id);
+                result->AddMember(person);
+                person->SetPoolId(typeId, static_cast<unsigned int>(result->GetId()));
             }
-
-        return result;
 }
 
 Person* GeoGridJSONReader::ParsePerson(nlohmann::json& person)
