@@ -17,6 +17,7 @@
 
 #include "GeoGridWriter.h"
 #include "geopop/Location.h"
+#include "contact/ContactPool.h"
 
 #include <nlohmann/json.hpp>
 //#include <boost/property_tree/ptree.hpp>
@@ -45,10 +46,7 @@ public:
 
 private:
         /// Create a JSON Structure containing all info needed to reconstruct a ContactCenter.
-        nlohmann::json WriteContactCenter(std::shared_ptr<ContactCenter> contactCenter);
-
-        /// Create a JSON Structure containing all info needed to reconstruct a ContactPool.
-        nlohmann::json WriteContactPool(stride::ContactPool* contactPool);
+        nlohmann::json WriteContactCenter(stride::ContactPool* const&contactPool);
 
         /// Create a JSON Structure containing all info needed to reconstruct a Coordinate.
         nlohmann::json WriteCoordinate(const Coordinate& coordinate);

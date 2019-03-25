@@ -15,8 +15,7 @@
 
 #include "GeoGridJSONWriter.h"
 
-#include "contact/ContactPool.h"
-#include "geopop/ContactCenter.h"
+//#include "geopop/ContactCenter.h"
 #include "geopop/GeoGrid.h"
 #include "pop/Person.h"
 
@@ -29,7 +28,6 @@ namespace geopop {
 using namespace std;
 using namespace stride;
 using namespace stride::ContactType;
-using namespace boost::property_tree;
 
 GeoGridJSONWriter::GeoGridJSONWriter() : m_persons_found() {}
 
@@ -60,34 +58,22 @@ void GeoGridJSONWriter::Write(GeoGrid& geoGrid, ostream& stream)
         stream << root;
 }
 
-nlohmann::json GeoGridJSONWriter::WriteContactCenter(shared_ptr<ContactCenter> contactCenter)
+nlohmann::json GeoGridJSONWriter::WriteContactCenter(ContactPool* const & contactPool)
 {
-        nlohmann::json contactCenter_root;
-        contactCenter_root["id"] = contactCenter->GetId();
-        contactCenter_root["type"] = ToString(contactCenter->GetContactPoolType());
         nlohmann::json pools = nlohmann::json::array();
-        for (const auto& pool : *contactCenter) {
+        for (auto pool : *contactPool){
                 nlohmann::json child;
-                child = WriteContactPool(pool);
+                nlohmann::json people = nlohmann::json::array();
+                child["id"] = contactPool->GetId();
+//                for (auto person : pool{
+                        auto person = pool;
+                        m_persons_found.insert(person);
+                        people.push_back(person->GetId());
+//                }
+                child["people"] = people;
                 pools.push_back(move(child));
         }
-        contactCenter_root["pools"] = pools;
-        return contactCenter_root;
-}
-
-nlohmann::json GeoGridJSONWriter::WriteContactPool(ContactPool* contactPool)
-{
-        // contactPool_root is going to be an element in the "pools" array
-        nlohmann::json contactPool_root;
-        contactPool_root["id"] = contactPool->GetId();
-        // people is an array of ID's
-        nlohmann::json people = nlohmann::json::array();
-        for (auto person : *contactPool) {
-                m_persons_found.insert(person);
-                people.push_back(person->GetId());
-        }
-        contactPool_root["people"] = people;
-        return contactPool_root;
+        return pools;
 }
 
 nlohmann::json GeoGridJSONWriter::WriteCoordinate(const Coordinate& coordinate)
@@ -118,12 +104,12 @@ nlohmann::json GeoGridJSONWriter::WriteLocation(const Location& location)
 
         nlohmann::json contactCenters = nlohmann::json::array();
         for (Id typ : IdList) {
-                for (const auto& c : location->RefCenters(typ)) {
+                for (const auto& c : location.CRefPools(typ)) {
                         nlohmann::json child;
-                        {
-                                child = WriteContactCenter(c);
-                                contactCenters.push_back(move(child));
-                        }
+                        child["type"] = ToString(typ);
+                        child["id"] = c->GetId();
+                        child = WriteContactCenter(c);
+                        contactCenters.push_back(move(child));
                 }
         }
         location_root["contactCenters"] = contactCenters;
