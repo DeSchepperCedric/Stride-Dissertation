@@ -77,7 +77,9 @@ void CompareContactPools(Id typeId, const stride::util::SegmentedVector<stride::
             {Id::SecondaryCommunity, proto::GeoGrid_Location_ContactPools_Type_SecondaryCommunity},
             {Id::College, proto::GeoGrid_Location_ContactPools_Type_College},
             {Id::Household, proto::GeoGrid_Location_ContactPools_Type_Household},
-            {Id::Workplace, proto::GeoGrid_Location_ContactPools_Type_Workplace}};
+            {Id::Workplace, proto::GeoGrid_Location_ContactPools_Type_Workplace},
+            {Id::Daycare, proto::GeoGrid_Location_ContactPools_Type_Daycare},
+            {Id::PreSchool, proto::GeoGrid_Location_ContactPools_Type_PreSchool}};
 
         EXPECT_EQ(types.at(typeId), protoContactPools.type());
         ASSERT_EQ(protoContactPools.pools_size(), contactPools.size());
