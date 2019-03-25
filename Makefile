@@ -129,6 +129,9 @@ test: install
 gtest: install
 	cd $(CMAKE_INSTALL_PREFIX); bin/gtester $(TESTARGS)
 
+visual: cores configure
+	$(MAKE) $(PARALLEL_MAKE) -C $(BUILD_DIR) --no-print-directory visual
+
 format:
 	resources/bash/clang-format-all .
 	resources/bash/remove_trailing_space
