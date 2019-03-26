@@ -23,6 +23,7 @@ addons:
       - qtdeclarative5-dev
       - qtdeclarative5-qtquick2-plugin
       - qml-module-qtquick-controls
+      - qtquickcontrols2-5-dev
       - qtlocation5-dev qtpositioning5-dev 
       - qml-module-qtlocation 
       - qml-module-qtpositioning
