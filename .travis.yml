@@ -21,6 +21,7 @@ addons:
       - doxygen
       - graphviz
       - qtdeclarative5-dev
+      - qml
       - qtdeclarative5-qtquick2-plugin
       - qml-module-qtquick-controls
       - qtquickcontrols2-5-dev
