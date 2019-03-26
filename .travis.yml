@@ -20,6 +20,14 @@ addons:
       # - libhdf5-dev
       - doxygen
       - graphviz
+      - qtbase-dev
+      - qtdeclarative5-dev
+      - qtdeclarative5-qtquick2-plugin
+      - qtquickcontrols2-5-dev
+      - qml-module-qtquick-controls2
+      - qtlocation5-dev qtpositioning5-dev 
+      - qml-module-qtlocation 
+      - qml-module-qtpositioning
 
 matrix:
   include:
