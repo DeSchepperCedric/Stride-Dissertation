@@ -113,9 +113,9 @@ install:
       fi
       export CMAKE_PREFIX_PATH=$SWIGHOME:$CMAKE_PREFIX_PATH
       #--------- Linux - qt 5.12.1 (xenial) from Stephan Binner's ppa
-        sudo apt-add-repository ppa:beineri/opt-qt-5.12.1-xenial -y
-        sudo apt-get update
-		sudo apt-get install qt512base qt512quickcontrols2 qt512location
+      sudo apt-add-repository ppa:beineri/opt-qt-5.12.1-xenial -y
+      sudo apt-get update
+      sudo apt-get install qt512base qt512quickcontrols2 qt512location
     fi
     #--------- OSX
   - |
