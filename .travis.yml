@@ -95,6 +95,8 @@ before_install:
     if [[ "$TRAVIS_OS_NAME" == "linux" ]] && [[ "$CC" == "clang" ]]; then
       export LD_LIBRARY_PATH="/usr/local/clang/lib:$LD_LIBRARY_PATH"
     fi
+  - sudo apt-add-repository --yes ppa:beineri/opt-qt-5.12.1-xenial
+  - sudo apt -qq update
 
 install:
   #--------- Linux
@@ -113,19 +115,7 @@ install:
       fi
       export CMAKE_PREFIX_PATH=$SWIGHOME:$CMAKE_PREFIX_PATH
       #--------- Linux - qt 5.12.1 (xenial) from Stephan Binner's ppa
-      if [[ "$CC" == "clang" ]]; then
-        sudo apt install libomp-dev
-      fi
-      sudo apt-get install libgl-dev
-      sudo add-apt-repository ppa:beineri/opt-qt-5.12.1-xenial -y
-      sudo apt-get update -qq
-      sudo apt-get install -y -q qt512base qt512charts-no-lgpl qt512svg qt512declarative qt512qbs
-      sudo apt-get install -y -q qt512quickcontrols qt512connectivity qt512graphicaleffects qt512tools qt512quickcontrols2 qt512location
-      source /opt/qt512/bin/qt512-env.sh
-      sudo ldconfig /opt/qt512/lib
-      export CMAKE_PREFIX_PATH=/opt/qt512/:$CMAKE_PREFIX_PATH
-      export LD_LIBRARY_PATH=/opt/qt512/lib/
-    fi
+      sudo apt install qt512base qt512quickcontrols2 qt512location
     #--------- OSX
   - |
     if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then
