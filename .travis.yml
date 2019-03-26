@@ -95,7 +95,7 @@ before_install:
     if [[ "$TRAVIS_OS_NAME" == "linux" ]] && [[ "$CC" == "clang" ]]; then
       export LD_LIBRARY_PATH="/usr/local/clang/lib:$LD_LIBRARY_PATH"
     fi
-  - sudo apt-add-repository --yes ppa:beineri/opt-qt-5.12.1-xenial
+  #- sudo apt-add-repository --yes ppa:beineri/opt-qt-5.12.1-xenial
   - sudo apt-get update
 
 install:
