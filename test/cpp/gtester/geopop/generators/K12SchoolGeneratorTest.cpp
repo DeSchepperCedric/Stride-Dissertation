@@ -21,8 +21,8 @@
 #include "pop/Population.h"
 #include "util/RnMan.h"
 
-#include <gtest/gtest.h>
 #include <array>
+#include <gtest/gtest.h>
 
 using namespace std;
 using namespace geopop;

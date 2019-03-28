@@ -15,13 +15,13 @@
 
 #include "geopop/generators/DaycareGenerator.h"
 
-#include "geopop/ContactCenter.h"
 #include "geopop/GeoGrid.h"
 #include "geopop/GeoGridConfig.h"
 #include "geopop/Location.h"
 #include "pop/Population.h"
 #include "util/RnMan.h"
 
+#include <array>
 #include <gtest/gtest.h>
 
 using namespace std;
@@ -92,17 +92,18 @@ TEST_F(DaycareGeneratorTest, FiveLocationsTest)
         m_geo_grid.AddLocation(loc4);
         m_geo_grid.AddLocation(loc5);
 
-        for (const shared_ptr<Location>& loc : m_geo_grid) {
+        for (const auto& loc : m_geo_grid) {
                 loc->SetPopFraction(static_cast<double>(loc->GetPopCount()) /
                                     static_cast<double>(m_geogrid_config.input.pop_size));
         }
 
         m_daycare_generator.Apply(m_geo_grid, m_geogrid_config);
 
-        vector<unsigned int> sizes{2021, 1933, 1527, 655, 817};
-        for (size_t i = 0; i < sizes.size(); i++) {
+        array<unsigned int, 5> sizes{2021, 1933, 1527, 655, 817};
+        for (auto i = 0U; i < sizes.size(); i++) {
                 EXPECT_EQ(sizes[i] * m_geogrid_config.pools.pools_per_daycare,
                           m_geo_grid[i]->CRefPools(Id::Daycare).size());
         }
 }
+
 } // namespace
