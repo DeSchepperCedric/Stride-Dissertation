@@ -116,9 +116,9 @@ public:
                 unsigned int pools_per_household = 1U;
 
                 /// Used to calculate the number of Daycares.
-                unsigned int daycare_size      = 3U;
+                unsigned int daycare_size      = 18U;
                 unsigned int pools_per_daycare = 1U;
-                unsigned int daycare_pool_size = 3U;
+                unsigned int daycare_pool_size = 18U;
 
                 /// Used to calculate the number of PreSchools.
                 unsigned int preschool_size      = 120U;

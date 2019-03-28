@@ -145,10 +145,8 @@ void ComparePerson(const proto::GeoGrid_Person& protoPerson)
                   person->GetPoolId(Id::PrimaryCommunity));
         EXPECT_EQ(persons_pools[make_pair(protoPerson.id(), Id::SecondaryCommunity)],
                   person->GetPoolId(Id::SecondaryCommunity));
-        EXPECT_EQ(persons_pools[make_pair(protoPerson.id(), Id::Daycare)],
-                  person->GetPoolId(Id::Daycare));
-        EXPECT_EQ(persons_pools[make_pair(protoPerson.id(), Id::PreSchool)],
-                  person->GetPoolId(Id::PreSchool));
+        EXPECT_EQ(persons_pools[make_pair(protoPerson.id(), Id::Daycare)], person->GetPoolId(Id::Daycare));
+        EXPECT_EQ(persons_pools[make_pair(protoPerson.id(), Id::PreSchool)], person->GetPoolId(Id::PreSchool));
 }
 
 void CompareGeoGrid(GeoGrid& geoGrid)
@@ -195,9 +193,9 @@ shared_ptr<GeoGrid> GetPopulatedGeoGrid(Population* pop)
         loc->RefPools(Id::PreSchool).emplace_back(prePool);
 
         geoGrid->AddLocation(loc);
-        const auto person = geoGrid->GetPopulation()->CreatePerson(
-            0, 18, hPool->GetId(), k12Pool->GetId(), cPool->GetId(), wPool->GetId(), pcPool->GetId(), scPool->GetId(),
-            dPool->GetId(), prePool->GetId());
+        const auto person = geoGrid->GetPopulation()->CreatePerson(0, 18, hPool->GetId(), k12Pool->GetId(),
+                                                                   cPool->GetId(), wPool->GetId(), pcPool->GetId(),
+                                                                   scPool->GetId(), dPool->GetId(), prePool->GetId());
         k12Pool->AddMember(person);
         pcPool->AddMember(person);
         scPool->AddMember(person);
@@ -207,7 +205,6 @@ shared_ptr<GeoGrid> GetPopulatedGeoGrid(Population* pop)
         dPool->AddMember(person);
         prePool->AddMember(person);
         return geoGrid;
-
 }
 
 shared_ptr<GeoGrid> GetCommutesGeoGrid(Population* pop)

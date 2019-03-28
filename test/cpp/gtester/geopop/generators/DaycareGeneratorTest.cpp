@@ -61,7 +61,7 @@ TEST_F(DaycareGeneratorTest, OneLocationTest)
         m_daycare_generator.Apply(m_geo_grid, m_geogrid_config);
 
         const auto& poolsOfLoc1 = loc1->CRefPools<Id::Daycare>();
-        EXPECT_EQ(poolsOfLoc1.size(), 100 * m_geogrid_config.pools.pools_per_daycare);
+        EXPECT_EQ(poolsOfLoc1.size(), 17 * m_geogrid_config.pools.pools_per_daycare);
 }
 
 TEST_F(DaycareGeneratorTest, ZeroLocationTest)
@@ -99,7 +99,7 @@ TEST_F(DaycareGeneratorTest, FiveLocationsTest)
 
         m_daycare_generator.Apply(m_geo_grid, m_geogrid_config);
 
-        vector<unsigned int> sizes{12193, 11784, 8890, 3934, 4913};
+        vector<unsigned int> sizes{2021, 1933, 1527, 655, 817};
         for (size_t i = 0; i < sizes.size(); i++) {
                 EXPECT_EQ(sizes[i] * m_geogrid_config.pools.pools_per_daycare,
                           m_geo_grid[i]->CRefPools(Id::Daycare).size());

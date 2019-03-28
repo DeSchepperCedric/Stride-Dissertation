@@ -42,8 +42,6 @@ void PreSchoolPopulator::Apply(GeoGrid& geoGrid, const GeoGridConfig& geoGridCon
                 // 1. find all preschools in an area of 10-k*10 km
                 const vector<ContactPool*>& classes = GetNearbyPools(Id::PreSchool, geoGrid, *loc);
 
-                AssertThrow(!classes.empty(), "No PreSchool found!", m_logger);
-
                 auto dist = m_rn_man.GetUniformIntGenerator(0, static_cast<int>(classes.size()), 0U);
 
                 // 2. for every student assign a class
