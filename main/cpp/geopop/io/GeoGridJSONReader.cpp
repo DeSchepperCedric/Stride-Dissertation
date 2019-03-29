@@ -35,7 +35,7 @@ GeoGridJSONReader::GeoGridJSONReader(unique_ptr<istream> inputStream, Population
 
 void GeoGridJSONReader::Read()
 {
-    nlohmann::json root;
+        nlohmann::json root;
         try {
                 *m_inputStream >> root;
         } catch (nlohmann::json::parse_error& e) {
@@ -46,10 +46,10 @@ void GeoGridJSONReader::Read()
 
         auto& geoGrid = m_population->RefGeoGrid();
         // WARNING: fails if "persons" contains empty string instead of empty array
-        auto people  = ParseArray(root.at("persons"));
+        auto people = ParseArray(root.at("persons"));
 
         for (auto it = people.begin(); it != people.end(); it++) {
-                auto person = ParsePerson(*it);
+                auto person               = ParsePerson(*it);
                 m_people[person->GetId()] = person;
         }
         auto locations = ParseArray(root.at("locations"));
@@ -125,9 +125,8 @@ void GeoGridJSONReader::ParseContactCenters(nlohmann::json& contactCenter, share
                 throw Exception("No such ContactCenter type: " + type);
         }
 
-        auto result = make_shared<ContactPool>(id, typeId);
+        auto result       = make_shared<ContactPool>(id, typeId);
         auto contactPools = ParseArray(contactCenter.at("pools"));
-
 
         for (auto it = contactPools.begin(); it != contactPools.end(); it++) {
                 ParseContactPool(loc, *it, typeId);
@@ -140,39 +139,37 @@ void GeoGridJSONReader::ParseContactPool(shared_ptr<Location> loc, nlohmann::jso
         auto result = m_population->RefPoolSys().CreateContactPool(typeId);
         loc->RefPools(typeId).emplace_back(result);
         auto people = ParseArray(contactPool.at("people"));
-            for (auto it = people.begin(); it != people.end(); it++) {
-                auto person_id = ParseNumerical<unsigned int>(*it);
-                const auto person = m_people.at(person_id);
+        for (auto it = people.begin(); it != people.end(); it++) {
+                auto       person_id = ParseNumerical<unsigned int>(*it);
+                const auto person    = m_people.at(person_id);
                 result->AddMember(person);
                 person->SetPoolId(typeId, static_cast<unsigned int>(result->GetId()));
-            }
+        }
 }
 
 Person* GeoGridJSONReader::ParsePerson(nlohmann::json& person)
 {
-        const auto id   = ParseNumerical<unsigned int>(person.at("id"));
-        const auto age  = ParseNumerical<unsigned int>(person.at("age"));
-        const auto hhId = ParseNumerical<unsigned int>(person.at("Household"));
-        const auto ksId = ParseNumerical<unsigned int>(person.at("K12School"));
-        const auto coId = ParseNumerical<unsigned int>(person.at("College"));
-        const auto wpId = ParseNumerical<unsigned int>(person.at("Workplace"));
-        const auto pcId = ParseNumerical<unsigned int>(person.at("PrimaryCommunity"));
-        const auto scId = ParseNumerical<unsigned int>(person.at("SecondaryCommunity"));
-        const auto dId = ParseNumerical<unsigned int>(person.at("Daycare"));
+        const auto id    = ParseNumerical<unsigned int>(person.at("id"));
+        const auto age   = ParseNumerical<unsigned int>(person.at("age"));
+        const auto hhId  = ParseNumerical<unsigned int>(person.at("Household"));
+        const auto ksId  = ParseNumerical<unsigned int>(person.at("K12School"));
+        const auto coId  = ParseNumerical<unsigned int>(person.at("College"));
+        const auto wpId  = ParseNumerical<unsigned int>(person.at("Workplace"));
+        const auto pcId  = ParseNumerical<unsigned int>(person.at("PrimaryCommunity"));
+        const auto scId  = ParseNumerical<unsigned int>(person.at("SecondaryCommunity"));
+        const auto dId   = ParseNumerical<unsigned int>(person.at("Daycare"));
         const auto preId = ParseNumerical<unsigned int>(person.at("PreSchool"));
 
-
-    return m_population->CreatePerson(id, age, hhId, ksId, coId, wpId, pcId, scId, dId, preId);
+        return m_population->CreatePerson(id, age, hhId, ksId, coId, wpId, pcId, scId, dId, preId);
 }
 
 nlohmann::json GeoGridJSONReader::ParseArray(nlohmann::json& node)
 {
-    if (node.type() == nlohmann::json::value_t::string) {
-        return nlohmann::json::array();
-    } else {
-        return node;
-    }
+        if (node.type() == nlohmann::json::value_t::string) {
+                return nlohmann::json::array();
+        } else {
+                return node;
+        }
 }
-
 
 } // namespace geopop

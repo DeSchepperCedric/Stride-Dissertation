@@ -65,6 +65,7 @@ set(SRC
         geopop/io/GeoGridProtoReaderTest.cpp
         geopop/io/GeoGridProtoWriterTest.cpp
         geopop/io/HouseholdCSVReaderTest.cpp
+        geopop/io/HouseholdJSONReaderTest.cpp
         geopop/io/ReaderFactoryTest.cpp
         #---
         geopop/kdtree.cpp

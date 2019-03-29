@@ -4,8 +4,8 @@
 
 #include <gtest/gtest.h>
 #include <memory>
-#include <vector>
 #include <nlohmann/json.hpp>
+#include <vector>
 
 using namespace std;
 using namespace geopop;
@@ -30,8 +30,8 @@ TEST(HouseholdJSONReader, test1)
 	]
 })";
 
-        GeoGridConfig      geoConfig{};
-        auto               instream = make_unique<istringstream>(jsonString);
+        GeoGridConfig       geoConfig{};
+        auto                instream = make_unique<istringstream>(jsonString);
         HouseholdJSONReader reader(move(instream));
 
         reader.SetReferenceHouseholds(geoConfig.refHH.person_count, geoConfig.refHH.ages);
