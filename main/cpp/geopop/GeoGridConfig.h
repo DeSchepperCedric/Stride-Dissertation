@@ -45,6 +45,12 @@ public:
         // -----------------------------------------------------------------------------------------
         struct
         {
+                /// Participation of daycare (fraction of people of daycare age going to daycare).
+                double participation_daycare;
+
+                /// Participation of preschool (fraction of people of preschool age going to preschool).
+                double participation_preschool;
+
                 /// Participation of college (fraction of people of college age going to college).
                 double participation_college;
 
@@ -82,6 +88,12 @@ public:
         // -----------------------------------------------------------------------------------------
         struct
         {
+                /// Numbers of individuals in Daycare.
+                unsigned int popcount_daycare;
+
+                /// Numbers of individuals in PreSchool.
+                unsigned int popcount_preschool;
+
                 /// Numbers of individuals in K12School.
                 unsigned int popcount_k12school;
 
@@ -102,6 +114,16 @@ public:
         {
                 /// Every houselhold constitutes a single ContactPool.
                 unsigned int pools_per_household = 1U;
+
+                /// Used to calculate the number of Daycares.
+                unsigned int daycare_size      = 18U;
+                unsigned int pools_per_daycare = 1U;
+                unsigned int daycare_pool_size = 18U;
+
+                /// Used to calculate the number of PreSchools.
+                unsigned int preschool_size      = 120U;
+                unsigned int pools_per_preschool = 6U;
+                unsigned int pre_pool_size       = 20U;
 
                 /// Used to calculate the number of K12Schools.
                 unsigned int k12school_size      = 500U;

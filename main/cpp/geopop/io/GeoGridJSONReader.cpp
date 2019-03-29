@@ -117,6 +117,10 @@ void GeoGridJSONReader::ParseContactCenters(nlohmann::json& contactCenter, share
                 typeId = Id::SecondaryCommunity;
         } else if (type == ToString(Id::Workplace)) {
                 typeId = Id::Workplace;
+        } else if (type == ToString(Id::Daycare)) {
+                typeId = Id::Daycare;
+        } else if (type == ToString(Id::PreSchool)) {
+                typeId = Id::PreSchool;
         } else {
                 throw Exception("No such ContactCenter type: " + type);
         }
@@ -154,8 +158,11 @@ Person* GeoGridJSONReader::ParsePerson(nlohmann::json& person)
         const auto wpId = ParseNumerical<unsigned int>(person.at("Workplace"));
         const auto pcId = ParseNumerical<unsigned int>(person.at("PrimaryCommunity"));
         const auto scId = ParseNumerical<unsigned int>(person.at("SecondaryCommunity"));
+        const auto dId = ParseNumerical<unsigned int>(person.at("Daycare"));
+        const auto preId = ParseNumerical<unsigned int>(person.at("PreSchool"));
 
-    return m_population->CreatePerson(id, age, hhId, ksId, coId, wpId, pcId, scId);
+
+    return m_population->CreatePerson(id, age, hhId, ksId, coId, wpId, pcId, scId, dId, preId);
 }
 
 nlohmann::json GeoGridJSONReader::ParseArray(nlohmann::json& node)

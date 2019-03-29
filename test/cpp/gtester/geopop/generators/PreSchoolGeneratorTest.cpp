@@ -10,10 +10,10 @@
  *  You should have received a copy of the GNU General Public License
  *  along with the software. If not, see <http://www.gnu.org/licenses/>.
  *
- *  Copyright 2019, Jan Broeckhove.
+ *  Copyright 2018, Jan Broeckhove and Bistromatics group.
  */
 
-#include "geopop/generators/K12SchoolGenerator.h"
+#include "geopop/generators/PreSchoolGenerator.h"
 
 #include "geopop/GeoGrid.h"
 #include "geopop/GeoGridConfig.h"
@@ -32,54 +32,51 @@ using namespace stride::util;
 
 namespace {
 
-class K12SchoolGeneratorTest : public testing::Test
+class PreSchoolGeneratorTest : public testing::Test
 {
 public:
-        K12SchoolGeneratorTest()
-            : m_rn_man(RnInfo()), m_k12school_generator(m_rn_man), m_geogrid_config(), m_pop(Population::Create()),
+        PreSchoolGeneratorTest()
+            : m_rn_man(RnInfo()), m_preschool_generator(m_rn_man), m_geogrid_config(), m_pop(Population::Create()),
               m_geo_grid(m_pop.get())
         {
         }
 
 protected:
         RnMan                  m_rn_man;
-        K12SchoolGenerator     m_k12school_generator;
+        PreSchoolGenerator     m_preschool_generator;
         GeoGridConfig          m_geogrid_config;
         shared_ptr<Population> m_pop;
         GeoGrid                m_geo_grid;
 };
 
-// Check that generator can handle one Location.
-TEST_F(K12SchoolGeneratorTest, OneLocationTest)
+TEST_F(PreSchoolGeneratorTest, OneLocationTest)
 {
         m_geogrid_config.input.pop_size             = 10000;
-        m_geogrid_config.popInfo.popcount_k12school = 2000;
+        m_geogrid_config.popInfo.popcount_preschool = 300;
 
-        auto loc1 = make_shared<Location>(1, 4, Coordinate(0, 0), "Antwerpen", 2500);
+        auto loc1 = make_shared<Location>(1, 4, Coordinate(0, 0), "Antwerpen", m_geogrid_config.input.pop_size);
         m_geo_grid.AddLocation(loc1);
 
-        m_k12school_generator.Apply(m_geo_grid, m_geogrid_config);
+        m_preschool_generator.Apply(m_geo_grid, m_geogrid_config);
 
-        const auto& poolsOfLoc1 = loc1->CRefPools(Id::K12School);
-        EXPECT_EQ(poolsOfLoc1.size(), 4 * m_geogrid_config.pools.pools_per_k12school);
+        const auto& poolsOfLoc1 = loc1->CRefPools<Id::PreSchool>();
+        EXPECT_EQ(poolsOfLoc1.size(), 3 * m_geogrid_config.pools.pools_per_preschool);
 }
 
-// Check that generator can handle empty GeoGrid.
-TEST_F(K12SchoolGeneratorTest, ZeroLocationTest)
+TEST_F(PreSchoolGeneratorTest, ZeroLocationTest)
 {
         m_geogrid_config.input.pop_size             = 10000;
-        m_geogrid_config.popInfo.popcount_k12school = 2000;
+        m_geogrid_config.popInfo.popcount_preschool = 300;
 
-        m_k12school_generator.Apply(m_geo_grid, m_geogrid_config);
+        m_preschool_generator.Apply(m_geo_grid, m_geogrid_config);
 
         EXPECT_EQ(m_geo_grid.size(), 0);
 }
 
-// Check that generator can handle five Locations.
-TEST_F(K12SchoolGeneratorTest, FiveLocationsTest)
+TEST_F(PreSchoolGeneratorTest, FiveLocationsTest)
 {
         m_geogrid_config.input.pop_size             = 37542 * 100;
-        m_geogrid_config.popInfo.popcount_k12school = 750840;
+        m_geogrid_config.popInfo.popcount_preschool = 125140;
 
         auto loc1 = make_shared<Location>(1, 4, Coordinate(0, 0), "Antwerpen", 10150 * 100);
         auto loc2 = make_shared<Location>(1, 4, Coordinate(0, 0), "Vlaams-Brabant", 10040 * 100);
@@ -98,12 +95,12 @@ TEST_F(K12SchoolGeneratorTest, FiveLocationsTest)
                                     static_cast<double>(m_geogrid_config.input.pop_size));
         }
 
-        m_k12school_generator.Apply(m_geo_grid, m_geogrid_config);
+        m_preschool_generator.Apply(m_geo_grid, m_geogrid_config);
 
-        array<unsigned int, 5> sizes{444, 416, 330, 133, 179};
+        array<unsigned int, 5> sizes{295, 284, 240, 97, 127};
         for (auto i = 0U; i < sizes.size(); i++) {
-                EXPECT_EQ(sizes[i] * m_geogrid_config.pools.pools_per_k12school,
-                          m_geo_grid[i]->CRefPools(Id::K12School).size());
+                EXPECT_EQ(sizes[i] * m_geogrid_config.pools.pools_per_preschool,
+                          m_geo_grid[i]->CRefPools(Id::PreSchool).size());
         }
 }
 

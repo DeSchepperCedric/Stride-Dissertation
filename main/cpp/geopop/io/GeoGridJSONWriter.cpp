@@ -15,11 +15,9 @@
 
 #include "GeoGridJSONWriter.h"
 
-//#include "geopop/ContactCenter.h"
 #include "geopop/GeoGrid.h"
 #include "pop/Person.h"
 
-//#include <boost/property_tree/json_parser.hpp>
 #include <iostream>
 #include <omp.h>
 
@@ -130,6 +128,8 @@ nlohmann::json GeoGridJSONWriter::WritePerson(Person* person)
         person_root["Workplace"] = person->GetPoolId(Id::Workplace);
         person_root["PrimaryCommunity"] = person->GetPoolId(Id::PrimaryCommunity);
         person_root["SecondaryCommunity"] = person->GetPoolId(Id::SecondaryCommunity);
+        person_root["Daycare"] = person->GetPoolId(Id::Daycare);
+        person_root["PreSchool"] = person->GetPoolId(Id::PreSchool;
         return person_root;
 }
 
