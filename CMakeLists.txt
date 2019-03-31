@@ -75,7 +75,7 @@ endif()
 #============================================================================
 # Configuration for Qt5
 #============================================================================
-if(NOT STRiDE_FORCE_NO_QT5)
+list(APPEND CMAKE_PREFIX_PATH "/opt/Qt/5.12.2/gcc_64/lib/cmake")
 if(NOT STRIDE_FORCE_NO_QT5)
     if(APPLE AND EXISTS /usr/local/opt/qt5)
         list(APPEND CMAKE_PREFIX_PATH "/usr/local/opt/qt5")
