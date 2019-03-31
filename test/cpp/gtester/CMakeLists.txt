@@ -56,6 +56,7 @@ set(SRC
         geopop/generators/WorkplaceGeneratorTest.cpp
         geopop/generators/DaycareGeneratorTest.cpp
         geopop/generators/PreSchoolGeneratorTest.cpp
+        geopop/generators/WorkplaceGeneratorTest.cpp
         #---
         geopop/io/CitiesCSVReaderTest.cpp
         geopop/io/CommutesCSVReaderTest.cpp
@@ -67,6 +68,10 @@ set(SRC
         geopop/io/HouseholdCSVReaderTest.cpp
         geopop/io/HouseholdJSONReaderTest.cpp
         geopop/io/ReaderFactoryTest.cpp
+        geopop/io/DataVisualisationTest.cpp
+        geopop/io/GeoGridHDF5Reader.cpp
+        geopop/io/GeoGridHDF5Writer.cpp
+        geopop/io/WorkPlaceReaderTest.cpp
         #---
         geopop/kdtree.cpp
         #---
@@ -79,6 +84,7 @@ set(SRC
         geopop/populators/WorkplacePopulatorTest.cpp
         geopop/populators/DaycarePopulatorTest.cpp
         geopop/populators/PreSchoolPopulatorTest.cpp
+        geopop/populators/WorkPlacePopulatorTest.cpp
         #---
         myhayai/DeliveryMan.cpp
         myhayai/MyhayaiTests.cpp
@@ -86,6 +92,12 @@ set(SRC
         myhayai/flex_delivery.cpp
         #---
         main.cpp
+        #---
+        geopop/Demographic/DemoGraphicTest.cpp
+        #---
+        geopop/Scenario/default.cpp
+        geopop/Scenario/defaultGenerator.cpp
+        geopop/Scenario/defaultImport.cpp
         )
 
 #if (OPENMP_FOUND)
