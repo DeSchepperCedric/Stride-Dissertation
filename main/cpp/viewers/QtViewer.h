@@ -26,25 +26,26 @@
 
 namespace stride {
 
-    class SimRunner;
+class SimRunner;
 
-    namespace viewers {
+namespace viewers {
 
 /// Viewer gathers infection count at each sim step.
-        class QtViewer {
-        public:
-            /// Instantiate cases viewer.
-            explicit QtViewer(std::shared_ptr<SimRunner> runner) : m_infected(), m_runner(std::move(runner)) {}
+class QtViewer
+{
+public:
+        /// Instantiate cases viewer.
+        explicit QtViewer(std::shared_ptr<SimRunner> runner) : m_infected(), m_runner(std::move(runner)) {}
 
-            std::vector<unsigned int> GetInfectionCounts() { return m_infected; }
+        std::vector<unsigned int> GetInfectionCounts() { return m_infected; }
 
-            /// Let viewer perform update.
-            void Update(sim_event::Id id);
+        /// Let viewer perform update.
+        void Update(sim_event::Id id);
 
-        private:
-            std::vector<unsigned int> m_infected;
-            std::shared_ptr<SimRunner> m_runner;
-        };
+private:
+        std::vector<unsigned int>  m_infected;
+        std::shared_ptr<SimRunner> m_runner;
+};
 
-    } // namespace viewers
+} // namespace viewers
 } // namespace stride

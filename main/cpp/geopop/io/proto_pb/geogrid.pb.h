@@ -92,12 +92,14 @@ enum GeoGrid_Location_ContactPools_Type {
   GeoGrid_Location_ContactPools_Type_College = 3,
   GeoGrid_Location_ContactPools_Type_Household = 4,
   GeoGrid_Location_ContactPools_Type_Workplace = 5,
+    GeoGrid_Location_ContactPools_Type_Daycare=  6,
+    GeoGrid_Location_ContactPools_Type_PreSchool = 7,
   GeoGrid_Location_ContactPools_Type_GeoGrid_Location_ContactPools_Type_INT_MIN_SENTINEL_DO_NOT_USE_ = std::numeric_limits<::google::protobuf::int32>::min(),
   GeoGrid_Location_ContactPools_Type_GeoGrid_Location_ContactPools_Type_INT_MAX_SENTINEL_DO_NOT_USE_ = std::numeric_limits<::google::protobuf::int32>::max()
 };
 bool GeoGrid_Location_ContactPools_Type_IsValid(int value);
 const GeoGrid_Location_ContactPools_Type GeoGrid_Location_ContactPools_Type_Type_MIN = GeoGrid_Location_ContactPools_Type_K12School;
-const GeoGrid_Location_ContactPools_Type GeoGrid_Location_ContactPools_Type_Type_MAX = GeoGrid_Location_ContactPools_Type_Workplace;
+const GeoGrid_Location_ContactPools_Type GeoGrid_Location_ContactPools_Type_Type_MAX = GeoGrid_Location_ContactPools_Type_PreSchool;
 const int GeoGrid_Location_ContactPools_Type_Type_ARRAYSIZE = GeoGrid_Location_ContactPools_Type_Type_MAX + 1;
 
 const ::google::protobuf::EnumDescriptor* GeoGrid_Location_ContactPools_Type_descriptor();
@@ -465,6 +467,10 @@ class GeoGrid_Location_ContactPools final :
     GeoGrid_Location_ContactPools_Type_Household;
   static const Type Workplace =
     GeoGrid_Location_ContactPools_Type_Workplace;
+        static const Type Daycare =
+                GeoGrid_Location_ContactPools_Type_Daycare;
+        static const Type PreSchool =
+                GeoGrid_Location_ContactPools_Type_PreSchool;
   static inline bool Type_IsValid(int value) {
     return GeoGrid_Location_ContactPools_Type_IsValid(value);
   }

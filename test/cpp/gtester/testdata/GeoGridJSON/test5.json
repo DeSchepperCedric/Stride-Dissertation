@@ -83,6 +83,30 @@
                             ]
                         }
                     ]
+                },
+                {
+                    "id": 6,
+                    "type": "Daycare",
+                    "pools": [
+                        {
+                            "id": "8",
+                            "people": [
+                                "1"
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "id": 7,
+                    "type": "PreSchool",
+                    "pools": [
+                        {
+                            "id": "9",
+                            "people": [
+                                "1"
+                            ]
+                        }
+                    ]
                 }
             ]
         }
@@ -96,7 +120,10 @@
             "Workplace": "6",
             "PrimaryCommunity": "3",
             "SecondaryCommunity": "7",
-            "College": "4"
+            "College": "4",
+            "Daycare": "8",
+            "PreSchool": "9"
+
         }
     ]
 }

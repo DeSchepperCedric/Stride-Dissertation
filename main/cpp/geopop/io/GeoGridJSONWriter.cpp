@@ -15,11 +15,9 @@
 
 #include "GeoGridJSONWriter.h"
 
-//#include "geopop/ContactCenter.h"
 #include "geopop/GeoGrid.h"
 #include "pop/Person.h"
 
-//#include <boost/property_tree/json_parser.hpp>
 #include <iostream>
 #include <omp.h>
 
@@ -58,18 +56,18 @@ void GeoGridJSONWriter::Write(GeoGrid& geoGrid, ostream& stream)
         stream << root;
 }
 
-nlohmann::json GeoGridJSONWriter::WriteContactCenter(ContactPool* const & contactPool)
+nlohmann::json GeoGridJSONWriter::WriteContactCenter(ContactPool* const& contactPool)
 {
         nlohmann::json pools = nlohmann::json::array();
-        for (auto pool : *contactPool){
+        for (auto pool : *contactPool) {
                 nlohmann::json child;
                 nlohmann::json people = nlohmann::json::array();
-                child["id"] = contactPool->GetId();
-//                for (auto person : pool{
-                        auto person = pool;
-                        m_persons_found.insert(person);
-                        people.push_back(person->GetId());
-//                }
+                child["id"]           = contactPool->GetId();
+                //                for (auto person : pool{
+                auto person = pool;
+                m_persons_found.insert(person);
+                people.push_back(person->GetId());
+                //                }
                 child["people"] = people;
                 pools.push_back(move(child));
         }
@@ -80,16 +78,16 @@ nlohmann::json GeoGridJSONWriter::WriteCoordinate(const Coordinate& coordinate)
 {
         nlohmann::json coordinate_root;
         coordinate_root["longitude"] = boost::geometry::get<0>(coordinate);
-        coordinate_root["latitude"] = boost::geometry::get<1>(coordinate);
+        coordinate_root["latitude"]  = boost::geometry::get<1>(coordinate);
         return coordinate_root;
 }
 
 nlohmann::json GeoGridJSONWriter::WriteLocation(const Location& location)
 {
         nlohmann::json location_root;
-        location_root["id"] = location.GetID();
-        location_root["name"] = location.GetName();
-        location_root["province"] = location.GetProvince();
+        location_root["id"]         = location.GetID();
+        location_root["name"]       = location.GetName();
+        location_root["province"]   = location.GetProvince();
         location_root["population"] = location.GetPopCount();
         location_root["coordinate"] = WriteCoordinate(location.GetCoordinate());
 
@@ -107,8 +105,8 @@ nlohmann::json GeoGridJSONWriter::WriteLocation(const Location& location)
                 for (const auto& c : location.CRefPools(typ)) {
                         nlohmann::json child;
                         child["type"] = ToString(typ);
-                        child["id"] = c->GetId();
-                        child = WriteContactCenter(c);
+                        child["id"]   = c->GetId();
+                        child         = WriteContactCenter(c);
                         contactCenters.push_back(move(child));
                 }
         }
@@ -122,14 +120,16 @@ nlohmann::json GeoGridJSONWriter::WritePerson(Person* person)
         using namespace ContactType;
 
         nlohmann::json person_root;
-        person_root["id"] = person->GetId();
-        person_root["age"] = person->GetAge();
-        person_root["K12School"] = person->GetPoolId(Id::K12School);
-        person_root["College"] = person->GetPoolId(Id::College);
-        person_root["Household"] = person->GetPoolId(Id::Household);
-        person_root["Workplace"] = person->GetPoolId(Id::Workplace);
-        person_root["PrimaryCommunity"] = person->GetPoolId(Id::PrimaryCommunity);
+        person_root["id"]                 = person->GetId();
+        person_root["age"]                = person->GetAge();
+        person_root["K12School"]          = person->GetPoolId(Id::K12School);
+        person_root["College"]            = person->GetPoolId(Id::College);
+        person_root["Household"]          = person->GetPoolId(Id::Household);
+        person_root["Workplace"]          = person->GetPoolId(Id::Workplace);
+        person_root["PrimaryCommunity"]   = person->GetPoolId(Id::PrimaryCommunity);
         person_root["SecondaryCommunity"] = person->GetPoolId(Id::SecondaryCommunity);
+        person_root["Daycare"]            = person->GetPoolId(Id::Daycare);
+        person_root["PreSchool"]          = person->GetPoolId(Id::PreSchool);
         return person_root;
 }
 

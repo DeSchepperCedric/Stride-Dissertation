@@ -13,23 +13,23 @@
  *  Copyright 2018, 2019, Jan Broeckhove and Bistromatics group.
  */
 
-#include "ContactCenter.h"
+#pragma once
 
-#include "contact/ContactPool.h"
+#include "Populator.h"
 
 namespace geopop {
 
-std::pair<unsigned int, unsigned int> ContactCenter::GetPopulationAndInfectedCount() const
+/**
+ * Populate the PreSchools.
+ */
+class PreSchoolPopulator : public Populator
 {
-        auto population = 0U;
-        auto infected   = 0U;
+public:
+        /// Using base class constructors.
+        using Populator::Populator;
 
-        for (stride::ContactPool* pool : m_pools) {
-                population += pool->GetPool().size();
-                infected += pool->GetInfectedCount();
-        }
-
-        return {population, infected};
-}
+        /// Core method implementation.
+        void Apply(GeoGrid& geogrid, const GeoGridConfig& geoGridConfig) override;
+};
 
 } // namespace geopop
