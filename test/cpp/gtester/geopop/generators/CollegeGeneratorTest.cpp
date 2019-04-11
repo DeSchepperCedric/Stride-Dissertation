@@ -13,11 +13,12 @@
  *  Copyright 2019, Jan Broeckhove.
  */
 
-#include "geopop/generators/CollegeGenerator.h"
+#include "geopop/generators/Generator.h"
 
 #include "geopop/GeoGrid.h"
 #include "geopop/GeoGridConfig.h"
 #include "geopop/Location.h"
+#include "geopop/PoolParams.h"
 #include "pop/Population.h"
 #include "util/RnMan.h"
 
@@ -52,23 +53,23 @@ protected:
 // Checks whther generator can handle a single location.
 TEST_F(CollegeGeneratorTest, OneLocationTest)
 {
-        m_geogrid_config.input.pop_size           = 45000;
-        m_geogrid_config.popInfo.popcount_college = 9000;
+        m_geogrid_config.param.pop_size           = 45000;
+        m_geogrid_config.info.popcount_college = 9000;
 
-        auto loc1 = make_shared<Location>(1, 4, Coordinate(0, 0), "Antwerpen", m_geogrid_config.input.pop_size);
+        auto loc1 = make_shared<Location>(1, 4, Coordinate(0, 0), "Antwerpen", m_geogrid_config.param.pop_size);
         m_geo_grid.AddLocation(loc1);
 
         m_college_generator.Apply(m_geo_grid, m_geogrid_config);
 
         const auto& poolsOfLoc1 = loc1->CRefPools<Id::College>();
-        EXPECT_EQ(poolsOfLoc1.size(), 3 * m_geogrid_config.pools.pools_per_college);
+        EXPECT_EQ(poolsOfLoc1.size(), 3 * PoolParams<Id::College>::pools);
 }
 
 // Checks whether Generator can handle zero locations in GeoGrid.
 TEST_F(CollegeGeneratorTest, ZeroLocationTest)
 {
-        m_geogrid_config.input.pop_size           = 10000;
-        m_geogrid_config.popInfo.popcount_college = 2000;
+        m_geogrid_config.param.pop_size           = 10000;
+        m_geogrid_config.info.popcount_college = 2000;
 
         m_college_generator.Apply(m_geo_grid, m_geogrid_config);
 
@@ -78,8 +79,8 @@ TEST_F(CollegeGeneratorTest, ZeroLocationTest)
 // Checks whether generator can handle multiple locations.
 TEST_F(CollegeGeneratorTest, MultipleLocationsTest)
 {
-        m_geogrid_config.input.pop_size           = 399992;
-        m_geogrid_config.popInfo.popcount_college = 79998;
+        m_geogrid_config.param.pop_size           = 399992;
+        m_geogrid_config.info.popcount_college = 79998;
 
         array<unsigned int, 15> sizes{28559, 33319, 39323, 37755, 35050, 10060, 13468, 8384,
                                       9033,  31426, 33860, 4110,  50412, 25098, 40135};
@@ -91,7 +92,7 @@ TEST_F(CollegeGeneratorTest, MultipleLocationsTest)
 
         array<unsigned int, sizes.size()> expected{2, 2, 5, 2, 3, 0, 0, 0, 0, 2, 2, 0, 3, 3, 3};
         for (auto i = 0U; i < sizes.size(); i++) {
-                EXPECT_EQ(expected[i] * m_geogrid_config.pools.pools_per_college,
+                EXPECT_EQ(expected[i] * PoolParams<Id::College>::pools,
                           m_geo_grid[i]->CRefPools<Id::College>().size());
         }
 }

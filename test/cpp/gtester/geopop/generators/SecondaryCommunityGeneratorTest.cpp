@@ -13,11 +13,12 @@
  *  Copyright 2019, Jan Broeckhove.
  */
 
-#include "geopop/generators/SecondaryCommunityGenerator.h"
+#include "geopop/generators/Generator.h"
 
 #include "geopop/GeoGrid.h"
 #include "geopop/GeoGridConfig.h"
 #include "geopop/Location.h"
+#include "geopop/PoolParams.h"
 #include "pop/Population.h"
 #include "util/RnMan.h"
 
@@ -51,7 +52,7 @@ protected:
 
 TEST_F(SecondaryCommunityGeneratorTest, OneLocationTest)
 {
-        m_geogrid_config.input.pop_size = 10000;
+        m_geogrid_config.param.pop_size = 10000;
 
         auto loc1 = make_shared<Location>(1, 4, Coordinate(0, 0), "Antwerpen", 2500);
         m_geo_grid.AddLocation(loc1);
@@ -61,12 +62,12 @@ TEST_F(SecondaryCommunityGeneratorTest, OneLocationTest)
 
         m_secondary_community_generator.Apply(m_geo_grid, m_geogrid_config);
 
-        EXPECT_EQ(p1.size(), 5 * m_geogrid_config.pools.pools_per_secondary_community);
+        EXPECT_EQ(p1.size(), 5 * PoolParams<Id::SecondaryCommunity>::pools);
 }
 
 TEST_F(SecondaryCommunityGeneratorTest, EqualLocationTest)
 {
-        m_geogrid_config.input.pop_size = 100 * 100 * 1000;
+        m_geogrid_config.param.pop_size = 100 * 100 * 1000;
 
         for (int i = 0; i < 10; i++) {
                 m_geo_grid.AddLocation(
@@ -78,13 +79,13 @@ TEST_F(SecondaryCommunityGeneratorTest, EqualLocationTest)
         array<unsigned int, 10> expected{546, 495, 475, 500, 463, 533, 472, 539, 496, 481};
         for (auto i = 0U; i < expected.size(); i++) {
                 const auto& p = m_geo_grid[i]->RefPools(Id::SecondaryCommunity);
-                EXPECT_EQ(expected[i] * m_geogrid_config.pools.pools_per_secondary_community, p.size());
+                EXPECT_EQ(expected[i] * PoolParams<Id::SecondaryCommunity>::pools, p.size());
         }
 }
 
 TEST_F(SecondaryCommunityGeneratorTest, ZeroLocationTest)
 {
-        m_geogrid_config.input.pop_size = 10000;
+        m_geogrid_config.param.pop_size = 10000;
         m_secondary_community_generator.Apply(m_geo_grid, m_geogrid_config);
 
         EXPECT_EQ(m_geo_grid.size(), 0);
@@ -92,8 +93,8 @@ TEST_F(SecondaryCommunityGeneratorTest, ZeroLocationTest)
 
 TEST_F(SecondaryCommunityGeneratorTest, FiveLocationsTest)
 {
-        m_geogrid_config.input.pop_size             = 37542 * 100;
-        m_geogrid_config.popInfo.popcount_k12school = 750840;
+        m_geogrid_config.param.pop_size             = 37542 * 100;
+        m_geogrid_config.info.popcount_k12school = 750840;
 
         auto loc1 = make_shared<Location>(1, 4, Coordinate(0, 0), "Antwerpen", 10150 * 100);
         auto loc2 = make_shared<Location>(1, 4, Coordinate(0, 0), "Vlaams-Brabant", 10040 * 100);
@@ -112,7 +113,7 @@ TEST_F(SecondaryCommunityGeneratorTest, FiveLocationsTest)
         array<unsigned int, 5> expected{553, 518, 410, 173, 224};
         for (auto i = 0U; i < expected.size(); i++) {
                 const auto& cp = m_geo_grid[i]->CRefPools(Id::SecondaryCommunity);
-                EXPECT_EQ(expected[i] * m_geogrid_config.pools.pools_per_secondary_community, cp.size());
+                EXPECT_EQ(expected[i] * PoolParams<Id::SecondaryCommunity>::pools, cp.size());
         }
 }
 
