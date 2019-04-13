@@ -16,6 +16,7 @@
 #include "GeoGridConfig.h"
 
 #include "contact/AgeBrackets.h"
+#include "contact/ContactType.h"
 #include "geopop/io/HouseholdReader.h"
 #include "geopop/io/ReaderFactory.h"
 #include "util/StringUtils.h"
@@ -29,28 +30,41 @@ namespace geopop {
 using namespace std;
 using namespace boost::property_tree;
 using namespace stride::AgeBrackets;
+using namespace stride::ContactType;
 using stride::util::intToDottedString;
 
-GeoGridConfig::GeoGridConfig() : input{}, refHH{}, popInfo{}, pools{} {}
+GeoGridConfig::GeoGridConfig() : param{}, refHH{}, info{} {}
 
 GeoGridConfig::GeoGridConfig(const ptree& configPt) : GeoGridConfig()
 {
-        input.pop_size                     = configPt.get<unsigned int>("run.geopop_gen.population_size");
-        input.participation_college        = configPt.get<double>("run.geopop_gen.participation_college");
-        input.fraction_workplace_commuters = configPt.get<double>("run.geopop_gen.fraction_workplace_commuters");
-        input.fraction_college_commuters   = configPt.get<double>("run.geopop_gen.fraction_college_commuters");
-        input.particpation_workplace       = configPt.get<double>("run.geopop_gen.particpation_workplace");
-        input.participation_preschool      = configPt.get<double>("run.geopop_gen.participation_preschool");
-        input.participation_daycare        = configPt.get<double>("run.geopop_gen.participation_daycare");
+        const auto pt = configPt.get_child("run.geopop_gen");
+        param.pop_size                     = pt.get<unsigned int>("population_size");
+        param.participation_daycare        = pt.get<double>("participation_daycare");
+        param.participation_preschool      = pt.get<double>("participation_preschool");
+        param.participation_college        = pt.get<double>("participation_college");
+        param.fraction_workplace_commuters = pt.get<double>("fraction_workplace_commuters");
+        param.fraction_college_commuters   = pt.get<double>("fraction_college_commuters");
+        param.particpation_workplace       = pt.get<double>("particpation_workplace");
+
+        people[Id::Daycare]                = pt.get<unsigned int>("people_per_Daycare", 18U);
+        people[Id::PreSchool]              = pt.get<unsigned int>("people_per_PreSchool", 120U);
+        people[Id::K12School]              = pt.get<unsigned int>("people_per_K12School", 500U);
+        people[Id::College]                = pt.get<unsigned int>("people_per_College", 3000U);
+        people[Id::Workplace]              = pt.get<unsigned int>("people_per_Workplace", 20U);
+        people[Id::PrimaryCommunity]       = pt.get<unsigned int>("people_per_PrimaryCommunity", 2000U);
+        people[Id::SecondaryCommunity]     = pt.get<unsigned int>("people_per_SecondaryCommunity", 2000U);
+
+        pools[Id::Daycare]                = pt.get<unsigned int>("pools_per_Daycare", 1U);
+        pools[Id::PreSchool]              = pt.get<unsigned int>("pools_per_PreSchool", 6U);
+        pools[Id::K12School]              = pt.get<unsigned int>("pools_per_K12School", 25U);
+        pools[Id::College]                = pt.get<unsigned int>("pools_per_College", 20U);
 }
 
 void GeoGridConfig::SetData(const string& householdsFileName)
 {
-        ReaderFactory readerFactory;
-
-        auto householdsReader = readerFactory.CreateHouseholdReader(householdsFileName);
+        auto householdsReader = ReaderFactory::CreateHouseholdReader(householdsFileName);
         householdsReader->SetReferenceHouseholds(refHH.person_count, refHH.ages);
-        const auto popSize = input.pop_size;
+        const auto popSize = param.pop_size;
 
         //----------------------------------------------------------------
         // Determine age makeup of reference houshold population.
@@ -63,7 +77,6 @@ void GeoGridConfig::SetData(const string& householdsFileName)
         auto ref_k12school = 0U;
         auto ref_college   = 0U;
         auto ref_workplace = 0U;
-
         for (const auto& hhAgeProfile : refHH.ages) {
                 for (const auto& age : hhAgeProfile) {
                         if (Daycare::HasAge(age)) {
@@ -98,19 +111,18 @@ void GeoGridConfig::SetData(const string& householdsFileName)
         const auto age_count_college   = static_cast<unsigned int>(floor(popSize * fraction_college_age));
         const auto age_count_workplace = static_cast<unsigned int>(floor(popSize * fraction_workplace_age));
 
-        popInfo.popcount_daycare = static_cast<unsigned int>(floor(input.participation_daycare * age_count_daycare));
+        info.popcount_daycare = static_cast<unsigned int>(floor(param.participation_daycare * age_count_daycare));
 
-        popInfo.popcount_preschool =
-            static_cast<unsigned int>(floor(input.participation_preschool * age_count_preschool));
+        info.popcount_preschool = static_cast<unsigned int>(floor(param.participation_preschool * age_count_preschool));
 
-        popInfo.popcount_k12school = age_count_k12school;
+        info.popcount_k12school = age_count_k12school;
 
-        popInfo.popcount_college = static_cast<unsigned int>(floor(input.participation_college * age_count_college));
+        info.popcount_college = static_cast<unsigned int>(floor(param.participation_college * age_count_college));
 
-        popInfo.popcount_workplace = static_cast<unsigned int>(
-            floor(input.particpation_workplace * (age_count_workplace - popInfo.popcount_college)));
+        info.popcount_workplace = static_cast<unsigned int>(
+            floor(param.particpation_workplace * (age_count_workplace - info.popcount_college)));
 
-        popInfo.count_households = static_cast<unsigned int>(floor(static_cast<double>(popSize) / averageHhSize));
+        info.count_households = static_cast<unsigned int>(floor(static_cast<double>(popSize) / averageHhSize));
 }
 
 ostream& operator<<(ostream& out, const GeoGridConfig& config)
