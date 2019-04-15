@@ -68,7 +68,7 @@ void MakeGeoGrid(const GeoGridConfig& , int locCount, int locPop, int schoolCoun
                 auto loc = make_shared<Location>(locI, 1, Coordinate(0.0, 0.0), "", locPop);
 
                 for (int schI = 0; schI < schoolCount; schI++) {
-                        k12Gen.AddPools(*loc, pop);
+                        k12Gen.AddPools(*loc, pop, config);
                 }
 
                 for (int dayI = 0; dayI < dayCount; dayI++) {
@@ -80,7 +80,7 @@ void MakeGeoGrid(const GeoGridConfig& , int locCount, int locPop, int schoolCoun
                 }
 
                 for (int hI = 0; hI < houseHoldCount; hI++) {
-                        hhGen.AddPools(*loc, pop);
+                        hhGen.AddPools(*loc, pop, config);
                         auto contactPool = loc->RefPools(Id::Household).back();
 
                         for (int i = 0; i < personCount; i++) {
