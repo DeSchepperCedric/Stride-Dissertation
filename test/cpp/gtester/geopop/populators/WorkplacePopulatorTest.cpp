@@ -13,12 +13,13 @@
  *  Copyright 2019, Jan Broeckhove.
  */
 
-#include "geopop/populators/WorkplacePopulator.h"
+#include "geopop/populators/Populator.h"
 
 #include "MakeGeoGrid.h"
 #include "contact/AgeBrackets.h"
 #include "geopop/Location.h"
-#include "geopop/generators/WorkplaceGenerator.h"
+#include "geopop/PoolParams.h"
+#include "geopop/generators/Generator.h"
 #include "pop/Population.h"
 #include "util/RnMan.h"
 
@@ -48,7 +49,7 @@ protected:
         shared_ptr<Population> m_pop;
         GeoGrid&               m_geo_grid;
         WorkplaceGenerator     m_workplace_generator;
-        const unsigned int     m_ppwp = GeoGridConfig{}.pools.pools_per_workplace;
+        const unsigned int     m_ppwp = PoolParams<Id::Workplace>::pools;
 };
 
 TEST_F(WorkplacePopulatorTest, NoPopulation)
@@ -63,8 +64,8 @@ TEST_F(WorkplacePopulatorTest, NoActive)
 {
         MakeGeoGrid(m_geogrid_config, 3, 100, 12, 2, 3, 33, 3, m_pop.get());
 
-        m_geogrid_config.input.particpation_workplace = 0;
-        m_geogrid_config.input.participation_college  = 1;
+        m_geogrid_config.param.particpation_workplace = 0;
+        m_geogrid_config.param.participation_college  = 1;
 
         // Nobody works, everybody in the student age bracket goes to college: so workplace is empty.
         // Brasschaat and Schoten are close to each other. There is no commuting, but they are so close
@@ -90,9 +91,9 @@ TEST_F(WorkplacePopulatorTest, NoCommuting)
 {
         MakeGeoGrid(m_geogrid_config, 3, 100, 12, 2, 3, 33, 3, m_pop.get());
 
-        m_geogrid_config.input.fraction_workplace_commuters = 0;
-        m_geogrid_config.input.particpation_workplace       = 1;
-        m_geogrid_config.input.participation_college        = 0.5;
+        m_geogrid_config.param.fraction_workplace_commuters = 0;
+        m_geogrid_config.param.particpation_workplace       = 1;
+        m_geogrid_config.param.participation_college        = 0.5;
 
         // Brasschaat and Schoten are close to each other
         // There is no commuting, but since they will still receive students from each other
@@ -100,23 +101,23 @@ TEST_F(WorkplacePopulatorTest, NoCommuting)
 
         auto brasschaat = *m_geo_grid.begin();
         brasschaat->SetCoordinate(Coordinate(51.29227, 4.49419));
-        m_workplace_generator.AddPools(*brasschaat, m_pop.get(), m_ppwp);
-        m_workplace_generator.AddPools(*brasschaat, m_pop.get(), m_ppwp);
+        m_workplace_generator.AddPools(*brasschaat, m_pop.get());
+        m_workplace_generator.AddPools(*brasschaat, m_pop.get());
 
         auto schoten = *(m_geo_grid.begin() + 1);
         schoten->SetCoordinate(Coordinate(51.2497532, 4.4977063));
-        m_workplace_generator.AddPools(*schoten, m_pop.get(), m_ppwp);
-        m_workplace_generator.AddPools(*schoten, m_pop.get(), m_ppwp);
+        m_workplace_generator.AddPools(*schoten, m_pop.get());
+        m_workplace_generator.AddPools(*schoten, m_pop.get());
 
         auto kortrijk = *(m_geo_grid.begin() + 2);
         kortrijk->SetCoordinate(Coordinate(50.82900246, 3.264406009));
-        m_workplace_generator.AddPools(*kortrijk, m_pop.get(), m_ppwp);
-        m_workplace_generator.AddPools(*kortrijk, m_pop.get(), m_ppwp);
+        m_workplace_generator.AddPools(*kortrijk, m_pop.get());
+        m_workplace_generator.AddPools(*kortrijk, m_pop.get());
 
         m_geo_grid.Finalize();
         m_workplace_populator.Apply(m_geo_grid, m_geogrid_config);
 
-        const auto pwc = GeoGridConfig().pools.pools_per_workplace;
+        constexpr auto pwc = PoolParams<Id::Workplace>::pools;
 
         // Assert that persons of Schoten only go to Schoten or Brasschaat
         for (const auto& hPool : schoten->RefPools(Id::Household)) {
@@ -165,24 +166,24 @@ TEST_F(WorkplacePopulatorTest, OnlyCommuting)
 {
         MakeGeoGrid(m_geogrid_config, 2, 3, 12, 90, 3, 33, 3, m_pop.get());
 
-        m_geogrid_config.input.fraction_workplace_commuters = 0;
-        m_geogrid_config.input.fraction_workplace_commuters = 1;
-        m_geogrid_config.input.fraction_college_commuters   = 0;
-        m_geogrid_config.popInfo.popcount_workplace         = 1;
-        m_geogrid_config.input.particpation_workplace       = 1;
-        m_geogrid_config.input.participation_college        = 0.5;
+        m_geogrid_config.param.fraction_workplace_commuters = 0;
+        m_geogrid_config.param.fraction_workplace_commuters = 1;
+        m_geogrid_config.param.fraction_college_commuters   = 0;
+        m_geogrid_config.info.popcount_workplace         = 1;
+        m_geogrid_config.param.particpation_workplace       = 1;
+        m_geogrid_config.param.participation_college        = 0.5;
 
         // only commuting
 
         auto schoten = *(m_geo_grid.begin());
         schoten->SetCoordinate(Coordinate(51.2497532, 4.4977063));
-        m_workplace_generator.AddPools(*schoten, m_pop.get(), m_ppwp);
-        m_workplace_generator.AddPools(*schoten, m_pop.get(), m_ppwp);
+        m_workplace_generator.AddPools(*schoten, m_pop.get());
+        m_workplace_generator.AddPools(*schoten, m_pop.get());
 
         auto kortrijk = *(m_geo_grid.begin() + 1);
         kortrijk->SetCoordinate(Coordinate(50.82900246, 3.264406009));
-        m_workplace_generator.AddPools(*kortrijk, m_pop.get(), m_ppwp);
-        m_workplace_generator.AddPools(*kortrijk, m_pop.get(), m_ppwp);
+        m_workplace_generator.AddPools(*kortrijk, m_pop.get());
+        m_workplace_generator.AddPools(*kortrijk, m_pop.get());
 
         schoten->AddOutgoingCommute(kortrijk, 0.5);
         kortrijk->AddIncomingCommute(schoten, 0.5);
@@ -192,7 +193,7 @@ TEST_F(WorkplacePopulatorTest, OnlyCommuting)
         m_geo_grid.Finalize();
         m_workplace_populator.Apply(m_geo_grid, m_geogrid_config);
 
-        const auto pwc = GeoGridConfig().pools.pools_per_workplace;
+        constexpr auto pwc = PoolParams<Id::Workplace>::pools;
 
         // Assert that persons of Schoten only go to Kortrijk
         for (const auto& hPool : schoten->RefPools(Id::Household)) {
@@ -223,31 +224,31 @@ TEST_F(WorkplacePopulatorTest, OnlyCommuting)
         }
 }
 
-TEST_F(WorkplacePopulatorTest, OnlyCommutingButNoCommutingAvaiable)
+TEST_F(WorkplacePopulatorTest, NoCommutingAvailable)
 {
         MakeGeoGrid(m_geogrid_config, 3, 100, 12, 2, 3, 33, 3, m_pop.get());
 
-        m_geogrid_config.input.fraction_workplace_commuters = 0;
-        m_geogrid_config.input.fraction_workplace_commuters = 1;
-        m_geogrid_config.input.fraction_college_commuters   = 0;
-        m_geogrid_config.popInfo.popcount_workplace         = 1;
-        m_geogrid_config.input.particpation_workplace       = 1;
-        m_geogrid_config.input.participation_college        = 0.5;
+        m_geogrid_config.param.fraction_workplace_commuters = 0;
+        m_geogrid_config.param.fraction_workplace_commuters = 1;
+        m_geogrid_config.param.fraction_college_commuters   = 0;
+        m_geogrid_config.info.popcount_workplace         = 1;
+        m_geogrid_config.param.particpation_workplace       = 1;
+        m_geogrid_config.param.participation_college        = 0.5;
 
         auto brasschaat = *m_geo_grid.begin();
         brasschaat->SetCoordinate(Coordinate(51.29227, 4.49419));
-        m_workplace_generator.AddPools(*brasschaat, m_pop.get(), m_ppwp);
-        m_workplace_generator.AddPools(*brasschaat, m_pop.get(), m_ppwp);
+        m_workplace_generator.AddPools(*brasschaat, m_pop.get());
+        m_workplace_generator.AddPools(*brasschaat, m_pop.get());
 
         auto schoten = *(m_geo_grid.begin() + 1);
         schoten->SetCoordinate(Coordinate(51.2497532, 4.4977063));
-        m_workplace_generator.AddPools(*schoten, m_pop.get(), m_ppwp);
-        m_workplace_generator.AddPools(*schoten, m_pop.get(), m_ppwp);
+        m_workplace_generator.AddPools(*schoten, m_pop.get());
+        m_workplace_generator.AddPools(*schoten, m_pop.get());
 
         auto kortrijk = *(m_geo_grid.begin() + 2);
         kortrijk->SetCoordinate(Coordinate(50.82900246, 3.264406009));
-        m_workplace_generator.AddPools(*kortrijk, m_pop.get(), m_ppwp);
-        m_workplace_generator.AddPools(*kortrijk, m_pop.get(), m_ppwp);
+        m_workplace_generator.AddPools(*kortrijk, m_pop.get());
+        m_workplace_generator.AddPools(*kortrijk, m_pop.get());
 
         // test case is only commuting but between nobody is commuting from or to Brasschaat
         schoten->AddOutgoingCommute(kortrijk, 0.5);
@@ -258,7 +259,7 @@ TEST_F(WorkplacePopulatorTest, OnlyCommutingButNoCommutingAvaiable)
         m_geo_grid.Finalize();
         m_workplace_populator.Apply(m_geo_grid, m_geogrid_config);
 
-        const auto pwc = GeoGridConfig().pools.pools_per_workplace;
+        constexpr auto pwc = PoolParams<Id::Workplace>::pools;
 
         // Assert that persons of Schoten only go to Kortrijk
         for (const auto& hPool : schoten->RefPools(Id::Household)) {

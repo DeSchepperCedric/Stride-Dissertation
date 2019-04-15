@@ -133,7 +133,7 @@ visual: cores configure
 	$(MAKE) $(PARALLEL_MAKE) -C $(BUILD_DIR) --no-print-directory visual
 
 gtest: install
-	cd $(CMAKE_INSTALL_PREFIX); bin/gtester $(TESTARGS)
+	cd $(CMAKE_INSTALL_PREFIX); bin/gtester $(TESTARGS) --gtest_output=xml:tests/gtester_all.xml
 
 format:
 	resources/bash/clang-format-all .
