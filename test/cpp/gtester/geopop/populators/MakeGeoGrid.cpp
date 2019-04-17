@@ -16,10 +16,7 @@
 #include "MakeGeoGrid.h"
 
 #include "geopop/Location.h"
-#include "geopop/generators/DaycareGenerator.h"
-#include "geopop/generators/HouseholdGenerator.h"
-#include "geopop/generators/K12SchoolGenerator.h"
-#include "geopop/generators/PreSchoolGenerator.h"
+#include "geopop/generators/Generator.h"
 #include "pop/Population.h"
 #include "util/RnMan.h"
 
@@ -41,8 +38,8 @@ using namespace geopop;
  * @param personCount       The number of persons per Household.
  * @param pop               The population carrying this GeoGrid.
  */
-void MakeGeoGrid(const GeoGridConfig& ggConfig, int locCount, int locPop, int dayCount, int preCount, int schoolCount,
-                 int houseHoldCount, int personCount, Population* pop)
+void MakeGeoGrid(const GeoGridConfig& , int locCount, int locPop, int schoolCount, int houseHoldCount,
+                 int personCount, Population* pop)
 {
         vector<unsigned int> populationSample = {
             17, 27, 65, 40, 29, 76, 27, 50, 28, 62, 50, 14, 30, 36, 12, 31, 25, 72, 62, 4,  40, 52, 55, 50, 62,
@@ -64,12 +61,6 @@ void MakeGeoGrid(const GeoGridConfig& ggConfig, int locCount, int locPop, int da
         RnMan              rnMan(RnInfo{});
         K12SchoolGenerator k12Gen(rnMan);
         HouseholdGenerator hhGen(rnMan);
-        DaycareGenerator   dayGen(rnMan);
-        PreSchoolGenerator preGen(rnMan);
-        const unsigned int pph   = ggConfig.pools.pools_per_household;
-        const unsigned int ppk12 = ggConfig.pools.pools_per_k12school;
-        const unsigned int ppday = ggConfig.pools.pools_per_daycare;
-        const unsigned int pppre = ggConfig.pools.pools_per_preschool;
 
         size_t sampleId = 0;
         auto   personId = 0U;
@@ -77,7 +68,7 @@ void MakeGeoGrid(const GeoGridConfig& ggConfig, int locCount, int locPop, int da
                 auto loc = make_shared<Location>(locI, 1, Coordinate(0.0, 0.0), "", locPop);
 
                 for (int schI = 0; schI < schoolCount; schI++) {
-                        k12Gen.AddPools(*loc, pop, ppk12);
+                        k12Gen.AddPools(*loc, pop, config);
                 }
 
                 for (int dayI = 0; dayI < dayCount; dayI++) {
@@ -89,7 +80,7 @@ void MakeGeoGrid(const GeoGridConfig& ggConfig, int locCount, int locPop, int da
                 }
 
                 for (int hI = 0; hI < houseHoldCount; hI++) {
-                        hhGen.AddPools(*loc, pop, pph);
+                        hhGen.AddPools(*loc, pop, config);
                         auto contactPool = loc->RefPools(Id::Household).back();
 
                         for (int i = 0; i < personCount; i++) {
