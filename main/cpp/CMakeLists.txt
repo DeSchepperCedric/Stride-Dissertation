@@ -26,16 +26,16 @@ else()
 endif()
 
 set_source_files_properties(
-        geopop/io/GeoGridProtoReader.cpp
-        geopop/io/GeoGridProtoWriter.cpp
-        PROPERTIES
-        COMPILE_FLAGS "-I${Protobuf_PBS_DIR}"
+    geopop/io/GeoGridProtoReader.cpp
+    geopop/io/GeoGridProtoWriter.cpp
+    PROPERTIES
+    COMPILE_FLAGS "-I${Protobuf_PBS_DIR}"
 )
 
 set_property(SOURCE ${PROTO_HDR} ${PROTO_SRC}
-        PROPERTY
-        COMPILE_FLAGS "-Wno-all -Wno-effc++ -Wno-extra -Wno-pedantic"
-        )
+    PROPERTY
+    COMPILE_FLAGS "-Wno-all -Wno-effc++ -Wno-extra -Wno-pedantic"
+)
 
 #============================================================================
 # Sources.
@@ -78,6 +78,8 @@ set(STRIDE_SRC
     geopop/generators/PrimaryCommunityGenerator.cpp
     geopop/generators/SecondaryCommunityGenerator.cpp
     geopop/generators/WorkplaceGenerator.cpp
+    geopop/generators/DaycareGenerator.cpp
+    geopop/generators/PreSchoolGenerator.cpp
     #---
     geopop/io/LocationsCSVReader.cpp
     geopop/io/CommutesCSVReader.cpp
@@ -101,6 +103,8 @@ set(STRIDE_SRC
     geopop/populators/PrimaryCommunityPopulator.cpp
     geopop/populators/SecondaryCommunityPopulator.cpp
     geopop/populators/WorkplacePopulator.cpp
+    geopop/populators/DaycarePopulator.cpp
+    geopop/populators/PreSchoolPopulator.cpp
     #---
     ${PROTO_HEADER}
     ${PROTO_SRC}
@@ -154,10 +158,10 @@ else()
     target_link_libraries(libstride PUBLIC libprotobuf)
 endif()
 set_target_properties(libstride
-        PROPERTIES
+    PROPERTIES
         POSITION_INDEPENDENT_CODE ON
         PREFIX ""
-        )
+)
 include(CheckIPOSupported)
 
 # For future use: inter procedural optimization
