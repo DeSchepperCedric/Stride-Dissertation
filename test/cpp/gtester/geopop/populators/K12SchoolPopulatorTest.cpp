@@ -65,7 +65,7 @@ TEST_F(K12SchoolPopulatorTest, NoPopulation)
 
 TEST_F(K12SchoolPopulatorTest, OneLocationTest)
 {
-        MakeGeoGrid(m_gg_config, 1, 300, 5, 100, 3, m_pop.get());
+        MakeGeoGrid(m_gg_config, 1, 300, 20, 3, 5, 100, 3, m_pop.get());
         m_geo_grid.Finalize();
         m_k12school_populator.Apply(m_geo_grid, m_gg_config);
 
@@ -139,7 +139,7 @@ TEST_F(K12SchoolPopulatorTest, OneLocationTest)
 
 TEST_F(K12SchoolPopulatorTest, TwoLocationTest)
 {
-        MakeGeoGrid(m_gg_config, 3, 100, 3, 33, 3, m_pop.get());
+        MakeGeoGrid(m_gg_config, 3, 100, 12, 2, 3, 33, 3, m_pop.get());
 
         // Brasschaat and Schoten are close to each oter and will both have students from both.
         // Kortrijk will only have students going to Kortrijk.
