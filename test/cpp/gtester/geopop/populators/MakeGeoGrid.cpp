@@ -73,11 +73,11 @@ void MakeGeoGrid(const GeoGridConfig& , int locCount, int locPop, int dayCount, 
                 }
 
                 for (int dayI = 0; dayI < dayCount; dayI++) {
-                        dayGen.AddPools(*loc, pop, ppday);
+                        dayGen.AddPools(*loc, pop, config);
                 }
 
                 for (int preI = 0; preI < preCount; preI++) {
-                        preGen.AddPools(*loc, pop, pppre);
+                        preGen.AddPools(*loc, pop, config);
                 }
 
                 for (int hI = 0; hI < houseHoldCount; hI++) {
