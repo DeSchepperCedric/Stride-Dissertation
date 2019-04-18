@@ -38,7 +38,7 @@ using namespace geopop;
  * @param personCount       The number of persons per Household.
  * @param pop               The population carrying this GeoGrid.
  */
-void MakeGeoGrid(const GeoGridConfig& , int locCount, int locPop, int schoolCount, int houseHoldCount,
+void MakeGeoGrid(const GeoGridConfig& , int locCount, int locPop, int dayCount, int preCount, int schoolCount, int houseHoldCount,
                  int personCount, Population* pop)
 {
         vector<unsigned int> populationSample = {
