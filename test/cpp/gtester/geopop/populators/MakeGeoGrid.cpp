@@ -63,6 +63,7 @@ void MakeGeoGrid(const GeoGridConfig& , int locCount, int locPop, int dayCount, 
         HouseholdGenerator hhGen(rnMan);
         DaycareGenerator   dayGen(rnMan);
         PreSchoolGenerator preGen(rnMan);
+        
         size_t sampleId = 0;
         auto   personId = 0U;
         for (int locI = 0; locI < locCount; locI++) {
