@@ -76,6 +76,12 @@ void Populator<stride::ContactType::Id::PrimaryCommunity>::Apply(GeoGrid& geoGri
 template<>
 void Populator<stride::ContactType::Id::SecondaryCommunity>::Apply(GeoGrid& geoGrid, const GeoGridConfig& ggConfig);
 
+template<>
+void Populator<stride::ContactType::Id::Daycare>::Apply(GeoGrid& geoGrid, const GeoGridConfig& ggConfig);
+
+template<>
+void Populator<stride::ContactType::Id::PreSchool>::Apply(GeoGrid& geoGrid, const GeoGridConfig& ggConfig);
+
 // ---------------------------------------------------------------
 // Shorthand definitions.
 // ---------------------------------------------------------------
@@ -85,5 +91,7 @@ using WorkplacePopulator = Populator<stride::ContactType::Id::Workplace>;
 using HouseholdPopulator = Populator<stride::ContactType::Id::Household>;
 using PrimaryCommunityPopulator = Populator<stride::ContactType::Id::PrimaryCommunity>;
 using SecondaryCommunityPopulator = Populator<stride::ContactType::Id::SecondaryCommunity>;
+using DaycarePopulator = Populator<stride::ContactType::Id::Daycare>;
+using PreSchoolPopulator = Populator<stride::ContactType::Id::PreSchool>;
 
 } // namespace geopop

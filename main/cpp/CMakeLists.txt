@@ -78,6 +78,8 @@ set(STRIDE_SRC
     geopop/generators/PrimaryCommunityGenerator.cpp
     geopop/generators/SecondaryCommunityGenerator.cpp
     geopop/generators/WorkplaceGenerator.cpp
+    geopop/generators/DaycareGenerator.cpp
+    geopop/generators/PreSchoolGenerator.cpp
     #---
     geopop/io/LocationsCSVReader.cpp
     geopop/io/CommutesCSVReader.cpp
@@ -101,6 +103,8 @@ set(STRIDE_SRC
     geopop/populators/PrimaryCommunityPopulator.cpp
     geopop/populators/SecondaryCommunityPopulator.cpp
     geopop/populators/WorkplacePopulator.cpp
+    geopop/populators/DaycarePopulator.cpp
+    geopop/populators/PreSchoolPopulator.cpp
     #---
     ${PROTO_HEADER}
     ${PROTO_SRC}

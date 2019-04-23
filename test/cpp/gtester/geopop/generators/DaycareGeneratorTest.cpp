@@ -13,7 +13,7 @@
  *  Copyright 2018, Jan Broeckhove and Bistromatics group.
  */
 
-#include "geopop/generators/DaycareGenerator.h"
+#include "geopop/generators/Generator.h"
 
 #include "geopop/GeoGrid.h"
 #include "geopop/GeoGridConfig.h"
@@ -36,7 +36,7 @@ class DaycareGeneratorTest : public testing::Test
 {
 public:
         DaycareGeneratorTest()
-            : m_rn_man(RnInfo()), m_daycare_generator(m_rn_man), m_geogrid_config(), m_pop(Population::Create()),
+            : m_rn_man(RnInfo()), m_daycare_generator(m_rn_man), m_gg_config(), m_pop(Population::Create()),
               m_geo_grid(m_pop.get())
         {
         }
@@ -44,41 +44,42 @@ public:
 protected:
         RnMan                  m_rn_man;
         DaycareGenerator       m_daycare_generator;
-        GeoGridConfig          m_geogrid_config;
+        GeoGridConfig          m_gg_config;
         shared_ptr<Population> m_pop;
         GeoGrid                m_geo_grid;
+        unsigned int           m_ppday = m_gg_config.pools[Id::Daycare];
 };
 
 TEST_F(DaycareGeneratorTest, OneLocationTest)
 {
 
-        m_geogrid_config.input.pop_size           = 10000;
-        m_geogrid_config.popInfo.popcount_daycare = 300;
+        m_gg_config.param.pop_size           = 10000;
+        m_gg_config.info.popcount_daycare = 300;
 
-        auto loc1 = make_shared<Location>(1, 4, Coordinate(0, 0), "Antwerpen", m_geogrid_config.input.pop_size);
+        auto loc1 = make_shared<Location>(1, 4, Coordinate(0, 0), "Antwerpen", m_gg_config.param.pop_size);
         m_geo_grid.AddLocation(loc1);
 
-        m_daycare_generator.Apply(m_geo_grid, m_geogrid_config);
+        m_daycare_generator.Apply(m_geo_grid, m_gg_config);
 
         const auto& poolsOfLoc1 = loc1->CRefPools<Id::Daycare>();
-        EXPECT_EQ(poolsOfLoc1.size(), 17 * m_geogrid_config.pools.pools_per_daycare);
+        EXPECT_EQ(poolsOfLoc1.size(), 17 * m_ppday);
 }
 
 TEST_F(DaycareGeneratorTest, ZeroLocationTest)
 {
 
-        m_geogrid_config.input.pop_size           = 10000;
-        m_geogrid_config.popInfo.popcount_daycare = 300;
+        m_gg_config.param.pop_size           = 10000;
+        m_gg_config.info.popcount_daycare = 300;
 
-        m_daycare_generator.Apply(m_geo_grid, m_geogrid_config);
+        m_daycare_generator.Apply(m_geo_grid, m_gg_config);
 
         EXPECT_EQ(m_geo_grid.size(), 0);
 }
 
 TEST_F(DaycareGeneratorTest, FiveLocationsTest)
 {
-        m_geogrid_config.input.pop_size           = 37542 * 100;
-        m_geogrid_config.popInfo.popcount_daycare = 125140;
+        m_gg_config.param.pop_size           = 37542 * 100;
+        m_gg_config.info.popcount_daycare = 125140;
 
         auto loc1 = make_shared<Location>(1, 4, Coordinate(0, 0), "Antwerpen", 10150 * 100);
         auto loc2 = make_shared<Location>(1, 4, Coordinate(0, 0), "Vlaams-Brabant", 10040 * 100);
@@ -94,15 +95,14 @@ TEST_F(DaycareGeneratorTest, FiveLocationsTest)
 
         for (const auto& loc : m_geo_grid) {
                 loc->SetPopFraction(static_cast<double>(loc->GetPopCount()) /
-                                    static_cast<double>(m_geogrid_config.input.pop_size));
+                                    static_cast<double>(m_gg_config.param.pop_size));
         }
 
-        m_daycare_generator.Apply(m_geo_grid, m_geogrid_config);
+        m_daycare_generator.Apply(m_geo_grid, m_gg_config);
 
         array<unsigned int, 5> sizes{2021, 1933, 1527, 655, 817};
         for (auto i = 0U; i < sizes.size(); i++) {
-                EXPECT_EQ(sizes[i] * m_geogrid_config.pools.pools_per_daycare,
-                          m_geo_grid[i]->CRefPools(Id::Daycare).size());
+                EXPECT_EQ(sizes[i] * m_ppday, m_geo_grid[i]->CRefPools(Id::Daycare).size());
         }
 }
 

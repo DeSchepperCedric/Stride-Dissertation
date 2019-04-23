@@ -87,6 +87,12 @@ void Generator<stride::ContactType::Id::PrimaryCommunity>::Apply(GeoGrid& geoGri
 template<>
 void Generator<stride::ContactType::Id::SecondaryCommunity>::Apply(GeoGrid& geoGrid, const GeoGridConfig& ggConfig);
 
+template<>
+void Generator<stride::ContactType::Id::Daycare>::Apply(GeoGrid& geoGrid, const GeoGridConfig& ggConfig);
+
+template<>
+void Generator<stride::ContactType::Id::PreSchool>::Apply(GeoGrid& geoGrid, const GeoGridConfig& ggConfig);
+
 // ---------------------------------------------------------------
 // Shorthand definitions.
 // ---------------------------------------------------------------
@@ -96,5 +102,7 @@ using WorkplaceGenerator = Generator<stride::ContactType::Id::Workplace>;
 using HouseholdGenerator = Generator<stride::ContactType::Id::Household>;
 using PrimaryCommunityGenerator = Generator<stride::ContactType::Id::PrimaryCommunity>;
 using SecondaryCommunityGenerator = Generator<stride::ContactType::Id::SecondaryCommunity>;
+using DaycareGenerator = Generator<stride::ContactType::Id::Daycare>;
+using PreSchoolGenerator = Generator<stride::ContactType::Id::PreSchool>;
 
 } // namespace geopop

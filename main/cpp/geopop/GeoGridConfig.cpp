@@ -39,12 +39,12 @@ GeoGridConfig::GeoGridConfig(const ptree& configPt) : GeoGridConfig()
 {
         const auto pt = configPt.get_child("run.geopop_gen");
         param.pop_size                     = pt.get<unsigned int>("population_size");
-        param.participation_daycare        = pt.get<double>("participation_daycare");
-        param.participation_preschool      = pt.get<double>("participation_preschool");
         param.participation_college        = pt.get<double>("participation_college");
         param.fraction_workplace_commuters = pt.get<double>("fraction_workplace_commuters");
         param.fraction_college_commuters   = pt.get<double>("fraction_college_commuters");
         param.particpation_workplace       = pt.get<double>("particpation_workplace");
+        param.participation_preschool      = pt.get<double>("participation_preschool");
+        param.participation_daycare        = pt.get<double>("participation_daycare");
 
         people[Id::Daycare]                = pt.get<unsigned int>("people_per_Daycare", 18U);
         people[Id::PreSchool]              = pt.get<unsigned int>("people_per_PreSchool", 120U);
@@ -54,8 +54,6 @@ GeoGridConfig::GeoGridConfig(const ptree& configPt) : GeoGridConfig()
         people[Id::PrimaryCommunity]       = pt.get<unsigned int>("people_per_PrimaryCommunity", 2000U);
         people[Id::SecondaryCommunity]     = pt.get<unsigned int>("people_per_SecondaryCommunity", 2000U);
 
-        pools[Id::Daycare]                = pt.get<unsigned int>("pools_per_Daycare", 1U);
-        pools[Id::PreSchool]              = pt.get<unsigned int>("pools_per_PreSchool", 6U);
         pools[Id::K12School]              = pt.get<unsigned int>("pools_per_K12School", 25U);
         pools[Id::College]                = pt.get<unsigned int>("pools_per_College", 20U);
 }
@@ -77,6 +75,7 @@ void GeoGridConfig::SetData(const string& householdsFileName)
         auto ref_k12school = 0U;
         auto ref_college   = 0U;
         auto ref_workplace = 0U;
+
         for (const auto& hhAgeProfile : refHH.ages) {
                 for (const auto& age : hhAgeProfile) {
                         if (Daycare::HasAge(age)) {
@@ -111,9 +110,11 @@ void GeoGridConfig::SetData(const string& householdsFileName)
         const auto age_count_college   = static_cast<unsigned int>(floor(popSize * fraction_college_age));
         const auto age_count_workplace = static_cast<unsigned int>(floor(popSize * fraction_workplace_age));
 
+
         info.popcount_daycare = static_cast<unsigned int>(floor(param.participation_daycare * age_count_daycare));
 
-        info.popcount_preschool = static_cast<unsigned int>(floor(param.participation_preschool * age_count_preschool));
+        info.popcount_preschool = static_cast<unsigned int>(
+            floor(param.participation_preschool * age_count_preschool));
 
         info.popcount_k12school = age_count_k12school;
 
@@ -130,21 +131,21 @@ ostream& operator<<(ostream& out, const GeoGridConfig& config)
         const int w = 53;
         out.setf(std::ios_base::left, std::ios_base::adjustfield);
         out << "Input:" << endl;
-        out << setw(w) << "Fraction college commuters:" << config.input.fraction_college_commuters << "\n";
-        out << setw(w) << "Fraction workplace commuters:" << config.input.fraction_workplace_commuters << "\n";
-        out << setw(w) << "Participation fraction of daycare:" << config.input.participation_daycare << "\n";
-        out << setw(w) << "Participation fraction of preschool:" << config.input.participation_preschool << "\n";
-        out << setw(w) << "Participation fraction of college:" << config.input.participation_college << "\n";
-        out << setw(w) << "Participation fraaction of workplace:" << config.input.particpation_workplace << "\n";
-        out << setw(w) << "Target population size" << intToDottedString(config.input.pop_size) << "\n"
+        out << setw(w) << "Fraction college commuters:" << config.param.fraction_college_commuters << "\n";
+        out << setw(w) << "Fraction workplace commuters:" << config.param.fraction_workplace_commuters << "\n";
+        out << setw(w) << "Participation fraction of daycare:" << config.param.participation_daycare << "\n";
+        out << setw(w) << "Participation fraction of preschool:" << config.param.participation_preschool << "\n";
+        out << setw(w) << "Participation fraction of college:" << config.param.participation_college << "\n";
+        out << setw(w) << "Participation fraaction of workplace:" << config.param.particpation_workplace << "\n";
+        out << setw(w) << "Target population size" << intToDottedString(config.param.pop_size) << "\n"
             << "\n";
         out << "Calculated:"
             << "\n";
-        out << setw(w) << "Daycare student count:" << intToDottedString(config.popInfo.popcount_daycare) << "\n";
-        out << setw(w) << "PreSchool student count:" << intToDottedString(config.popInfo.popcount_preschool) << "\n";
-        out << setw(w) << "K12School student count:" << intToDottedString(config.popInfo.popcount_k12school) << "\n";
-        out << setw(w) << "College student count:" << intToDottedString(config.popInfo.popcount_college) << "\n";
-        out << setw(w) << "Workplace person count:" << intToDottedString(config.popInfo.popcount_workplace) << "\n";
+        out << setw(w) << "Daycare student count:" << intToDottedString(config.info.popcount_daycare) << "\n";
+        out << setw(w) << "PreSchool student count:" << intToDottedString(config.info.popcount_preschool) << "\n";
+        out << setw(w) << "K12School student count:" << intToDottedString(config.info.popcount_k12school) << "\n";
+        out << setw(w) << "College student count:" << intToDottedString(config.info.popcount_college) << "\n";
+        out << setw(w) << "Workplace person count:" << intToDottedString(config.info.popcount_workplace) << "\n";
         out << endl;
         return out;
 }

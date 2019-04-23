@@ -33,7 +33,6 @@ using namespace geopop;
  * @param locCount          The number of Locations.
  * @param locPop            The population count at each Location.
  * @param dayCount          The number of daycares at each location.
- * @param preCount          The number of preSchools at each location.
  * @param schoolCount       The number of K12Schools at each Location.
  * @param houseHoldCount    The number of households at each Location.
  * @param personCount       The number of persons per Household.
@@ -64,7 +63,7 @@ void MakeGeoGrid(const GeoGridConfig& , int locCount, int locPop, int dayCount, 
         HouseholdGenerator hhGen(rnMan);
         DaycareGenerator   dayGen(rnMan);
         PreSchoolGenerator preGen(rnMan);
-
+        
         size_t sampleId = 0;
         auto   personId = 0U;
         for (int locI = 0; locI < locCount; locI++) {
@@ -88,7 +87,7 @@ void MakeGeoGrid(const GeoGridConfig& , int locCount, int locPop, int dayCount, 
 
                         for (int i = 0; i < personCount; i++) {
                                 auto sample = populationSample[sampleId % populationSize];
-                                auto p      = pop->CreatePerson(personId, sample, contactPool->GetId(), 0, 0, 0, 0, 0);
+                                auto p = pop->CreatePerson(personId, sample, contactPool->GetId(), 0, 0, 0, 0, 0, 0, 0);
                                 contactPool->AddMember(p);
                                 sampleId++;
                                 personId++;

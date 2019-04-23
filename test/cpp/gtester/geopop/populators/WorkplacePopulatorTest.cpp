@@ -61,7 +61,7 @@ TEST_F(WorkplacePopulatorTest, NoPopulation)
 
 TEST_F(WorkplacePopulatorTest, NoActive)
 {
-        MakeGeoGrid(m_geogrid_config, 3, 100, 12, 2, 3, 33, 3, m_pop.get());
+        MakeGeoGrid(m_gg_config, 3, 100, 12, 2, 3, 33, 3, m_pop.get());
 
         m_gg_config.param.particpation_workplace = 0;
         m_gg_config.param.participation_college  = 1;
@@ -88,7 +88,7 @@ TEST_F(WorkplacePopulatorTest, NoActive)
 
 TEST_F(WorkplacePopulatorTest, NoCommuting)
 {
-        MakeGeoGrid(m_geogrid_config, 3, 100, 12, 2, 3, 33, 3, m_pop.get());
+        MakeGeoGrid(m_gg_config, 3, 100, 12, 2, 3, 33, 3, m_pop.get());
 
         m_gg_config.param.fraction_workplace_commuters = 0;
         m_gg_config.param.particpation_workplace       = 1;
@@ -161,12 +161,12 @@ TEST_F(WorkplacePopulatorTest, NoCommuting)
 
 TEST_F(WorkplacePopulatorTest, OnlyCommuting)
 {
-        MakeGeoGrid(m_geogrid_config, 2, 3, 12, 90, 3, 33, 3, m_pop.get());
+        MakeGeoGrid(m_gg_config, 3, 100, 12, 90, 3, 33, 3, m_pop.get());
 
         m_gg_config.param.fraction_workplace_commuters = 0;
         m_gg_config.param.fraction_workplace_commuters = 1;
         m_gg_config.param.fraction_college_commuters   = 0;
-        m_gg_config.info.popcount_workplace         = 1;
+        m_gg_config.info.popcount_workplace            = 1;
         m_gg_config.param.particpation_workplace       = 1;
         m_gg_config.param.participation_college        = 0.5;
 
@@ -221,7 +221,7 @@ TEST_F(WorkplacePopulatorTest, OnlyCommuting)
 
 TEST_F(WorkplacePopulatorTest, NoCommutingAvailable)
 {
-        MakeGeoGrid(m_geogrid_config, 3, 100, 12, 2, 3, 33, 3, m_pop.get());
+        MakeGeoGrid(m_gg_config, 3, 100, 12, 2, 3, 33, 3, m_pop.get());
 
         m_gg_config.param.fraction_workplace_commuters = 0;
         m_gg_config.param.fraction_workplace_commuters = 1;
