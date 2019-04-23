@@ -15,7 +15,7 @@
 
 #include "GeoGridJSONReader.h"
 
-#include "geopop/ContactCenter.h"
+//#include "geopop/ContactCenter.h"
 #include "geopop/GeoGrid.h"
 #include "pop/Population.h"
 #include "util/Exception.h"

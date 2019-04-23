@@ -40,8 +40,8 @@ namespace geopop {
 std::shared_ptr<GeoGridReader> GeoGridReaderFactory::CreateReader(const std::string&  filename,
                                                                   stride::Population* pop) const
 {
-        const filesys::path path(FileSys::GetDataDir() / filesys::path(filename));
-        //const filesys::path path(filename);
+//        const filesys::path path(FileSys::GetDataDir() / filesys::path(filename));
+        const filesys::path path(filename);
         if (!filesys::exists(path)) {
                 throw stride::util::Exception("GeoGridReaderFactory::CreateReader> File not found: " + path.string());
         }
