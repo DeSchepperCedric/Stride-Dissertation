@@ -74,6 +74,8 @@ void RunConfigManager::AddGeoPopConfig(ptree& pt)
                 <participation_college>0.5</participation_college>
                 <particpation_workplace>0.75</particpation_workplace>
                 <population_size>600000</population_size>
+                <participation_daycare>0.45</participation_daycare>
+                <participation_preschool>0.99</participation_preschool>
     </geopop_gen>
 </run>
         )###";

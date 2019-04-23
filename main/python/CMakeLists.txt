@@ -26,13 +26,13 @@ add_subdirectory(age_immunity_shift)
 # Build & install the Swig files for python environment.
 #============================================================================
 set(SWIG_IFACE
-        swig/contactpooltype.i
-        swig/health.i
-        swig/population.i
-        swig/sim.i
-        swig/pystride.i
-        swig/transmissionprofile.i
-        )
+    swig/contactpooltype.i
+    swig/health.i
+    swig/population.i
+    swig/sim.i
+    swig/pystride.i
+    swig/transmissionprofile.i
+    )
 
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -w")
 include(${SWIG_USE_FILE})
@@ -45,14 +45,14 @@ swig_link_libraries(pystride PUBLIC libstride ${PYTHON_LIBRARIES})
 # Install Python package (modules plus scripts).
 #================================================================================================
 INSTALL(FILES
-        ${CMAKE_BINARY_DIR}/main/python/pystride.py
-        ${CMAKE_BINARY_DIR}/main/python/_pystride.so
-        DESTINATION ${BIN_INSTALL_LOCATION}/pystride/stride)
+    ${CMAKE_BINARY_DIR}/main/python/pystride.py
+    ${CMAKE_BINARY_DIR}/main/python/_pystride.so
+    DESTINATION ${BIN_INSTALL_LOCATION}/pystride/stride)
 
 INSTALL(DIRECTORY
-        pystride
-        postprocessing
-        DESTINATION ${BIN_INSTALL_LOCATION})
+    pystride
+    postprocessing
+    DESTINATION ${BIN_INSTALL_LOCATION})
 
 #================================================================================================
 # Clean up

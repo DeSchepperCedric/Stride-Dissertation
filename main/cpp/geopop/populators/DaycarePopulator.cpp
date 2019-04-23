@@ -29,7 +29,7 @@ using namespace std;
 using namespace stride;
 using namespace stride::ContactType;
 
-template<>
+template <>
 void Populator<stride::ContactType::Id::Daycare>::Apply(GeoGrid& geoGrid, const GeoGridConfig& geoGridConfig)
 {
         m_logger->info("Starting to populate Daycares");
@@ -44,8 +44,7 @@ void Populator<stride::ContactType::Id::Daycare>::Apply(GeoGrid& geoGrid, const 
 
                 AssertThrow(!nearByDaycaresPools.empty(), "No Daycares found!", m_logger);
 
-                const auto dist =
-                    m_rn_man.GetUniformIntGenerator(0, static_cast<int>(nearByDaycaresPools.size()), 0U);
+                const auto dist = m_rn_man.GetUniformIntGenerator(0, static_cast<int>(nearByDaycaresPools.size()), 0U);
 
                 // 2. for every baby assign a class
                 for (const auto& hhPool : loc->RefPools(Id::Household)) {

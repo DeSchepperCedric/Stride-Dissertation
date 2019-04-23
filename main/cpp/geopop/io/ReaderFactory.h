@@ -43,10 +43,10 @@ class ReaderFactory
 {
 public:
         /// Create a Reader based on the filename relative to the data directory.
-        static std::shared_ptr<LocationsReader> CreateLocationsReader(const std::string &filename);
+        static std::shared_ptr<LocationsReader> CreateLocationsReader(const std::string& filename);
 
         /// Create a Reader based on an absolute filesystem path for the input file.
-        static std::shared_ptr<LocationsReader> CreateLocationsReader(const filesys::path &path);
+        static std::shared_ptr<LocationsReader> CreateLocationsReader(const filesys::path& path);
 
         /// Create a CommutesReader based on the filename relative to the data directory.
         static std::shared_ptr<CommutesReader> CreateCommutesReader(const std::string& filename);

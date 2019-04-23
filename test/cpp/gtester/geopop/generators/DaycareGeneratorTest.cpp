@@ -53,7 +53,7 @@ protected:
 TEST_F(DaycareGeneratorTest, OneLocationTest)
 {
 
-        m_gg_config.param.pop_size           = 10000;
+        m_gg_config.param.pop_size        = 10000;
         m_gg_config.info.popcount_daycare = 300;
 
         auto loc1 = make_shared<Location>(1, 4, Coordinate(0, 0), "Antwerpen", m_gg_config.param.pop_size);
@@ -68,7 +68,7 @@ TEST_F(DaycareGeneratorTest, OneLocationTest)
 TEST_F(DaycareGeneratorTest, ZeroLocationTest)
 {
 
-        m_gg_config.param.pop_size           = 10000;
+        m_gg_config.param.pop_size        = 10000;
         m_gg_config.info.popcount_daycare = 300;
 
         m_daycare_generator.Apply(m_geo_grid, m_gg_config);
@@ -78,7 +78,7 @@ TEST_F(DaycareGeneratorTest, ZeroLocationTest)
 
 TEST_F(DaycareGeneratorTest, FiveLocationsTest)
 {
-        m_gg_config.param.pop_size           = 37542 * 100;
+        m_gg_config.param.pop_size        = 37542 * 100;
         m_gg_config.info.popcount_daycare = 125140;
 
         auto loc1 = make_shared<Location>(1, 4, Coordinate(0, 0), "Antwerpen", 10150 * 100);

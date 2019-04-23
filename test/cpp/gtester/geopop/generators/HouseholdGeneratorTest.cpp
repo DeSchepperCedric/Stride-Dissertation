@@ -77,7 +77,7 @@ TEST_F(HouseholdGeneratorTest, ZeroLocationTest)
 TEST_F(HouseholdGeneratorTest, FiveLocationsTest)
 {
         m_gg_config.info.count_households = 4000;
-        m_gg_config.param.pop_size           = 37542 * 100;
+        m_gg_config.param.pop_size        = 37542 * 100;
 
         auto loc1 = make_shared<Location>(1, 4, Coordinate(0, 0), "Antwerpen", 10150 * 100);
         auto loc2 = make_shared<Location>(2, 4, Coordinate(0, 0), "Vlaams-Brabant", 10040 * 100);

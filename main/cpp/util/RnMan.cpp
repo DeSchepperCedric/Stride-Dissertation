@@ -83,7 +83,7 @@ std::function<int()> RnMan::GetDiscreteGenerator(const vector<double>& weights, 
 
 bool RnMan::MakeWeightedCoinFlip(double fraction, unsigned int i)
 {
-        array<double, 2> weights{ 1.0 - fraction, fraction};
+        array<double, 2> weights{1.0 - fraction, fraction};
         // -> 0, return is false -> not part of the fraction
         // -> 1, return is true -> part of the fraction
         auto dist = m_rn->GetDiscreteGenerator(weights.begin(), weights.end(), i);
