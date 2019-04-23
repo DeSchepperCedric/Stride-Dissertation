@@ -83,8 +83,8 @@ set(STRIDE_SRC
     #---
     geopop/io/LocationsCSVReader.cpp
     geopop/io/CommutesCSVReader.cpp
-    #geopop/io/GeoGridJSONReader.cpp
-    #geopop/io/GeoGridJSONWriter.cpp
+    geopop/io/GeoGridJSONReader.cpp
+    geopop/io/GeoGridJSONWriter.cpp
     geopop/io/GeoGridProtoReader.cpp
     geopop/io/GeoGridProtoReader.h
     geopop/io/GeoGridProtoWriter.cpp
@@ -95,6 +95,7 @@ set(STRIDE_SRC
     geopop/io/GeoGridWriterFactory.cpp
     geopop/io/GeoGridWriterFactory.h
     geopop/io/HouseholdCSVReader.cpp
+    geopop/io/HouseholdJSONReader.cpp
     geopop/io/ReaderFactory.cpp
     #---
     geopop/populators/CollegePopulator.cpp
@@ -176,7 +177,10 @@ include(CheckIPOSupported)
 # Build the stride binary.
 #============================================================================
 add_executable(stride execs/stride.cpp)
+add_executable(JSONproto prototypes/JSONArchPrototype.cpp)
 target_link_libraries(stride libstride)
+target_link_libraries(JSONproto libstride)
 install(TARGETS stride DESTINATION ${BIN_INSTALL_LOCATION})
+install(TARGETS JSONproto DESTINATION ${BIN_INSTALL_LOCATION})
 
 #############################################################################

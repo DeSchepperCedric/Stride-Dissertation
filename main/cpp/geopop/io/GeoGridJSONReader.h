@@ -20,7 +20,8 @@
 #include "contact/ContactType.h"
 #include "geopop/Location.h"
 
-#include <boost/property_tree/ptree_fwd.hpp>
+#include <boost/lexical_cast.hpp>
+#include <nlohmann/json.hpp>
 
 namespace geopop {
 
@@ -46,20 +47,35 @@ public:
         void Read() override;
 
 private:
-        /// Create a ContactCenter based on the information stored in the provided boost property tree.
-        std::shared_ptr<ContactCenter> ParseContactCenter(boost::property_tree::ptree& contactCenter);
+        void ParseContactCenters(nlohmann::json& contactCenter, std::shared_ptr<Location> loc);
 
         /// Create a ContactCenter based on the information stored in the provided boost property tree.
-        stride::ContactPool* ParseContactPool(boost::property_tree::ptree& contactPool, stride::ContactType::Id typeId);
+        std::shared_ptr<Location> ParseLocation(nlohmann::json& location);
+
+        /// Create a ContactCenter based on the information stored in the provided boost property tree.
+        void ParseContactPool(std::shared_ptr<Location> loc, nlohmann::json& contactPool, stride::ContactType::Id typeId);
 
         /// Create a Coordinate based on the information stored in the provided boost property tree.
-        Coordinate ParseCoordinate(boost::property_tree::ptree& coordinate);
+        Coordinate ParseCoordinate(nlohmann::json& coordinate);
 
         /// Create a Location based on the information stored in the provided boost property tree.
-        std::shared_ptr<Location> ParseLocation(boost::property_tree::ptree& location);
+        std::shared_ptr<Location> ParseLocation(nlohmann::json& location, stride::ContactType::Id typeId);
 
         /// Create a Person based on the information stored in the provided boost property tree.
-        stride::Person* ParsePerson(boost::property_tree::ptree& person);
+        stride::Person* ParsePerson(nlohmann::json& person);
+
+        /// Get numerical data from a json node
+        template<typename T>
+        T ParseNumerical(nlohmann::json& node){
+            if (node.type() == nlohmann::json::value_t::string) {
+                return boost::lexical_cast<T>(node.get<std::string>());
+            } else {
+                return node.get<T>();
+            }
+        }
+
+        /// Get an array from a json node
+        nlohmann::json ParseArray(nlohmann::json& node);
 };
 
 } // namespace geopop

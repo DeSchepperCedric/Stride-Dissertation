@@ -15,7 +15,7 @@
 
 #include "GeoGridIOUtils.h"
 
-#include "geopop/ContactCenter.h"
+//#include "geopop/ContactCenter.h"
 #include "geopop/GeoGridConfig.h"
 #include "geopop/io/GeoGridJSONWriter.h"
 #include "pop/Population.h"
@@ -26,6 +26,7 @@
 #include <gtest/gtest.h>
 #include <iostream>
 #include <sstream>
+#include <nlohmann/json.hpp>
 
 using namespace std;
 using namespace geopop;
@@ -36,15 +37,15 @@ using boost::property_tree::ptree;
 
 namespace {
 
-void sortContactCenters(ptree& pt)
+void sortContactCenters(nlohmann::json& json)
 {
-        auto& contactCenters       = pt.get_child("contactCenters");
-        auto  compareContactCenter = [](const pair<string, ptree>& a, const pair<string, ptree>& b) {
-                return a.second.get<string>("type") < b.second.get<string>("type");
+        auto& contactCenters       = json.at("contactCenters");
+        auto  compareContactCenter = [](const nlohmann::json& a, const nlohmann::json& b) {
+                return a.at("type") < b.at("type");
         };
-        contactCenters.sort<decltype(compareContactCenter)>(compareContactCenter);
+        std::sort(contactCenters.begin(), contactCenters.end(), compareContactCenter);
 }
-
+/*
 void sortTree(ptree& tree)
 {
         auto compareLocation = [](const pair<string, ptree>& a, const pair<string, ptree>& b) {
@@ -57,25 +58,36 @@ void sortTree(ptree& tree)
                 sortContactCenters(it->second.get_child(""));
         }
 }
+*/
+void sortJSON(nlohmann::json& json)
+{
+    auto compareLocation = [](const nlohmann::json& a, const nlohmann::json& b) {
+        return a.at("id") < b.at("id");
+    };
+    auto& locations = json.at("locations");
+    std::sort(locations.begin(), locations.end(), compareLocation);
+
+    for (auto it = locations.begin(); it != locations.end(); it++) {
+        sortContactCenters(*it);
+    }
+}
 
 bool compareGeoGrid(GeoGrid& geoGrid, const string& testname)
 {
         GeoGridJSONWriter writer;
         stringstream      ss;
         writer.Write(geoGrid, ss);
-        ptree result;
-        read_json(ss, result);
-        sortTree(result);
+        nlohmann::json result;
+        ss >> result;
+        sortJSON(result);
 
-        ptree expected;
-        read_json(FileSys::GetTestsDir().string() + "/testdata/GeoGridJSON/" + testname, expected);
-        sortTree(expected);
+        nlohmann::json expected;
+        std::ifstream inputStream(FileSys::GetTestsDir().string() + "/testdata/GeoGridJSON/writerJSON/" + testname);
 
-        ostringstream oss1, oss2;
-        boost::property_tree::xml_parser::write_xml(oss1, result);
-        boost::property_tree::xml_parser::write_xml(oss2, expected);
-        // return result == expected;
-        return oss1.str() == oss2.str();
+        inputStream >> expected;
+        sortJSON(expected);
+
+        return result == expected;
 }
 
 TEST(GeoGridJSONWriterTest, locationTest)
@@ -90,18 +102,19 @@ TEST(GeoGridJSONWriterTest, locationTest)
 }
 TEST(GeoGridJSONWriterTest, contactCentersTest)
 {
-        auto pop      = Population::Create();
-        auto geoGrid  = GeoGrid(pop.get());
-        auto location = make_shared<Location>(1, 4, Coordinate(0, 0), "Bavikhove", 2500);
+        const auto pop     = Population::Create();
+        auto&      geoGrid = pop->RefGeoGrid();
+        const auto loc     = make_shared<Location>(1, 4, Coordinate(0, 0), "Bavikhove", 2500);
 
-        location->AddCenter(make_shared<ContactCenter>(0, Id::K12School));
-        location->AddCenter(make_shared<ContactCenter>(1, Id::PrimaryCommunity));
-        location->AddCenter(make_shared<ContactCenter>(2, Id::College));
-        location->AddCenter(make_shared<ContactCenter>(3, Id::Household));
-        location->AddCenter(make_shared<ContactCenter>(4, Id::Workplace));
-        location->AddCenter(make_shared<ContactCenter>(5, Id::Daycare));
-        location->AddCenter(make_shared<ContactCenter>(6, Id::PreSchool));
-        geoGrid.AddLocation(location);
+        loc->RefPools(Id::K12School).emplace_back(pop->RefPoolSys().CreateContactPool(Id::K12School));
+        loc->RefPools(Id::PrimaryCommunity).emplace_back(pop->RefPoolSys().CreateContactPool(Id::PrimaryCommunity));
+        loc->RefPools(Id::College).emplace_back(pop->RefPoolSys().CreateContactPool(Id::College));
+        loc->RefPools(Id::Household).emplace_back(pop->RefPoolSys().CreateContactPool(Id::Household));
+        loc->RefPools(Id::Workplace).emplace_back(pop->RefPoolSys().CreateContactPool(Id::Workplace));
+        loc->RefPools(Id::Daycare).emplace_back(pop->RefPoolSys().CreateContactPool(Id::Daycare));
+        loc->RefPools(Id::PreSchool).emplace_back(pop->RefPoolSys().CreateContactPool(Id::PreSchool));
+
+        geoGrid.AddLocation(loc);
 
         EXPECT_TRUE(compareGeoGrid(geoGrid, "test1.json"));
 }
