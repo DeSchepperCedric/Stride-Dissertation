@@ -25,10 +25,11 @@
  * @param ggConfig          The GeoGridConfig to use.
  * @param locCount          The number of Locations.
  * @param locPop            The population count at each Location.
+ * @param dayCount          The number of daycares at each location.
  * @param schoolCount       The number of K12Schools at each Location.
  * @param houseHoldCount    The number of households at each Location.
  * @param personCount       The number of persons per Household.
  * @param pop               The population carrying this GeoGrid.
  */
-void MakeGeoGrid(const geopop::GeoGridConfig& ggConfig, int locCount, int locPop, int schoolCount, int houseHoldCount,
-                 int personCount, stride::Population* pop);
+void MakeGeoGrid(const geopop::GeoGridConfig& ggConfig, int locCount, int locPop, int dayCount, int preCount,
+                 int schoolCount, int houseHoldCount, int personCount, stride::Population* pop);

@@ -1,3 +1,4 @@
+
 /*
  *  This is free software: you can redistribute it and/or modify it
  *  under the terms of the GNU General Public License as published by
@@ -13,7 +14,7 @@
  *  Copyright 2018, 2019, Jan Broeckhove and Bistromatics group.
  */
 
-#include "HouseholdPopulator.h"
+#include "Populator.h"
 
 #include "geopop/GeoGrid.h"
 #include "geopop/GeoGridConfig.h"
@@ -25,7 +26,8 @@ namespace geopop {
 using namespace std;
 using namespace stride::ContactType;
 
-void HouseholdPopulator::Apply(GeoGrid& geoGrid, const GeoGridConfig& geoGridConfig)
+template<>
+void Populator<stride::ContactType::Id::Household>::Apply(GeoGrid& geoGrid, const GeoGridConfig& geoGridConfig)
 {
         m_logger->trace("Starting to populate Households");
 
@@ -37,7 +39,7 @@ void HouseholdPopulator::Apply(GeoGrid& geoGrid, const GeoGridConfig& geoGridCon
                 for (auto& pool : loc->RefPools(Id::Household)) {
                         const auto hDraw = static_cast<unsigned int>(hh_dist());
                         for (const auto& age : geoGridConfig.refHH.ages[hDraw]) {
-                                const auto p = pop->CreatePerson(person_id++, age, pool->GetId(), 0, 0, 0, 0, 0);
+                                const auto p = pop->CreatePerson(person_id++, age, pool->GetId(), 0, 0, 0, 0, 0, 0, 0);
                                 pool->AddMember(p);
                         }
                 }
