@@ -25,10 +25,10 @@ add_definitions(-DGTEST_LANG_CXX11)
 # Build & install the (OpenMP enabled if OpenMP available) executable.
 #============================================================================
 set_source_files_properties(
-        geopop/io/GeoGridIOUtils.cpp
-        geopop/io/GeoGridProtoReaderTest.cpp
-        PROPERTIES
-        COMPILE_FLAGS "-I${Protobuf_PBS_DIR}"
+    geopop/io/GeoGridIOUtils.cpp
+    geopop/io/GeoGridProtoReaderTest.cpp
+    PROPERTIES
+    COMPILE_FLAGS "-I${Protobuf_PBS_DIR}"
 )
 
 set(EXEC gtester)
@@ -61,8 +61,8 @@ set(SRC
         geopop/io/CitiesCSVReaderTest.cpp
         geopop/io/CommutesCSVReaderTest.cpp
         geopop/io/GeoGridIOUtils.cpp
-        #geopop/io/GeoGridJSONReaderTest.cpp
-        #geopop/io/GeoGridJSONWriterTest.cpp
+#        geopop/io/GeoGridJSONReaderTest.cpp
+#        geopop/io/GeoGridJSONWriterTest.cpp
         geopop/io/GeoGridProtoReaderTest.cpp
         geopop/io/GeoGridProtoWriterTest.cpp
         geopop/io/HouseholdCSVReaderTest.cpp
@@ -114,9 +114,8 @@ install(DIRECTORY testdata/ DESTINATION ${TESTS_INSTALL_LOCATION}/testdata/)
 # Define tests.
 #============================================================================
 add_test(NAME ${EXEC}
-        WORKING_DIRECTORY ${TESTS_DIR}
-        COMMAND ${CMAKE_INSTALL_PREFIX}/${BIN_INSTALL_LOCATION}/${EXEC}
-        --gtest_output=xml:gtester_all.xml
-        )
+        WORKING_DIRECTORY ${CMAKE_INSTALL_PREFIX}
+        COMMAND ${BIN_INSTALL_LOCATION}/${EXEC} --gtest_output=xml:${TESTS_INSTALL_LOCATION}/gtester_all.xml
+)
 
 #############################################################################

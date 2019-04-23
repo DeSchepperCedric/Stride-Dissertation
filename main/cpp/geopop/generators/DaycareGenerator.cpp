@@ -13,13 +13,9 @@
  *  Copyright 2018, 2019, Jan Broeckhove and Bistromatics group.
  */
 
-#include "DaycareGenerator.h"
+#include "Generator.h"
 
-#include "geopop/GeoGrid.h"
-#include "geopop/GeoGridConfig.h"
-#include "geopop/Location.h"
-#include "pop/Population.h"
-#include "util/RnMan.h"
+#include "util/Assert.h"
 
 namespace geopop {
 
@@ -27,7 +23,8 @@ using namespace std;
 using namespace stride;
 using namespace stride::ContactType;
 
-void DaycareGenerator::Apply(GeoGrid& geoGrid, const GeoGridConfig& geoGridConfig)
+template <>
+void Generator<stride::ContactType::Id::Daycare>::Apply(GeoGrid& geoGrid, const GeoGridConfig& ggConfig)
 {
         // 1. given the number of persons of daycare age, calculate number of daycares; daycares
         //    have 3 pupils on average
@@ -35,9 +32,9 @@ void DaycareGenerator::Apply(GeoGrid& geoGrid, const GeoGridConfig& geoGridConfi
         //    relative number of pupils for that location; the relative number of pupils is set
         //    to the relative population w.r.t the total population.
 
-        const auto pupilCount = geoGridConfig.popInfo.popcount_daycare;
+        const auto pupilCount = ggConfig.info.popcount_daycare;
         const auto schoolCount =
-            static_cast<unsigned int>(ceil(pupilCount / static_cast<double>(geoGridConfig.pools.daycare_size)));
+            static_cast<unsigned int>(ceil(pupilCount / static_cast<double>(ggConfig.people[Id::Daycare])));
 
         vector<double> weights;
         for (const auto& loc : geoGrid) {
@@ -54,16 +51,7 @@ void DaycareGenerator::Apply(GeoGrid& geoGrid, const GeoGridConfig& geoGridConfi
 
         for (auto i = 0U; i < schoolCount; i++) {
                 const auto loc = geoGrid[dist()];
-                AddPools(*loc, pop, geoGridConfig.pools.pools_per_daycare);
-        }
-}
-
-void DaycareGenerator::AddPools(Location& loc, Population* pop, unsigned int number)
-{
-        auto& poolSys = pop->RefPoolSys();
-        for (auto i = 0U; i < number; ++i) {
-                const auto p = poolSys.CreateContactPool(Id::Daycare);
-                loc.RegisterPool<Id::Daycare>(p);
+                AddPools(*loc, pop, ggConfig);
         }
 }
 

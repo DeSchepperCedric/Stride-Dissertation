@@ -13,7 +13,7 @@
  *  Copyright 2018, Jan Broeckhove and Bistromatics group.
  */
 
-#include "geopop/generators/PreSchoolGenerator.h"
+#include "geopop/generators/Generator.h"
 
 #include "geopop/GeoGrid.h"
 #include "geopop/GeoGridConfig.h"
@@ -36,7 +36,7 @@ class PreSchoolGeneratorTest : public testing::Test
 {
 public:
         PreSchoolGeneratorTest()
-            : m_rn_man(RnInfo()), m_preschool_generator(m_rn_man), m_geogrid_config(), m_pop(Population::Create()),
+            : m_rn_man(RnInfo()), m_preschool_generator(m_rn_man), m_gg_config(), m_pop(Population::Create()),
               m_geo_grid(m_pop.get())
         {
         }
@@ -44,39 +44,40 @@ public:
 protected:
         RnMan                  m_rn_man;
         PreSchoolGenerator     m_preschool_generator;
-        GeoGridConfig          m_geogrid_config;
+        GeoGridConfig          m_gg_config;
         shared_ptr<Population> m_pop;
         GeoGrid                m_geo_grid;
+        unsigned int           m_pppre = m_gg_config.pools[Id::PreSchool];
 };
 
 TEST_F(PreSchoolGeneratorTest, OneLocationTest)
 {
-        m_geogrid_config.input.pop_size             = 10000;
-        m_geogrid_config.popInfo.popcount_preschool = 300;
+        m_gg_config.param.pop_size          = 10000;
+        m_gg_config.info.popcount_preschool = 300;
 
-        auto loc1 = make_shared<Location>(1, 4, Coordinate(0, 0), "Antwerpen", m_geogrid_config.input.pop_size);
+        auto loc1 = make_shared<Location>(1, 4, Coordinate(0, 0), "Antwerpen", m_gg_config.param.pop_size);
         m_geo_grid.AddLocation(loc1);
 
-        m_preschool_generator.Apply(m_geo_grid, m_geogrid_config);
+        m_preschool_generator.Apply(m_geo_grid, m_gg_config);
 
         const auto& poolsOfLoc1 = loc1->CRefPools<Id::PreSchool>();
-        EXPECT_EQ(poolsOfLoc1.size(), 3 * m_geogrid_config.pools.pools_per_preschool);
+        EXPECT_EQ(poolsOfLoc1.size(), 3 * m_pppre);
 }
 
 TEST_F(PreSchoolGeneratorTest, ZeroLocationTest)
 {
-        m_geogrid_config.input.pop_size             = 10000;
-        m_geogrid_config.popInfo.popcount_preschool = 300;
+        m_gg_config.param.pop_size          = 10000;
+        m_gg_config.info.popcount_preschool = 300;
 
-        m_preschool_generator.Apply(m_geo_grid, m_geogrid_config);
+        m_preschool_generator.Apply(m_geo_grid, m_gg_config);
 
         EXPECT_EQ(m_geo_grid.size(), 0);
 }
 
 TEST_F(PreSchoolGeneratorTest, FiveLocationsTest)
 {
-        m_geogrid_config.input.pop_size             = 37542 * 100;
-        m_geogrid_config.popInfo.popcount_preschool = 125140;
+        m_gg_config.param.pop_size          = 37542 * 100;
+        m_gg_config.info.popcount_preschool = 125140;
 
         auto loc1 = make_shared<Location>(1, 4, Coordinate(0, 0), "Antwerpen", 10150 * 100);
         auto loc2 = make_shared<Location>(1, 4, Coordinate(0, 0), "Vlaams-Brabant", 10040 * 100);
@@ -92,15 +93,14 @@ TEST_F(PreSchoolGeneratorTest, FiveLocationsTest)
 
         for (const auto& loc : m_geo_grid) {
                 loc->SetPopFraction(static_cast<double>(loc->GetPopCount()) /
-                                    static_cast<double>(m_geogrid_config.input.pop_size));
+                                    static_cast<double>(m_gg_config.param.pop_size));
         }
 
-        m_preschool_generator.Apply(m_geo_grid, m_geogrid_config);
+        m_preschool_generator.Apply(m_geo_grid, m_gg_config);
 
         array<unsigned int, 5> sizes{295, 284, 240, 97, 127};
         for (auto i = 0U; i < sizes.size(); i++) {
-                EXPECT_EQ(sizes[i] * m_geogrid_config.pools.pools_per_preschool,
-                          m_geo_grid[i]->CRefPools(Id::PreSchool).size());
+                EXPECT_EQ(sizes[i] * m_pppre, m_geo_grid[i]->CRefPools(Id::PreSchool).size());
         }
 }
 

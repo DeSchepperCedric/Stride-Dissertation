@@ -26,16 +26,16 @@ else()
 endif()
 
 set_source_files_properties(
-        geopop/io/GeoGridProtoReader.cpp
-        geopop/io/GeoGridProtoWriter.cpp
-        PROPERTIES
-        COMPILE_FLAGS "-I${Protobuf_PBS_DIR}"
+    geopop/io/GeoGridProtoReader.cpp
+    geopop/io/GeoGridProtoWriter.cpp
+    PROPERTIES
+    COMPILE_FLAGS "-I${Protobuf_PBS_DIR}"
 )
 
 set_property(SOURCE ${PROTO_HDR} ${PROTO_SRC}
-        PROPERTY
-        COMPILE_FLAGS "-Wno-all -Wno-effc++ -Wno-extra -Wno-pedantic"
-        )
+    PROPERTY
+    COMPILE_FLAGS "-Wno-all -Wno-effc++ -Wno-extra -Wno-pedantic"
+)
 
 #============================================================================
 # Sources.
@@ -73,14 +73,13 @@ set(STRIDE_SRC
     geopop/geo/KdTree2DPoint.cpp
     #---
     geopop/generators/CollegeGenerator.cpp
-    geopop/generators/Generator.cpp
     geopop/generators/HouseholdGenerator.cpp
     geopop/generators/K12SchoolGenerator.cpp
     geopop/generators/PrimaryCommunityGenerator.cpp
     geopop/generators/SecondaryCommunityGenerator.cpp
     geopop/generators/WorkplaceGenerator.cpp
-        geopop/generators/DaycareGenerator.cpp
-        geopop/generators/PreSchoolGenerator.cpp
+    geopop/generators/DaycareGenerator.cpp
+    geopop/generators/PreSchoolGenerator.cpp
     #---
     geopop/io/LocationsCSVReader.cpp
     geopop/io/CommutesCSVReader.cpp
@@ -98,15 +97,15 @@ set(STRIDE_SRC
     geopop/io/HouseholdCSVReader.cpp
         geopop/io/HouseholdJSONReader.cpp
     geopop/io/ReaderFactory.cpp
+    #---
     geopop/populators/CollegePopulator.cpp
     geopop/populators/HouseholdPopulator.cpp
     geopop/populators/K12SchoolPopulator.cpp
-    geopop/populators/Populator.cpp
     geopop/populators/PrimaryCommunityPopulator.cpp
     geopop/populators/SecondaryCommunityPopulator.cpp
     geopop/populators/WorkplacePopulator.cpp
-        geopop/populators/DaycarePopulator.cpp
-        geopop/populators/PreSchoolPopulator.cpp
+    geopop/populators/DaycarePopulator.cpp
+    geopop/populators/PreSchoolPopulator.cpp
     #---
     ${PROTO_HEADER}
     ${PROTO_SRC}
@@ -155,9 +154,9 @@ target_compile_definitions(libstride PUBLIC "-DSTRIDE_GIT_HASH=${STRIDE_WC_REVIS
 target_compile_definitions(libstride PUBLIC "-DPROCCOUNT=${PROCCOUNT}")
 target_link_libraries(libstride PRIVATE ${LIBS})
 if(Protobuf_FOUND)
-    target_link_libraries(libstride PRIVATE ${Protobuf_LIBRARIES})
+    target_link_libraries(libstride PUBLIC ${Protobuf_LIBRARIES})
 else()
-    target_link_libraries(libstride PRIVATE libprotobuf)
+    target_link_libraries(libstride PUBLIC libprotobuf)
 endif()
 if(HDF5_FOUND)
     target_link_libraries(libstride PRIVATE ${HDF5_CXX_LIBRARIES} ${HDF5_CXX_HL_LIBRARIES})
@@ -165,10 +164,10 @@ else()
     target_link_libraries(libstride PRIVATE hdf5-static hdf5_cpp-static hdf5_hl-static hdf5_hl_cpp-static)
 endif()
 set_target_properties(libstride
-        PROPERTIES
+    PROPERTIES
         POSITION_INDEPENDENT_CODE ON
         PREFIX ""
-        )
+)
 include(CheckIPOSupported)
 
 # For future use: inter procedural optimization

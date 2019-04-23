@@ -13,14 +13,13 @@
  *  Copyright 2018, 2019, Jan Broeckhove and Bistromatics group.
  */
 
-#include "geopop/populators/DaycarePopulator.h"
-#include "geopop/generators/DaycareGenerator.h"
+#include "geopop/populators/Populator.h"
 
 #include "MakeGeoGrid.h"
 #include "contact/AgeBrackets.h"
-#include "geopop/GeoGrid.h"
 #include "geopop/GeoGridConfig.h"
 #include "geopop/Location.h"
+#include "geopop/generators/Generator.h"
 #include "pop/Population.h"
 #include "util/LogUtils.h"
 #include "util/RnMan.h"
@@ -40,20 +39,20 @@ class DaycarePopulatorTest : public testing::Test
 {
 public:
         DaycarePopulatorTest()
-            : m_rn_man(RnInfo()), m_daycare_populator(m_rn_man), m_geogrid_config(), m_pop(Population::Create()),
+            : m_rn_man(RnInfo()), m_daycare_populator(m_rn_man), m_gg_config(), m_pop(Population::Create()),
               m_geo_grid(m_pop->RefGeoGrid()), m_daycare_generator(m_rn_man)
         {
-                m_geogrid_config.input.participation_daycare = 0.45;
+                m_gg_config.param.participation_daycare = 0.45;
         }
 
 protected:
         RnMan                  m_rn_man;
         DaycarePopulator       m_daycare_populator;
-        GeoGridConfig          m_geogrid_config;
+        GeoGridConfig          m_gg_config;
         shared_ptr<Population> m_pop;
         GeoGrid&               m_geo_grid;
         DaycareGenerator       m_daycare_generator;
-        const unsigned int     m_ppday = GeoGridConfig{}.pools.pools_per_daycare;
+        unsigned int           m_ppday = m_gg_config.pools[Id::Daycare];
 };
 
 TEST_F(DaycarePopulatorTest, NoPopulation)
@@ -61,14 +60,14 @@ TEST_F(DaycarePopulatorTest, NoPopulation)
         m_geo_grid.AddLocation(make_shared<Location>(0, 0, Coordinate(0.0, 0.0), "", 0));
         m_geo_grid.Finalize();
 
-        EXPECT_NO_THROW(m_daycare_populator.Apply(m_geo_grid, m_geogrid_config));
+        EXPECT_NO_THROW(m_daycare_populator.Apply(m_geo_grid, m_gg_config));
 }
 
 TEST_F(DaycarePopulatorTest, OneLocationTest)
 {
-        MakeGeoGrid(m_geogrid_config, 1, 300, 20, 3, 5, 100, 3, m_pop.get());
+        MakeGeoGrid(m_gg_config, 1, 300, 20, 3, 5, 100, 3, m_pop.get());
         m_geo_grid.Finalize();
-        m_daycare_populator.Apply(m_geo_grid, m_geogrid_config);
+        m_daycare_populator.Apply(m_geo_grid, m_gg_config);
 
         map<int, int> usedCapacity{{1, 0},  {2, 0},  {3, 0},  {4, 1},  {5, 1},  {6, 0},  {7, 0},
                                    {8, 0},  {9, 0},  {10, 0}, {11, 0}, {12, 0}, {13, 0}, {14, 1},
@@ -76,7 +75,7 @@ TEST_F(DaycarePopulatorTest, OneLocationTest)
 
         auto  location = *m_geo_grid.begin();
         auto& dayPools = location->RefPools(Id::Daycare);
-        ASSERT_EQ(dayPools.size(), 20 * m_geogrid_config.pools.pools_per_daycare);
+        ASSERT_EQ(dayPools.size(), 20 * m_ppday);
         for (auto& pool : dayPools) {
                 EXPECT_EQ(usedCapacity[pool->GetId()], pool->size());
                 for (Person* person : *pool) {
@@ -124,7 +123,7 @@ TEST_F(DaycarePopulatorTest, OneLocationTest)
 
 TEST_F(DaycarePopulatorTest, TwoLocationTest)
 {
-        MakeGeoGrid(m_geogrid_config, 3, 100, 12, 2, 3, 33, 3, m_pop.get());
+        MakeGeoGrid(m_gg_config, 3, 100, 12, 2, 3, 33, 3, m_pop.get());
 
         // Brasschaat and Schoten are close to each other and will both have students from both.
         // Kortrijk will only have students going to Kortrijk.
@@ -138,16 +137,16 @@ TEST_F(DaycarePopulatorTest, TwoLocationTest)
         kortrijk->SetCoordinate(Coordinate(50.82900246, 3.264406009));
 
         m_geo_grid.Finalize();
-        m_daycare_populator.Apply(m_geo_grid, m_geogrid_config);
+        m_daycare_populator.Apply(m_geo_grid, m_gg_config);
 
         auto& dayPools1 = brasschaat->RefPools(Id::Daycare);
         auto& dayPools2 = schoten->RefPools(Id::Daycare);
         auto& dayPools3 = kortrijk->RefPools(Id::Daycare);
 
         // Check number of pools corresponding to 3 Daycares per location.
-        EXPECT_EQ(dayPools1.size(), 12 * m_geogrid_config.pools.pools_per_daycare);
-        EXPECT_EQ(dayPools2.size(), 12 * m_geogrid_config.pools.pools_per_daycare);
-        EXPECT_EQ(dayPools3.size(), 12 * m_geogrid_config.pools.pools_per_daycare);
+        EXPECT_EQ(dayPools1.size(), 12 * m_ppday);
+        EXPECT_EQ(dayPools2.size(), 12 * m_ppday);
+        EXPECT_EQ(dayPools3.size(), 12 * m_ppday);
 
         map<int, int> persons{
             {0, 0},   {1, 0},   {2, 0},    {3, 0},   {4, 0},   {5, 0},    {6, 0},   {7, 0},   {8, 0},   {9, 0},

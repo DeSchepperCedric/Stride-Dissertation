@@ -59,12 +59,6 @@ endif
 ifneq ($(STRIDE_INCLUDE_DOC),)
 	CMAKE_ARGS += -DSTRIDE_INCLUDE_DOC:BOOL=$(STRIDE_INCLUDE_DOC)
 endif
-ifneq ($(STRIDE_FORCE_NO_OPENMP),)
-	CMAKE_ARGS += -DSTRIDE_FORCE_NO_OPENMP:BOOL=$(STRIDE_FORCE_NO_OPENMP)
-endif
-ifneq ($(STRIDE_FORCE_NO_PYHTON),)
-	CMAKE_ARGS += -DSTRIDE_FORCE_NO_PYTHON:BOOL=$(STRIDE_FORCE_NO_PYTHON)
-endif
 ifneq ($(STRIDE_FORCE_NO_BOOST),)
 	CMAKE_ARGS += -DSTRIDE_FORCE_NO_BOOST:BOOL=$(STRIDE_FORCE_NO_BOOST)
 endif
@@ -74,6 +68,16 @@ endif
 ifneq ($(BOOST_NO_SYSTEM_PATHS),)
 	CMAKE_ARGS += -DBOOST_NO_SYSTEM_PATHS:BOOL=$(BOOST_NO_SYSTEM_PATHS)
 endif
+ifneq ($(STRIDE_FORCE_NO_OPENMP),)
+	CMAKE_ARGS += -DSTRIDE_FORCE_NO_OPENMP:BOOL=$(STRIDE_FORCE_NO_OPENMP)
+endif
+ifneq ($(STRIDE_FORCE_NO_PROTOC),)
+	CMAKE_ARGS += -DSTRIDE_FORCE_NO_PROTOC:BOOL=$(STRIDE_FORCE_NO_PROTOC)
+endif
+ifneq ($(STRIDE_FORCE_NO_PYHTON),)
+	CMAKE_ARGS += -DSTRIDE_FORCE_NO_PYTHON:BOOL=$(STRIDE_FORCE_NO_PYTHON)
+endif
+
 #============================================================================
 #   Build directory.
 #============================================================================
@@ -100,11 +104,11 @@ help:
 	@ $(CMAKE) -E echo "   CMAKE_INSTALL_PREFIX          : " $(CMAKE_INSTALL_PREFIX)
 	@ $(CMAKE) -E echo " "
 	@ $(CMAKE) -E echo "   STRIDE_INCLUDE_DOC            : " $(STRIDE_INCLUDE_DOC)
-	@ $(CMAKE) -E echo "   STRIDE_FORCE_NO_OPENMP        : " $(STRIDE_FORCE_NO_OPENMP)
-	@ $(CMAKE) -E echo "   STRIDE_FORCE_NO_PYTHON        : " $(STRIDE_FORCE_NO_PYTHON)
-	@ $(CMAKE) -E echo "   STRIDE_FORCE_NO_HDF5          : " $(STRIDE_FORCE_NO_HDF5)
 	@ $(CMAKE) -E echo "   STRIDE_FORCE_NO_BOOST         : " $(STRIDE_FORCE_NO_BOOST)
 	@ $(CMAKE) -E echo "   BOOST_NO_SYSTEM_PATHS         : " $(BOOST_NO_SYSTEM_PATHS)
+	@ $(CMAKE) -E echo "   STRIDE_FORCE_NO_OPENMP        : " $(STRIDE_FORCE_NO_OPENMP)
+	@ $(CMAKE) -E echo "   STRIDE_FORCE_NO_PROTOC        : " $(STRIDE_FORCE_NO_PROTOC)
+	@ $(CMAKE) -E echo "   STRIDE_FORCE_NO_PYTHON        : " $(STRIDE_FORCE_NO_PYTHON)
 	@ $(CMAKE) -E echo " "
 
 cores:
@@ -133,7 +137,7 @@ visual: cores configure
 	$(MAKE) $(PARALLEL_MAKE) -C $(BUILD_DIR) --no-print-directory visual
 
 gtest: install
-	cd $(CMAKE_INSTALL_PREFIX); bin/gtester $(TESTARGS)
+	cd $(CMAKE_INSTALL_PREFIX); bin/gtester $(TESTARGS) --gtest_output=xml:tests/gtester_all.xml
 
 format:
 	resources/bash/clang-format-all .

@@ -13,7 +13,7 @@
  *  Copyright 2018, 2019, Jan Broeckhove and Bistromatics group.
  */
 
-#include "DaycarePopulator.h"
+#include "Populator.h"
 
 #include "contact/AgeBrackets.h"
 #include "contact/ContactPool.h"
@@ -29,7 +29,8 @@ using namespace std;
 using namespace stride;
 using namespace stride::ContactType;
 
-void DaycarePopulator::Apply(GeoGrid& geoGrid, const GeoGridConfig& geoGridConfig)
+template <>
+void Populator<stride::ContactType::Id::Daycare>::Apply(GeoGrid& geoGrid, const GeoGridConfig& geoGridConfig)
 {
         m_logger->info("Starting to populate Daycares");
 
@@ -38,19 +39,20 @@ void DaycarePopulator::Apply(GeoGrid& geoGrid, const GeoGridConfig& geoGridConfi
                 if (loc->GetPopCount() == 0) {
                         continue;
                 }
-
                 // 1. find all daycares in an area of 10-k*10 km
-                const vector<ContactPool*>& nearByDaycares = GetNearbyPools(Id::Daycare, geoGrid, *loc);
+                const auto& nearByDaycaresPools = geoGrid.GetNearbyPools(Id::Daycare, *loc);
 
-                auto dist = m_rn_man.GetUniformIntGenerator(0, static_cast<int>(nearByDaycares.size()), 0U);
+                AssertThrow(!nearByDaycaresPools.empty(), "No Daycares found!", m_logger);
 
-                // 2. for every student assign a class
+                const auto dist = m_rn_man.GetUniformIntGenerator(0, static_cast<int>(nearByDaycaresPools.size()), 0U);
+
+                // 2. for every baby assign a class
                 for (const auto& hhPool : loc->RefPools(Id::Household)) {
                         for (Person* p : *hhPool) {
                                 if (AgeBrackets::Daycare::HasAge(p->GetAge()) &&
-                                    MakeChoice(geoGridConfig.input.participation_daycare)) {
-                                        // this person is a student
-                                        auto& c = nearByDaycares[dist()];
+                                    m_rn_man.MakeWeightedCoinFlip(geoGridConfig.param.participation_daycare)) {
+                                        // this person is a baby
+                                        auto& c = nearByDaycaresPools[dist()];
                                         c->AddMember(p);
                                         p->SetPoolId(Id::Daycare, c->GetId());
                                 }

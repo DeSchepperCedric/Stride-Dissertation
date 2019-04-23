@@ -15,7 +15,7 @@
 
 #include "GeoGridIOUtils.h"
 
-#include "geopop/ContactCenter.h"
+//#include "geopop/ContactCenter.h"
 #include "geopop/GeoGridConfig.h"
 #include "geopop/io/GeoGridJSONWriter.h"
 #include "pop/Population.h"
@@ -100,18 +100,19 @@ TEST(GeoGridJSONWriterTest, locationTest)
 }
 TEST(GeoGridJSONWriterTest, contactCentersTest)
 {
-        auto pop      = Population::Create();
-        auto geoGrid  = GeoGrid(pop.get());
-        auto location = make_shared<Location>(1, 4, Coordinate(0, 0), "Bavikhove", 2500);
+        const auto pop     = Population::Create();
+        auto&      geoGrid = pop->RefGeoGrid();
+        const auto loc     = make_shared<Location>(1, 4, Coordinate(0, 0), "Bavikhove", 2500);
 
-        location->AddCenter(make_shared<ContactCenter>(0, Id::K12School));
-        location->AddCenter(make_shared<ContactCenter>(1, Id::PrimaryCommunity));
-        location->AddCenter(make_shared<ContactCenter>(2, Id::College));
-        location->AddCenter(make_shared<ContactCenter>(3, Id::Household));
-        location->AddCenter(make_shared<ContactCenter>(4, Id::Workplace));
-        location->AddCenter(make_shared<ContactCenter>(5, Id::Daycare));
-        location->AddCenter(make_shared<ContactCenter>(6, Id::PreSchool));
-        geoGrid.AddLocation(location);
+        loc->RefPools(Id::K12School).emplace_back(pop->RefPoolSys().CreateContactPool(Id::K12School));
+        loc->RefPools(Id::PrimaryCommunity).emplace_back(pop->RefPoolSys().CreateContactPool(Id::PrimaryCommunity));
+        loc->RefPools(Id::College).emplace_back(pop->RefPoolSys().CreateContactPool(Id::College));
+        loc->RefPools(Id::Household).emplace_back(pop->RefPoolSys().CreateContactPool(Id::Household));
+        loc->RefPools(Id::Workplace).emplace_back(pop->RefPoolSys().CreateContactPool(Id::Workplace));
+        loc->RefPools(Id::Daycare).emplace_back(pop->RefPoolSys().CreateContactPool(Id::Daycare));
+        loc->RefPools(Id::PreSchool).emplace_back(pop->RefPoolSys().CreateContactPool(Id::PreSchool));
+
+        geoGrid.AddLocation(loc);
 
         EXPECT_TRUE(compareGeoGrid(geoGrid, "test1.json"));
 }

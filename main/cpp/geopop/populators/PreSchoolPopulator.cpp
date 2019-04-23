@@ -13,7 +13,7 @@
  *  Copyright 2018, 2019, Jan Broeckhove and Bistromatics group.
  */
 
-#include "PreSchoolPopulator.h"
+#include "Populator.h"
 
 #include "contact/AgeBrackets.h"
 #include "contact/ContactPool.h"
@@ -29,7 +29,8 @@ using namespace std;
 using namespace stride;
 using namespace stride::ContactType;
 
-void PreSchoolPopulator::Apply(GeoGrid& geoGrid, const GeoGridConfig& geoGridConfig)
+template <>
+void Populator<stride::ContactType::Id::PreSchool>::Apply(GeoGrid& geoGrid, const GeoGridConfig& geoGridConfig)
 {
         m_logger->info("Starting to populate PreSchools");
 
@@ -40,17 +41,20 @@ void PreSchoolPopulator::Apply(GeoGrid& geoGrid, const GeoGridConfig& geoGridCon
                 }
 
                 // 1. find all preschools in an area of 10-k*10 km
-                const vector<ContactPool*>& classes = GetNearbyPools(Id::PreSchool, geoGrid, *loc);
+                const auto& nearByPreSchoolsPools = geoGrid.GetNearbyPools(Id::PreSchool, *loc);
 
-                auto dist = m_rn_man.GetUniformIntGenerator(0, static_cast<int>(classes.size()), 0U);
+                AssertThrow(!nearByPreSchoolsPools.empty(), "No Daycares found!", m_logger);
 
-                // 2. for every student assign a class
+                const auto dist =
+                    m_rn_man.GetUniformIntGenerator(0, static_cast<int>(nearByPreSchoolsPools.size()), 0U);
+
+                // 2. for every todler assign a class
                 for (const auto& hhPool : loc->RefPools(Id::Household)) {
                         for (Person* p : *hhPool) {
                                 if (AgeBrackets::PreSchool::HasAge(p->GetAge()) &&
-                                    MakeChoice(geoGridConfig.input.participation_preschool)) {
-                                        // this person is a student
-                                        auto& c = classes[dist()];
+                                    m_rn_man.MakeWeightedCoinFlip(geoGridConfig.param.participation_preschool)) {
+                                        // this person is a todler
+                                        auto& c = nearByPreSchoolsPools[dist()];
                                         c->AddMember(p);
                                         p->SetPoolId(Id::PreSchool, c->GetId());
                                 }
