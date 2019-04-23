@@ -26,7 +26,7 @@ namespace geopop {
 using namespace std;
 using namespace stride::ContactType;
 
-template<>
+template <>
 void Populator<stride::ContactType::Id::Household>::Apply(GeoGrid& geoGrid, const GeoGridConfig& geoGridConfig)
 {
         m_logger->trace("Starting to populate Households");

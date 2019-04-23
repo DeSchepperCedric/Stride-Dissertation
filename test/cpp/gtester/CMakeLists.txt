@@ -25,10 +25,10 @@ add_definitions(-DGTEST_LANG_CXX11)
 # Build & install the (OpenMP enabled if OpenMP available) executable.
 #============================================================================
 set_source_files_properties(
-        geopop/io/GeoGridIOUtils.cpp
-        geopop/io/GeoGridProtoReaderTest.cpp
-        PROPERTIES
-        COMPILE_FLAGS "-I${Protobuf_PBS_DIR}"
+    geopop/io/GeoGridIOUtils.cpp
+    geopop/io/GeoGridProtoReaderTest.cpp
+    PROPERTIES
+    COMPILE_FLAGS "-I${Protobuf_PBS_DIR}"
 )
 
 set(EXEC gtester)
@@ -61,8 +61,8 @@ set(SRC
         geopop/io/CitiesCSVReaderTest.cpp
         geopop/io/CommutesCSVReaderTest.cpp
         geopop/io/GeoGridIOUtils.cpp
-        #geopop/io/GeoGridJSONReaderTest.cpp
-        #geopop/io/GeoGridJSONWriterTest.cpp
+#        geopop/io/GeoGridJSONReaderTest.cpp
+#        geopop/io/GeoGridJSONWriterTest.cpp
         geopop/io/GeoGridProtoReaderTest.cpp
         geopop/io/GeoGridProtoWriterTest.cpp
         geopop/io/HouseholdCSVReaderTest.cpp

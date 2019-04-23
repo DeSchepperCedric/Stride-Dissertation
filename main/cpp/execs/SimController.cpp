@@ -33,7 +33,9 @@ using namespace boost::property_tree;
 namespace stride {
 
 SimController::SimController(const ptree& config, const string& name)
-        : ControlHelper(config, name), m_simulator(nullptr) {}
+    : ControlHelper(config, name), m_simulator(nullptr)
+{
+}
 
 void SimController::Control()
 {

@@ -149,27 +149,27 @@ void GeoGridJSONReader::ParseContactPool(shared_ptr<Location> loc, nlohmann::jso
 
 Person* GeoGridJSONReader::ParsePerson(nlohmann::json& person)
 {
-        const auto id    = ParseNumerical<unsigned int>(person.at("id"));
-        const auto age   = ParseNumerical<unsigned int>(person.at("age"));
-        const auto hhId  = ParseNumerical<unsigned int>(person.at("Household"));
-        const auto ksId  = ParseNumerical<unsigned int>(person.at("K12School"));
-        const auto coId  = ParseNumerical<unsigned int>(person.at("College"));
-        const auto wpId  = ParseNumerical<unsigned int>(person.at("Workplace"));
-        const auto pcId  = ParseNumerical<unsigned int>(person.at("PrimaryCommunity"));
-        const auto scId  = ParseNumerical<unsigned int>(person.at("SecondaryCommunity"));
-        const auto dId   = ParseNumerical<unsigned int>(person.at("Daycare"));
-        const auto preId = ParseNumerical<unsigned int>(person.at("PreSchool"));
+        const auto id   = ParseNumerical<unsigned int>(person.at("id"));
+        const auto age  = ParseNumerical<unsigned int>(person.at("age"));
+        const auto hhId = ParseNumerical<unsigned int>(person.at("Household"));
+        const auto ksId = ParseNumerical<unsigned int>(person.at("K12School"));
+        const auto coId = ParseNumerical<unsigned int>(person.at("College"));
+        const auto wpId = ParseNumerical<unsigned int>(person.at("Workplace"));
+        const auto pcId = ParseNumerical<unsigned int>(person.at("PrimaryCommunity"));
+        const auto scId = ParseNumerical<unsigned int>(person.at("SecondaryCommunity"));
+        const auto dcId = ParseNumerical<unsigned int>(person.at("Daycare"));
+        const auto psId = ParseNumerical<unsigned int>(person.at("PreSchool"));
 
-        return m_population->CreatePerson(id, age, hhId, ksId, coId, wpId, pcId, scId, dId, preId);
+        return m_population->CreatePerson(id, age, hhId, ksId, coId, wpId, pcId, scId, dcId, psId);
 }
 
 nlohmann::json GeoGridJSONReader::ParseArray(nlohmann::json& node)
 {
-        if (node.type() == nlohmann::json::value_t::string) {
-                return nlohmann::json::array();
-        } else {
-                return node;
-        }
+    if (node.type() == nlohmann::json::value_t::string) {
+        return nlohmann::json::array();
+    } else {
+        return node;
+    }
 }
 
 } // namespace geopop

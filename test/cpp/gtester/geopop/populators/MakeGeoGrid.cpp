@@ -38,8 +38,8 @@ using namespace geopop;
  * @param personCount       The number of persons per Household.
  * @param pop               The population carrying this GeoGrid.
  */
-void MakeGeoGrid(const GeoGridConfig& , int locCount, int locPop, int schoolCount, int houseHoldCount,
-                 int personCount, Population* pop)
+void MakeGeoGrid(const GeoGridConfig&, int locCount, int locPop, int dayCount, int preCount, int schoolCount,
+                 int houseHoldCount, int personCount, Population* pop)
 {
         vector<unsigned int> populationSample = {
             17, 27, 65, 40, 29, 76, 27, 50, 28, 62, 50, 14, 30, 36, 12, 31, 25, 72, 62, 4,  40, 52, 55, 50, 62,
@@ -61,6 +61,8 @@ void MakeGeoGrid(const GeoGridConfig& , int locCount, int locPop, int schoolCoun
         RnMan              rnMan(RnInfo{});
         K12SchoolGenerator k12Gen(rnMan);
         HouseholdGenerator hhGen(rnMan);
+        DaycareGenerator   dayGen(rnMan);
+        PreSchoolGenerator preGen(rnMan);
 
         size_t sampleId = 0;
         auto   personId = 0U;
@@ -72,11 +74,11 @@ void MakeGeoGrid(const GeoGridConfig& , int locCount, int locPop, int schoolCoun
                 }
 
                 for (int dayI = 0; dayI < dayCount; dayI++) {
-                        dayGen.AddPools(*loc, pop, ppday);
+                        dayGen.AddPools(*loc, pop, config);
                 }
 
                 for (int preI = 0; preI < preCount; preI++) {
-                        preGen.AddPools(*loc, pop, pppre);
+                        preGen.AddPools(*loc, pop, config);
                 }
 
                 for (int hI = 0; hI < houseHoldCount; hI++) {

@@ -47,10 +47,7 @@ ControlHelper::ControlHelper()
 {
 }
 
-ControlHelper::~ControlHelper()
-{
-        Shutdown();
-}
+ControlHelper::~ControlHelper() { Shutdown(); }
 
 ControlHelper::ControlHelper(const ptree& config, string name) : ControlHelper()
 {
@@ -96,7 +93,6 @@ void ControlHelper::InstallLogger()
         const auto logLevel = m_config.get<string>("run.stride_log_level");
         m_stride_logger->set_level(spdlog::level::from_str(logLevel));
         m_stride_logger->flush_on(spdlog::level::err);
-
 }
 
 void ControlHelper::Shutdown()
@@ -130,7 +126,7 @@ void ControlHelper::LogStartup()
         }
         stringstream ss;
         write_xml(ss, m_config, xml_writer_make_settings<ptree::key_type>(' ', 8));
-        const auto s = ss.str();
+        const auto   s = ss.str();
         stringstream spretty;
         std::regex_replace(std::ostreambuf_iterator<char>(spretty), s.begin(), s.end(), std::regex("(\\n+)"), "\n");
         m_stride_logger->trace("Config :\n {}", spretty.str());

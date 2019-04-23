@@ -47,13 +47,13 @@ protected:
         GeoGridConfig          m_gg_config;
         shared_ptr<Population> m_pop;
         GeoGrid                m_geo_grid;
-        unsigned int            m_ppwp = m_gg_config.pools[Id::Workplace];
+        unsigned int           m_ppwp = m_gg_config.pools[Id::Workplace];
 };
 
 // Check that generator can handle empty GeoGrid.
 TEST_F(WorkplaceGeneratorTest, ZeroLocationTest)
 {
-        m_gg_config.param.pop_size           = 10000;
+        m_gg_config.param.pop_size        = 10000;
         m_gg_config.info.popcount_college = 20000;
         m_workplace_generator.Apply(m_geo_grid, m_gg_config);
 
@@ -64,7 +64,7 @@ TEST_F(WorkplaceGeneratorTest, ZeroLocationTest)
 TEST_F(WorkplaceGeneratorTest, NoCommuting)
 {
         m_gg_config.param.pop_size                     = 5 * 1000 * 1000;
-        m_gg_config.info.popcount_workplace         = static_cast<unsigned int>(0.20 * 5 * 1000 * 1000);
+        m_gg_config.info.popcount_workplace            = static_cast<unsigned int>(0.20 * 5 * 1000 * 1000);
         m_gg_config.param.particpation_workplace       = 0.20;
         m_gg_config.param.fraction_workplace_commuters = 0;
 
@@ -92,7 +92,7 @@ TEST_F(WorkplaceGeneratorTest, NoCommuting)
 TEST_F(WorkplaceGeneratorTest, NullCommuting)
 {
         m_gg_config.param.pop_size                     = 5 * 1000 * 1000;
-        m_gg_config.info.popcount_workplace         = static_cast<unsigned int>(0.20 * 5 * 1000 * 1000);
+        m_gg_config.info.popcount_workplace            = static_cast<unsigned int>(0.20 * 5 * 1000 * 1000);
         m_gg_config.param.particpation_workplace       = 0.20;
         m_gg_config.param.fraction_workplace_commuters = 0.10;
 
@@ -132,7 +132,7 @@ TEST_F(WorkplaceGeneratorTest, NullCommuting)
 TEST_F(WorkplaceGeneratorTest, TenCommuting)
 {
         m_gg_config.param.pop_size                     = 5 * 1000 * 1000;
-        m_gg_config.info.popcount_workplace         = static_cast<unsigned int>(0.20 * 5 * 1000 * 1000);
+        m_gg_config.info.popcount_workplace            = static_cast<unsigned int>(0.20 * 5 * 1000 * 1000);
         m_gg_config.param.particpation_workplace       = 0.20;
         m_gg_config.param.fraction_workplace_commuters = 0.10;
 
