@@ -15,8 +15,8 @@
 
 #pragma once
 
-#include "contact/ContactType.h"
 #include "contact/ContactPool.h"
+#include "contact/ContactType.h"
 #include "geopop/GeoGridConfig.h"
 #include "util/LogUtils.h"
 #include "util/RnMan.h"
@@ -38,7 +38,7 @@ class Populator
 public:
         /// Construct with a RnMan and a logger.
         explicit Populator(stride::util::RnMan& rnMan, std::shared_ptr<spdlog::logger> logger = nullptr)
-                : m_rn_man(rnMan), m_logger(move(logger))
+            : m_rn_man(rnMan), m_logger(move(logger))
         {
                 if (!m_logger)
                         m_logger = stride::util::LogUtils::CreateNullLogger();
@@ -48,7 +48,7 @@ public:
         ~Populator() = default;
 
         /// Populate the ContactPools type ID. This is a placeholder for the specializations.
-        void Apply(GeoGrid&, const GeoGridConfig&) {};
+        void Apply(GeoGrid&, const GeoGridConfig&){};
 
 protected:
         stride::util::RnMan&            m_rn_man; ///< RnManager used by populators.
@@ -58,40 +58,40 @@ protected:
 // ---------------------------------------------------------------
 // Declare specializations (implemntation in separate .cpp files).
 // ---------------------------------------------------------------
-template<>
+template <>
 void Populator<stride::ContactType::Id::K12School>::Apply(GeoGrid& geoGrid, const GeoGridConfig& ggConfig);
 
-template<>
+template <>
 void Populator<stride::ContactType::Id::College>::Apply(GeoGrid& geoGrid, const GeoGridConfig& ggConfig);
 
-template<>
+template <>
 void Populator<stride::ContactType::Id::Workplace>::Apply(GeoGrid& geoGrid, const GeoGridConfig& ggConfig);
 
-template<>
+template <>
 void Populator<stride::ContactType::Id::Household>::Apply(GeoGrid& geoGrid, const GeoGridConfig& ggConfig);
 
-template<>
+template <>
 void Populator<stride::ContactType::Id::PrimaryCommunity>::Apply(GeoGrid& geoGrid, const GeoGridConfig& ggConfig);
 
-template<>
+template <>
 void Populator<stride::ContactType::Id::SecondaryCommunity>::Apply(GeoGrid& geoGrid, const GeoGridConfig& ggConfig);
 
-template<>
+template <>
 void Populator<stride::ContactType::Id::Daycare>::Apply(GeoGrid& geoGrid, const GeoGridConfig& ggConfig);
 
-template<>
+template <>
 void Populator<stride::ContactType::Id::PreSchool>::Apply(GeoGrid& geoGrid, const GeoGridConfig& ggConfig);
 
 // ---------------------------------------------------------------
 // Shorthand definitions.
 // ---------------------------------------------------------------
-using K12SchoolPopulator = Populator<stride::ContactType::Id::K12School>;
-using CollegePopulator = Populator<stride::ContactType::Id::College>;
-using WorkplacePopulator = Populator<stride::ContactType::Id::Workplace>;
-using HouseholdPopulator = Populator<stride::ContactType::Id::Household>;
-using PrimaryCommunityPopulator = Populator<stride::ContactType::Id::PrimaryCommunity>;
+using K12SchoolPopulator          = Populator<stride::ContactType::Id::K12School>;
+using CollegePopulator            = Populator<stride::ContactType::Id::College>;
+using WorkplacePopulator          = Populator<stride::ContactType::Id::Workplace>;
+using HouseholdPopulator          = Populator<stride::ContactType::Id::Household>;
+using PrimaryCommunityPopulator   = Populator<stride::ContactType::Id::PrimaryCommunity>;
 using SecondaryCommunityPopulator = Populator<stride::ContactType::Id::SecondaryCommunity>;
-using DaycarePopulator = Populator<stride::ContactType::Id::Daycare>;
-using PreSchoolPopulator = Populator<stride::ContactType::Id::PreSchool>;
+using DaycarePopulator            = Populator<stride::ContactType::Id::Daycare>;
+using PreSchoolPopulator          = Populator<stride::ContactType::Id::PreSchool>;
 
 } // namespace geopop

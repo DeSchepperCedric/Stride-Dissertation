@@ -13,8 +13,8 @@
  *  Copyright 2018, 2019, Jan Broeckhove and Bistromatics group.
  */
 
-#include "geopop/populators/Populator.h"
 #include "geopop/generators/Generator.h"
+#include "geopop/populators/Populator.h"
 
 #include "MakeGeoGrid.h"
 #include "contact/AgeBrackets.h"

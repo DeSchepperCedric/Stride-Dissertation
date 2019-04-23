@@ -46,7 +46,7 @@ class GenPopController : protected ControlHelper
 public:
         /// Straight initialization.
         explicit GenPopController(const boost::property_tree::ptree& config,
-                                  const std::string& name = "GenPopController");
+                                  const std::string&                 name = "GenPopController");
 
         /// Actual run of the simulator.
         void Control();

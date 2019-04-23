@@ -20,15 +20,14 @@
 #include "geopop/GeoGridConfig.h"
 #include "geopop/Location.h"
 #include "pop/Population.h"
-#include "util/RnMan.h"
 #include "util/LogUtils.h"
+#include "util/RnMan.h"
 
 #include <spdlog/logger.h>
 
 namespace geopop {
 
 class GeoGrid;
-
 
 /**
  * Generator uses geo & pop data to construct ContactPools in the GeoGrid.
@@ -39,7 +38,7 @@ class Generator
 public:
         /// Constructor with random number manager and logger.
         explicit Generator(stride::util::RnMan rnMan, std::shared_ptr<spdlog::logger> logger = nullptr)
-                : m_rn_man(std::move(rnMan)), m_logger(std::move(logger))
+            : m_rn_man(std::move(rnMan)), m_logger(std::move(logger))
         {
                 if (!m_logger)
                         m_logger = stride::util::LogUtils::CreateNullLogger();
@@ -69,40 +68,40 @@ protected:
 // ---------------------------------------------------------------
 // Declare specializations (implemntation in separate .cpp files).
 // ---------------------------------------------------------------
-template<>
+template <>
 void Generator<stride::ContactType::Id::K12School>::Apply(GeoGrid& geoGrid, const GeoGridConfig& ggConfig);
 
-template<>
+template <>
 void Generator<stride::ContactType::Id::College>::Apply(GeoGrid& geoGrid, const GeoGridConfig& ggConfig);
 
-template<>
+template <>
 void Generator<stride::ContactType::Id::Workplace>::Apply(GeoGrid& geoGrid, const GeoGridConfig& ggConfig);
 
-template<>
+template <>
 void Generator<stride::ContactType::Id::Household>::Apply(GeoGrid& geoGrid, const GeoGridConfig& ggConfig);
 
-template<>
+template <>
 void Generator<stride::ContactType::Id::PrimaryCommunity>::Apply(GeoGrid& geoGrid, const GeoGridConfig& ggConfig);
 
-template<>
+template <>
 void Generator<stride::ContactType::Id::SecondaryCommunity>::Apply(GeoGrid& geoGrid, const GeoGridConfig& ggConfig);
 
-template<>
+template <>
 void Generator<stride::ContactType::Id::Daycare>::Apply(GeoGrid& geoGrid, const GeoGridConfig& ggConfig);
 
-template<>
+template <>
 void Generator<stride::ContactType::Id::PreSchool>::Apply(GeoGrid& geoGrid, const GeoGridConfig& ggConfig);
 
 // ---------------------------------------------------------------
 // Shorthand definitions.
 // ---------------------------------------------------------------
-using K12SchoolGenerator = Generator<stride::ContactType::Id::K12School>;
-using CollegeGenerator = Generator<stride::ContactType::Id::College>;
-using WorkplaceGenerator = Generator<stride::ContactType::Id::Workplace>;
-using HouseholdGenerator = Generator<stride::ContactType::Id::Household>;
-using PrimaryCommunityGenerator = Generator<stride::ContactType::Id::PrimaryCommunity>;
+using K12SchoolGenerator          = Generator<stride::ContactType::Id::K12School>;
+using CollegeGenerator            = Generator<stride::ContactType::Id::College>;
+using WorkplaceGenerator          = Generator<stride::ContactType::Id::Workplace>;
+using HouseholdGenerator          = Generator<stride::ContactType::Id::Household>;
+using PrimaryCommunityGenerator   = Generator<stride::ContactType::Id::PrimaryCommunity>;
 using SecondaryCommunityGenerator = Generator<stride::ContactType::Id::SecondaryCommunity>;
-using DaycareGenerator = Generator<stride::ContactType::Id::Daycare>;
-using PreSchoolGenerator = Generator<stride::ContactType::Id::PreSchool>;
+using DaycareGenerator            = Generator<stride::ContactType::Id::Daycare>;
+using PreSchoolGenerator          = Generator<stride::ContactType::Id::PreSchool>;
 
 } // namespace geopop
