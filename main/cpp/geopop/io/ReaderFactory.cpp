@@ -63,10 +63,10 @@ shared_ptr<HouseholdReader> ReaderFactory::CreateHouseholdReader(const filesys::
         }
         if (path.extension().string() == ".csv") {
                 return make_shared<HouseholdCSVReader>(make_unique<ifstream>(path.string()));
-        } else if (path.extension().string() == ".json"){
+        } else if (path.extension().string() == ".json") {
                 return make_shared<HouseholdJSONReader>(make_unique<ifstream>(path.string()));
         } else {
-              throw runtime_error("Unsupported file extension: " + path.extension().string());
+                throw runtime_error("Unsupported file extension: " + path.extension().string());
         }
 }
 

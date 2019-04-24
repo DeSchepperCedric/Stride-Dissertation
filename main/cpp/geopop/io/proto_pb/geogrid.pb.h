@@ -92,8 +92,8 @@ enum GeoGrid_Location_ContactPools_Type {
   GeoGrid_Location_ContactPools_Type_College = 3,
   GeoGrid_Location_ContactPools_Type_Household = 4,
   GeoGrid_Location_ContactPools_Type_Workplace = 5,
-    GeoGrid_Location_ContactPools_Type_Daycare=  6,
-    GeoGrid_Location_ContactPools_Type_PreSchool = 7,
+  GeoGrid_Location_ContactPools_Type_Daycare=  6,
+  GeoGrid_Location_ContactPools_Type_PreSchool = 7,
   GeoGrid_Location_ContactPools_Type_GeoGrid_Location_ContactPools_Type_INT_MIN_SENTINEL_DO_NOT_USE_ = std::numeric_limits<::google::protobuf::int32>::min(),
   GeoGrid_Location_ContactPools_Type_GeoGrid_Location_ContactPools_Type_INT_MAX_SENTINEL_DO_NOT_USE_ = std::numeric_limits<::google::protobuf::int32>::max()
 };
@@ -467,10 +467,10 @@ class GeoGrid_Location_ContactPools final :
     GeoGrid_Location_ContactPools_Type_Household;
   static const Type Workplace =
     GeoGrid_Location_ContactPools_Type_Workplace;
-        static const Type Daycare =
-                GeoGrid_Location_ContactPools_Type_Daycare;
-        static const Type PreSchool =
-                GeoGrid_Location_ContactPools_Type_PreSchool;
+  static const Type Daycare =
+    GeoGrid_Location_ContactPools_Type_Daycare;
+  static const Type PreSchool =
+    GeoGrid_Location_ContactPools_Type_PreSchool;
   static inline bool Type_IsValid(int value) {
     return GeoGrid_Location_ContactPools_Type_IsValid(value);
   }

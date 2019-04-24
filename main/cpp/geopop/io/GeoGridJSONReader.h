@@ -53,7 +53,8 @@ private:
         std::shared_ptr<Location> ParseLocation(nlohmann::json& location);
 
         /// Create a ContactCenter based on the information stored in the provided boost property tree.
-        void ParseContactPool(std::shared_ptr<Location> loc, nlohmann::json& contactPool, stride::ContactType::Id typeId);
+        void ParseContactPool(std::shared_ptr<Location> loc, nlohmann::json& contactPool,
+                              stride::ContactType::Id typeId);
 
         /// Create a Coordinate based on the information stored in the provided boost property tree.
         Coordinate ParseCoordinate(nlohmann::json& coordinate);
@@ -65,13 +66,14 @@ private:
         stride::Person* ParsePerson(nlohmann::json& person);
 
         /// Get numerical data from a json node
-        template<typename T>
-        T ParseNumerical(nlohmann::json& node){
-            if (node.type() == nlohmann::json::value_t::string) {
-                return boost::lexical_cast<T>(node.get<std::string>());
-            } else {
-                return node.get<T>();
-            }
+        template <typename T>
+        T ParseNumerical(nlohmann::json& node)
+        {
+                if (node.type() == nlohmann::json::value_t::string) {
+                        return boost::lexical_cast<T>(node.get<std::string>());
+                } else {
+                        return node.get<T>();
+                }
         }
 
         /// Get an array from a json node

@@ -62,6 +62,9 @@ endif
 ifneq ($(STRIDE_FORCE_NO_BOOST),)
 	CMAKE_ARGS += -DSTRIDE_FORCE_NO_BOOST:BOOL=$(STRIDE_FORCE_NO_BOOST)
 endif
+ifneq ($(STRIDE_FORCE_NO_HDF5),)
+	CMAKE_ARGS += -DSTRIDE_FORCE_NO_HDF5:BOOL=$(STRIDE_FORCE_NO_HDF5)
+endif
 ifneq ($(BOOST_NO_SYSTEM_PATHS),)
 	CMAKE_ARGS += -DBOOST_NO_SYSTEM_PATHS:BOOL=$(BOOST_NO_SYSTEM_PATHS)
 endif
@@ -129,6 +132,9 @@ distclean:
 
 test: install
 	cd $(BUILD_DIR)/test; ctest $(TESTARGS) -V
+
+visual: cores configure
+	$(MAKE) $(PARALLEL_MAKE) -C $(BUILD_DIR) --no-print-directory visual
 
 gtest: install
 	cd $(CMAKE_INSTALL_PREFIX); bin/gtester $(TESTARGS) --gtest_output=xml:tests/gtester_all.xml

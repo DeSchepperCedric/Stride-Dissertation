@@ -26,7 +26,7 @@ set(SRC
 	src/sha1.cpp
 )
 
-add_library(sha1 ${SRC})
+add_library(sha1 STATIC ${SRC})
 set_property(TARGET sha1 PROPERTY POSITION_INDEPENDENT_CODE ON)
 unset(SRC)
 

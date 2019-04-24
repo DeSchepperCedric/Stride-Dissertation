@@ -25,8 +25,8 @@
 #include <boost/property_tree/xml_parser.hpp>
 #include <gtest/gtest.h>
 #include <iostream>
-#include <sstream>
 #include <nlohmann/json.hpp>
+#include <sstream>
 
 using namespace std;
 using namespace geopop;
@@ -61,15 +61,13 @@ void sortTree(ptree& tree)
 */
 void sortJSON(nlohmann::json& json)
 {
-    auto compareLocation = [](const nlohmann::json& a, const nlohmann::json& b) {
-        return a.at("id") < b.at("id");
-    };
-    auto& locations = json.at("locations");
-    std::sort(locations.begin(), locations.end(), compareLocation);
+        auto compareLocation = [](const nlohmann::json& a, const nlohmann::json& b) { return a.at("id") < b.at("id"); };
+        auto& locations      = json.at("locations");
+        std::sort(locations.begin(), locations.end(), compareLocation);
 
-    for (auto it = locations.begin(); it != locations.end(); it++) {
-        sortContactCenters(*it);
-    }
+        for (auto it = locations.begin(); it != locations.end(); it++) {
+                sortContactCenters(*it);
+        }
 }
 
 bool compareGeoGrid(GeoGrid& geoGrid, const string& testname)
@@ -82,7 +80,7 @@ bool compareGeoGrid(GeoGrid& geoGrid, const string& testname)
         sortJSON(result);
 
         nlohmann::json expected;
-        std::ifstream inputStream(FileSys::GetTestsDir().string() + "/testdata/GeoGridJSON/writerJSON/" + testname);
+        std::ifstream  inputStream(FileSys::GetTestsDir().string() + "/testdata/GeoGridJSON/writerJSON/" + testname);
 
         inputStream >> expected;
         sortJSON(expected);

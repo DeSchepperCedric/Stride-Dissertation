@@ -69,7 +69,9 @@ void GeoGridProtoReader::ParseContactPools(shared_ptr<Location>                 
             {proto::GeoGrid_Location_ContactPools_Type_SecondaryCommunity, Id::SecondaryCommunity},
             {proto::GeoGrid_Location_ContactPools_Type_College, Id::College},
             {proto::GeoGrid_Location_ContactPools_Type_Household, Id::Household},
-            {proto::GeoGrid_Location_ContactPools_Type_Workplace, Id::Workplace}};
+            {proto::GeoGrid_Location_ContactPools_Type_Workplace, Id::Workplace},
+            {proto::GeoGrid_Location_ContactPools_Type_Daycare, Id::Daycare},
+            {proto::GeoGrid_Location_ContactPools_Type_PreSchool, Id::PreSchool}};
 
         const auto typeId = types.at(protoType);
 
