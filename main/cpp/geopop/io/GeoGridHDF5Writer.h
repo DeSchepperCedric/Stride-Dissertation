@@ -18,6 +18,8 @@
 #include "GeoGridWriter.h"
 #include "geopop/Location.h"
 
+#include "H5Cpp.h"
+#include <string>
 #include <set>
 
 namespace stride {
@@ -42,20 +44,22 @@ public:
         void Write(GeoGrid& geoGrid, std::ostream& stream) override;
 
 private:
-        /// Create a Boost Property Tree containing all info needed to reconstruct a ContactCenter.
-        boost::property_tree::ptree WriteContactCenter(std::shared_ptr<ContactCenter> contactCenter);
+        /// Create a HDF5 containing all info needed to reconstruct a ContactPool.
+        void WriteContactPool(stride::ContactPool* contactPool, H5::Group& contactPools, const std::string& name);
 
-        /// Create a Boost Property Tree containing all info needed to reconstruct a ContactPool.
-        boost::property_tree::ptree WriteContactPool(stride::ContactPool* contactPool);
+        /// Create a HDF5 containing all info needed to reconstruct a Coordinate.
+        void WriteCoordinate(const Coordinate& coordinate);
 
-        /// Create a Boost Property Tree containing all info needed to reconstruct a Coordinate.
-        boost::property_tree::ptree WriteCoordinate(const Coordinate& coordinate);
+        /// Create a HDF5 Group containing all info needed to reconstruct a Location.
+        void WriteLocation(const Location& location, H5::Group& locations, const std::string& location_name);
 
-        /// Create a Boost Property Tree containing all info needed to reconstruct a Location.
-        boost::property_tree::ptree WriteLocation(const Location& location);
+        /// Write the id's of people in a contactpool in a hdf5 dataset.
+        void WritePeople(stride::Person* person, H5::DataSet& pool);
 
-        /// Create a Boost Property Tree containing all info needed to reconstruct a Person.
-        boost::property_tree::ptree WritePerson(stride::Person* person);
+        void WriteCommute(H5::DataSet& locations);
+
+        /// Create a HDF5 Dataset containing all info needed to reconstruct a Person.
+        void WritePerson(stride::Person* person, H5::DataSet& persons);
 
 private:
         std::set<stride::Person*> m_persons_found; ///< The persons found when looping over the ContactPools.

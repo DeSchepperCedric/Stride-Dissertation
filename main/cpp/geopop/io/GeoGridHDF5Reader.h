@@ -20,6 +20,8 @@
 #include "contact/ContactType.h"
 #include "geopop/Location.h"
 
+#include "H5Cpp.h"
+
 namespace geopop {
 
 class GeoGrid;
@@ -31,7 +33,7 @@ class GeoGrid;
 class GeoGridHDF5Reader : public GeoGridReader
 {
 public:
-        /// Construct the GeoGridHDF5Reader with the istream which contains the HDF5?
+        /// Construct the GeoGridHDF5Reader with the istream which contains the HDF5.
         GeoGridHDF5Reader(std::unique_ptr<std::istream> inputStream, stride::Population* pop);
 
         /// No copy constructor.
@@ -45,19 +47,19 @@ public:
 
 private:
         /// Create a ContactCenter based on the information stored in the provided ...
-        std::shared_ptr<ContactCenter> ParseContactCenter(boost::property_tree::ptree& contactCenter);
+        std::shared_ptr<ContactCenter> ParseContactCenter(H5::& contactCenter);
 
         /// Create a ContactCenter based on the information stored in the provided ...
-        stride::ContactPool* ParseContactPool(boost::property_tree::ptree& contactPool, stride::ContactType::Id typeId);
+        stride::ContactPool* ParseContactPool(H5::& contactPool, stride::ContactType::Id typeId);
 
         /// Create a Coordinate based on the information stored in the provided ...
-        Coordinate ParseCoordinate(boost::property_tree::ptree& coordinate);
+        Coordinate ParseCoordinate(H5::Attribute& coordinate);
 
         /// Create a Location based on the information stored in the provided ...
-        std::shared_ptr<Location> ParseLocation(boost::property_tree::ptree& location);
+        std::shared_ptr<Location> ParseLocation(H5::Group& location);
 
         /// Create a Person based on the information stored in the provided ...
-        stride::Person* ParsePerson(boost::property_tree::ptree& person);
+        stride::Person* ParsePerson(H5::DataSet& person);
 };
 
 } // namespace geopop
