@@ -304,8 +304,6 @@ bool GeoGrid_Location_ContactPools_Type_IsValid(int value) {
     case 3:
     case 4:
     case 5:
-    case 6:
-    case 7:
       return true;
     default:
       return false;
@@ -319,8 +317,6 @@ const GeoGrid_Location_ContactPools_Type GeoGrid_Location_ContactPools::Secondar
 const GeoGrid_Location_ContactPools_Type GeoGrid_Location_ContactPools::College;
 const GeoGrid_Location_ContactPools_Type GeoGrid_Location_ContactPools::Household;
 const GeoGrid_Location_ContactPools_Type GeoGrid_Location_ContactPools::Workplace;
-    const GeoGrid_Location_ContactPools_Type GeoGrid_Location_ContactPools::Daycare;
-    const GeoGrid_Location_ContactPools_Type GeoGrid_Location_ContactPools::PreSchool;
 const GeoGrid_Location_ContactPools_Type GeoGrid_Location_ContactPools::Type_MIN;
 const GeoGrid_Location_ContactPools_Type GeoGrid_Location_ContactPools::Type_MAX;
 const int GeoGrid_Location_ContactPools::Type_ARRAYSIZE;

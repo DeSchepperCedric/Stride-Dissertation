@@ -32,14 +32,13 @@ using namespace geopop;
  * each having the same number of persons.
  * @param locCount          The number of Locations.
  * @param locPop            The population count at each Location.
- * @param dayCount          The number of daycares at each location.
  * @param schoolCount       The number of K12Schools at each Location.
  * @param houseHoldCount    The number of households at each Location.
  * @param personCount       The number of persons per Household.
  * @param pop               The population carrying this GeoGrid.
  */
-void MakeGeoGrid(const GeoGridConfig&, int locCount, int locPop, int dayCount, int preCount, int schoolCount,
-                 int houseHoldCount, int personCount, Population* pop)
+void MakeGeoGrid(const GeoGridConfig& , int locCount, int locPop, int schoolCount, int houseHoldCount,
+                 int personCount, Population* pop)
 {
         vector<unsigned int> populationSample = {
             17, 27, 65, 40, 29, 76, 27, 50, 28, 62, 50, 14, 30, 36, 12, 31, 25, 72, 62, 4,  40, 52, 55, 50, 62,
@@ -61,8 +60,6 @@ void MakeGeoGrid(const GeoGridConfig&, int locCount, int locPop, int dayCount, i
         RnMan              rnMan(RnInfo{});
         K12SchoolGenerator k12Gen(rnMan);
         HouseholdGenerator hhGen(rnMan);
-        DaycareGenerator   dayGen(rnMan);
-        PreSchoolGenerator preGen(rnMan);
 
         size_t sampleId = 0;
         auto   personId = 0U;
@@ -73,21 +70,13 @@ void MakeGeoGrid(const GeoGridConfig&, int locCount, int locPop, int dayCount, i
                         k12Gen.AddPools(*loc, pop, config);
                 }
 
-                for (int dayI = 0; dayI < dayCount; dayI++) {
-                        dayGen.AddPools(*loc, pop, config);
-                }
-
-                for (int preI = 0; preI < preCount; preI++) {
-                        preGen.AddPools(*loc, pop, config);
-                }
-
                 for (int hI = 0; hI < houseHoldCount; hI++) {
                         hhGen.AddPools(*loc, pop, config);
                         auto contactPool = loc->RefPools(Id::Household).back();
 
                         for (int i = 0; i < personCount; i++) {
                                 auto sample = populationSample[sampleId % populationSize];
-                                auto p = pop->CreatePerson(personId, sample, contactPool->GetId(), 0, 0, 0, 0, 0, 0, 0);
+                                auto p      = pop->CreatePerson(personId, sample, contactPool->GetId(), 0, 0, 0, 0, 0);
                                 contactPool->AddMember(p);
                                 sampleId++;
                                 personId++;

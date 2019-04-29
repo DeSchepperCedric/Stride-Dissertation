@@ -27,15 +27,15 @@ using namespace std;
 using namespace stride;
 using namespace stride::ContactType;
 
-template <>
+template<>
 void Generator<stride::ContactType::Id::PrimaryCommunity>::Apply(GeoGrid& geoGrid, const GeoGridConfig& ggConfig)
 {
         // 1. calculate number of communities
         // 2. assign communities to a location using a discrete distribution reflecting
         //    the relative number of people at that location
 
-        const auto popCount = ggConfig.param.pop_size;
-        // const auto communitySize  = PoolParams<Id::PrimaryCommunity>::people;
+        const auto popCount       = ggConfig.param.pop_size;
+        //const auto communitySize  = PoolParams<Id::PrimaryCommunity>::people;
         const auto communitySize  = ggConfig.people[Id::PrimaryCommunity];
         const auto communityCount = static_cast<unsigned int>(ceil(popCount / static_cast<double>(communitySize)));
 

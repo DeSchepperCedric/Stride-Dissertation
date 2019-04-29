@@ -103,6 +103,3 @@ H5Edefin.h
 H5Einit.h
 H5Epubgen.h
 H5Eterm.h
-
-venv
-main/resources/commuting/

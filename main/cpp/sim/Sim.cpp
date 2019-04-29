@@ -57,7 +57,7 @@ std::shared_ptr<Sim> Sim::Create(const boost::property_tree::ptree& config, shar
 
 std::shared_ptr<Sim> Sim::Create(const string& configString, std::shared_ptr<Population> pop, util::RnMan rnMan)
 {
-        return Create(RunConfigManager::FromString(configString), std::move(pop), std::move(rnMan));
+	return Create(RunConfigManager::FromString(configString), std::move(pop), std::move(rnMan));
 }
 
 void Sim::TimeStep()
@@ -94,9 +94,7 @@ void Sim::TimeStep()
                 for (auto typ : ContactType::IdList) {
                         if ((typ == ContactType::Id::Workplace && isWorkOff) ||
                             (typ == ContactType::Id::K12School && isSchoolOff) ||
-                            (typ == ContactType::Id::College && isSchoolOff) ||
-                            (typ == ContactType::Id::Daycare && isSchoolOff) ||
-                            (typ == ContactType::Id::PreSchool && isSchoolOff)) {
+                            (typ == ContactType::Id::College && isSchoolOff)) {
                                 continue;
                         }
 #pragma omp for schedule(static)

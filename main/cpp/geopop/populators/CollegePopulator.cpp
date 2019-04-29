@@ -29,7 +29,7 @@ using namespace std;
 using namespace stride;
 using namespace stride::ContactType;
 
-template <>
+template<>
 void Populator<stride::ContactType::Id::College>::Apply(GeoGrid& geoGrid, const GeoGridConfig& geoGridConfig)
 {
         m_logger->trace("Starting to populate Colleges");
@@ -71,8 +71,7 @@ void Populator<stride::ContactType::Id::College>::Apply(GeoGrid& geoGrid, const 
                                     m_rn_man.MakeWeightedCoinFlip(geoGridConfig.param.participation_college)) {
                                         // this person is a student
                                         if (!commutingCollege.empty() &&
-                                            m_rn_man.MakeWeightedCoinFlip(
-                                                geoGridConfig.param.fraction_college_commuters)) {
+                                            m_rn_man.MakeWeightedCoinFlip(geoGridConfig.param.fraction_college_commuters)) {
                                                 // this person is commuting
 
                                                 // pools to commute to

@@ -51,8 +51,7 @@ public:
                                            util::RnMan rnMan);
 
         /// For use in python environment: create Sim using configuration string i.o. ptree.
-        static std::shared_ptr<Sim> Create(const std::string& configString, std::shared_ptr<Population> pop,
-                                           util::RnMan rnMan);
+        static std::shared_ptr<Sim> Create(const std::string& configString, std::shared_ptr<Population> pop, util::RnMan rnMan);
 
         /// Calendar for the simulated world. Initialized with the start date in the simulation
         /// world. Use GetCalendar()->GetSimulationDay() for the number of days simulated.

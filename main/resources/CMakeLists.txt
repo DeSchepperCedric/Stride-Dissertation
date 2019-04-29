@@ -1,8 +1,8 @@
 #############################################################################
-#  This file is part of the Stride software.
+#  This file is part of the Stride software. 
 #  It is free software: you can redistribute it and/or modify
-#  it under the terms of the GNU General Public License as published by
-#  the Free Software Foundation, either version 3 of the License, or any
+#  it under the terms of the GNU General Public License as published by 
+#  the Free Software Foundation, either version 3 of the License, or any 
 #  later version.
 #  The software is distributed in the hope that it will be useful,
 #  but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -26,7 +26,7 @@ execute_process(COMMAND ${CMAKE_COMMAND} -E make_directory ${UNZIP_FOLDER})
 file(GLOB ZIP_FILES "data/*.zip")
 foreach( file_i ${ZIP_FILES} )
 	execute_process(COMMAND ${CMAKE_COMMAND} -E tar xzf ${file_i}
-			WORKING_DIRECTORY ${UNZIP_FOLDER})
+                    WORKING_DIRECTORY ${UNZIP_FOLDER})
 endforeach()
 
 # Install unzipped files

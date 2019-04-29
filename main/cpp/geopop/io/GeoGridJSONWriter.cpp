@@ -15,9 +15,12 @@
 
 #include "GeoGridJSONWriter.h"
 
+#include "contact/ContactPool.h"
+#include "geopop/ContactCenter.h"
 #include "geopop/GeoGrid.h"
 #include "pop/Person.h"
 
+#include <boost/property_tree/json_parser.hpp>
 #include <iostream>
 #include <omp.h>
 
@@ -26,110 +29,116 @@ namespace geopop {
 using namespace std;
 using namespace stride;
 using namespace stride::ContactType;
+using namespace boost::property_tree;
 
 GeoGridJSONWriter::GeoGridJSONWriter() : m_persons_found() {}
 
 void GeoGridJSONWriter::Write(GeoGrid& geoGrid, ostream& stream)
 {
-        nlohmann::json root;
-        nlohmann::json locations = nlohmann::json::array();
+        ptree root;
+        ptree locations;
+        ptree persons;
 
         for (const auto& location : geoGrid) {
-                nlohmann::json child;
-                child = WriteLocation(*location);
+                pair<string, ptree> child;
+                child = make_pair("", WriteLocation(*location));
                 locations.push_back(move(child));
         }
-
-        root["locations"] = locations;
-
-        nlohmann::json persons = nlohmann::json::array();
+        root.add_child("locations", locations);
 
         for (const auto& person : m_persons_found) {
-                nlohmann::json child;
-                child = WritePerson(person);
+                pair<string, ptree> child;
+                child = make_pair("", WritePerson(person));
                 persons.push_back(move(child));
         }
-        root["persons"] = persons;
+        root.add_child("persons", persons);
 
         m_persons_found.clear();
-
-        stream << root;
+        write_json(stream, root);
 }
 
-nlohmann::json GeoGridJSONWriter::WriteContactCenter(ContactPool* const& contactPool)
+ptree GeoGridJSONWriter::WriteContactCenter(shared_ptr<ContactCenter> contactCenter)
 {
-        nlohmann::json pools = nlohmann::json::array();
-        for (auto pool : *contactPool) {
-                nlohmann::json child;
-                nlohmann::json people = nlohmann::json::array();
-                child["id"]           = contactPool->GetId();
-                //                for (auto person : pool{
-                auto person = pool;
-                m_persons_found.insert(person);
-                people.push_back(person->GetId());
-                //                }
-                child["people"] = people;
+        ptree contactCenter_root;
+        contactCenter_root.put("id", contactCenter->GetId());
+        contactCenter_root.put("type", ToString(contactCenter->GetContactPoolType()));
+        ptree pools;
+
+        for (const auto& pool : *contactCenter) {
+                pair<string, ptree> child;
+                child = make_pair("", WriteContactPool(pool));
                 pools.push_back(move(child));
         }
-        return pools;
+
+        contactCenter_root.add_child("pools", pools);
+        return contactCenter_root;
 }
 
-nlohmann::json GeoGridJSONWriter::WriteCoordinate(const Coordinate& coordinate)
+ptree GeoGridJSONWriter::WriteContactPool(ContactPool* contactPool)
 {
-        nlohmann::json coordinate_root;
-        coordinate_root["longitude"] = boost::geometry::get<0>(coordinate);
-        coordinate_root["latitude"]  = boost::geometry::get<1>(coordinate);
+        ptree contactPool_root;
+        contactPool_root.put("id", contactPool->GetId());
+        ptree people;
+        for (auto person : *contactPool) {
+                ptree person_root;
+                m_persons_found.insert(person);
+                person_root.put("", person->GetId());
+                people.push_back(make_pair("", person_root));
+        }
+        contactPool_root.add_child("people", people);
+        return contactPool_root;
+}
+
+ptree GeoGridJSONWriter::WriteCoordinate(const Coordinate& coordinate)
+{
+        ptree coordinate_root;
+        coordinate_root.put("longitude", boost::geometry::get<0>(coordinate));
+        coordinate_root.put("latitude", boost::geometry::get<1>(coordinate));
         return coordinate_root;
 }
 
-nlohmann::json GeoGridJSONWriter::WriteLocation(const Location& location)
+ptree GeoGridJSONWriter::WriteLocation(const Location& location)
 {
-        nlohmann::json location_root;
-        location_root["id"]         = location.GetID();
-        location_root["name"]       = location.GetName();
-        location_root["province"]   = location.GetProvince();
-        location_root["population"] = location.GetPopCount();
-        location_root["coordinate"] = WriteCoordinate(location.GetCoordinate());
+        ptree location_root;
+        location_root.put("id", location.GetID());
+        location_root.put("name", location.GetName());
+        location_root.put("province", location.GetProvince());
+        location_root.put("population", location.GetPopCount());
+        location_root.add_child("coordinate", WriteCoordinate(location.GetCoordinate()));
 
         auto commutes = location.CRefOutgoingCommutes();
         if (!commutes.empty()) {
-                nlohmann::json commutes_root;
+                ptree commutes_root;
                 for (auto commute_pair : commutes) {
-                        commutes_root[to_string(commute_pair.first->GetID())] = commute_pair.second;
+                        commutes_root.put(to_string(commute_pair.first->GetID()), commute_pair.second);
                 }
-                location_root["commutes"] = commutes_root;
+                location_root.add_child("commutes", commutes_root);
         }
 
-        nlohmann::json contactCenters = nlohmann::json::array();
+        ptree contactCenters;
         for (Id typ : IdList) {
-                for (const auto& c : location.CRefPools(typ)) {
-                        nlohmann::json child;
-                        child["type"] = ToString(typ);
-                        child["id"]   = c->GetId();
-                        child         = WriteContactCenter(c);
+                for (const auto& c : location.CRefCenters(typ)) {
+                        pair<string, ptree> child;
+                        child = make_pair("", WriteContactCenter(c));
                         contactCenters.push_back(move(child));
                 }
         }
-        location_root["contactCenters"] = contactCenters;
+        location_root.add_child("contactCenters", contactCenters);
 
         return location_root;
 }
 
-nlohmann::json GeoGridJSONWriter::WritePerson(Person* person)
+ptree GeoGridJSONWriter::WritePerson(Person* person)
 {
-        using namespace ContactType;
-
-        nlohmann::json person_root;
-        person_root["id"]                 = person->GetId();
-        person_root["age"]                = person->GetAge();
-        person_root["K12School"]          = person->GetPoolId(Id::K12School);
-        person_root["College"]            = person->GetPoolId(Id::College);
-        person_root["Household"]          = person->GetPoolId(Id::Household);
-        person_root["Workplace"]          = person->GetPoolId(Id::Workplace);
-        person_root["PrimaryCommunity"]   = person->GetPoolId(Id::PrimaryCommunity);
-        person_root["SecondaryCommunity"] = person->GetPoolId(Id::SecondaryCommunity);
-        person_root["Daycare"]            = person->GetPoolId(Id::Daycare);
-        person_root["PreSchool"]          = person->GetPoolId(Id::PreSchool);
+        ptree person_root;
+        person_root.put("id", person->GetId());
+        person_root.put("age", person->GetAge());
+        person_root.put("K12School", person->GetPoolId(Id::K12School));
+        person_root.put("College", person->GetPoolId(Id::College));
+        person_root.put("Household", person->GetPoolId(Id::Household));
+        person_root.put("Workplace", person->GetPoolId(Id::Workplace));
+        person_root.put("PrimaryCommunity", person->GetPoolId(Id::PrimaryCommunity));
+        person_root.put("SecondaryCommunity", person->GetPoolId(Id::SecondaryCommunity));
         return person_root;
 }
 

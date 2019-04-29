@@ -53,11 +53,10 @@ tuple<ptree, unsigned int, double> ScenarioData::Get(string tag)
             {"measles_26", 1.0e-03},  {"r0_0", 5.0e-02},    {"r0_4", 1.0e-01},        {"r0_8", 8.0e-02},
             {"r0_12", 1.0e-01},       {"r0_16", 8.0e-02}};
 
-        //TODO properly calc targets by doing multiple runs and calculating the mean
         const map<string, unsigned int> targets_geopop = {
-            {"influenza_a_geopop", 558000U}, {"influenza_b_geopop", 0U},     {"influenza_c_geopop", 5U},
-            {"measles_16_geopop", 290000U},  {"measles_26_geopop", 600000U}, {"r0_0_geopop", 1200U},
-            {"r0_12_geopop", 42300U},        {"r0_16_geopop", 74500U},       {"r0_4_geopop", 4600U},
+            {"influenza_a_geopop", 554000U}, {"influenza_b_geopop", 0U},     {"influenza_c_geopop", 5U},
+            {"measles_16_geopop", 270000U},  {"measles_26_geopop", 600000U}, {"r0_0_geopop", 1200U},
+            {"r0_12_geopop", 39300U},        {"r0_16_geopop", 70500U},       {"r0_4_geopop", 4300U},
             {"r0_8_geopop", 15900U}};
 
         const map<string, double> margins_geopop = {{"influenza_a_geopop", 3.0e-03}, {"influenza_b_geopop", 0.0},

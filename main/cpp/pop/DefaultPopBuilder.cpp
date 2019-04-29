@@ -60,9 +60,11 @@ shared_ptr<Population> DefaultPopBuilder::MakePersons(shared_ptr<Population> pop
         if (!popFile.is_open()) {
                 throw runtime_error(string(__func__) + "> Error opening population file " + filePath.string());
         }
+
         string line;
         getline(popFile, line); // step over file header
         unsigned int person_id = 0U;
+
         while (getline(popFile, line)) {
                 const auto values               = Split(line, ",");
                 const auto age                  = FromString<unsigned int>(values[0]);
@@ -73,12 +75,14 @@ shared_ptr<Population> DefaultPopBuilder::MakePersons(shared_ptr<Population> pop
                 const auto secondaryCommunityId = FromString<unsigned int>(values[5]);
 
                 pop->CreatePerson(person_id, age, householdId, schoolId, 0, workId, primaryCommunityId,
-                                  secondaryCommunityId, 0, 0);
+                                  secondaryCommunityId);
                 ++person_id;
         }
+
         popFile.close();
 
         m_stride_logger->trace("Done building default population.");
+
         return pop;
 }
 
@@ -132,6 +136,7 @@ shared_ptr<Population> DefaultPopBuilder::Build(shared_ptr<Population> pop)
                         }
                 }
         }
+
 
         return pop;
 }

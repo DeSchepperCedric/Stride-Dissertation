@@ -47,8 +47,6 @@ message GeoGrid {
                 College = 3;
                 Household = 4;
                 Workplace = 5;
-                Daycare = 6;
-                PreSchool = 7;
             }
             Type type = 2;
 

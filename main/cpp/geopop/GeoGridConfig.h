@@ -44,24 +44,18 @@ public:
         /// People per unit (= Household, K12School, College, etc.) for each of the ContactTypes.
         /// Default initialization. Order in which contacttypes are listed in the
         /// definition of the enumeration must be respected!
-        stride::ContactType::IdSubscriptArray<unsigned int> people{0U, 18U, 120U, 500U, 3000U, 20U, 2000U, 2000U};
+        stride::ContactType::IdSubscriptArray<unsigned int> people {0U, 500U, 3000U, 20U, 2000U, 2000U};
 
         /// Pools per unit (= Household, K12School, College, etc.) for each of the ContactTypes.
         /// Default initialization. Order in which contacttypes are listed in the
         /// definition of the enumeration must be respected!
-        stride::ContactType::IdSubscriptArray<unsigned int> pools{1U, 1U, 6U, 25U, 20U, 1U, 1U, 1U};
+        stride::ContactType::IdSubscriptArray<unsigned int> pools {1U, 25U, 20U, 1U, 1U, 1U};
 
         // -----------------------------------------------------------------------------------------
         // Parameters set by constructor with configuration property tree.
         // -----------------------------------------------------------------------------------------
         struct
         {
-                /// Participation of daycare (fraction of people of daycare age going to daycare).
-                double participation_daycare;
-
-                /// Participation of preschool (fraction of people of preschool age going to preschool).
-                double participation_preschool;
-
                 /// Participation of college (fraction of people of college age going to college).
                 double participation_college;
 
@@ -100,12 +94,6 @@ public:
         // -----------------------------------------------------------------------------------------
         struct
         {
-                /// Numbers of individuals in Daycare.
-                unsigned int popcount_daycare;
-
-                /// Numbers of individuals in PreSchool.
-                unsigned int popcount_preschool;
-
                 /// Numbers of individuals in K12School.
                 unsigned int popcount_k12school;
 

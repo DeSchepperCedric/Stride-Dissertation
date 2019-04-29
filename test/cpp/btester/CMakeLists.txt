@@ -18,10 +18,10 @@
 # Build & install executable.
 #============================================================================
 set(SRC
-        InfluenzaBench.cpp
-        MeaslesBench.cpp
-        main.cpp
-        )
+    InfluenzaBench.cpp
+    MeaslesBench.cpp
+    main.cpp
+    )
 
 include_directories(${CMAKE_SOURCE_DIR}/test/cpp)
 add_executable(btester ${SRC})

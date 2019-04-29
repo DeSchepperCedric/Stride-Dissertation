@@ -32,8 +32,7 @@ AgeContactProfile::AgeContactProfile(Id poolType, const ptree& contactPt) : std:
 {
         string typeKey = ContactType::ToString(poolType);
         // TODO ELiminate this hack by fixing the data file
-        if (poolType == Id::K12School || poolType == Id::College || poolType == Id::Daycare ||
-            poolType == Id::PreSchool) {
+        if (poolType == Id::K12School || poolType == Id::College) {
                 typeKey = "school";
         } else if (poolType == Id::Household) {
                 typeKey = "household";

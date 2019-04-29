@@ -29,7 +29,7 @@ namespace geopop {
 
 /**
  * Retrieves the reference Household profiles from file.
- * This can be implemented using different input file types. Currently CSV and JSON is implemented.
+ * This can be implemented using different input file types. Currently CSV is implemented.
  */
 class HouseholdReader
 {
