@@ -21,8 +21,8 @@
 #include "pop/Population.h"
 #include "util/RnMan.h"
 
-#include <gtest/gtest.h>
 #include <array>
+#include <gtest/gtest.h>
 
 using namespace std;
 using namespace geopop;
@@ -36,8 +36,8 @@ class SecondaryCommunityGeneratorTest : public testing::Test
 {
 public:
         SecondaryCommunityGeneratorTest()
-            : m_rn_man(RnInfo()), m_community_generator(m_rn_man), m_gg_config(),
-              m_pop(Population::Create()), m_geo_grid(m_pop.get())
+            : m_rn_man(RnInfo()), m_community_generator(m_rn_man), m_gg_config(), m_pop(Population::Create()),
+              m_geo_grid(m_pop.get())
         {
         }
 
@@ -93,7 +93,7 @@ TEST_F(SecondaryCommunityGeneratorTest, ZeroLocationTest)
 
 TEST_F(SecondaryCommunityGeneratorTest, FiveLocationsTest)
 {
-        m_gg_config.param.pop_size             = 37542 * 100;
+        m_gg_config.param.pop_size          = 37542 * 100;
         m_gg_config.info.popcount_k12school = 750840;
 
         auto loc1 = make_shared<Location>(1, 4, Coordinate(0, 0), "Antwerpen", 10150 * 100);

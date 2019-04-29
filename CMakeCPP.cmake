@@ -180,6 +180,10 @@ endif()
 if(NOT OPENMP_FOUND)
     include_directories(${CMAKE_HOME_DIRECTORY}/main/resources/lib/domp/include)
 endif()
+#----------------------------------------------------------------------------
+# nlohmann_json
+#----------------------------------------------------------------------------
+include_directories(SYSTEM ${CMAKE_HOME_DIRECTORY}/main/resources/lib/nlohmann_json/include)
 
 #----------------------------------------------------------------------------
 # HDF5

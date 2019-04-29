@@ -129,6 +129,10 @@ void GeoPopBuilder::MakePools(GeoGrid& geoGrid, const GeoGridConfig& geoGridConf
         SecondaryCommunityGenerator(m_rn_man, m_stride_logger).Apply(geoGrid, geoGridConfig);
 
         HouseholdGenerator(m_rn_man, m_stride_logger).Apply(geoGrid, geoGridConfig);
+
+        DaycareGenerator(m_rn_man, m_stride_logger).Apply(geoGrid, geoGridConfig);
+
+        PreSchoolGenerator(m_rn_man, m_stride_logger).Apply(geoGrid, geoGridConfig);
 }
 
 void GeoPopBuilder::MakePersons(GeoGrid& geoGrid, const GeoGridConfig& geoGridConfig)
@@ -144,6 +148,10 @@ void GeoPopBuilder::MakePersons(GeoGrid& geoGrid, const GeoGridConfig& geoGridCo
         SecondaryCommunityPopulator(m_rn_man, m_stride_logger).Apply(geoGrid, geoGridConfig);
 
         WorkplacePopulator(m_rn_man, m_stride_logger).Apply(geoGrid, geoGridConfig);
+
+        DaycarePopulator(m_rn_man, m_stride_logger).Apply(geoGrid, geoGridConfig);
+
+        PreSchoolPopulator(m_rn_man, m_stride_logger).Apply(geoGrid, geoGridConfig);
 }
 
 } // namespace stride

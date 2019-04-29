@@ -60,9 +60,9 @@ include(CMakeCPP.cmake)
 # Configuration for Swig & Python.
 #============================================================================
 if(NOT STRIDE_FORCE_NO_PYTHON)
-	find_package(SWIG)
-	find_package(PythonInterp 3)
-	find_package(PythonLibs 3)
+    find_package(SWIG)
+    find_package(PythonInterp 3)
+    find_package(PythonLibs 3)
 endif()
 
 #============================================================================
@@ -73,12 +73,41 @@ if(STRIDE_INCLUDE_DOC)
 endif()
 
 #============================================================================
+# Configuration for Qt5
+#============================================================================
+list(APPEND CMAKE_PREFIX_PATH "/opt/Qt/5.12.2/gcc_64/lib/cmake")
+if(NOT STRIDE_FORCE_NO_QT5)
+    if(APPLE AND EXISTS /usr/local/opt/qt5)
+        list(APPEND CMAKE_PREFIX_PATH "/usr/local/opt/qt5")
+    endif()
+    find_package(Qt5Quick)
+    find_package(Qt5Positioning)
+    find_package(Qt5Location)
+    find_package(Qt5Qml)
+    set(USE_QT 1 CACHE STRING "Use Qt5")
+
+    if(NOT Qt5Quick_FOUND OR NOT Qt5Positioning_FOUND OR NOT Qt5Location_FOUND OR NOT Qt5Qml_FOUND)
+        set(USE_QT 0)
+    endif()
+
+    set(QT_USE ${USE_QT})
+    add_definitions(-DQT_USE=${USE_QT})
+
+    if(QT_USE)
+        find_package(Qt5 COMPONENTS Core Quick Qml Positioning Location REQUIRED)
+        add_subdirectory(qt)
+    else()
+        message(WARNING "Qt5 not enabled.\nGUI will not work. Please run qt/setup.sh")
+    endif()
+endif()
+
+#============================================================================
 # Add subdirs
 #============================================================================
 add_subdirectory(main)
 add_subdirectory(test)
 if(STRIDE_INCLUDE_DOC)
-	add_subdirectory(doc)
+    add_subdirectory(doc)
 endif()
 
 #============================================================================

@@ -133,6 +133,9 @@ distclean:
 test: install
 	cd $(BUILD_DIR)/test; ctest $(TESTARGS) -V
 
+visual: cores configure
+	$(MAKE) $(PARALLEL_MAKE) -C $(BUILD_DIR) --no-print-directory visual
+
 gtest: install
 	cd $(CMAKE_INSTALL_PREFIX); bin/gtester $(TESTARGS) --gtest_output=xml:tests/gtester_all.xml
 

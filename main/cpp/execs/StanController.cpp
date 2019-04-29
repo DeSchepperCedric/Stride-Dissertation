@@ -66,8 +66,8 @@ void StanController::Control()
                 rd_values.emplace_back(rd());
         }
         for (unsigned int i = 0; i < stanCount; i++) {
-                seeds.emplace_back(ToString(rd_values[2 * i]) + "," + ToString(rd_values[2 * i + 1]) + ","
-                                   + ToString(rd_values[2 * i + 2]) + "," + ToString(rd_values[2 * i + 3]));
+                seeds.emplace_back(ToString(rd_values[2 * i]) + "," + ToString(rd_values[2 * i + 1]) + "," +
+                                   ToString(rd_values[2 * i + 2]) + "," + ToString(rd_values[2 * i + 3]));
         }
         vector<vector<unsigned int>> results(stanCount);
 

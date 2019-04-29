@@ -23,7 +23,7 @@ using namespace std;
 using namespace stride;
 using namespace stride::ContactType;
 
-template<>
+template <>
 void Generator<stride::ContactType::Id::College>::Apply(GeoGrid& geoGrid, const GeoGridConfig& ggConfig)
 {
         const auto studentCount = ggConfig.info.popcount_college;
@@ -59,6 +59,5 @@ void Generator<stride::ContactType::Id::College>::Apply(GeoGrid& geoGrid, const 
                 AddPools(*loc, pop, ggConfig);
         }
 }
-
 
 } // namespace geopop
