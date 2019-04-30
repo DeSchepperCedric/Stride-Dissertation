@@ -14,7 +14,7 @@
     <output_persons>false</output_persons>
     <output_prefix></output_prefix>
     <output_summary>false</output_summary>
-    <population_file>gengeopop.proto</population_file>
+    <population_file>gengeopop.json</population_file>
     <population_type>generate</population_type>
     <rng_seed>1</rng_seed>
     <rng_type>mrg2</rng_type>
@@ -35,6 +35,8 @@
         <fraction_college_commuters>0.5</fraction_college_commuters>
         <fraction_workplace_commuters>0.5</fraction_workplace_commuters>
         <household_file>households_flanders.json</household_file>
+        <participation_preschool>0.99</participation_preschool>
+        <participation_daycare>0.45</participation_daycare>
         <participation_college>0.5</participation_college>
         <particpation_workplace>0.75</particpation_workplace>
         <population_size>600000</population_size>

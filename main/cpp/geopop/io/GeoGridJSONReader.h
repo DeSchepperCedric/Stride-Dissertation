@@ -49,23 +49,21 @@ public:
 private:
         void ParseContactPoolsClass(nlohmann::json& contactCenter, std::shared_ptr<Location> loc);
 
-        /// Create a ContactCenter based on the information stored in the provided boost property tree.
+        /// Create a ContactCenter based on the information stored in the provided json structure
         std::shared_ptr<Location> ParseLocation(nlohmann::json& location);
 
-        /// Create a ContactCenter based on the information stored in the provided boost property tree.
+        /// Create a ContactCenter based on the information stored in the provided json structure.
         void ParseContactPool(std::shared_ptr<Location> loc, nlohmann::json& contactPool,
                               stride::ContactType::Id typeId);
 
-        /// Create a Coordinate based on the information stored in the provided boost property tree.
+        /// Create a Coordinate based on the information stored in the provided json structure.
         Coordinate ParseCoordinate(nlohmann::json& coordinate);
 
-        /// Create a Location based on the information stored in the provided boost property tree.
-        std::shared_ptr<Location> ParseLocation(nlohmann::json& location, stride::ContactType::Id typeId);
 
-        /// Create a Person based on the information stored in the provided boost property tree.
+        /// Create a Person based on the information stored in the provided json structure.
         stride::Person* ParsePerson(nlohmann::json& person);
 
-        /// Get numerical data from a json node
+        /// Get numerical data from a json node, this will not fail in case it is formatted as a string
         template <typename T>
         T ParseNumerical(nlohmann::json& node)
         {
@@ -76,7 +74,8 @@ private:
                 }
         }
 
-        /// Get an array from a json node
+        /// Get an array from a json node, this will not fail if the array is an empty string
+        /// this could be the case, given the provided example files (rather safe than segfault).
         nlohmann::json ParseArray(nlohmann::json& node);
 };
 

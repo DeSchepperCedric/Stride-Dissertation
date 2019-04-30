@@ -20,7 +20,6 @@
 #include "geopop/Location.h"
 
 #include <nlohmann/json.hpp>
-//#include <boost/property_tree/ptree.hpp>
 #include <set>
 
 namespace stride {
@@ -53,8 +52,6 @@ private:
 
         /// Create a JSON Structure containing all info needed to reconstruct a Location.
         nlohmann::json WriteLocation(const Location& location);
-        //        /// Create a Boost Property Tree containing all info needed to reconstruct a Location.
-        //        boost::property_tree::ptree WriteLocation(const Location& location);
 
         /// Create a JSON Structure containing all info needed to reconstruct a Person.
         nlohmann::json WritePerson(stride::Person* person);
