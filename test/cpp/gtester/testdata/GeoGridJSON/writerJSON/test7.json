@@ -9,7 +9,7 @@
                 "longitude": 0.0,
                 "latitude": 0.0
             },
-            "contactCenters": []
+            "contactPools": []
         },
         {
             "id": 2,
@@ -24,7 +24,7 @@
                 "1": 0.75,
                 "3": 0.5
             },
-            "contactCenters": []
+            "contactPools": []
         },
         {
             "id": 1,
@@ -39,7 +39,7 @@
                 "2": 0.5,
                 "3": 0.25
             },
-            "contactCenters": []
+            "contactPools": []
         }
     ],
     "persons": []
