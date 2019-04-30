@@ -162,6 +162,8 @@ Person* GeoGridJSONReader::ParsePerson(nlohmann::json& person)
 {
         const auto id   = ParseNumerical<unsigned int>(person.at("id"));
         const auto age  = ParseNumerical<unsigned int>(person.at("age"));
+        // The following ID's of contactpools will not necessarily coincide with the actual ID of the contactpool, due to how ID's are generated
+        // This issue will be fixed later on, when parsing the contactpools, then the correct contactpool ID will be assigned.
         const auto hhId = ParseNumerical<unsigned int>(person.at("Household"));
         const auto ksId = ParseNumerical<unsigned int>(person.at("K12School"));
         const auto coId = ParseNumerical<unsigned int>(person.at("College"));

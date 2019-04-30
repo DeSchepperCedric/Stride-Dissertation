@@ -65,9 +65,7 @@ bool compareGeoGrid(GeoGrid& geoGrid, const string& testname)
         nlohmann::json result;
         ss >> result;
         sortJSON(result);
-//        std::cout << result.dump(4) << std::endl;
         nlohmann::json expected;
-//        std::cout << FileSys::GetTestsDir().string() << std::endl;
         std::ifstream  inputStream(FileSys::GetTestsDir().string() + "/testdata/GeoGridJSON/writerJSON/" + testname);
 
         inputStream >> expected;

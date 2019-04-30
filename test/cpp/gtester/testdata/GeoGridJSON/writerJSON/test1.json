@@ -12,23 +12,66 @@
             "contactPools": [
                 {
                     "class": "K12School",
-                    "pools": []
+                    "pools": [
+                        {
+                            "id": 1,
+                            "people": []
+                        }
+                    ]
                 },
                 {
                     "class": "PrimaryCommunity",
-                    "pools": []
+                    "pools": [
+                        {
+                            "id": 1,
+                            "people": []
+                        }
+                    ]
                 },
                 {
                     "class": "College",
-                    "pools": []
+                    "pools": [
+                        {
+                            "id": 1,
+                            "people": []
+                        }
+                    ]
                 },
                 {
                     "class": "Household",
-                    "pools": []
+                    "pools": [
+                        {
+                            "id": 1,
+                            "people": []
+                        }
+                    ]
                 },
                 {
                     "class": "Workplace",
-                    "pools": []
+                    "pools": [
+                        {
+                            "id": 1,
+                            "people": []
+                        }
+                    ]
+                },
+                {
+                    "class": "Daycare",
+                    "pools": [
+                        {
+                            "id": 1,
+                            "people": []
+                        }
+                    ]
+                },
+                {
+                    "class": "PreSchool",
+                    "pools": [
+                        {
+                            "id": 1,
+                            "people": []
+                        }
+                    ]
                 }
             ]
         }
