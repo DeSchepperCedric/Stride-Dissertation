@@ -14,7 +14,7 @@
     <output_persons>false</output_persons>
     <output_prefix></output_prefix>
     <output_summary>false</output_summary>
-    <population_file>pop_flanders600.csv</population_file>
+    <population_file>gengeopop.json</population_file>
     <population_type>import</population_type>
     <rng_seed>1</rng_seed>
     <rng_type>mrg2</rng_type>
