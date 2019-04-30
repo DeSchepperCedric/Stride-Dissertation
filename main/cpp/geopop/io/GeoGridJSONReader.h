@@ -47,7 +47,7 @@ public:
         void Read() override;
 
 private:
-        void ParseContactCenters(nlohmann::json& contactCenter, std::shared_ptr<Location> loc);
+        void ParseContactPoolsClass(nlohmann::json& contactCenter, std::shared_ptr<Location> loc);
 
         /// Create a ContactCenter based on the information stored in the provided boost property tree.
         std::shared_ptr<Location> ParseLocation(nlohmann::json& location);

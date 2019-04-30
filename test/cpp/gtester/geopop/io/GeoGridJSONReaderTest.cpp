@@ -16,7 +16,6 @@
 #include "geopop/io/GeoGridJSONReader.h"
 
 #include "contact/ContactType.h"
-//#include "geopop/ContactCenter.h"
 #include "geopop/GeoGrid.h"
 #include "pop/Population.h"
 #include "util/Exception.h"
@@ -39,6 +38,7 @@ namespace {
 void getGeoGridFromFile(const string& filename, Population* pop)
 {
         auto file = make_unique<ifstream>();
+//        std::cout <<FileSys::GetTestsDir().string() + "/testdata/GeoGridJSON/" + filename << std::endl;
         file->open(FileSys::GetTestsDir().string() + "/testdata/GeoGridJSON/" + filename);
         GeoGridJSONReader geoGridJSONReader(move(file), pop);
         geoGridJSONReader.Read();
@@ -145,7 +145,7 @@ TEST(GeoGridJSONReaderTest, commutesTest)
         }
 }
 
-TEST(GeoGridJSONReaderTest, contactCentersTest)
+TEST(GeoGridJSONReaderTest, contactPoolsTest)
 {
         auto pop = Population::Create();
         getGeoGridFromFile("test1.json", pop.get());
@@ -159,16 +159,8 @@ TEST(GeoGridJSONReaderTest, contactCentersTest)
                 }
         }
 
-        map<Id, bool> found = {{Id::K12School, false}, {Id::PrimaryCommunity, false}, {Id::College, false},
-                               {Id::Household, false}, {Id::Workplace, false},        {Id::Daycare, false},
-                               {Id::PreSchool, false}};
-
-        for (unsigned int i = 0; i < 7; i++) {
-                EXPECT_FALSE(found[centers[i]->GetType()]);
-                found[centers[i]->GetType()] = true;
-        }
-        for (auto& type : found) {
-                EXPECT_TRUE(type.second);
+        for (Id typ : IdList) {
+            EXPECT_EQ(location->CRefPools(typ).size(), 0);
         }
 }
 
@@ -179,10 +171,6 @@ void runPeopleTest(const string& filename)
         auto& geoGrid  = pop->RefGeoGrid();
         auto  location = geoGrid[0];
 
-        map<int, string> ids = {{0, "K12School"}, {1, "PrimaryCommunity"}, {2, "SecondaryCommunity"},
-                                {3, "College"},   {4, "Household"},        {5, "Workplace"},
-                                {6, "Daycare"},   {7, "PreSchool"}};
-
         EXPECT_EQ(location->GetID(), 1);
         EXPECT_EQ(location->GetName(), "Bavikhove");
         EXPECT_EQ(location->GetProvince(), 4);
@@ -190,7 +178,7 @@ void runPeopleTest(const string& filename)
         EXPECT_EQ(get<0>(location->GetCoordinate()), 0);
         EXPECT_EQ(get<1>(location->GetCoordinate()), 0);
 
-        vector<shared_ptr<ContactPool>> centers;
+        vector<ContactPool*> centers;
         for (Id typ : IdList) {
                 for (const auto& p : location->CRefPools(typ)) {
                         centers.emplace_back(p);
@@ -199,18 +187,16 @@ void runPeopleTest(const string& filename)
 
         for (const auto& center : centers) {
                 auto person   = (*center)[0];
-                //auto person = *(pool->begin());
-                EXPECT_EQ(ids[center->GetId()], ToString(center->GetType()));
                 EXPECT_EQ(person->GetId(), 0);
                 EXPECT_EQ(person->GetAge(), 18);
-                EXPECT_EQ(person->GetPoolId(Id::K12School), 2);
-                EXPECT_EQ(person->GetPoolId(Id::Household), 5);
-                EXPECT_EQ(person->GetPoolId(Id::College), 4);
-                EXPECT_EQ(person->GetPoolId(Id::Workplace), 6);
-                EXPECT_EQ(person->GetPoolId(Id::PrimaryCommunity), 3);
-                EXPECT_EQ(person->GetPoolId(Id::SecondaryCommunity), 7);
-                EXPECT_EQ(person->GetPoolId(Id::Daycare), 8);
-                EXPECT_EQ(person->GetPoolId(Id::PreSchool), 9);
+                EXPECT_EQ(person->GetPoolId(Id::K12School), 1);
+                EXPECT_EQ(person->GetPoolId(Id::Household), 1);
+                EXPECT_EQ(person->GetPoolId(Id::College), 1);
+                EXPECT_EQ(person->GetPoolId(Id::Workplace), 1);
+                EXPECT_EQ(person->GetPoolId(Id::PrimaryCommunity), 1);
+                EXPECT_EQ(person->GetPoolId(Id::SecondaryCommunity), 1);
+                EXPECT_EQ(person->GetPoolId(Id::Daycare), 1);
+                EXPECT_EQ(person->GetPoolId(Id::PreSchool), 1);
         }
 }
 

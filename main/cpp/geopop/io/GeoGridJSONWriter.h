@@ -46,7 +46,7 @@ public:
 
 private:
         /// Create a JSON Structure containing all info needed to reconstruct a ContactCenter.
-        nlohmann::json WriteContactCenter(stride::ContactPool* const& contactPool);
+        nlohmann::json WriteContactPool(stride::ContactPool* const& contactPool);
 
         /// Create a JSON Structure containing all info needed to reconstruct a Coordinate.
         nlohmann::json WriteCoordinate(const Coordinate& coordinate);
