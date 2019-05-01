@@ -67,7 +67,7 @@ public:
 
                 /// Participation of workplace (fraction of people of work age and not going to
                 /// college and having employment).
-                double particpation_workplace;
+                double participation_workplace;
 
                 /// Fraction of college students that commute.
                 double fraction_college_commuters;
@@ -122,7 +122,7 @@ public:
         // -----------------------------------------------------------------------------------------
         /// Read the househould data file, parse it and set data.
         // -----------------------------------------------------------------------------------------
-        void SetData(const std::string& householdsFileName);
+        void SetData(const boost::property_tree::ptree& configPt);
 };
 
 } // namespace geopop

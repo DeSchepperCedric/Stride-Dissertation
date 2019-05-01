@@ -57,7 +57,8 @@ shared_ptr<Population> GeoPopBuilder::Build(shared_ptr<Population> pop)
         // Set the GeoGridConfig.
         // ------------------------------------------------------------
         GeoGridConfig ggConfig(m_config);
-        ggConfig.SetData(m_config.get<string>("run.geopop_gen.household_file"));
+        auto   geopop_gen = m_config.get_child("run.geopop_gen");
+        ggConfig.SetData(geopop_gen);
 
         // ------------------------------------------------------------
         // Get GeoGrid associated with 'pop'.
@@ -67,16 +68,26 @@ shared_ptr<Population> GeoPopBuilder::Build(shared_ptr<Population> pop)
         // ------------------------------------------------------------
         // Read locations file (commute file only if present).
         // ------------------------------------------------------------
-        string commutesFile;
-        auto   geopop_gen = m_config.get_child("run.geopop_gen");
-        if (geopop_gen.count("commuting_file")) {
-                commutesFile = m_config.get<string>("run.geopop_gen.commuting_file");
+        const auto number_regions = geopop_gen.get<unsigned int>("number_regions");
+        for (unsigned int i = 0; i < number_regions; ++i) {
+                string commutesFile;
+                string citiesFile;
+
+                if (geopop_gen.count("region" + std::to_string(i) + ".commuting_file")) {
+                    commutesFile = geopop_gen.get<string>("region" + std::to_string(i) + ".commuting_file");
+                } else if (geopop_gen.count("region0.commuting_file")) {
+                    commutesFile = geopop_gen.get<string>("region0.commuting_file");
+                }
+                if (geopop_gen.count("region" + std::to_string(i) + ".cities_file")) {
+                    citiesFile = geopop_gen.get<string>("region" + std::to_string(i) + ".cities_file");
+                } else {
+                    citiesFile = geopop_gen.get<string>("region0.cities_file");
+                }
+
+                m_stride_logger->trace("Starting MakeLocations");
+                MakeLocations(geoGrid, ggConfig, citiesFile, commutesFile);
+                m_stride_logger->trace("Finished MakeLocations");
         }
-
-        m_stride_logger->trace("Starting MakeLocations");
-        MakeLocations(geoGrid, ggConfig, m_config.get<string>("run.geopop_gen.cities_file"), commutesFile);
-        m_stride_logger->trace("Finished MakeLocations");
-
         // ------------------------------------------------------------
         // Generate Geo.
         // ------------------------------------------------------------
