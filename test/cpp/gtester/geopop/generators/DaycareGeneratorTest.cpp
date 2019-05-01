@@ -39,6 +39,12 @@ public:
             : m_rn_man(RnInfo()), m_daycare_generator(m_rn_man), m_gg_config(), m_pop(Population::Create()),
               m_geo_grid(m_pop.get())
         {
+                for (unsigned int i = 0; i < 5; ++i){
+                        GeoGridConfig::Param param;
+                        m_gg_config.params[i] = param;
+                        GeoGridConfig::Info info;
+                        m_gg_config.regionsInfo[i] = info;
+                }
         }
 
 protected:
@@ -53,10 +59,10 @@ protected:
 TEST_F(DaycareGeneratorTest, OneLocationTest)
 {
 
-        m_gg_config.param.pop_size        = 10000;
-        m_gg_config.info.popcount_daycare = 300;
+        m_gg_config.params.at(4).pop_size        = 10000;
+        m_gg_config.regionsInfo.at(4).popcount_daycare = 300;
 
-        auto loc1 = make_shared<Location>(1, 4, Coordinate(0, 0), "Antwerpen", m_gg_config.param.pop_size);
+        auto loc1 = make_shared<Location>(1, 4, Coordinate(0, 0), "Antwerpen", m_gg_config.params.at(4).pop_size);
         m_geo_grid.AddLocation(loc1);
 
         m_daycare_generator.Apply(m_geo_grid, m_gg_config);
@@ -68,8 +74,8 @@ TEST_F(DaycareGeneratorTest, OneLocationTest)
 TEST_F(DaycareGeneratorTest, ZeroLocationTest)
 {
 
-        m_gg_config.param.pop_size        = 10000;
-        m_gg_config.info.popcount_daycare = 300;
+        m_gg_config.params.at(0).pop_size        = 10000;
+        m_gg_config.regionsInfo.at(0).popcount_daycare = 300;
 
         m_daycare_generator.Apply(m_geo_grid, m_gg_config);
 
@@ -78,8 +84,8 @@ TEST_F(DaycareGeneratorTest, ZeroLocationTest)
 
 TEST_F(DaycareGeneratorTest, FiveLocationsTest)
 {
-        m_gg_config.param.pop_size        = 37542 * 100;
-        m_gg_config.info.popcount_daycare = 125140;
+        m_gg_config.params.at(4).pop_size        = 37542 * 100;
+        m_gg_config.regionsInfo.at(4).popcount_daycare = 125140;
 
         auto loc1 = make_shared<Location>(1, 4, Coordinate(0, 0), "Antwerpen", 10150 * 100);
         auto loc2 = make_shared<Location>(1, 4, Coordinate(0, 0), "Vlaams-Brabant", 10040 * 100);
@@ -95,7 +101,7 @@ TEST_F(DaycareGeneratorTest, FiveLocationsTest)
 
         for (const auto& loc : m_geo_grid) {
                 loc->SetPopFraction(static_cast<double>(loc->GetPopCount()) /
-                                    static_cast<double>(m_gg_config.param.pop_size));
+                                    static_cast<double>(m_gg_config.params.at(4).pop_size));
         }
 
         m_daycare_generator.Apply(m_geo_grid, m_gg_config);

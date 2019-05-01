@@ -39,6 +39,13 @@ public:
             : m_rn_man(RnInfo()), m_college_generator(m_rn_man), m_gg_config(), m_pop(Population::Create()),
               m_geo_grid(m_pop.get())
         {
+                for (unsigned int i = 0; i < 5; ++i){
+                        GeoGridConfig::Param param;
+                        m_gg_config.params[i] = param;
+                        GeoGridConfig::Info info;
+                        m_gg_config.regionsInfo[i] = info;
+                }
+
         }
 
 protected:
@@ -53,10 +60,10 @@ protected:
 // Checks whther generator can handle a single location.
 TEST_F(CollegeGeneratorTest, OneLocationTest)
 {
-        m_gg_config.param.pop_size        = 45000;
-        m_gg_config.info.popcount_college = 9000;
+        m_gg_config.params.at(4).pop_size        = 45000;
+        m_gg_config.regionsInfo.at(4).popcount_college = 9000;
 
-        auto loc1 = make_shared<Location>(1, 4, Coordinate(0, 0), "Antwerpen", m_gg_config.param.pop_size);
+        auto loc1 = make_shared<Location>(1, 4, Coordinate(0, 0), "Antwerpen", m_gg_config.params.at(4).pop_size);
         m_geo_grid.AddLocation(loc1);
 
         m_college_generator.Apply(m_geo_grid, m_gg_config);
@@ -68,8 +75,8 @@ TEST_F(CollegeGeneratorTest, OneLocationTest)
 // Checks whether Generator can handle zero locations in GeoGrid.
 TEST_F(CollegeGeneratorTest, ZeroLocationTest)
 {
-        m_gg_config.param.pop_size        = 10000;
-        m_gg_config.info.popcount_college = 2000;
+        m_gg_config.params.at(0).pop_size        = 10000;
+        m_gg_config.regionsInfo.at(0).popcount_college = 2000;
 
         m_college_generator.Apply(m_geo_grid, m_gg_config);
 
@@ -79,8 +86,8 @@ TEST_F(CollegeGeneratorTest, ZeroLocationTest)
 // Checks whether generator can handle multiple locations.
 TEST_F(CollegeGeneratorTest, MultipleLocationsTest)
 {
-        m_gg_config.param.pop_size        = 399992;
-        m_gg_config.info.popcount_college = 79998;
+        m_gg_config.params.at(4).pop_size        = 399992;
+        m_gg_config.regionsInfo.at(4).popcount_college = 79998;
 
         array<unsigned int, 15> sizes{28559, 33319, 39323, 37755, 35050, 10060, 13468, 8384,
                                       9033,  31426, 33860, 4110,  50412, 25098, 40135};

@@ -42,7 +42,13 @@ public:
             : m_rn_man(RnInfo()), m_preschool_populator(m_rn_man), m_gg_config(), m_pop(Population::Create()),
               m_geo_grid(m_pop->RefGeoGrid()), m_preschool_generator(m_rn_man)
         {
-                m_gg_config.param.participation_preschool = 0.99;
+                for (unsigned int i = 0; i < 5; ++i){
+                        GeoGridConfig::Param param;
+                        m_gg_config.params[i] = param;
+                }
+
+                m_gg_config.params[0].participation_preschool = 0.99;
+                m_gg_config.params[1].participation_preschool = 0.99;
         }
 
 protected:

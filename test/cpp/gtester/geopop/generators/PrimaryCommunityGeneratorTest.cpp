@@ -39,6 +39,12 @@ public:
             : m_rn_man(RnInfo()), m_community_generator(m_rn_man), m_gg_config(), m_pop(Population::Create()),
               m_geo_grid(m_pop.get())
         {
+                for (unsigned int i = 0; i < 5; ++i){
+                        GeoGridConfig::Param param;
+                        m_gg_config.params[i] = param;
+                        GeoGridConfig::Info info;
+                        m_gg_config.regionsInfo[i] = info;
+                }
         }
 
 protected:
@@ -52,7 +58,7 @@ protected:
 
 TEST_F(PrimaryCommunityGeneratorTest, OneLocationTest)
 {
-        m_gg_config.param.pop_size = 10000;
+        m_gg_config.params.at(4).pop_size = 10000;
 
         auto loc1 = make_shared<Location>(1, 4, Coordinate(0, 0), "Antwerpen", 2500);
         m_geo_grid.AddLocation(loc1);
@@ -67,7 +73,7 @@ TEST_F(PrimaryCommunityGeneratorTest, OneLocationTest)
 
 TEST_F(PrimaryCommunityGeneratorTest, EqualLocationTest)
 {
-        m_gg_config.param.pop_size = 100 * 100 * 1000;
+        m_gg_config.params.at(4).pop_size = 100 * 100 * 1000;
 
         for (int i = 0; i < 10; i++) {
                 m_geo_grid.AddLocation(
@@ -86,7 +92,7 @@ TEST_F(PrimaryCommunityGeneratorTest, EqualLocationTest)
 // Check can handle empty GeoGrid.
 TEST_F(PrimaryCommunityGeneratorTest, ZeroLocationTest)
 {
-        m_gg_config.param.pop_size = 10000;
+        m_gg_config.params.at(4).pop_size = 10000;
 
         m_community_generator.Apply(m_geo_grid, m_gg_config);
 
@@ -96,8 +102,8 @@ TEST_F(PrimaryCommunityGeneratorTest, ZeroLocationTest)
 // Check for five Locations.
 TEST_F(PrimaryCommunityGeneratorTest, FiveLocationsTest)
 {
-        m_gg_config.param.pop_size          = 37542 * 100;
-        m_gg_config.info.popcount_k12school = 750840;
+        m_gg_config.params.at(4).pop_size          = 37542 * 100;
+        m_gg_config.regionsInfo.at(4).popcount_k12school = 750840;
 
         auto loc1 = make_shared<Location>(1, 4, Coordinate(0, 0), "Antwerpen", 10150 * 100);
         auto loc2 = make_shared<Location>(1, 4, Coordinate(0, 0), "Vlaams-Brabant", 10040 * 100);

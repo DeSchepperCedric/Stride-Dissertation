@@ -39,6 +39,12 @@ public:
             : m_rn_man(RnInfo()), m_household_generator(m_rn_man), m_gg_config(), m_pop(Population::Create()),
               m_geo_grid(m_pop.get())
         {
+                for (unsigned int i = 0; i < 5; ++i){
+                        GeoGridConfig::Param param;
+                        m_gg_config.params[i] = param;
+                        GeoGridConfig::Info info;
+                        m_gg_config.regionsInfo[i] = info;
+                }
         }
 
 protected:
@@ -53,7 +59,7 @@ protected:
 // Check that generator can handle situation with a single Location.
 TEST_F(HouseholdGeneratorTest, OneLocationTest)
 {
-        m_gg_config.info.count_households = 4;
+        m_gg_config.regionsInfo.at(4).count_households = 4;
 
         auto loc1 = make_shared<Location>(1, 4, Coordinate(0, 0), "Antwerpen", 2500);
         m_geo_grid.AddLocation(loc1);
@@ -67,7 +73,7 @@ TEST_F(HouseholdGeneratorTest, OneLocationTest)
 // Check that generator can handle "no Locations" situation.
 TEST_F(HouseholdGeneratorTest, ZeroLocationTest)
 {
-        m_gg_config.info.count_households = 4;
+        m_gg_config.regionsInfo.at(4).count_households = 4;
         m_household_generator.Apply(m_geo_grid, m_gg_config);
 
         EXPECT_EQ(m_geo_grid.size(), 0);
@@ -76,8 +82,8 @@ TEST_F(HouseholdGeneratorTest, ZeroLocationTest)
 // check that generator can handle five Locations.
 TEST_F(HouseholdGeneratorTest, FiveLocationsTest)
 {
-        m_gg_config.info.count_households = 4000;
-        m_gg_config.param.pop_size        = 37542 * 100;
+        m_gg_config.regionsInfo.at(4).count_households = 4000;
+        m_gg_config.params.at(4).pop_size        = 37542 * 100;
 
         auto loc1 = make_shared<Location>(1, 4, Coordinate(0, 0), "Antwerpen", 10150 * 100);
         auto loc2 = make_shared<Location>(2, 4, Coordinate(0, 0), "Vlaams-Brabant", 10040 * 100);
@@ -93,7 +99,7 @@ TEST_F(HouseholdGeneratorTest, FiveLocationsTest)
 
         for (const auto& loc : m_geo_grid) {
                 loc->SetPopFraction(static_cast<double>(loc->GetPopCount()) /
-                                    static_cast<double>(m_gg_config.param.pop_size));
+                                    static_cast<double>(m_gg_config.params.at(4).pop_size));
         }
 
         m_household_generator.Apply(m_geo_grid, m_gg_config);
