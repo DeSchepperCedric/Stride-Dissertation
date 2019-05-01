@@ -34,7 +34,10 @@ void Generator<stride::ContactType::Id::SecondaryCommunity>::Apply(GeoGrid& geoG
         // 2. assign communities to a location using a discrete distribution reflecting
         //    the relative number of people at that location
 
-        const auto popCount       = ggConfig.param.pop_size;
+        auto popCount = 0U;
+        for (const auto & it : ggConfig.params){
+                popCount += it.second.pop_size;
+        }
         const auto communitySize  = ggConfig.people[Id::SecondaryCommunity];
         const auto communityCount = static_cast<unsigned int>(ceil(popCount / static_cast<double>(communitySize)));
 

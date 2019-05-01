@@ -33,7 +33,7 @@ using namespace stride::AgeBrackets;
 using namespace stride::ContactType;
 using stride::util::intToDottedString;
 
-GeoGridConfig::GeoGridConfig() : param{}, refHH{}, info{} {}
+GeoGridConfig::GeoGridConfig() : params{}, refHouseHolds{}, regionsInfo{} {}
 
 GeoGridConfig::GeoGridConfig(const ptree& configPt) : GeoGridConfig()
 {
@@ -44,7 +44,7 @@ GeoGridConfig::GeoGridConfig(const ptree& configPt) : GeoGridConfig()
 void GeoGridConfig::SetData(const ptree& configPt)
 {
 //        configPt contains the run.geopop_gen child of the configPt
-//        make the setter be able to handle a variable number of regions
+//        make SetData be able to handle a variable number of regions
 
 
 //        arrays in boost ptrees:
@@ -52,37 +52,42 @@ void GeoGridConfig::SetData(const ptree& configPt)
 //        for (auto it = array.begin(); it != array.end(); it++) {
 //                // it->second.get_child("") is now a ptree from the array
 //        }
-//        conclusie: ugly af
-//        maybe dus gwn diff names voor de regions region0...regionN en N als child ook
-//        dat gaat dus nu vertrekpunt zijn, kunnen later altijd aanpassen moest het nodig zijn
 
-        const auto number_regions = configPt.get<unsigned int>("number_regions");
+        people[Id::Daycare]            = configPt.get<unsigned int>("people_per_Daycare", 18U);
+        people[Id::PreSchool]          = configPt.get<unsigned int>("people_per_PreSchool", 120U);
+        people[Id::K12School]          = configPt.get<unsigned int>("people_per_K12School", 500U);
+        people[Id::College]            = configPt.get<unsigned int>("people_per_College", 3000U);
+        people[Id::Workplace]          = configPt.get<unsigned int>("people_per_Workplace", 20U);
+        people[Id::PrimaryCommunity]   = configPt.get<unsigned int>("people_per_PrimaryCommunity", 2000U);
+        people[Id::SecondaryCommunity] = configPt.get<unsigned int>("people_per_SecondaryCommunity", 2000U);
 
-        for (unsigned int i = 0; i < number_regions; ++i){
-                const auto regionPt = configPt.get_child("region" + std::to_string(i));
+        //TODO why no pools per preschool/ alternative: for all, but setters with default 1?
+        pools[Id::K12School]           = configPt.get<unsigned int>("pools_per_K12School", 25U);
+        pools[Id::College]             = configPt.get<unsigned int>("pools_per_College", 20U);
+        auto regionArray = configPt.get_child("regions");
+        for (auto it = regionArray.begin(); it != regionArray.end(); ++it){
+                Param param;
+                const auto regionPt                = it->second.get_child("");
+                const auto regionId                = regionPt.get<unsigned int>("id",0);
+
                 param.pop_size                     = regionPt.get<unsigned int>("population_size");
                 param.participation_college        = regionPt.get<double>("participation_college");
                 param.fraction_workplace_commuters = regionPt.get<double>("fraction_workplace_commuters");
                 param.fraction_college_commuters   = regionPt.get<double>("fraction_college_commuters");
-                param.participation_workplace       = regionPt.get<double>("particpation_workplace");
+                param.participation_workplace      = regionPt.get<double>("participation_workplace");
                 param.participation_preschool      = regionPt.get<double>("participation_preschool");
                 param.participation_daycare        = regionPt.get<double>("participation_daycare");
+                params[regionId] = param;
 
-                people[Id::Daycare]            = regionPt.get<unsigned int>("people_per_Daycare", 18U);
-                people[Id::PreSchool]          = regionPt.get<unsigned int>("people_per_PreSchool", 120U);
-                people[Id::K12School]          = regionPt.get<unsigned int>("people_per_K12School", 500U);
-                people[Id::College]            = regionPt.get<unsigned int>("people_per_College", 3000U);
-                people[Id::Workplace]          = regionPt.get<unsigned int>("people_per_Workplace", 20U);
-                people[Id::PrimaryCommunity]   = regionPt.get<unsigned int>("people_per_PrimaryCommunity", 2000U);
-                people[Id::SecondaryCommunity] = regionPt.get<unsigned int>("people_per_SecondaryCommunity", 2000U);
-                pools[Id::K12School]           = regionPt.get<unsigned int>("pools_per_K12School", 25U);
-                pools[Id::College]             = regionPt.get<unsigned int>("pools_per_College", 20U);
                 auto householdsReader = ReaderFactory::CreateHouseholdReader(regionPt.get<string>("household_file"));
+
+                RefHH refHH;
                 householdsReader->SetReferenceHouseholds(refHH.person_count, refHH.ages);
+                refHouseHolds[regionId] = refHH;
                 const auto popSize = param.pop_size;
 
                 //----------------------------------------------------------------
-                // Determine age makeup of reference houshold population.
+                // Determine age makeup of reference household population.
                 //----------------------------------------------------------------
                 const auto ref_p_count   = refHH.person_count;
                 const auto averageHhSize = static_cast<double>(ref_p_count) / static_cast<double>(refHH.ages.size());
@@ -127,43 +132,54 @@ void GeoGridConfig::SetData(const ptree& configPt)
                 const auto age_count_college   = static_cast<unsigned int>(floor(popSize * fraction_college_age));
                 const auto age_count_workplace = static_cast<unsigned int>(floor(popSize * fraction_workplace_age));
 
+                Info info;
+
                 info.popcount_daycare = static_cast<unsigned int>(floor(param.participation_daycare * age_count_daycare));
-
                 info.popcount_preschool = static_cast<unsigned int>(floor(param.participation_preschool * age_count_preschool));
-
                 info.popcount_k12school = age_count_k12school;
-
                 info.popcount_college = static_cast<unsigned int>(floor(param.participation_college * age_count_college));
-
                 info.popcount_workplace = static_cast<unsigned int>(
-                        floor(param.particpation_workplace * (age_count_workplace - info.popcount_college)));
-
+                        floor(param.participation_workplace * (age_count_workplace - info.popcount_college)));
                 info.count_households = static_cast<unsigned int>(floor(static_cast<double>(popSize) / averageHhSize));
 
+                regionsInfo[regionId] = info;
         }
 }
 
 ostream& operator<<(ostream& out, const GeoGridConfig& config)
 {
         const int w = 53;
-        out.setf(std::ios_base::left, std::ios_base::adjustfield);
-        out << "Input:" << endl;
-        out << setw(w) << "Fraction college commuters:" << config.param.fraction_college_commuters << "\n";
-        out << setw(w) << "Fraction workplace commuters:" << config.param.fraction_workplace_commuters << "\n";
-        out << setw(w) << "Participation fraction of daycare:" << config.param.participation_daycare << "\n";
-        out << setw(w) << "Participation fraction of preschool:" << config.param.participation_preschool << "\n";
-        out << setw(w) << "Participation fraction of college:" << config.param.participation_college << "\n";
-        out << setw(w) << "Participation fraaction of workplace:" << config.param.particpation_workplace << "\n";
-        out << setw(w) << "Target population size" << intToDottedString(config.param.pop_size) << "\n"
-            << "\n";
-        out << "Calculated:"
-            << "\n";
-        out << setw(w) << "Daycare student count:" << intToDottedString(config.info.popcount_daycare) << "\n";
-        out << setw(w) << "PreSchool student count:" << intToDottedString(config.info.popcount_preschool) << "\n";
-        out << setw(w) << "K12School student count:" << intToDottedString(config.info.popcount_k12school) << "\n";
-        out << setw(w) << "College student count:" << intToDottedString(config.info.popcount_college) << "\n";
-        out << setw(w) << "Workplace person count:" << intToDottedString(config.info.popcount_workplace) << "\n";
-        out << endl;
+        for (const auto &it : config.params) {
+                out.setf(std::ios_base::left, std::ios_base::adjustfield);
+                out << "Input:" << endl;
+                out << setw(w) << "Fraction college commuters:" << it.second.fraction_college_commuters
+                    << "\n";
+                out << setw(w) << "Fraction workplace commuters:" << it.second.fraction_workplace_commuters
+                    << "\n";
+                out << setw(w) << "Participation fraction of daycare:" << it.second.participation_daycare
+                    << "\n";
+                out << setw(w) << "Participation fraction of preschool:" << it.second.participation_preschool
+                    << "\n";
+                out << setw(w) << "Participation fraction of college:" << it.second.participation_college
+                    << "\n";
+                out << setw(w) << "Participation fraction of workplace:" << it.second.participation_workplace
+                    << "\n";
+                out << setw(w) << "Target population size" << intToDottedString(it.second.pop_size) << "\n"
+                    << "\n";
+                out << "Calculated:"
+                    << "\n";
+                out << setw(w) << "Daycare student count:"
+                    << intToDottedString(config.regionsInfo.at(it.first).popcount_daycare) << "\n";
+                out << setw(w) << "PreSchool student count:"
+                    << intToDottedString(config.regionsInfo.at(it.first).popcount_preschool) << "\n";
+                out << setw(w) << "K12School student count:"
+                    << intToDottedString(config.regionsInfo.at(it.first).popcount_k12school) << "\n";
+                out << setw(w) << "College student count:"
+                    << intToDottedString(config.regionsInfo.at(it.first).popcount_college) << "\n";
+                out << setw(w) << "Workplace person count:"
+                    << intToDottedString(config.regionsInfo.at(it.first).popcount_workplace) << "\n";
+                out << endl;
+        }
         return out;
 }
 

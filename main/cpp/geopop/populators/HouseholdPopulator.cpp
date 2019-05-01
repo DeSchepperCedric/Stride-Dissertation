@@ -32,13 +32,17 @@ void Populator<stride::ContactType::Id::Household>::Apply(GeoGrid& geoGrid, cons
         m_logger->trace("Starting to populate Households");
 
         auto person_id = 0U;
-        auto hh_dist   = m_rn_man.GetUniformIntGenerator(0, static_cast<int>(geoGridConfig.refHH.ages.size()), 0U);
+        std::map<unsigned int, std::function<int()>> hh_dist;
+        for (const auto & it : geoGridConfig.refHouseHolds){
+                hh_dist[it.first] = m_rn_man.GetUniformIntGenerator(0, static_cast<int>(it.second.ages.size()), 0U);
+        }
         auto pop       = geoGrid.GetPopulation();
 
         for (const shared_ptr<Location>& loc : geoGrid) {
                 for (auto& pool : loc->RefPools(Id::Household)) {
-                        const auto hDraw = static_cast<unsigned int>(hh_dist());
-                        for (const auto& age : geoGridConfig.refHH.ages[hDraw]) {
+                        const auto prov  = loc->GetProvince();
+                        const auto hDraw = static_cast<unsigned int>(hh_dist.at(prov)());
+                        for (const auto& age : geoGridConfig.refHouseHolds.at(prov).ages[hDraw]) {
                                 const auto p = pop->CreatePerson(person_id++, age, pool->GetId(), 0, 0, 0, 0, 0, 0, 0);
                                 pool->AddMember(p);
                         }

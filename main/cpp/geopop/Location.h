@@ -80,7 +80,7 @@ public:
         /// Gets the province.
         unsigned int GetProvince() const { return m_province; }
 
-        /// Get Location's population fraction (of the total populaion count).
+        /// Get Location's population fraction (of the total population count).
         double GetPopFraction() const;
 
         /// Sets the Coordinate of this Location.

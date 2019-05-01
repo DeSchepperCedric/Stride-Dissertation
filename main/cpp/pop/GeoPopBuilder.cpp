@@ -68,26 +68,17 @@ shared_ptr<Population> GeoPopBuilder::Build(shared_ptr<Population> pop)
         // ------------------------------------------------------------
         // Read locations file (commute file only if present).
         // ------------------------------------------------------------
-        const auto number_regions = geopop_gen.get<unsigned int>("number_regions");
-        for (unsigned int i = 0; i < number_regions; ++i) {
-                string commutesFile;
-                string citiesFile;
-
-                if (geopop_gen.count("region" + std::to_string(i) + ".commuting_file")) {
-                    commutesFile = geopop_gen.get<string>("region" + std::to_string(i) + ".commuting_file");
-                } else if (geopop_gen.count("region0.commuting_file")) {
-                    commutesFile = geopop_gen.get<string>("region0.commuting_file");
-                }
-                if (geopop_gen.count("region" + std::to_string(i) + ".cities_file")) {
-                    citiesFile = geopop_gen.get<string>("region" + std::to_string(i) + ".cities_file");
-                } else {
-                    citiesFile = geopop_gen.get<string>("region0.cities_file");
-                }
-
-                m_stride_logger->trace("Starting MakeLocations");
-                MakeLocations(geoGrid, ggConfig, citiesFile, commutesFile);
-                m_stride_logger->trace("Finished MakeLocations");
+        string commutesFile;
+        if (geopop_gen.count("commuting_file")) {
+                commutesFile = geopop_gen.get<string>("commuting_file");
         }
+
+        string citiesFile = geopop_gen.get<string>("cities_file");
+
+        m_stride_logger->trace("Starting MakeLocations");
+        MakeLocations(geoGrid, ggConfig, citiesFile, commutesFile);
+        m_stride_logger->trace("Finished MakeLocations");
+
         // ------------------------------------------------------------
         // Generate Geo.
         // ------------------------------------------------------------
@@ -121,8 +112,13 @@ void GeoPopBuilder::MakeLocations(GeoGrid& geoGrid, const GeoGridConfig& geoGrid
                 commutesReader->FillGeoGrid(geoGrid);
         }
 
+        auto total_pop = 0U;
+        for (const auto& param : geoGridConfig.params){
+                total_pop += param.second.pop_size;
+        }
+
         for (const shared_ptr<Location>& loc : geoGrid) {
-                loc->SetPopCount(geoGridConfig.param.pop_size);
+                loc->SetPopCount(total_pop);
         }
         geoGrid.Finalize();
 }

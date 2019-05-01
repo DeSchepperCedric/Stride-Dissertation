@@ -23,6 +23,7 @@
 
 #include <memory>
 #include <ostream>
+#include <map>
 
 namespace geopop {
 
@@ -54,7 +55,7 @@ public:
         // -----------------------------------------------------------------------------------------
         // Parameters set by constructor with configuration property tree.
         // -----------------------------------------------------------------------------------------
-        struct
+        struct Param
         {
                 /// Participation of daycare (fraction of people of daycare age going to daycare).
                 double participation_daycare;
@@ -77,19 +78,24 @@ public:
 
                 /// Target population size for the generated population.
                 unsigned int pop_size;
-        } param;
+        };
+
+        std::map<unsigned int, Param> params;
 
         // -----------------------------------------------------------------------------------------
         // The reference Households used to generate the population by random draws.
         // -----------------------------------------------------------------------------------------
-        struct
+        struct RefHH
         {
                 /// Number of persons in the reference household set.
                 unsigned int person_count = 0U;
 
                 /// Age profile per reference household.
                 std::vector<std::vector<unsigned int>> ages{};
-        } refHH;
+        };
+
+        std::map<unsigned int, RefHH> refHouseHolds;
+
 
         // -----------------------------------------------------------------------------------------
         // These are numbers derived from the reference households, the target size of the generated
@@ -98,7 +104,7 @@ public:
         // (to very close approximation) in the generated population.
         // The numbers are set by the SetData method.
         // -----------------------------------------------------------------------------------------
-        struct
+        struct Info
         {
                 /// Numbers of individuals in Daycare.
                 unsigned int popcount_daycare;
@@ -117,7 +123,9 @@ public:
 
                 /// The number of households.
                 unsigned int count_households;
-        } info;
+        };
+
+        std::map<unsigned int, Info> regionsInfo;
 
         // -----------------------------------------------------------------------------------------
         /// Read the househould data file, parse it and set data.
