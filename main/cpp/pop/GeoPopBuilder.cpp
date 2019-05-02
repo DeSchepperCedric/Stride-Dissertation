@@ -72,11 +72,15 @@ shared_ptr<Population> GeoPopBuilder::Build(shared_ptr<Population> pop)
         if (geopop_gen.count("commuting_file")) {
                 commutesFile = geopop_gen.get<string>("commuting_file");
         }
+        string majorCitiesFile;
+        if (geopop_gen.count("major_cities_file")) {
+                commutesFile = geopop_gen.get<string>("major_cities_file");
+        }
 
         string citiesFile = geopop_gen.get<string>("cities_file");
 
         m_stride_logger->trace("Starting MakeLocations");
-        MakeLocations(geoGrid, ggConfig, citiesFile, commutesFile);
+        MakeLocations(geoGrid, ggConfig, citiesFile, commutesFile, majorCitiesFile);
         m_stride_logger->trace("Finished MakeLocations");
 
         // ------------------------------------------------------------
@@ -102,10 +106,16 @@ shared_ptr<Population> GeoPopBuilder::Build(shared_ptr<Population> pop)
 }
 
 void GeoPopBuilder::MakeLocations(GeoGrid& geoGrid, const GeoGridConfig& geoGridConfig, const string& citiesFileName,
-                                  const string& commutingFileName)
+                                  const string& commutingFileName, const string& majorCitiesFileName)
 {
         const auto locationsReader = ReaderFactory::CreateLocationsReader(citiesFileName);
         locationsReader->FillGeoGrid(geoGrid);
+
+        // Check if there's a major cities file, if so, parse it and set a boolean in the proper locations
+        if (!majorCitiesFileName.empty()) {
+                const auto majorCitiesReader = ReaderFactory::CreateMajorCitiesReader(majorCitiesFileName);
+                majorCitiesReader->FillGeoGrid(geoGrid);
+        }
 
         if (!commutingFileName.empty()) {
                 const auto commutesReader = ReaderFactory::CreateCommutesReader(commutingFileName);

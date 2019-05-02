@@ -30,6 +30,7 @@
     <vaccine_rate>0.8</vaccine_rate>
     <geopop_gen>
 	<cities_file>flanders_cities.csv</cities_file>
+	<major_cities_file>flanders_major_cities.csv</major_cities_file>
 	<commuting_file>flanders_commuting.csv</commuting_file>
 	<regions>
 		<region>
@@ -37,6 +38,7 @@
 			<fraction_college_commuters>0.5</fraction_college_commuters>
 			<fraction_workplace_commuters>0.5</fraction_workplace_commuters>
 			<household_file>households_flanders.json</household_file>
+			<major_household_file>households_flanders.json</major_household_file>
 			<participation_preschool>0.99</participation_preschool>
 			<participation_daycare>0.45</participation_daycare>
 			<participation_college>0.5</participation_college>

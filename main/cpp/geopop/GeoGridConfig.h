@@ -91,7 +91,13 @@ public:
                 unsigned int person_count = 0U;
 
                 /// Age profile per reference household.
-                std::vector<std::vector<unsigned int>> ages{};
+                std::vector<std::vector<unsigned int>> ages {};
+
+                /// Number of persons in the reference household set for central cities.
+                unsigned int major_person_count = 0U;
+
+                /// Age profile per reference household of central cities.
+                std::vector<std::vector<unsigned int>> major_ages {};
         };
 
         std::map<unsigned int, RefHH> refHouseHolds;
@@ -123,6 +129,25 @@ public:
 
                 /// The number of households.
                 unsigned int count_households;
+
+                /// Numbers of individuals in Daycare.
+                unsigned int major_popcount_daycare;
+
+                /// Numbers of individuals in PreSchool.
+                unsigned int major_popcount_preschool;
+
+                /// Numbers of individuals in K12School.
+                unsigned int major_popcount_k12school;
+
+                /// Number of individuals in College.
+                unsigned int major_popcount_college;
+
+                /// Number of individuals in Workplace.
+                unsigned int major_popcount_workplace;
+
+                /// The number of households.
+                unsigned int major_count_households;
+
         };
 
         std::map<unsigned int, Info> regionsInfo;
@@ -131,6 +156,9 @@ public:
         /// Read the househould data file, parse it and set data.
         // -----------------------------------------------------------------------------------------
         void SetData(const boost::property_tree::ptree& configPt);
+
+
+        Info ParseHouseholdInfo(unsigned int ref_p_count, std::vector<std::vector<unsigned int>> &ages, Param &param);
 };
 
 } // namespace geopop

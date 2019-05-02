@@ -79,72 +79,99 @@ void GeoGridConfig::SetData(const ptree& configPt)
                 param.participation_daycare        = regionPt.get<double>("participation_daycare");
                 params[regionId] = param;
 
-                auto householdsReader = ReaderFactory::CreateHouseholdReader(regionPt.get<string>("household_file"));
-
                 RefHH refHH;
+                const auto householdsReader = ReaderFactory::CreateHouseholdReader(regionPt.get<string>("household_file"));
+                const auto major_household_file = regionPt.get<string>("major_household_file", "");
+                if (!major_household_file.empty()) {
+                        const auto majorHouseholdsReader = ReaderFactory::CreateHouseholdReader(major_household_file);
+                        majorHouseholdsReader->SetReferenceHouseholds(refHH.major_person_count, refHH.major_ages);
+                }
                 householdsReader->SetReferenceHouseholds(refHH.person_count, refHH.ages);
                 refHouseHolds[regionId] = refHH;
-                const auto popSize = param.pop_size;
 
-                //----------------------------------------------------------------
-                // Determine age makeup of reference household population.
-                //----------------------------------------------------------------
-                const auto ref_p_count   = refHH.person_count;
-                const auto averageHhSize = static_cast<double>(ref_p_count) / static_cast<double>(refHH.ages.size());
-
-                auto ref_daycare   = 0U;
-                auto ref_preschool = 0U;
-                auto ref_k12school = 0U;
-                auto ref_college   = 0U;
-                auto ref_workplace = 0U;
-
-                for (const auto& hhAgeProfile : refHH.ages) {
-                        for (const auto& age : hhAgeProfile) {
-                                if (Daycare::HasAge(age)) {
-                                        ref_daycare++;
-                                }
-                                if (PreSchool::HasAge(age)) {
-                                        ref_preschool++;
-                                }
-                                if (K12School::HasAge(age)) {
-                                        ref_k12school++;
-                                }
-                                if (College::HasAge(age)) {
-                                        ref_college++;
-                                }
-                                if (Workplace::HasAge(age)) {
-                                        ref_workplace++;
-                                }
-                        }
-                }
-                //----------------------------------------------------------------
-                // Scale up to the generated population size.
-                //----------------------------------------------------------------
-                const auto fraction_daycare_age   = static_cast<double>(ref_daycare) / static_cast<double>(ref_p_count);
-                const auto fraction_preschool_age = static_cast<double>(ref_preschool) / static_cast<double>(ref_p_count);
-                const auto fraction_k12school_age = static_cast<double>(ref_k12school) / static_cast<double>(ref_p_count);
-                const auto fraction_college_age   = static_cast<double>(ref_college) / static_cast<double>(ref_p_count);
-                const auto fraction_workplace_age = static_cast<double>(ref_workplace) / static_cast<double>(ref_p_count);
-
-                const auto age_count_daycare   = static_cast<unsigned int>(floor(popSize * fraction_daycare_age));
-                const auto age_count_preschool = static_cast<unsigned int>(floor(popSize * fraction_preschool_age));
-                const auto age_count_k12school = static_cast<unsigned int>(floor(popSize * fraction_k12school_age));
-                const auto age_count_college   = static_cast<unsigned int>(floor(popSize * fraction_college_age));
-                const auto age_count_workplace = static_cast<unsigned int>(floor(popSize * fraction_workplace_age));
 
                 Info info;
+                info = ParseHouseholdInfo(refHH.person_count, refHH.ages, param);
+                if (!major_household_file.empty()) {
+                        //Add the major info to the info struct
+                        Info major_info = ParseHouseholdInfo(refHH.major_person_count, refHH.major_ages, param);
 
-                info.popcount_daycare = static_cast<unsigned int>(floor(param.participation_daycare * age_count_daycare));
-                info.popcount_preschool = static_cast<unsigned int>(floor(param.participation_preschool * age_count_preschool));
-                info.popcount_k12school = age_count_k12school;
-                info.popcount_college = static_cast<unsigned int>(floor(param.participation_college * age_count_college));
-                info.popcount_workplace = static_cast<unsigned int>(
-                        floor(param.participation_workplace * (age_count_workplace - info.popcount_college)));
-                info.count_households = static_cast<unsigned int>(floor(static_cast<double>(popSize) / averageHhSize));
+                        info.major_popcount_daycare = major_info.popcount_daycare;
+                        info.major_popcount_preschool = major_info.popcount_preschool;
+                        info.major_popcount_k12school = major_info.popcount_k12school;
+                        info.major_popcount_college = major_info.popcount_college;
+                        info.major_popcount_workplace = major_info.popcount_workplace;
+                        info.major_count_households = major_info.count_households;
+                }
 
                 regionsInfo[regionId] = info;
+
         }
 }
+
+GeoGridConfig::Info GeoGridConfig::ParseHouseholdInfo(unsigned int ref_p_count, std::vector<std::vector<unsigned int>>& ages, Param& param)
+{
+        const auto popSize = param.pop_size;
+        const auto refHHSize = ages.size();
+
+        //----------------------------------------------------------------
+        // Determine age makeup of reference household population.
+        //----------------------------------------------------------------
+        const auto averageHhSize = static_cast<double>(ref_p_count) / static_cast<double>(refHHSize);
+
+        auto ref_daycare   = 0U;
+        auto ref_preschool = 0U;
+        auto ref_k12school = 0U;
+        auto ref_college   = 0U;
+        auto ref_workplace = 0U;
+
+        for (const auto& hhAgeProfile : ages) {
+                for (const auto& age : hhAgeProfile) {
+                        if (Daycare::HasAge(age)) {
+                                ref_daycare++;
+                        }
+                        if (PreSchool::HasAge(age)) {
+                                ref_preschool++;
+                        }
+                        if (K12School::HasAge(age)) {
+                                ref_k12school++;
+                        }
+                        if (College::HasAge(age)) {
+                                ref_college++;
+                        }
+                        if (Workplace::HasAge(age)) {
+                                ref_workplace++;
+                        }
+                }
+        }
+        //----------------------------------------------------------------
+        // Scale up to the generated population size.
+        //----------------------------------------------------------------
+        const auto fraction_daycare_age   = static_cast<double>(ref_daycare) / static_cast<double>(ref_p_count);
+        const auto fraction_preschool_age = static_cast<double>(ref_preschool) / static_cast<double>(ref_p_count);
+        const auto fraction_k12school_age = static_cast<double>(ref_k12school) / static_cast<double>(ref_p_count);
+        const auto fraction_college_age   = static_cast<double>(ref_college) / static_cast<double>(ref_p_count);
+        const auto fraction_workplace_age = static_cast<double>(ref_workplace) / static_cast<double>(ref_p_count);
+
+        const auto age_count_daycare   = static_cast<unsigned int>(floor(popSize * fraction_daycare_age));
+        const auto age_count_preschool = static_cast<unsigned int>(floor(popSize * fraction_preschool_age));
+        const auto age_count_k12school = static_cast<unsigned int>(floor(popSize * fraction_k12school_age));
+        const auto age_count_college   = static_cast<unsigned int>(floor(popSize * fraction_college_age));
+        const auto age_count_workplace = static_cast<unsigned int>(floor(popSize * fraction_workplace_age));
+
+        Info info;
+
+        info.popcount_daycare = static_cast<unsigned int>(floor(param.participation_daycare * age_count_daycare));
+        info.popcount_preschool = static_cast<unsigned int>(floor(param.participation_preschool * age_count_preschool));
+        info.popcount_k12school = age_count_k12school;
+        info.popcount_college = static_cast<unsigned int>(floor(param.participation_college * age_count_college));
+        info.popcount_workplace = static_cast<unsigned int>(
+                floor(param.participation_workplace * (age_count_workplace - info.popcount_college)));
+        info.count_households = static_cast<unsigned int>(floor(static_cast<double>(popSize) / averageHhSize));
+
+        return info;
+}
+
 
 ostream& operator<<(ostream& out, const GeoGridConfig& config)
 {
