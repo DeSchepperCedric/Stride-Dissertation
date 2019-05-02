@@ -78,14 +78,10 @@ TEST_F(HouseholdGeneratorTest, OneLocationTest)
 TEST_F(HouseholdGeneratorTest, ZeroLocationTest)
 {
         GeoGridConfig::Param param;
-        m_gg_config.params[0] = param;
+        m_gg_config.params[4] = param;
         GeoGridConfig::Info info;
-        m_gg_config.regionsInfo[0] = info;
+        m_gg_config.regionsInfo[4] = info;
 
-        GeoGridConfig::Param param;
-        m_gg_config.params[0] = param;
-        GeoGridConfig::Info info;
-        m_gg_config.regionsInfo[0] = info;
 
         m_gg_config.regionsInfo.at(4).count_households = 4;
         m_household_generator.Apply(m_geo_grid, m_gg_config);
