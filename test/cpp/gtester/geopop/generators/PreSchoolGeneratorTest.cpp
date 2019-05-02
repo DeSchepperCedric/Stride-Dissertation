@@ -39,12 +39,12 @@ public:
             : m_rn_man(RnInfo()), m_preschool_generator(m_rn_man), m_gg_config(), m_pop(Population::Create()),
               m_geo_grid(m_pop.get())
         {
-                for (unsigned int i = 0; i < 5; ++i){
-                        GeoGridConfig::Param param;
-                        m_gg_config.params[i] = param;
-                        GeoGridConfig::Info info;
-                        m_gg_config.regionsInfo[i] = info;
-                }
+//                for (unsigned int i = 0; i < 5; ++i){
+//                        GeoGridConfig::Param param;
+//                        m_gg_config.params[i] = param;
+//                        GeoGridConfig::Info info;
+//                        m_gg_config.regionsInfo[i] = info;
+//                }
         }
 
 protected:
@@ -58,6 +58,11 @@ protected:
 
 TEST_F(PreSchoolGeneratorTest, OneLocationTest)
 {
+        GeoGridConfig::Param param;
+        m_gg_config.params[4] = param;
+        GeoGridConfig::Info info;
+        m_gg_config.regionsInfo[4] = info;
+
         m_gg_config.params.at(4).pop_size          = 10000;
         m_gg_config.regionsInfo.at(4).popcount_preschool = 300;
 
@@ -72,6 +77,11 @@ TEST_F(PreSchoolGeneratorTest, OneLocationTest)
 
 TEST_F(PreSchoolGeneratorTest, ZeroLocationTest)
 {
+        GeoGridConfig::Param param;
+        m_gg_config.params[4] = param;
+        GeoGridConfig::Info info;
+        m_gg_config.regionsInfo[4] = info;
+
         m_gg_config.params.at(4).pop_size          = 10000;
         m_gg_config.regionsInfo.at(4).popcount_preschool = 300;
 
@@ -82,6 +92,11 @@ TEST_F(PreSchoolGeneratorTest, ZeroLocationTest)
 
 TEST_F(PreSchoolGeneratorTest, FiveLocationsTest)
 {
+        GeoGridConfig::Param param;
+        m_gg_config.params[4] = param;
+        GeoGridConfig::Info info;
+        m_gg_config.regionsInfo[4] = info;
+
         m_gg_config.params.at(4).pop_size          = 37542 * 100;
         m_gg_config.regionsInfo.at(4).popcount_preschool = 125140;
 

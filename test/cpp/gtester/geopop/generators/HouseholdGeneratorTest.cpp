@@ -39,12 +39,12 @@ public:
             : m_rn_man(RnInfo()), m_household_generator(m_rn_man), m_gg_config(), m_pop(Population::Create()),
               m_geo_grid(m_pop.get())
         {
-                for (unsigned int i = 0; i < 5; ++i){
-                        GeoGridConfig::Param param;
-                        m_gg_config.params[i] = param;
-                        GeoGridConfig::Info info;
-                        m_gg_config.regionsInfo[i] = info;
-                }
+//                for (unsigned int i = 0; i < 5; ++i){
+//                        GeoGridConfig::Param param;
+//                        m_gg_config.params[i] = param;
+//                        GeoGridConfig::Info info;
+//                        m_gg_config.regionsInfo[i] = info;
+//                }
         }
 
 protected:
@@ -59,6 +59,10 @@ protected:
 // Check that generator can handle situation with a single Location.
 TEST_F(HouseholdGeneratorTest, OneLocationTest)
 {
+        GeoGridConfig::Param param;
+        m_gg_config.params[4] = param;
+        GeoGridConfig::Info info;
+        m_gg_config.regionsInfo[4] = info;
         m_gg_config.regionsInfo.at(4).count_households = 4;
 
         auto loc1 = make_shared<Location>(1, 4, Coordinate(0, 0), "Antwerpen", 2500);
@@ -73,6 +77,16 @@ TEST_F(HouseholdGeneratorTest, OneLocationTest)
 // Check that generator can handle "no Locations" situation.
 TEST_F(HouseholdGeneratorTest, ZeroLocationTest)
 {
+        GeoGridConfig::Param param;
+        m_gg_config.params[0] = param;
+        GeoGridConfig::Info info;
+        m_gg_config.regionsInfo[0] = info;
+
+        GeoGridConfig::Param param;
+        m_gg_config.params[0] = param;
+        GeoGridConfig::Info info;
+        m_gg_config.regionsInfo[0] = info;
+
         m_gg_config.regionsInfo.at(4).count_households = 4;
         m_household_generator.Apply(m_geo_grid, m_gg_config);
 
@@ -82,6 +96,10 @@ TEST_F(HouseholdGeneratorTest, ZeroLocationTest)
 // check that generator can handle five Locations.
 TEST_F(HouseholdGeneratorTest, FiveLocationsTest)
 {
+        GeoGridConfig::Param param;
+        m_gg_config.params[4] = param;
+        GeoGridConfig::Info info;
+        m_gg_config.regionsInfo[4] = info;
         m_gg_config.regionsInfo.at(4).count_households = 4000;
         m_gg_config.params.at(4).pop_size        = 37542 * 100;
 

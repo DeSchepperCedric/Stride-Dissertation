@@ -153,7 +153,7 @@ void GeoGridJSONReader::ParseContactPool(shared_ptr<Location> loc, nlohmann::jso
                         result->AddMember(person);
                         person->SetPoolId(typeId, result->GetId());
                 } catch (std::out_of_range& e){
-                        throw Exception("No such person with id: " + person_id);
+                        throw Exception("No such person with id: " + std::to_string(person_id));
                 }
         }
 }

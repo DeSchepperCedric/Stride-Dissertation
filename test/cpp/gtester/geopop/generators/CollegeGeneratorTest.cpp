@@ -39,12 +39,12 @@ public:
             : m_rn_man(RnInfo()), m_college_generator(m_rn_man), m_gg_config(), m_pop(Population::Create()),
               m_geo_grid(m_pop.get())
         {
-                for (unsigned int i = 0; i < 5; ++i){
-                        GeoGridConfig::Param param;
-                        m_gg_config.params[i] = param;
-                        GeoGridConfig::Info info;
-                        m_gg_config.regionsInfo[i] = info;
-                }
+//                for (unsigned int i = 0; i < 5; ++i){
+//                        GeoGridConfig::Param param;
+//                        m_gg_config.params[i] = param;
+//                        GeoGridConfig::Info info;
+//                        m_gg_config.regionsInfo[i] = info;
+//                }
 
         }
 
@@ -60,6 +60,10 @@ protected:
 // Checks whther generator can handle a single location.
 TEST_F(CollegeGeneratorTest, OneLocationTest)
 {
+        GeoGridConfig::Param param;
+        m_gg_config.params[4] = param;
+        GeoGridConfig::Info info;
+        m_gg_config.regionsInfo[4] = info;
         m_gg_config.params.at(4).pop_size        = 45000;
         m_gg_config.regionsInfo.at(4).popcount_college = 9000;
 
@@ -75,6 +79,10 @@ TEST_F(CollegeGeneratorTest, OneLocationTest)
 // Checks whether Generator can handle zero locations in GeoGrid.
 TEST_F(CollegeGeneratorTest, ZeroLocationTest)
 {
+        GeoGridConfig::Param param;
+        m_gg_config.params[0] = param;
+        GeoGridConfig::Info info;
+        m_gg_config.regionsInfo[0] = info;
         m_gg_config.params.at(0).pop_size        = 10000;
         m_gg_config.regionsInfo.at(0).popcount_college = 2000;
 
@@ -86,6 +94,10 @@ TEST_F(CollegeGeneratorTest, ZeroLocationTest)
 // Checks whether generator can handle multiple locations.
 TEST_F(CollegeGeneratorTest, MultipleLocationsTest)
 {
+        GeoGridConfig::Param param;
+        m_gg_config.params[4] = param;
+        GeoGridConfig::Info info;
+        m_gg_config.regionsInfo[4] = info;
         m_gg_config.params.at(4).pop_size        = 399992;
         m_gg_config.regionsInfo.at(4).popcount_college = 79998;
 

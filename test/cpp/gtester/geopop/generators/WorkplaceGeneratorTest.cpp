@@ -39,12 +39,12 @@ public:
             : m_rn_man(RnInfo()), m_workplace_generator(m_rn_man), m_gg_config(), m_pop(Population::Create()),
               m_geo_grid(m_pop.get())
         {
-                for (unsigned int i = 0; i < 5; ++i){
-                        GeoGridConfig::Param param;
-                        m_gg_config.params[i] = param;
-                        GeoGridConfig::Info info;
-                        m_gg_config.regionsInfo[i] = info;
-                }
+//                for (unsigned int i = 0; i < 5; ++i){
+//                        GeoGridConfig::Param param;
+//                        m_gg_config.params[i] = param;
+//                        GeoGridConfig::Info info;
+//                        m_gg_config.regionsInfo[i] = info;
+//                }
         }
 
 protected:
@@ -59,6 +59,11 @@ protected:
 // Check that generator can handle empty GeoGrid.
 TEST_F(WorkplaceGeneratorTest, ZeroLocationTest)
 {
+        GeoGridConfig::Param param;
+        m_gg_config.params[4] = param;
+        GeoGridConfig::Info info;
+        m_gg_config.regionsInfo[4] = info;
+
         m_gg_config.params.at(4).pop_size        = 10000;
         m_gg_config.regionsInfo.at(4).popcount_college = 20000;
         m_workplace_generator.Apply(m_geo_grid, m_gg_config);
@@ -69,6 +74,11 @@ TEST_F(WorkplaceGeneratorTest, ZeroLocationTest)
 // Check that situation without commutes is OK.
 TEST_F(WorkplaceGeneratorTest, NoCommuting)
 {
+        GeoGridConfig::Param param;
+        m_gg_config.params[4] = param;
+        GeoGridConfig::Info info;
+        m_gg_config.regionsInfo[4] = info;
+
         m_gg_config.params.at(4).pop_size                     = 5 * 1000 * 1000;
         m_gg_config.regionsInfo.at(4).popcount_workplace            = static_cast<unsigned int>(0.20 * 5 * 1000 * 1000);
         m_gg_config.params.at(4).participation_workplace       = 0.20;
@@ -97,6 +107,11 @@ TEST_F(WorkplaceGeneratorTest, NoCommuting)
 // As many commutes from A to B as from B to A.
 TEST_F(WorkplaceGeneratorTest, NullCommuting)
 {
+        GeoGridConfig::Param param;
+        m_gg_config.params[4] = param;
+        GeoGridConfig::Info info;
+        m_gg_config.regionsInfo[4] = info;
+
         m_gg_config.params.at(4).pop_size                     = 5 * 1000 * 1000;
         m_gg_config.regionsInfo.at(4).popcount_workplace            = static_cast<unsigned int>(0.20 * 5 * 1000 * 1000);
         m_gg_config.params.at(4).participation_workplace       = 0.20;
@@ -137,6 +152,11 @@ TEST_F(WorkplaceGeneratorTest, NullCommuting)
 
 TEST_F(WorkplaceGeneratorTest, TenCommuting)
 {
+        GeoGridConfig::Param param;
+        m_gg_config.params[4] = param;
+        GeoGridConfig::Info info;
+        m_gg_config.regionsInfo[4] = info;
+
         m_gg_config.params.at(4).pop_size                     = 5 * 1000 * 1000;
         m_gg_config.regionsInfo.at(4).popcount_workplace            = static_cast<unsigned int>(0.20 * 5 * 1000 * 1000);
         m_gg_config.params.at(4).participation_workplace       = 0.20;
