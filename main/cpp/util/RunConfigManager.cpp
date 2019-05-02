@@ -78,7 +78,7 @@ void RunConfigManager::AddGeoPopConfig(ptree& pt)
 			<participation_daycare>0.45</participation_daycare>
 			<participation_college>0.5</participation_college>
 			<participation_workplace>0.75</participation_workplace>
-			<population_size>1027376</population_size>
+			<population_size>141971</population_size>
 		</region>
 		<region>
 			<id>2</id>
@@ -89,7 +89,7 @@ void RunConfigManager::AddGeoPopConfig(ptree& pt)
 			<participation_daycare>0.45</participation_daycare>
 			<participation_college>0.5</participation_college>
 			<participation_workplace>0.75</participation_workplace>
-			<population_size>1245688</population_size>
+			<population_size>172139</population_size>
 		</region>
 		<region>
 			<id>3</id>
@@ -100,7 +100,7 @@ void RunConfigManager::AddGeoPopConfig(ptree& pt)
 			<participation_daycare>0.45</participation_daycare>
 			<participation_college>0.5</participation_college>
 			<participation_workplace>0.75</participation_workplace>
-			<population_size>692930</population_size>
+			<population_size>95754</population_size>
 		</region>
 		<region>
 			<id>4</id>
@@ -111,7 +111,7 @@ void RunConfigManager::AddGeoPopConfig(ptree& pt)
 			<participation_daycare>0.45</participation_daycare>
 			<participation_college>0.5</participation_college>
 			<participation_workplace>0.75</participation_workplace>
-			<population_size>857604</population_size>
+			<population_size>118510</population_size>
 		</region>
 		<region>
 			<id>7</id>
@@ -122,7 +122,7 @@ void RunConfigManager::AddGeoPopConfig(ptree& pt)
 			<participation_daycare>0.45</participation_daycare>
 			<participation_college>0.5</participation_college>
 			<participation_workplace>0.75</participation_workplace>
-			<population_size>518325</population_size>
+			<population_size>71626</population_size>
 		</region>
 	</regions>
     </geopop_gen>

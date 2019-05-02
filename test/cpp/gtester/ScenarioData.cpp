@@ -54,6 +54,7 @@ tuple<ptree, unsigned int, double> ScenarioData::Get(string tag)
             {"r0_12", 1.0e-01},       {"r0_16", 8.0e-02}};
 
         //TODO properly calc targets by doing multiple runs and calculating the mean
+        //Met de natte vinger aanpassen als het logisch is ~J. Broeckhove, 2019
         const map<string, unsigned int> targets_geopop = {
             {"influenza_a_geopop", 558000U}, {"influenza_b_geopop", 0U},     {"influenza_c_geopop", 5U},
             {"measles_16_geopop", 290000U},  {"measles_26_geopop", 600000U}, {"r0_0_geopop", 1200U},
