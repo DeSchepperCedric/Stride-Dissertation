@@ -30,13 +30,26 @@ using namespace stride;
 using namespace stride::ContactType;
 using namespace H5;
 
-const unsigned int RANK       = 2;
-const unsigned int DIM2       = 1;
-const unsigned int PRSNS_DIM1 = 10;
-const unsigned int CMMT_DIM1  = 2;
-const unsigned int PPL_DIM1   = 1;
+const unsigned int RANK = 1;
 
-GeoGridHDF5Writer::GeoGridHDF5Writer() : m_persons_found() {}
+GeoGridHDF5Writer::GeoGridHDF5Writer() : m_persons_found(), person_type(sizeof(PERSON)), commute_type(sizeof(COMMUTE)), pool_type(sizeof(POOL))
+{
+        person_type.insertMember("Id", HOFFSET(PERSON, id), PredType::NATIVE_UINT);
+        person_type.insertMember("Age", HOFFSET(PERSON, age), PredType::NATIVE_FLOAT);
+        person_type.insertMember("K12School", HOFFSET(PERSON, k12school), PredType::NATIVE_UINT);
+        person_type.insertMember("College", HOFFSET(PERSON, college), PredType::NATIVE_UINT);
+        person_type.insertMember("Household", HOFFSET(PERSON, household), PredType::NATIVE_UINT);
+        person_type.insertMember("Workplace", HOFFSET(PERSON, workplace), PredType::NATIVE_UINT);
+        person_type.insertMember("PrimaryCommunity", HOFFSET(PERSON, primarycommunity), PredType::NATIVE_UINT);
+        person_type.insertMember("SecondaryCommunity", HOFFSET(PERSON, secondarycommunity), PredType::NATIVE_UINT);
+        person_type.insertMember("Daycare", HOFFSET(PERSON, daycare), PredType::NATIVE_UINT);
+        person_type.insertMember("PreSchool", HOFFSET(PERSON, preschool), PredType::NATIVE_UINT);
+
+        commute_type.insertMember("To", HOFFSET(COMMUTE, to), PredType::NATIVE_UINT);
+        commute_type.insertMember("Proportion", HOFFSET(COMMUTE, proportion), PredType::NATIVE_DOUBLE);
+
+        pool_type.insertMember("People", HOFFSET(POOL, people), PredType::NATIVE_UINT);
+}
 
 void GeoGridHDF5Writer::Write(GeoGrid& geoGrid, std::ostream& stream)
 {
@@ -44,7 +57,7 @@ void GeoGridHDF5Writer::Write(GeoGrid& geoGrid, std::ostream& stream)
         ss << stream.rdbuf();
         H5File file(ss.str(), H5F_ACC_TRUNC);
 
-        Group locations = file.createGroup("/Locations");
+        Group locations = file.createGroup("/locations");
         int count = 1;
         const string name = "location";
         for (const auto& location : geoGrid) {
@@ -54,12 +67,10 @@ void GeoGridHDF5Writer::Write(GeoGrid& geoGrid, std::ostream& stream)
         }
         //TODO attribute size
 
-        hsize_t     dimsf[2];
-        hsize_t     maxdimsf[2] = {H5S_UNLIMITED, H5S_UNLIMITED};
-        dimsf[0] = DIM2;
-        dimsf[1] = PRSNS_DIM1;
+        hsize_t     dimsf[1] = {0};
+        hsize_t     maxdimsf[2] = {H5S_UNLIMITED};
         DataSpace dataspace(RANK, dimsf, maxdimsf);
-        DataSet persons = file.createDataSet("/persons", PredType::NATIVE_UINT, dataspace);
+        DataSet persons = file.createDataSet("/persons", person_type, dataspace);
         for (const auto& person : m_persons_found) {
                 WritePerson(person, persons);
         }
@@ -75,9 +86,8 @@ void GeoGridHDF5Writer::Write(GeoGrid& geoGrid, std::ostream& stream)
 void GeoGridHDF5Writer::WriteContactPool(stride::ContactPool* contactPool, Group& contactPools, const string& name)
 {
         //contactPool_root.put("id", contactPool->GetId());
-        hsize_t     dimsf[1];
+        hsize_t     dimsf[1] = {0};
         hsize_t     maxdimsf[1] = {H5S_UNLIMITED};
-        dimsf[0] = PPL_DIM1;
         DataSpace dataspace(1, dimsf, maxdimsf);
         DataSet pool = contactPools.createDataSet(name, PredType::NATIVE_UINT, dataspace);
         for (auto person : *contactPool) {
@@ -107,14 +117,13 @@ void GeoGridHDF5Writer::WriteLocation(const Location& location, Group& locations
 
         auto commutes = location.CRefOutgoingCommutes();
         if (!commutes.empty()) {
-                hsize_t     dimsf[2];
-                hsize_t     maxdimsf[2] = {H5S_UNLIMITED, H5S_UNLIMITED};
-                dimsf[0] = DIM2;
-                dimsf[1] = CMMT_DIM1;
+                hsize_t     dimsf[1] = {0};
+                hsize_t     maxdimsf[1] = {H5S_UNLIMITED};
+
                 DataSpace dataspace(RANK, dimsf, maxdimsf);
                 DataSet commutes_dataset = loc.createDataSet("commutes", PredType::NATIVE_UINT, dataspace);
                 for (auto commute_pair : commutes) {
-                        //WriteCommute(DataSet& commutes_dataset, auto commute_pair);
+                        WriteCommute(commute_pair, commutes_dataset);
                 }
                 //TODO attributes
         }
@@ -134,34 +143,55 @@ void GeoGridHDF5Writer::WriteLocation(const Location& location, Group& locations
 
 void GeoGridHDF5Writer::WritePeople(stride::Person* person, DataSet& pool)
 {
-        unsigned int data[PPL_DIM1] = {person->GetId()};
-        pool.write(data, PredType::NATIVE_UINT);
+        hsize_t dimext[1] = {1};
+        pool.extend(pool.getStorageSize() + dimext);
+
+        POOL pool_add;
+        pool_add.people = person->GetId();
+
+        POOL data[1] = {pool_add};
+
+        DataSpace memspace(RANK, dimext, NULL);
+        pool.write(data, pool_type, memspace);
 }
 
-void GeoGridHDF5Writer::WriteCommute(DataSet& locations)
+void GeoGridHDF5Writer::WriteCommute(pair<Location*, double> commute_pair,  DataSet& locations)
 {
-        //locations->write(,)
+        hsize_t dimext[1] = {1};
+        locations.extend(locations.getStorageSize() + dimext);
+
+        COMMUTE commute_add;
+        commute_add.to          = commute_pair.first->GetID();
+        commute_add.proportion  = commute_pair.second;
+
+        COMMUTE data[1] = {commute_add};
+
+        DataSpace memspace(RANK, dimext, NULL);
+        locations.write(data, commute_type, memspace);
+
 }
 
 void GeoGridHDF5Writer::WritePerson(stride::Person* person, DataSet& persons)
 {
-        unsigned int data[DIM2][PRSNS_DIM1] =
-                {
-                  {
-                    person->GetId(),
-                    person->GetAge(),
-                    person->GetPoolId(Id::K12School),
-                    person->GetPoolId(Id::College),
-                    person->GetPoolId(Id::Household),
-                    person->GetPoolId(Id::Workplace),
-                    person->GetPoolId(Id::PrimaryCommunity),
-                    person->GetPoolId(Id::SecondaryCommunity),
-                    person->GetPoolId(Id::Daycare),
-                    person->GetPoolId(Id::PreSchool)
-                  }
-                };
+        hsize_t dimext[1] = {1};
+        persons.extend(persons.getStorageSize() + dimext);
 
-        persons.write(data, PredType::NATIVE_UINT);
+        PERSON person_add;
+        person_add.id                 = person->GetId();
+        person_add.age                = person->GetAge();
+        person_add.k12school          = person->GetPoolId(Id::K12School);
+        person_add.college            = person->GetPoolId(Id::College);
+        person_add.household          = person->GetPoolId(Id::Household);
+        person_add.workplace          = person->GetPoolId(Id::Workplace);
+        person_add.primarycommunity   = person->GetPoolId(Id::PrimaryCommunity);
+        person_add.secondarycommunity = person->GetPoolId(Id::SecondaryCommunity);
+        person_add.daycare            = person->GetPoolId(Id::Daycare);
+        person_add.preschool          = person->GetPoolId(Id::PreSchool);
+
+        PERSON data[1] = {person_add};
+
+        DataSpace memspace(RANK, dimext, NULL);
+        persons.write(data, person_type, memspace);
 }
 
 /*
