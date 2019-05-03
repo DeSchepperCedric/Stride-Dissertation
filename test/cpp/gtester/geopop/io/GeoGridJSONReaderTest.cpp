@@ -198,8 +198,8 @@ void runPeopleTest(const string& filename)
         }
 
         for (const auto& center : centers) {
-                auto person   = (*center)[0];
-                //auto person = *(pool->begin());
+                auto person = (*center)[0];
+                // auto person = *(pool->begin());
                 EXPECT_EQ(ids[center->GetId()], ToString(center->GetType()));
                 EXPECT_EQ(person->GetId(), 0);
                 EXPECT_EQ(person->GetAge(), 18);

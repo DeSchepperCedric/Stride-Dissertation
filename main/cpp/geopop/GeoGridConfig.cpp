@@ -19,6 +19,7 @@
 #include "contact/ContactType.h"
 #include "geopop/io/HouseholdReader.h"
 #include "geopop/io/ReaderFactory.h"
+#include "geopop/io/WorkplaceReader.h"
 #include "util/StringUtils.h"
 
 #include <boost/property_tree/ptree.hpp>
@@ -54,14 +55,23 @@ GeoGridConfig::GeoGridConfig(const ptree& configPt) : GeoGridConfig()
         people[Id::PrimaryCommunity]   = pt.get<unsigned int>("people_per_PrimaryCommunity", 2000U);
         people[Id::SecondaryCommunity] = pt.get<unsigned int>("people_per_SecondaryCommunity", 2000U);
 
-        pools[Id::K12School]              = pt.get<unsigned int>("pools_per_K12School", 25U);
-        pools[Id::College]                = pt.get<unsigned int>("pools_per_College", 20U);
+        pools[Id::K12School] = pt.get<unsigned int>("pools_per_K12School", 25U);
+        pools[Id::College]   = pt.get<unsigned int>("pools_per_College", 20U);
 }
 
-void GeoGridConfig::SetData(const string& householdsFileName)
+void GeoGridConfig::SetData(const string& householdsFileName, const string& workplacesFileName)
 {
         auto householdsReader = ReaderFactory::CreateHouseholdReader(householdsFileName);
         householdsReader->SetReferenceHouseholds(refHH.person_count, refHH.ages);
+
+        //----------------------------------------------------------------
+        // Set workplace size distribution values when file present.
+        //----------------------------------------------------------------
+        if (!workplacesFileName.empty()) {
+                auto workplaceReader = ReaderFactory::CreateWorkplaceReader(workplacesFileName);
+                workplaceReader->SetReferenceWorkplaces(refWP.average_workplace_size, refWP.ratios);
+        }
+
         const auto popSize = param.pop_size;
 
         //----------------------------------------------------------------

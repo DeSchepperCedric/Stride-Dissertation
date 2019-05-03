@@ -54,10 +54,19 @@ shared_ptr<Population> GeoPopBuilder::Build(shared_ptr<Population> pop)
         m_stride_logger->trace("Building geopop.");
 
         // ------------------------------------------------------------
+        // Read workplace size distribution file (commute file only if present).
+        // ------------------------------------------------------------
+        string workplaceFile;
+        auto   geopop_gen = m_config.get_child("run.geopop_gen");
+        if (geopop_gen.count("workplace_file")) {
+                workplaceFile = m_config.get<string>("run.geopop_gen.workplace_file");
+        }
+
+        // ------------------------------------------------------------
         // Set the GeoGridConfig.
         // ------------------------------------------------------------
         GeoGridConfig ggConfig(m_config);
-        ggConfig.SetData(m_config.get<string>("run.geopop_gen.household_file"));
+        ggConfig.SetData(m_config.get<string>("run.geopop_gen.household_file"), workplaceFile);
 
         // ------------------------------------------------------------
         // Get GeoGrid associated with 'pop'.
@@ -68,7 +77,6 @@ shared_ptr<Population> GeoPopBuilder::Build(shared_ptr<Population> pop)
         // Read locations file (commute file only if present).
         // ------------------------------------------------------------
         string commutesFile;
-        auto   geopop_gen = m_config.get_child("run.geopop_gen");
         if (geopop_gen.count("commuting_file")) {
                 commutesFile = m_config.get<string>("run.geopop_gen.commuting_file");
         }
