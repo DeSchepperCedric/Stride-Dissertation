@@ -20,7 +20,6 @@
 #include "pop/Person.h"
 
 #include <iostream>
-#include <sstream>
 #include <omp.h>
 
 namespace geopop {
@@ -56,20 +55,21 @@ GeoGridHDF5Writer::GeoGridHDF5Writer() : m_persons_found(), person_type(sizeof(P
 
 void GeoGridHDF5Writer::Write(GeoGrid& geoGrid, std::ostream& stream)
 {
-        ostringstream ss;
-        ss << stream.rdbuf();
-        H5File file(ss.str(), H5F_ACC_TRUNC);
+        //ostringstream ss;
+        //ss << stream.rdbuf();
+        H5File file("test", H5F_ACC_TRUNC);
 
         Group locations = file.createGroup("/locations");
-        int count = 1;
+        unsigned int count = 0;
         const string name = "location";
         for (const auto& location : geoGrid) {
+                count++;
                 string location_name = name + to_string(count);
                 WriteLocation(*location, locations, location_name);
                 count++;
         }
         hsize_t attr_dims[1]      = {1};
-        unsigned int attr_data[1] = {geoGrid.size()};
+        unsigned int attr_data[1] = {count};
         DataSpace   attr_dataspace(RANK, attr_dims);
         Attribute   attr_locations = locations.createAttribute("size", PredType::NATIVE_UINT, attr_dataspace);
         attr_locations.write(PredType::NATIVE_UINT, attr_data);
@@ -81,9 +81,9 @@ void GeoGridHDF5Writer::Write(GeoGrid& geoGrid, std::ostream& stream)
         for (const auto& person : m_persons_found) {
                 WritePerson(person, persons);
         }
-        attr_data[1] = {m_persons_found.size()};
-        Attribute attr_person = persons.createAttribute("size", PredType::NATIVE_UINT, attr_dataspace);
-        attr_person.write(PredType::NATIVE_UINT, attr_data);
+        unsigned long int attr_person_data[1] = {m_persons_found.size()};
+        Attribute attr_person = persons.createAttribute("size", PredType::NATIVE_ULONG, attr_dataspace);
+        attr_person.write(PredType::NATIVE_ULONG, attr_person_data);
 
         m_persons_found.clear();
         file.close();
@@ -105,13 +105,13 @@ void GeoGridHDF5Writer::WriteContactPool(stride::ContactPool* contactPool, Group
                 WritePeople(person, pool);
         }
         unsigned int attr_id_data[1]      = {contactPool->GetId()};
-        unsigned int attr_size_data[1]    = {contactPool->size()};
+        unsigned long int attr_size_data[1]    = {contactPool->size()};
         string attr_type_data[1]    = {ToString(contactPool->GetType())};
         Attribute attr_id     = contactPools.createAttribute("id", PredType::NATIVE_UINT, dataspace);
-        Attribute attr_size   = contactPools.createAttribute("size", PredType::NATIVE_UINT, dataspace);
+        Attribute attr_size   = contactPools.createAttribute("size", PredType::NATIVE_ULONG, dataspace);
         Attribute attr_type   = contactPools.createAttribute("type", strdatatype, dataspace);
         attr_id.write(PredType::NATIVE_UINT, attr_id_data);
-        attr_size.write(PredType::NATIVE_UINT, attr_size_data);
+        attr_size.write(PredType::NATIVE_ULONG, attr_size_data);
         attr_type.write(PredType::NATIVE_UINT, attr_type_data);
 }
 
@@ -159,9 +159,9 @@ void GeoGridHDF5Writer::WriteLocation(const Location& location, Group& locations
                 for (auto commute_pair : commutes) {
                         WriteCommute(commute_pair, commutes_dataset);
                 }
-                unsigned int attr_size_data[1] = {commutes.size()};
-                Attribute attr_size = commutes_dataset.createAttribute("size", PredType::NATIVE_UINT, attr_dataspace);
-                attr_size.write(PredType::NATIVE_UINT, attr_size_data);
+                unsigned long int attr_size_data[1] = {commutes.size()};
+                Attribute attr_size = commutes_dataset.createAttribute("size", PredType::NATIVE_ULONG, attr_dataspace);
+                attr_size.write(PredType::NATIVE_ULONG, attr_size_data);
         }
 
         Group contactPools(loc.createGroup("contactPools"));
