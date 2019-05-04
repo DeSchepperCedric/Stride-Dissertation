@@ -31,27 +31,18 @@ void WorkplaceCSVReader::SetReferenceWorkplaces(unsigned int&        ref_average
                                                 std::vector<double>& ref_ratios)
 {
         CSV reader(*(m_input_stream.get()));
-        std::cout << "setting reference"<<std::endl;
         double         average_size = 0U;
         vector<double> ratios;
         for (const CSVRow& row : reader) {
-            std::cout << row << std::endl;
+                std::cout << row << std::endl;
                 double       ratio;
                 unsigned int min;
                 unsigned int max;
                 try {
-                        std::string temp = row.GetValue<std::string>(0);
-                        std::cout << temp << std::endl;
+                        ratio = row.GetValue<double>(0);
                         min   = row.GetValue<unsigned int>(1);
-                        std::cout << min << std::endl;
-                        std::string t2   = row.GetValue<std::string>(2);
-                        std::cout << t2.size() << std::endl;
-                        for(auto i : t2){
-                            std::cout << i << std::endl;
-                        }
+                        max   = row.GetValue<unsigned int>(2);
                 } catch (const std::bad_cast& e) {
-                    std::cout << "NOT GOOD"<<std::endl;
-                    std::cout << e.what() << std::endl;
                         // NA
                         break;
                 }

@@ -127,7 +127,7 @@ TEST_F(WorkplacePopulatorDistributionTest, NoCommutingAvailable)
 }
 
 TEST_F(WorkplacePopulatorDistributionTest, OnlyCommuting)
-    {
+{
         MakeGeoGrid(m_gg_config, 3, 100, 12, 90, 3, 33, 3, m_pop.get());
 
         m_gg_config.param.fraction_workplace_commuters = 0;
@@ -160,30 +160,30 @@ TEST_F(WorkplacePopulatorDistributionTest, OnlyCommuting)
 
         // Assert that persons of Schoten only go to Kortrijk
         for (const auto& hPool : schoten->RefPools(Id::Household)) {
-            for (auto p : hPool[0]) {
-                const auto workId = p->GetPoolId(Id::Workplace);
-                if (AgeBrackets::Workplace::HasAge(p->GetAge()) && !AgeBrackets::College::HasAge(p->GetAge())) {
-                    EXPECT_TRUE(workId > 2 * m_ppwp && workId <= 4 * m_ppwp);
-                } else if (AgeBrackets::College::HasAge(p->GetAge())) {
-                    EXPECT_TRUE((workId > 2 * m_ppwp && workId <= 4 * m_ppwp) || workId == 0);
-                } else {
-                    EXPECT_EQ(0, workId);
+                for (auto p : hPool[0]) {
+                        const auto workId = p->GetPoolId(Id::Workplace);
+                        if (AgeBrackets::Workplace::HasAge(p->GetAge()) && !AgeBrackets::College::HasAge(p->GetAge())) {
+                                EXPECT_TRUE(workId > 2 * m_ppwp && workId <= 4 * m_ppwp);
+                        } else if (AgeBrackets::College::HasAge(p->GetAge())) {
+                                EXPECT_TRUE((workId > 2 * m_ppwp && workId <= 4 * m_ppwp) || workId == 0);
+                        } else {
+                                EXPECT_EQ(0, workId);
+                        }
                 }
-            }
         }
 
         // Assert that persons of Kortrijk only go to Schoten
         for (const auto& hPool : kortrijk->RefPools(Id::Household)) {
-            for (auto p : hPool[0]) {
-                const auto workId = p->GetPoolId(Id::Workplace);
-                if (AgeBrackets::Workplace::HasAge(p->GetAge()) && !AgeBrackets::College::HasAge(p->GetAge())) {
-                    EXPECT_TRUE(workId >= 1 && workId <= 2 * m_ppwp);
-                } else if (AgeBrackets::College::HasAge(p->GetAge())) {
-                    EXPECT_TRUE((workId >= 1 && workId <= 2 * m_ppwp) || workId == 0);
-                } else {
-                    EXPECT_EQ(0, workId);
+                for (auto p : hPool[0]) {
+                        const auto workId = p->GetPoolId(Id::Workplace);
+                        if (AgeBrackets::Workplace::HasAge(p->GetAge()) && !AgeBrackets::College::HasAge(p->GetAge())) {
+                                EXPECT_TRUE(workId >= 1 && workId <= 2 * m_ppwp);
+                        } else if (AgeBrackets::College::HasAge(p->GetAge())) {
+                                EXPECT_TRUE((workId >= 1 && workId <= 2 * m_ppwp) || workId == 0);
+                        } else {
+                                EXPECT_EQ(0, workId);
+                        }
                 }
-            }
         }
-    }
+}
 } // namespace
