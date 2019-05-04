@@ -97,6 +97,7 @@ void Populator<stride::ContactType::Id::Workplace>::Apply(GeoGrid& geoGrid, cons
                         std::vector<double> weightsNonCommutePools;
                         for (int i = 0; i < static_cast<int>(nearbyWp.size()); i++) {
                                 auto weight = 1 - geoGridConfig.refWP.ratios[genWorkPlaceSize()];
+
                                 weightsNonCommutePools.push_back(weight);
                                 AssertThrow(weight >= 0.0 && weight <= 1.0 && !isnan(weight),
                                             "Invalid weight: " + to_string(weight), m_logger);
@@ -137,7 +138,9 @@ void Populator<stride::ContactType::Id::Workplace>::Apply(GeoGrid& geoGrid, cons
                                                         for (int i = 0; i < s; i++) {
                                                                 auto weight =
                                                                     1 - geoGridConfig.refWP.ratios[genWorkPlaceSize()];
+
                                                                 weightsCommutePools.push_back(weight);
+
                                                                 AssertThrow(
                                                                     weight >= 0.0 && weight <= 1.0 && !isnan(weight),
                                                                     "Invalid weight: " + to_string(weight), m_logger);
@@ -155,6 +158,7 @@ void Populator<stride::ContactType::Id::Workplace>::Apply(GeoGrid& geoGrid, cons
                                                 // ----------------------------
                                                 // this person does not commute
                                                 // ----------------------------
+
                                                 const auto idraw = genNonCommute();
                                                 nearbyWp[idraw]->AddMember(person);
                                                 person->SetPoolId(Id::Workplace, nearbyWp[idraw]->GetId());

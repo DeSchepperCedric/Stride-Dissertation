@@ -68,8 +68,12 @@ void GeoGridConfig::SetData(const string& householdsFileName, const string& work
         // Set workplace size distribution values when file present.
         //----------------------------------------------------------------
         if (!workplacesFileName.empty()) {
+            std::cout << "READING" <<std::endl;
                 auto workplaceReader = ReaderFactory::CreateWorkplaceReader(workplacesFileName);
                 workplaceReader->SetReferenceWorkplaces(refWP.average_workplace_size, refWP.ratios);
+        }
+        else{
+            std::cout << "NOT READING" <<std::endl;
         }
 
         const auto popSize = param.pop_size;

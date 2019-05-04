@@ -56,7 +56,7 @@ TEST_F(WorkplacePopulatorDistributionTest, NoCommutingAvailable)
         m_gg_config.info.popcount_workplace            = 1;
         m_gg_config.param.particpation_workplace       = 1;
         m_gg_config.param.participation_college        = 0.5;
-        m_gg_config.refWP.average_workplace_size       = 50;
+        m_gg_config.refWP.average_workplace_size       = 10;
         m_gg_config.refWP.ratios                       = {0.60, 0.25, 0.10, 0.05};
 
         auto brasschaat = *m_geo_grid.begin();
@@ -125,4 +125,65 @@ TEST_F(WorkplacePopulatorDistributionTest, NoCommutingAvailable)
                 }
         }
 }
+
+TEST_F(WorkplacePopulatorDistributionTest, OnlyCommuting)
+    {
+        MakeGeoGrid(m_gg_config, 3, 100, 12, 90, 3, 33, 3, m_pop.get());
+
+        m_gg_config.param.fraction_workplace_commuters = 0;
+        m_gg_config.param.fraction_workplace_commuters = 1;
+        m_gg_config.param.fraction_college_commuters   = 0;
+        m_gg_config.info.popcount_workplace            = 1;
+        m_gg_config.param.particpation_workplace       = 1;
+        m_gg_config.param.participation_college        = 0.5;
+        m_gg_config.refWP.average_workplace_size       = 50;
+        m_gg_config.refWP.ratios                       = {0.60, 0.25, 0.10, 0.05};
+        // only commuting
+
+        auto schoten = *(m_geo_grid.begin());
+        schoten->SetCoordinate(Coordinate(51.2497532, 4.4977063));
+        m_workplace_generator.AddPools(*schoten, m_pop.get(), m_gg_config);
+        m_workplace_generator.AddPools(*schoten, m_pop.get(), m_gg_config);
+
+        auto kortrijk = *(m_geo_grid.begin() + 1);
+        kortrijk->SetCoordinate(Coordinate(50.82900246, 3.264406009));
+        m_workplace_generator.AddPools(*kortrijk, m_pop.get(), m_gg_config);
+        m_workplace_generator.AddPools(*kortrijk, m_pop.get(), m_gg_config);
+
+        schoten->AddOutgoingCommute(kortrijk, 0.5);
+        kortrijk->AddIncomingCommute(schoten, 0.5);
+        kortrijk->AddOutgoingCommute(schoten, 0.5);
+        schoten->AddIncomingCommute(kortrijk, 0.5);
+
+        m_geo_grid.Finalize();
+        m_workplace_populator.Apply(m_geo_grid, m_gg_config);
+
+        // Assert that persons of Schoten only go to Kortrijk
+        for (const auto& hPool : schoten->RefPools(Id::Household)) {
+            for (auto p : hPool[0]) {
+                const auto workId = p->GetPoolId(Id::Workplace);
+                if (AgeBrackets::Workplace::HasAge(p->GetAge()) && !AgeBrackets::College::HasAge(p->GetAge())) {
+                    EXPECT_TRUE(workId > 2 * m_ppwp && workId <= 4 * m_ppwp);
+                } else if (AgeBrackets::College::HasAge(p->GetAge())) {
+                    EXPECT_TRUE((workId > 2 * m_ppwp && workId <= 4 * m_ppwp) || workId == 0);
+                } else {
+                    EXPECT_EQ(0, workId);
+                }
+            }
+        }
+
+        // Assert that persons of Kortrijk only go to Schoten
+        for (const auto& hPool : kortrijk->RefPools(Id::Household)) {
+            for (auto p : hPool[0]) {
+                const auto workId = p->GetPoolId(Id::Workplace);
+                if (AgeBrackets::Workplace::HasAge(p->GetAge()) && !AgeBrackets::College::HasAge(p->GetAge())) {
+                    EXPECT_TRUE(workId >= 1 && workId <= 2 * m_ppwp);
+                } else if (AgeBrackets::College::HasAge(p->GetAge())) {
+                    EXPECT_TRUE((workId >= 1 && workId <= 2 * m_ppwp) || workId == 0);
+                } else {
+                    EXPECT_EQ(0, workId);
+                }
+            }
+        }
+    }
 } // namespace
