@@ -29,31 +29,6 @@ class Person;
 
 namespace geopop {
 
-typedef struct PERSON
-{
-        unsigned int  id;
-        float         age;
-        unsigned int  k12school;
-        unsigned int  college;
-        unsigned int  household;
-        unsigned int  workplace;
-        unsigned int  primarycommunity;
-        unsigned int  secondarycommunity;
-        unsigned int  daycare;
-        unsigned int  preschool;
-} PERSON;
-
-typedef struct COMMUTE
-{
-        unsigned int  to;
-        double        proportion;
-} COMMUTE;
-
-typedef struct POOL
-{
-        unsigned int  people;
-} POOL;
-
 class ContactCenter;
 
 /**
@@ -90,6 +65,7 @@ private:
 private:
         std::set<stride::Person*> m_persons_found; ///< The persons found when looping over the ContactPools.
 
+        const H5::StrType strdatatype;
         H5::CompType person_type;
         H5::CompType commute_type;
         H5::CompType pool_type;

@@ -20,7 +20,9 @@
 #include "contact/ContactType.h"
 #include "geopop/Location.h"
 
+#include <boost/lexical_cast.hpp>
 #include "H5Cpp.h"
+#include "util/HDF5.h"
 
 namespace geopop {
 
@@ -46,6 +48,7 @@ public:
         void Read() override;
 
 private:
+  /*
         /// Create a ContactCenter based on the information stored in the provided ...
         std::shared_ptr<ContactCenter> ParseContactCenter(H5::& contactCenter);
 
@@ -54,12 +57,17 @@ private:
 
         /// Create a Coordinate based on the information stored in the provided ...
         Coordinate ParseCoordinate(H5::Attribute& coordinate);
-
+*/
         /// Create a Location based on the information stored in the provided ...
         std::shared_ptr<Location> ParseLocation(H5::Group& location);
 
         /// Create a Person based on the information stored in the provided ...
-        stride::Person* ParsePerson(H5::DataSet& person);
+        stride::Person* ParsePerson(stride::util::PERSON& person);
+
+        const H5::StrType strdatatype;
+        H5::CompType person_type;
+        H5::CompType commute_type;
+        H5::CompType pool_type;
 };
 
 } // namespace geopop

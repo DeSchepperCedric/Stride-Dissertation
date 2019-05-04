@@ -18,6 +18,7 @@
 #include "contact/ContactPool.h"
 #include "geopop/GeoGrid.h"
 #include "pop/Person.h"
+#include "util/HDF5.h"
 
 #include <iostream>
 #include <omp.h>
@@ -27,14 +28,13 @@ namespace geopop {
 using namespace std;
 using namespace stride;
 using namespace stride::ContactType;
+using namespace util;
 using namespace H5;
 
 const unsigned int RANK = 1;
 
-// Create new string datatype for attribute
-StrType strdatatype(PredType::C_S1, 256); // of length 256 characters
-
-GeoGridHDF5Writer::GeoGridHDF5Writer() : m_persons_found(), person_type(sizeof(PERSON)), commute_type(sizeof(COMMUTE)), pool_type(sizeof(POOL))
+GeoGridHDF5Writer::GeoGridHDF5Writer()
+    : m_persons_found(), strdatatype(H5::PredType::C_S1, 256), person_type(sizeof(PERSON)), commute_type(sizeof(COMMUTE)), pool_type(sizeof(POOL))
 {
         person_type.insertMember("Id", HOFFSET(PERSON, id), PredType::NATIVE_UINT);
         person_type.insertMember("Age", HOFFSET(PERSON, age), PredType::NATIVE_FLOAT);
@@ -130,7 +130,7 @@ void GeoGridHDF5Writer::WriteLocation(const Location& location, Group& locations
         string attr_name_data[1]            = {location.GetName()};
         unsigned int attr_province_data[1]  = {location.GetProvince()};
         unsigned int attr_popcount_data[1]  = {location.GetPopCount()};
-        double attr_coord_data[1][2]         = {
+        double attr_coord_data[1][2]        = {
                                                 {
                                                   boost::geometry::get<0>(location.GetCoordinate()),
                                                   boost::geometry::get<1>(location.GetCoordinate())
