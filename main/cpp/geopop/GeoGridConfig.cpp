@@ -102,6 +102,13 @@ void GeoGridConfig::SetData(const ptree& configPt)
                         info.major_popcount_college = major_info.popcount_college;
                         info.major_popcount_workplace = major_info.popcount_workplace;
                         info.major_count_households = major_info.count_households;
+                } else {
+                        info.major_popcount_daycare = 0;
+                        info.major_popcount_preschool = 0;
+                        info.major_popcount_k12school = 0;
+                        info.major_popcount_college = 0;
+                        info.major_popcount_workplace = 0;
+                        info.major_count_households = 0;
                 }
 
                 regionsInfo[regionId] = info;

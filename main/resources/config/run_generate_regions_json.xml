@@ -50,6 +50,7 @@
 			<fraction_college_commuters>0.5</fraction_college_commuters>
 			<fraction_workplace_commuters>0.5</fraction_workplace_commuters>
 			<household_file>households_flanders.json</household_file>
+			<major_household_file>households_flanders.json</major_household_file>
 			<participation_preschool>0.99</participation_preschool>
 			<participation_daycare>0.45</participation_daycare>
 			<participation_college>0.5</participation_college>
@@ -61,6 +62,7 @@
 			<fraction_college_commuters>0.5</fraction_college_commuters>
 			<fraction_workplace_commuters>0.5</fraction_workplace_commuters>
 			<household_file>households_flanders.json</household_file>
+			<major_household_file>households_flanders.json</major_household_file>
 			<participation_preschool>0.99</participation_preschool>
 			<participation_daycare>0.45</participation_daycare>
 			<participation_college>0.5</participation_college>
@@ -72,6 +74,7 @@
 			<fraction_college_commuters>0.5</fraction_college_commuters>
 			<fraction_workplace_commuters>0.5</fraction_workplace_commuters>
 			<household_file>households_flanders.json</household_file>
+			<major_household_file>households_flanders.json</major_household_file>
 			<participation_preschool>0.99</participation_preschool>
 			<participation_daycare>0.45</participation_daycare>
 			<participation_college>0.5</participation_college>
@@ -83,6 +86,7 @@
 			<fraction_college_commuters>0.5</fraction_college_commuters>
 			<fraction_workplace_commuters>0.5</fraction_workplace_commuters>
 			<household_file>households_flanders.json</household_file>
+			<major_household_file>households_flanders.json</major_household_file>
 			<participation_preschool>0.99</participation_preschool>
 			<participation_daycare>0.45</participation_daycare>
 			<participation_college>0.5</participation_college>

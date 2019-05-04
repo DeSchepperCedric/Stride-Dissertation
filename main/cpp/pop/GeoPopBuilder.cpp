@@ -74,7 +74,7 @@ shared_ptr<Population> GeoPopBuilder::Build(shared_ptr<Population> pop)
         }
         string majorCitiesFile;
         if (geopop_gen.count("major_cities_file")) {
-                commutesFile = geopop_gen.get<string>("major_cities_file");
+                majorCitiesFile = geopop_gen.get<string>("major_cities_file");
         }
 
         string citiesFile = geopop_gen.get<string>("cities_file");
@@ -116,7 +116,6 @@ void GeoPopBuilder::MakeLocations(GeoGrid& geoGrid, const GeoGridConfig& geoGrid
                 const auto majorCitiesReader = ReaderFactory::CreateMajorCitiesReader(majorCitiesFileName);
                 majorCitiesReader->FillGeoGrid(geoGrid);
         }
-
         if (!commutingFileName.empty()) {
                 const auto commutesReader = ReaderFactory::CreateCommutesReader(commutingFileName);
                 commutesReader->FillGeoGrid(geoGrid);

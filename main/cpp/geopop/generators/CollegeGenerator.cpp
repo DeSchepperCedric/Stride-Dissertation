@@ -30,6 +30,7 @@ void Generator<stride::ContactType::Id::College>::Apply(GeoGrid& geoGrid, const 
         auto studentCount = 0U;
         for (const auto & it : ggConfig.regionsInfo){
                 studentCount += it.second.popcount_college;
+                studentCount += it.second.major_popcount_college;
         }
         const auto collegeCount =
             static_cast<unsigned int>(ceil(studentCount / static_cast<double>(ggConfig.people[Id::College])));
