@@ -29,7 +29,11 @@ void Generator<stride::ContactType::Id::K12School>::Apply(GeoGrid& geoGrid, cons
         //    relative number of pupils for that location; the relative number of pupils is set
         //    to the relative population w.r.t the total population.
 
-        const auto pupilCount = ggConfig.info.popcount_k12school;
+        auto pupilCount = 0U;
+        for (const auto & it : ggConfig.regionsInfo){
+                pupilCount += it.second.popcount_k12school;
+//                pupilCount += it.second.major_popcount_k12school;
+        }
         const auto schoolCount =
             static_cast<unsigned int>(ceil(pupilCount / static_cast<double>(ggConfig.people[Id::K12School])));
 

@@ -33,32 +33,19 @@ using namespace geopop;
 using namespace stride;
 using namespace stride::ContactType;
 using namespace stride::util;
-using boost::property_tree::ptree;
+//using boost::property_tree::ptree;
 
 namespace {
 
 void sortContactCenters(nlohmann::json& json)
 {
-        auto& contactCenters       = json.at("contactCenters");
+        auto& contactCenters       = json.at("contactPools");
         auto  compareContactCenter = [](const nlohmann::json& a, const nlohmann::json& b) {
-                return a.at("type") < b.at("type");
+                return a.at("class") < b.at("class");
         };
         std::sort(contactCenters.begin(), contactCenters.end(), compareContactCenter);
 }
-/*
-void sortTree(ptree& tree)
-{
-        auto compareLocation = [](const pair<string, ptree>& a, const pair<string, ptree>& b) {
-                return a.second.get<string>("id") < b.second.get<string>("id");
-        };
-        auto& locations = tree.get_child("locations");
-        locations.sort<decltype(compareLocation)>(compareLocation);
 
-        for (auto it = locations.begin(); it != locations.end(); it++) {
-                sortContactCenters(it->second.get_child(""));
-        }
-}
-*/
 void sortJSON(nlohmann::json& json)
 {
         auto compareLocation = [](const nlohmann::json& a, const nlohmann::json& b) { return a.at("id") < b.at("id"); };
@@ -78,7 +65,6 @@ bool compareGeoGrid(GeoGrid& geoGrid, const string& testname)
         nlohmann::json result;
         ss >> result;
         sortJSON(result);
-
         nlohmann::json expected;
         std::ifstream  inputStream(FileSys::GetTestsDir().string() + "/testdata/GeoGridJSON/writerJSON/" + testname);
 

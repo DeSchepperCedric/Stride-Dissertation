@@ -73,10 +73,10 @@ shared_ptr<Location> GeoGridJSONReader::ParseLocation(nlohmann::json& location)
         const auto coordinate = ParseCoordinate(location.at("coordinate"));
 
         auto result         = make_shared<Location>(id, province, coordinate, name, population);
-        auto contactCenters = ParseArray(location.at("contactCenters"));
+        auto contactPoolsClasses = ParseArray(location.at("contactPools"));
 
-        for (auto it = contactCenters.begin(); it != contactCenters.end(); it++) {
-                ParseContactCenters(*it, result);
+        for (auto it = contactPoolsClasses.begin(); it != contactPoolsClasses.end(); it++) {
+                ParseContactPoolsClass(*it, result);
         }
 
         if (location.count("commutes")) {
@@ -96,13 +96,17 @@ Coordinate GeoGridJSONReader::ParseCoordinate(nlohmann::json& coordinate)
 {
         const auto longitude = ParseNumerical<double>(coordinate.at("longitude"));
         const auto latitude  = ParseNumerical<double>(coordinate.at("latitude"));
+//        TODO worden die x en y gebruikt en wat is hier het praktisch nut van?
+//        const auto x         = ParseNumerical<double>(coordinate.at("x"));
+//        const auto y         = ParseNumerical<double>(coordinate.at("y"));
         return {longitude, latitude};
 }
 
-void GeoGridJSONReader::ParseContactCenters(nlohmann::json& contactCenter, shared_ptr<Location> loc)
+void GeoGridJSONReader::ParseContactPoolsClass(nlohmann::json& contactPoolClass, shared_ptr<Location> loc)
 {
-        const auto type = contactCenter.at("type").get<std::string>();
-        const auto id   = ParseNumerical<unsigned int>(contactCenter.at("id"));
+        const auto type = contactPoolClass.at("class").get<std::string>();
+//        TODO check if this ID is deprecated?
+//        const auto id   = ParseNumerical<unsigned int>(contactPoolClass.at("id"));
 
         ContactType::Id typeId;
         if (type == ToString(Id::K12School)) {
@@ -122,11 +126,11 @@ void GeoGridJSONReader::ParseContactCenters(nlohmann::json& contactCenter, share
         } else if (type == ToString(Id::PreSchool)) {
                 typeId = Id::PreSchool;
         } else {
-                throw Exception("No such ContactCenter type: " + type);
+                throw Exception("No such ContactPool type: " + type);
         }
 
-        auto result       = make_shared<ContactPool>(id, typeId);
-        auto contactPools = ParseArray(contactCenter.at("pools"));
+//        auto result       = make_shared<ContactPool>(id, typeId);
+        auto contactPools = ParseArray(contactPoolClass.at("pools"));
 
         for (auto it = contactPools.begin(); it != contactPools.end(); it++) {
                 ParseContactPool(loc, *it, typeId);
@@ -136,14 +140,21 @@ void GeoGridJSONReader::ParseContactCenters(nlohmann::json& contactCenter, share
 void GeoGridJSONReader::ParseContactPool(shared_ptr<Location> loc, nlohmann::json& contactPool, ContactType::Id typeId)
 {
         // Don't use the id of the ContactPool but the let the Population create an id.
+        //TODO check
+//        auto contactPool_id = ParseNumerical<unsigned int>(contactPool.at("id"));
         auto result = m_population->RefPoolSys().CreateContactPool(typeId);
+
         loc->RefPools(typeId).emplace_back(result);
         auto people = ParseArray(contactPool.at("people"));
         for (auto it = people.begin(); it != people.end(); it++) {
                 auto       person_id = ParseNumerical<unsigned int>(*it);
-                const auto person    = m_people.at(person_id);
-                result->AddMember(person);
-                person->SetPoolId(typeId, static_cast<unsigned int>(result->GetId()));
+                try {
+                        const auto person    = m_people.at(person_id);
+                        result->AddMember(person);
+                        person->SetPoolId(typeId, result->GetId());
+                } catch (std::out_of_range& e){
+                        throw Exception("No such person with id: " + std::to_string(person_id));
+                }
         }
 }
 
@@ -151,6 +162,8 @@ Person* GeoGridJSONReader::ParsePerson(nlohmann::json& person)
 {
         const auto id   = ParseNumerical<unsigned int>(person.at("id"));
         const auto age  = ParseNumerical<unsigned int>(person.at("age"));
+        // The following ID's of contactpools will not necessarily coincide with the actual ID of the contactpool, due to how ID's are generated
+        // This issue will be fixed later on, when parsing the contactpools, then the correct contactpool ID will be assigned.
         const auto hhId = ParseNumerical<unsigned int>(person.at("Household"));
         const auto ksId = ParseNumerical<unsigned int>(person.at("K12School"));
         const auto coId = ParseNumerical<unsigned int>(person.at("College"));
@@ -165,11 +178,11 @@ Person* GeoGridJSONReader::ParsePerson(nlohmann::json& person)
 
 nlohmann::json GeoGridJSONReader::ParseArray(nlohmann::json& node)
 {
-    if (node.type() == nlohmann::json::value_t::string) {
-        return nlohmann::json::array();
-    } else {
-        return node;
-    }
+        if (node.type() == nlohmann::json::value_t::string) {
+                return nlohmann::json::array();
+        } else {
+                return node;
+        }
 }
 
 } // namespace geopop

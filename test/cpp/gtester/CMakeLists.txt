@@ -61,8 +61,8 @@ set(SRC
         geopop/io/CitiesCSVReaderTest.cpp
         geopop/io/CommutesCSVReaderTest.cpp
         geopop/io/GeoGridIOUtils.cpp
-#        geopop/io/GeoGridJSONReaderTest.cpp
-#        geopop/io/GeoGridJSONWriterTest.cpp
+        geopop/io/GeoGridJSONReaderTest.cpp
+        geopop/io/GeoGridJSONWriterTest.cpp
         geopop/io/GeoGridProtoReaderTest.cpp
         geopop/io/GeoGridProtoWriterTest.cpp
         geopop/io/HouseholdCSVReaderTest.cpp
@@ -84,7 +84,7 @@ set(SRC
         geopop/populators/WorkplacePopulatorTest.cpp
         geopop/populators/DaycarePopulatorTest.cpp
         geopop/populators/PreSchoolPopulatorTest.cpp
-        geopop/populators/WorkPlacePopulatorTest.cpp
+        geopop/populators/WorkPlacePopulatorDistributionTest.cpp
         #---
         myhayai/DeliveryMan.cpp
         myhayai/MyhayaiTests.cpp

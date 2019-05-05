@@ -64,6 +64,11 @@ void MakeGeoGrid(const GeoGridConfig&, int locCount, int locPop, int dayCount, i
         DaycareGenerator   dayGen(rnMan);
         PreSchoolGenerator preGen(rnMan);
 
+        for (unsigned int i = 0; i < 5; ++i){
+                GeoGridConfig::Param param;
+                config.params[i] = param;
+        }
+
         size_t sampleId = 0;
         auto   personId = 0U;
         for (int locI = 0; locI < locCount; locI++) {

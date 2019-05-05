@@ -43,12 +43,13 @@ TEST(HouseholdCSVReader, test1)
         GeoGridConfig      geoConfig{};
         auto               instream = make_unique<istringstream>(csvString);
         HouseholdCSVReader reader(move(instream));
+        GeoGridConfig::RefHH refhh;
+        geoConfig.refHouseHolds[0] = refhh;
+        reader.SetReferenceHouseholds(geoConfig.refHouseHolds.at(0).person_count, geoConfig.refHouseHolds.at(0).ages);
 
-        reader.SetReferenceHouseholds(geoConfig.refHH.person_count, geoConfig.refHH.ages);
+        EXPECT_EQ(geoConfig.refHouseHolds.at(0).person_count, 23U);
 
-        EXPECT_EQ(geoConfig.refHH.person_count, 23U);
-
-        const vector<vector<unsigned int>>& HHages = geoConfig.refHH.ages;
+        const vector<vector<unsigned int>>& HHages = geoConfig.refHouseHolds.at(0).ages;
 
         EXPECT_EQ(HHages.size(), 8U);
         EXPECT_EQ(HHages[0].size(), 3U);

@@ -22,6 +22,7 @@
 #include "geopop/Location.h"
 #include "util/Assert.h"
 
+#include <geopop/GeoGridConfig.h>
 #include <utility>
 
 namespace geopop {
@@ -37,22 +38,13 @@ void Populator<stride::ContactType::Id::Workplace>::Apply(GeoGrid& geoGrid, cons
 {
         m_logger->trace("Starting to populate Workplaces");
 
-        auto                 genCommute{function<int()>()};
-        auto                 genNonCommute{function<int()>()};
+        auto genCommute{function<int()>()};
+        auto genNonCommute{function<int()>()};
+        auto gen{function<int()>()};
+
         vector<ContactPool*> nearbyWp{};
         vector<Location*>    commuteLocations{};
 
-        const auto participCollege      = geoGridConfig.param.participation_college;
-        const auto participWorkplace    = geoGridConfig.param.particpation_workplace;
-        const auto popCollege           = geoGridConfig.info.popcount_college;
-        const auto popWorkplace         = geoGridConfig.info.popcount_workplace;
-        const auto fracCollegeCommute   = geoGridConfig.param.fraction_college_commuters;
-        const auto fracWorkplaceCommute = geoGridConfig.param.fraction_workplace_commuters;
-
-        double fracCommuteStudents = 0.0;
-        if (static_cast<bool>(fracWorkplaceCommute) && popWorkplace) {
-                fracCommuteStudents = (popCollege * fracCollegeCommute) / (popWorkplace * fracWorkplaceCommute);
-        }
 
         // --------------------------------------------------------------------------------
         // For every location, if populated ...
@@ -61,9 +53,20 @@ void Populator<stride::ContactType::Id::Workplace>::Apply(GeoGrid& geoGrid, cons
                 if (loc->GetPopCount() == 0) {
                         continue;
                 }
+                const auto participCollege      = geoGridConfig.params.at(loc->GetProvince()).participation_college;
+                const auto participWorkplace    = geoGridConfig.params.at(loc->GetProvince()).participation_workplace;
+                const auto popCollege           = geoGridConfig.regionsInfo.at(loc->GetProvince()).popcount_college;
+                const auto popWorkplace         = geoGridConfig.regionsInfo.at(loc->GetProvince()).popcount_workplace;
+                const auto fracCollegeCommute   = geoGridConfig.params.at(loc->GetProvince()).fraction_college_commuters;
+                const auto fracWorkplaceCommute = geoGridConfig.params.at(loc->GetProvince()).fraction_workplace_commuters;
+
+                double fracCommuteStudents = 0.0;
+                if (static_cast<bool>(fracWorkplaceCommute) && popWorkplace) {
+                        fracCommuteStudents = (popCollege * fracCollegeCommute) / (popWorkplace * fracWorkplaceCommute);
+                }
 
                 // --------------------------------------------------------------------------------
-                // Find all Workplaces were employees from this location commute to
+                // Find all Workplaces where employees from this location commute to
                 // --------------------------------------------------------------------------------
                 commuteLocations.clear();
                 genCommute = function<int()>();
@@ -87,8 +90,22 @@ void Populator<stride::ContactType::Id::Workplace>::Apply(GeoGrid& geoGrid, cons
                 // --------------------------------------------------------------------------------
                 // Set NearbyWorkspacePools and associated generator
                 // --------------------------------------------------------------------------------
-                nearbyWp      = geoGrid.GetNearbyPools(Id::Workplace, *loc);
-                genNonCommute = m_rn_man.GetUniformIntGenerator(0, static_cast<int>(nearbyWp.size()), 0U);
+                nearbyWp = geoGrid.GetNearbyPools(Id::Workplace, *loc);
+
+                if (!geoGridConfig.refWP.ratios.empty()) {
+                        auto genWorkPlaceSize = m_rn_man.GetDiscreteGenerator(geoGridConfig.refWP.ratios, 0U);
+                        std::vector<double> weightsNonCommutePools;
+                        for (int i = 0; i < static_cast<int>(nearbyWp.size()); i++) {
+                                auto weight = 1 - geoGridConfig.refWP.ratios[genWorkPlaceSize()];
+
+                                weightsNonCommutePools.push_back(weight);
+                                AssertThrow(weight >= 0.0 && weight <= 1.0 && !isnan(weight),
+                                            "Invalid weight: " + to_string(weight), m_logger);
+                        }
+                        genNonCommute = m_rn_man.GetDiscreteGenerator(weightsNonCommutePools, 0U);
+                } else {
+                        genNonCommute = m_rn_man.GetUniformIntGenerator(0, static_cast<int>(nearbyWp.size()), 0U);
+                }
 
                 // --------------------------------------------------------------------------------
                 // For everyone of working age: decide between work or college (iff of College age)
@@ -113,8 +130,27 @@ void Populator<stride::ContactType::Id::Workplace>::Apply(GeoGrid& geoGrid, cons
                                                 // --------------------------------------------------------------
                                                 auto& pools = commuteLocations[genCommute()]->RefPools(Id::Workplace);
                                                 auto  s     = static_cast<int>(pools.size());
-                                                auto  gen   = m_rn_man.GetUniformIntGenerator(0, s);
-                                                auto  pool  = pools[gen()];
+
+                                                if (!geoGridConfig.refWP.ratios.empty()) {
+                                                        auto genWorkPlaceSize = m_rn_man.GetDiscreteGenerator(
+                                                            geoGridConfig.refWP.ratios, 0U);
+                                                        std::vector<double> weightsCommutePools;
+                                                        for (int i = 0; i < s; i++) {
+                                                                auto weight =
+                                                                    1 - geoGridConfig.refWP.ratios[genWorkPlaceSize()];
+
+                                                                weightsCommutePools.push_back(weight);
+
+                                                                AssertThrow(
+                                                                    weight >= 0.0 && weight <= 1.0 && !isnan(weight),
+                                                                    "Invalid weight: " + to_string(weight), m_logger);
+                                                        }
+                                                        gen = m_rn_man.GetDiscreteGenerator(weightsCommutePools, 0U);
+                                                } else {
+                                                        gen = m_rn_man.GetUniformIntGenerator(0, s);
+                                                }
+
+                                                auto pool = pools[gen()];
                                                 // so that's it
                                                 pool->AddMember(person);
                                                 person->SetPoolId(Id::Workplace, pool->GetId());
@@ -122,6 +158,7 @@ void Populator<stride::ContactType::Id::Workplace>::Apply(GeoGrid& geoGrid, cons
                                                 // ----------------------------
                                                 // this person does not commute
                                                 // ----------------------------
+
                                                 const auto idraw = genNonCommute();
                                                 nearbyWp[idraw]->AddMember(person);
                                                 person->SetPoolId(Id::Workplace, nearbyWp[idraw]->GetId());

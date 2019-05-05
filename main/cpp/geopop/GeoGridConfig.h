@@ -23,10 +23,23 @@
 
 #include <memory>
 #include <ostream>
+#include <map>
 
 namespace geopop {
 
 class GeoGrid;
+
+struct WorkplaceType
+{
+        /// Minimum size of Workplace type.
+        int size_min;
+
+        /// Maximum size of Workplace type.
+        int size_max;
+
+        /// Ratio of Workplace type.
+        double ratio;
+};
 
 /**
  * Configuration data mostly for generating a population, but also for computing
@@ -54,7 +67,7 @@ public:
         // -----------------------------------------------------------------------------------------
         // Parameters set by constructor with configuration property tree.
         // -----------------------------------------------------------------------------------------
-        struct
+        struct Param
         {
                 /// Participation of daycare (fraction of people of daycare age going to daycare).
                 double participation_daycare;
@@ -67,7 +80,7 @@ public:
 
                 /// Participation of workplace (fraction of people of work age and not going to
                 /// college and having employment).
-                double particpation_workplace;
+                double participation_workplace;
 
                 /// Fraction of college students that commute.
                 double fraction_college_commuters;
@@ -77,19 +90,42 @@ public:
 
                 /// Target population size for the generated population.
                 unsigned int pop_size;
-        } param;
+        };
+
+        std::map<unsigned int, Param> params;
 
         // -----------------------------------------------------------------------------------------
         // The reference Households used to generate the population by random draws.
         // -----------------------------------------------------------------------------------------
-        struct
+        struct RefHH
         {
                 /// Number of persons in the reference household set.
                 unsigned int person_count = 0U;
 
                 /// Age profile per reference household.
-                std::vector<std::vector<unsigned int>> ages{};
-        } refHH;
+                std::vector<std::vector<unsigned int>> ages {};
+
+                /// Number of persons in the reference household set for central cities.
+                unsigned int major_person_count = 0U;
+
+                /// Age profile per reference household of central cities.
+                std::vector<std::vector<unsigned int>> major_ages {};
+        };
+
+        std::map<unsigned int, RefHH> refHouseHolds;
+
+
+        // -----------------------------------------------------------------------------------------
+        // The reference Workplace types used to generate/populate workplaces
+        // -----------------------------------------------------------------------------------------
+        struct
+        {
+                /// Average number of persons in a workplace.
+                unsigned int average_workplace_size = 0U;
+
+                /// Ratio per workplace type
+                std::vector<double> ratios;
+        } refWP;
 
         // -----------------------------------------------------------------------------------------
         // These are numbers derived from the reference households, the target size of the generated
@@ -98,7 +134,7 @@ public:
         // (to very close approximation) in the generated population.
         // The numbers are set by the SetData method.
         // -----------------------------------------------------------------------------------------
-        struct
+        struct Info
         {
                 /// Numbers of individuals in Daycare.
                 unsigned int popcount_daycare;
@@ -117,12 +153,36 @@ public:
 
                 /// The number of households.
                 unsigned int count_households;
-        } info;
+
+                /// Numbers of individuals in Daycare.
+                unsigned int major_popcount_daycare;
+
+                /// Numbers of individuals in PreSchool.
+                unsigned int major_popcount_preschool;
+
+                /// Numbers of individuals in K12School.
+                unsigned int major_popcount_k12school;
+
+                /// Number of individuals in College.
+                unsigned int major_popcount_college;
+
+                /// Number of individuals in Workplace.
+                unsigned int major_popcount_workplace;
+
+                /// The number of households.
+                unsigned int major_count_households;
+
+        };
+
+        std::map<unsigned int, Info> regionsInfo;
 
         // -----------------------------------------------------------------------------------------
         /// Read the househould data file, parse it and set data.
         // -----------------------------------------------------------------------------------------
-        void SetData(const std::string& householdsFileName);
+        void SetData(const boost::property_tree::ptree& configPt);
+
+
+        Info ParseHouseholdInfo(unsigned int ref_p_count, std::vector<std::vector<unsigned int>> &ages, Param &param);
 };
 
 } // namespace geopop

@@ -11,40 +11,33 @@
                 "longitude": "0",
                 "latitude": "0"
             },
-            "contactCenters": [
+            "contactPools": [
                 {
-                    "id": 0,
-                    "type": "K12School",
+                    "class": "K12School",
                     "pools": ""
                 },
                 {
-                    "id": 1,
-                    "type": "Studio",
+                    "class": "Studio",
                     "pools": ""
                 },
                 {
-                    "id": 2,
-                    "type": "College",
+                    "class": "College",
                     "pools": ""
                 },
                 {
-                    "id": 3,
-                    "type": "Household",
+                    "class": "Household",
                     "pools": ""
                 },
                 {
-                    "id": 5,
-                    "type": "Workplace",
+                    "class": "Workplace",
                     "pools": ""
                 },
                 {
-                    "id": 6,
-                    "type": "Daycare",
+                    "class": "Daycare",
                     "pools": ""
                 },
                 {
-                    "id": 7,
-                    "type": "PreSchool",
+                    "class": "PreSchool",
                     "pools": ""
                 }
             ]

@@ -18,6 +18,8 @@
 #include "CommutesReader.h"
 #include "HouseholdReader.h"
 #include "LocationsReader.h"
+#include "MajorCitiesReader.h"
+#include "WorkplaceReader.h"
 
 #include <istream>
 #include <memory>
@@ -37,7 +39,7 @@ namespace geopop {
 /**
  * A Factory for creating the correct implementation of the different Readers which
  * parse the information needed to construct a GeoGrid, based on the file extension.
- * Currently only CSV Readers are implemented.
+ * Currently only CSV Readers are implemented., except for the HouseholdReader
  */
 class ReaderFactory
 {
@@ -59,6 +61,18 @@ public:
 
         /// Create a HouseholdReader based on the absolute filesystem path the input file.
         static std::shared_ptr<HouseholdReader> CreateHouseholdReader(const filesys::path& path);
+
+        /// Create a MajorCitiesReader based on the filename relative to the data directory.
+        static std::shared_ptr<MajorCitiesReader> CreateMajorCitiesReader(const std::string& filename);
+
+        /// Create a MajorCitiesReader based on the absolute filesystem path the input file.
+        static std::shared_ptr<MajorCitiesReader> CreateMajorCitiesReader(const filesys::path& path);
+
+        /// Create a WorkplaceReader based on the filename relative to the data directory.
+        static std::shared_ptr<WorkplaceReader> CreateWorkplaceReader(const std::string& filename);
+
+        /// Create a WorkplaceReader based on the absolute filesystem path the input file.
+        static std::shared_ptr<WorkplaceReader> CreateWorkplaceReader(const filesys::path& path);
 
 private:
         /// Create an istream based on the filesystem path.

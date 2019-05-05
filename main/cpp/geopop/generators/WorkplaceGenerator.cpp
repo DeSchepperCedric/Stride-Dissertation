@@ -14,6 +14,7 @@
  */
 
 #include "Generator.h"
+#include <geopop/GeoGridConfig.h>
 
 #include "util/Assert.h"
 
@@ -32,17 +33,23 @@ void Generator<stride::ContactType::Id::Workplace>::Apply(GeoGrid& geoGrid, cons
         // 4. use that information for the distribution
         // 5. assign each workplaces to a location
 
-        const auto EmployeeCount = ggConfig.info.popcount_workplace;
+        auto EmployeeCount = 0U;
+        for (const auto & it : ggConfig.regionsInfo){
+                EmployeeCount += it.second.popcount_workplace;
+//                EmployeeCount += it.second.major_popcount_workplace;
+        }
+        const auto WorkplaceSize = ggConfig.refWP.average_workplace_size == 0U ? ggConfig.people[Id::Workplace]
+                                                                               : ggConfig.refWP.average_workplace_size;
         const auto WorkplacesCount =
-            static_cast<unsigned int>(ceil(EmployeeCount / static_cast<double>(ggConfig.people[Id::Workplace])));
+            static_cast<unsigned int>(ceil(EmployeeCount / static_cast<double>(WorkplaceSize)));
 
         // = for each location #residents + #incoming commuting people - #outgoing commuting people
         vector<double> weights;
         for (const auto& loc : geoGrid) {
                 const double ActivePeopleCount =
-                    (loc->GetPopCount() + loc->GetIncomingCommuteCount(ggConfig.param.fraction_workplace_commuters) -
-                     loc->GetOutgoingCommuteCount(ggConfig.param.fraction_workplace_commuters) *
-                         ggConfig.param.particpation_workplace);
+                    (loc->GetPopCount() + loc->GetIncomingCommuteCount(ggConfig.params.at(loc->GetProvince()).fraction_workplace_commuters) -
+                     loc->GetOutgoingCommuteCount(ggConfig.params.at(loc->GetProvince()).fraction_workplace_commuters) *
+                         ggConfig.params.at(loc->GetProvince()).participation_workplace);
 
                 const double weight = ActivePeopleCount / EmployeeCount;
                 AssertThrow(weight >= 0 && weight <= 1 && !std::isnan(weight), "Invalid weight: " + to_string(weight),

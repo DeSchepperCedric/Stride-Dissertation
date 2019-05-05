@@ -14,10 +14,9 @@
     <output_persons>false</output_persons>
     <output_prefix></output_prefix>
     <output_summary>false</output_summary>
-    <population_file>gengeopop.proto</population_file>
+    <population_file>gengeopop.json</population_file>
     <population_type>generate</population_type>
-    <rng_seed>1</rng_seed>
-    <rng_type>mrg2</rng_type>
+    <rng_seed>7885590,7701590,9510335,4364132</rng_seed>
     <r0>11</r0>
     <seeding_age_max>99</seeding_age_max>
     <seeding_age_min>1</seeding_age_min>
@@ -32,11 +31,62 @@
     <geopop_gen>
         <cities_file>flanders_cities.csv</cities_file>
         <commuting_file>flanders_commuting.csv</commuting_file>
-        <fraction_college_commuters>0.5</fraction_college_commuters>
-        <fraction_workplace_commuters>0.5</fraction_workplace_commuters>
-        <household_file>households_flanders.json</household_file>
-        <participation_college>0.5</participation_college>
-        <particpation_workplace>0.75</particpation_workplace>
-        <population_size>600000</population_size>
+	<regions>
+		<region>
+			<id>1</id>
+			<fraction_college_commuters>0.5</fraction_college_commuters>
+			<fraction_workplace_commuters>0.5</fraction_workplace_commuters>
+			<household_file>households_flanders.json</household_file>
+			<participation_preschool>0.99</participation_preschool>
+			<participation_daycare>0.45</participation_daycare>
+			<participation_college>0.5</participation_college>
+			<participation_workplace>0.75</participation_workplace>
+			<population_size>141971</population_size>
+		</region>
+		<region>
+			<id>2</id>
+			<fraction_college_commuters>0.5</fraction_college_commuters>
+			<fraction_workplace_commuters>0.5</fraction_workplace_commuters>
+			<household_file>households_flanders.json</household_file>
+			<participation_preschool>0.99</participation_preschool>
+			<participation_daycare>0.45</participation_daycare>
+			<participation_college>0.5</participation_college>
+			<participation_workplace>0.75</participation_workplace>
+			<population_size>172139</population_size>
+		</region>
+		<region>
+			<id>3</id>
+			<fraction_college_commuters>0.5</fraction_college_commuters>
+			<fraction_workplace_commuters>0.5</fraction_workplace_commuters>
+			<household_file>households_flanders.json</household_file>
+			<participation_preschool>0.99</participation_preschool>
+			<participation_daycare>0.45</participation_daycare>
+			<participation_college>0.5</participation_college>
+			<participation_workplace>0.75</participation_workplace>
+			<population_size>95754</population_size>
+		</region>
+		<region>
+			<id>4</id>
+			<fraction_college_commuters>0.5</fraction_college_commuters>
+			<fraction_workplace_commuters>0.5</fraction_workplace_commuters>
+			<household_file>households_flanders.json</household_file>
+			<participation_preschool>0.99</participation_preschool>
+			<participation_daycare>0.45</participation_daycare>
+			<participation_college>0.5</participation_college>
+			<participation_workplace>0.75</participation_workplace>
+			<population_size>118510</population_size>
+		</region>
+		<region>
+			<id>7</id>
+			<fraction_college_commuters>0.5</fraction_college_commuters>
+			<fraction_workplace_commuters>0.5</fraction_workplace_commuters>
+			<household_file>households_flanders.json</household_file>
+			<participation_preschool>0.99</participation_preschool>
+			<participation_daycare>0.45</participation_daycare>
+			<participation_college>0.5</participation_college>
+			<participation_workplace>0.75</participation_workplace>
+			<population_size>71626</population_size>
+		</region>
+	</regions>
     </geopop_gen>
 </run>

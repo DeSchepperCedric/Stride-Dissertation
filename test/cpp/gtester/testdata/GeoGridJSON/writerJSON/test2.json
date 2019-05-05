@@ -9,75 +9,91 @@
                 "longitude": 0.0,
                 "latitude": 0.0
             },
-            "contactCenters": [
+            "contactPools": [
                 {
-                    "id": 0,
-                    "type": "K12School",
+                    "class": "K12School",
                     "pools": [
                         {
-                            "id": 2,
+                            "id": 1,
                             "people": [
-                                1
+                                0
                             ]
                         }
                     ]
                 },
                 {
-                    "id": 1,
-                    "type": "PrimaryCommunity",
+                    "class": "PrimaryCommunity",
                     "pools": [
                         {
-                            "id": 3,
+                            "id": 1,
                             "people": [
-                                1
+                                0
                             ]
                         }
                     ]
                 },
                 {
-                    "id": 2,
-                    "type": "SecondaryCommunity",
+                    "class": "SecondaryCommunity",
                     "pools": [
                         {
-                            "id": 7,
+                            "id": 1,
                             "people": [
-                                1
+                                0
                             ]
                         }
                     ]
                 },
                 {
-                    "id": 3,
-                    "type": "College",
+                    "class": "College",
                     "pools": [
                         {
-                            "id": 4,
+                            "id": 1,
                             "people": [
-                                1
+                                0
                             ]
                         }
                     ]
                 },
                 {
-                    "id": 4,
-                    "type": "Household",
+                    "class": "Household",
                     "pools": [
                         {
-                            "id": 5,
+                            "id": 1,
                             "people": [
-                                1
+                                0
                             ]
                         }
                     ]
                 },
                 {
-                    "id": 5,
-                    "type": "Workplace",
+                    "class": "Workplace",
                     "pools": [
                         {
-                            "id": 6,
+                            "id": 1,
                             "people": [
-                                1
+                                0
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "class": "Daycare",
+                    "pools": [
+                        {
+                            "id": 1,
+                            "people": [
+                                0
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "class": "PreSchool",
+                    "pools": [
+                        {
+                            "id": 1,
+                            "people": [
+                                0
                             ]
                         }
                     ]
@@ -87,14 +103,16 @@
     ],
     "persons": [
         {
-            "id": 1,
+            "id": 0,
             "age": 18,
-            "K12School": 2,
-            "College": 4,
-            "Household": 5,
-            "Workplace": 6,
-            "PrimaryCommunity": 3,
-            "SecondaryCommunity": 7
+            "K12School": 1,
+            "College": 1,
+            "Household": 1,
+            "Workplace": 1,
+            "PrimaryCommunity": 1,
+            "SecondaryCommunity": 1,
+            "Daycare": 1,
+            "PreSchool": 1
         }
     ]
 }

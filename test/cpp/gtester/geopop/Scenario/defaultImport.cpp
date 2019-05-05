@@ -8,7 +8,5 @@ using namespace std;
 
 namespace {
 
-    TEST(defaultImportScenarioTest, rundefaultImportScenarioTest) {
-        EXPECT_TRUE(true);
-    }
-}
+TEST(defaultImportScenarioTest, rundefaultImportScenarioTest) { EXPECT_TRUE(true); }
+} // namespace

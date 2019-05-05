@@ -31,13 +31,14 @@ GeoGridJSONWriter::GeoGridJSONWriter() : m_persons_found() {}
 
 void GeoGridJSONWriter::Write(GeoGrid& geoGrid, ostream& stream)
 {
+
         nlohmann::json root;
         nlohmann::json locations = nlohmann::json::array();
 
         for (const auto& location : geoGrid) {
                 nlohmann::json child;
                 child = WriteLocation(*location);
-                locations.push_back(move(child));
+                locations.push_back(child);
         }
 
         root["locations"] = locations;
@@ -47,7 +48,7 @@ void GeoGridJSONWriter::Write(GeoGrid& geoGrid, ostream& stream)
         for (const auto& person : m_persons_found) {
                 nlohmann::json child;
                 child = WritePerson(person);
-                persons.push_back(move(child));
+                persons.push_back(child);
         }
         root["persons"] = persons;
 
@@ -56,22 +57,17 @@ void GeoGridJSONWriter::Write(GeoGrid& geoGrid, ostream& stream)
         stream << root;
 }
 
-nlohmann::json GeoGridJSONWriter::WriteContactCenter(ContactPool* const& contactPool)
+nlohmann::json GeoGridJSONWriter::WriteContactPool(ContactPool* const& contactCenter)
 {
-        nlohmann::json pools = nlohmann::json::array();
-        for (auto pool : *contactPool) {
-                nlohmann::json child;
-                nlohmann::json people = nlohmann::json::array();
-                child["id"]           = contactPool->GetId();
-                //                for (auto person : pool{
-                auto person = pool;
+        nlohmann::json pool;
+        pool["id"] = contactCenter->GetId();
+        nlohmann::json people = nlohmann::json::array();
+        for (auto person : *contactCenter) {
                 m_persons_found.insert(person);
                 people.push_back(person->GetId());
-                //                }
-                child["people"] = people;
-                pools.push_back(move(child));
         }
-        return pools;
+        pool["people"] = people;
+        return pool;
 }
 
 nlohmann::json GeoGridJSONWriter::WriteCoordinate(const Coordinate& coordinate)
@@ -100,17 +96,21 @@ nlohmann::json GeoGridJSONWriter::WriteLocation(const Location& location)
                 location_root["commutes"] = commutes_root;
         }
 
-        nlohmann::json contactCenters = nlohmann::json::array();
+        nlohmann::json contactPools     = nlohmann::json::array();
+        nlohmann::json contactPoolClass;
+
         for (Id typ : IdList) {
-                for (const auto& c : location.CRefPools(typ)) {
-                        nlohmann::json child;
-                        child["type"] = ToString(typ);
-                        child["id"]   = c->GetId();
-                        child         = WriteContactCenter(c);
-                        contactCenters.push_back(move(child));
+            contactPoolClass["class"] = ToString(typ);
+            nlohmann::json pools = nlohmann::json::array();
+            for (const auto& c : location.CRefPools(typ)) {
+                        pools.push_back(WriteContactPool(c));
                 }
+            if (pools.size() != 0){
+                contactPoolClass["pools"] = pools;
+                contactPools.push_back(contactPoolClass);
+            }
         }
-        location_root["contactCenters"] = contactCenters;
+        location_root["contactPools"] = contactPools;
 
         return location_root;
 }
