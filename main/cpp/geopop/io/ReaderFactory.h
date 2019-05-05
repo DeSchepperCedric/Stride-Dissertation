@@ -19,6 +19,7 @@
 #include "HouseholdReader.h"
 #include "LocationsReader.h"
 #include "MajorCitiesReader.h"
+#include "WorkplaceReader.h"
 
 #include <istream>
 #include <memory>
@@ -66,6 +67,12 @@ public:
 
         /// Create a MajorCitiesReader based on the absolute filesystem path the input file.
         static std::shared_ptr<MajorCitiesReader> CreateMajorCitiesReader(const filesys::path& path);
+
+        /// Create a WorkplaceReader based on the filename relative to the data directory.
+        static std::shared_ptr<WorkplaceReader> CreateWorkplaceReader(const std::string& filename);
+
+        /// Create a WorkplaceReader based on the absolute filesystem path the input file.
+        static std::shared_ptr<WorkplaceReader> CreateWorkplaceReader(const filesys::path& path);
 
 private:
         /// Create an istream based on the filesystem path.

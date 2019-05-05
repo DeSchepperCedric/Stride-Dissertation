@@ -29,6 +29,18 @@ namespace geopop {
 
 class GeoGrid;
 
+struct WorkplaceType
+{
+        /// Minimum size of Workplace type.
+        int size_min;
+
+        /// Maximum size of Workplace type.
+        int size_max;
+
+        /// Ratio of Workplace type.
+        double ratio;
+};
+
 /**
  * Configuration data mostly for generating a population, but also for computing
  * the required number of schools, workplaces, communities etc. for that population.
@@ -102,6 +114,18 @@ public:
 
         std::map<unsigned int, RefHH> refHouseHolds;
 
+
+        // -----------------------------------------------------------------------------------------
+        // The reference Workplace types used to generate/populate workplaces
+        // -----------------------------------------------------------------------------------------
+        struct
+        {
+                /// Average number of persons in a workplace.
+                unsigned int average_workplace_size = 0U;
+
+                /// Ratio per workplace type
+                std::vector<double> ratios;
+        } refWP;
 
         // -----------------------------------------------------------------------------------------
         // These are numbers derived from the reference households, the target size of the generated

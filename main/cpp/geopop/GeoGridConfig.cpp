@@ -19,6 +19,7 @@
 #include "contact/ContactType.h"
 #include "geopop/io/HouseholdReader.h"
 #include "geopop/io/ReaderFactory.h"
+#include "geopop/io/WorkplaceReader.h"
 #include "util/StringUtils.h"
 
 #include <boost/property_tree/ptree.hpp>
@@ -52,6 +53,19 @@ void GeoGridConfig::SetData(const ptree& configPt)
 //        for (auto it = array.begin(); it != array.end(); it++) {
 //                // it->second.get_child("") is now a ptree from the array
 //        }
+        std::string workplacesFileName = configPt.get<string>("workplace_file", "");
+
+        //----------------------------------------------------------------
+        // Set workplace size distribution values when file present.
+        //----------------------------------------------------------------
+        if (!workplacesFileName.empty()) {
+                std::cout << "READING" <<std::endl;
+                auto workplaceReader = ReaderFactory::CreateWorkplaceReader(workplacesFileName);
+                workplaceReader->SetReferenceWorkplaces(refWP.average_workplace_size, refWP.ratios);
+        }
+        else{
+                std::cout << "NOT READING" <<std::endl;
+        }
 
         people[Id::Daycare]            = configPt.get<unsigned int>("people_per_Daycare", 18U);
         people[Id::PreSchool]          = configPt.get<unsigned int>("people_per_PreSchool", 120U);

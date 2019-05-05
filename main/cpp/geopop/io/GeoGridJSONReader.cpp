@@ -178,11 +178,11 @@ Person* GeoGridJSONReader::ParsePerson(nlohmann::json& person)
 
 nlohmann::json GeoGridJSONReader::ParseArray(nlohmann::json& node)
 {
-    if (node.type() == nlohmann::json::value_t::string) {
-        return nlohmann::json::array();
-    } else {
-        return node;
-    }
+        if (node.type() == nlohmann::json::value_t::string) {
+                return nlohmann::json::array();
+        } else {
+                return node;
+        }
 }
 
 } // namespace geopop

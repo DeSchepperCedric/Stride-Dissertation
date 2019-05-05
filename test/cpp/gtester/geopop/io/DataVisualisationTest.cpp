@@ -8,12 +8,8 @@ using namespace std;
 
 namespace {
 
-    TEST(DataVisualisationTest, readerTest){
-        EXPECT_TRUE(true);
-    }
+TEST(DataVisualisationTest, readerTest) { EXPECT_TRUE(true); }
 
-    TEST(DataVisualisationTest, writerTest){
-        EXPECT_TRUE(true);
-    }
+TEST(DataVisualisationTest, writerTest) { EXPECT_TRUE(true); }
 
-}
+} // namespace
