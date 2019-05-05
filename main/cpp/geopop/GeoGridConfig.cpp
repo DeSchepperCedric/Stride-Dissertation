@@ -59,12 +59,12 @@ void GeoGridConfig::SetData(const ptree& configPt)
         // Set workplace size distribution values when file present.
         //----------------------------------------------------------------
         if (!workplacesFileName.empty()) {
-                std::cout << "READING" <<std::endl;
+//                std::cout << "READING" <<std::endl;
                 auto workplaceReader = ReaderFactory::CreateWorkplaceReader(workplacesFileName);
                 workplaceReader->SetReferenceWorkplaces(refWP.average_workplace_size, refWP.ratios);
         }
         else{
-                std::cout << "NOT READING" <<std::endl;
+//                std::cout << "NOT READING" <<std::endl;
         }
 
         people[Id::Daycare]            = configPt.get<unsigned int>("people_per_Daycare", 18U);
