@@ -28,7 +28,7 @@ namespace geopop {
 using namespace std;
 using namespace stride;
 using namespace stride::ContactType;
-using namespace util;
+using namespace stride::util;
 using namespace H5;
 
 const unsigned int RANK = 1;

@@ -20,7 +20,6 @@
 #include "util/Exception.h"
 
 #include <memory>
-#include <sstream>
 
 namespace geopop {
 
@@ -66,7 +65,8 @@ void GeoGridHDF5Reader::Read()
         auto& geoGrid = m_population->RefGeoGrid();
         auto people = file.openDataSet("persons");
 
-        PERSON person_data[people.getStorageSize()];
+        const int person_dataset_size = people.getStorageSize();
+        PERSON person_data[person_dataset_size];
         people.read(&person_data, person_type);
         for (auto prsn : person_data) {
                 auto person               = ParsePerson(prsn);
@@ -78,7 +78,7 @@ void GeoGridHDF5Reader::Read()
         unsigned int size;
         locations_size.read(locations_size.getDataType(), &size);
         const string name = "location";
-        for (auto i = 1; i <= size; i++) {
+        for (unsigned int i = 1; i <= size; i++) {
                 string location_name = name + to_string(i);
                 shared_ptr<Location> loc;
                 auto location = locations.openGroup(location_name);
@@ -89,6 +89,58 @@ void GeoGridHDF5Reader::Read()
         AddCommutes(geoGrid);
         m_commutes.clear();
         m_people.clear();
+}
+
+void GeoGridHDF5Reader::ParseContactPool(H5::DataSet& contactPool, shared_ptr<Location> result)
+{
+        Attribute attr_id     = contactPool.openAttribute("id");
+        Attribute attr_size   = contactPool.openAttribute("size");
+        Attribute attr_type   = contactPool.openAttribute("type");
+        unsigned int  id;
+        unsigned int  size;
+        string        type;
+        attr_id.read(attr_id.getDataType(), &id);
+        attr_size.read(attr_size.getDataType(), &size);
+        attr_type.read(attr_type.getDataType(), &type);
+
+        ContactType::Id typeId;
+        if (type == ToString(Id::K12School)) {
+                typeId = Id::K12School;
+        } else if (type == ToString(Id::College)) {
+                typeId = Id::College;
+        } else if (type == ToString(Id::Household)) {
+                typeId = Id::Household;
+        } else if (type == ToString(Id::PrimaryCommunity)) {
+                typeId = Id::PrimaryCommunity;
+        } else if (type == ToString(Id::SecondaryCommunity)) {
+                typeId = Id::SecondaryCommunity;
+        } else if (type == ToString(Id::Workplace)) {
+                typeId = Id::Workplace;
+        } else if (type == ToString(Id::Daycare)) {
+                typeId = Id::Daycare;
+        } else if (type == ToString(Id::PreSchool)) {
+                typeId = Id::PreSchool;
+        } else {
+                throw ("No such ContactPool type: " + type);
+        }
+
+        auto cp = m_population->RefPoolSys().CreateContactPool(typeId);
+
+        const int pool_dataset_size = contactPool.getStorageSize();
+        POOL pool_data[pool_dataset_size];
+        contactPool.read(&pool_data, pool_type);
+        for (auto pool : pool_data) {
+              unsigned int people_id = pool.people;
+              try {
+                      const auto person = m_people.at(people_id);
+                      cp->AddMember(person);
+                      person->SetPoolId(typeId, result->GetID());
+              } catch (out_of_range& e) {
+                      throw ("No such person with id: " + to_string(people_id));
+              }
+        }
+
+        result->RegisterPool(cp, typeId);
 }
 
 shared_ptr<Location> GeoGridHDF5Reader::ParseLocation(Group& location)
@@ -110,6 +162,24 @@ shared_ptr<Location> GeoGridHDF5Reader::ParseLocation(Group& location)
         attr_coord.read(attr_id.getDataType(), &coord);
         Coordinate c = {boost::lexical_cast<double>(coord[0]), boost::lexical_cast<double>(coord[1])};
         auto result = make_shared<Location>(id, prov, c, name, pop);
+
+        auto contactPools = location.openGroup("contactPools");
+        Attribute pool_size = contactPools.openAttribute("size");
+        unsigned int size;
+        pool_size.read(pool_size.getDataType(), &size);
+        const string pool_name = "Pool";
+        for (unsigned int i = 1; i <= size; i++) {
+                auto pool = contactPools.openDataSet((name + to_string(i)));
+                ParseContactPool(pool, result);
+        }
+
+        auto commutes = location.openDataSet("commutes");
+        const int commutes_dataset_size = commutes.getStorageSize();;
+        COMMUTE commutes_data[commutes_dataset_size];
+        commutes.read(&commutes_data, commute_type);
+        for (auto cmmt : commutes_data) {
+                m_commutes.emplace_back(id, cmmt.to, cmmt.proportion);
+        }
 
         return result;
 }

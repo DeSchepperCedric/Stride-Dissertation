@@ -48,16 +48,15 @@ public:
         void Read() override;
 
 private:
-  /*
         /// Create a ContactCenter based on the information stored in the provided ...
-        std::shared_ptr<ContactCenter> ParseContactCenter(H5::& contactCenter);
+        ///std::shared_ptr<ContactCenter> ParseContactCenter(H5::& contactCenter);
 
         /// Create a ContactCenter based on the information stored in the provided ...
-        stride::ContactPool* ParseContactPool(H5::& contactPool, stride::ContactType::Id typeId);
+        void ParseContactPool(H5::DataSet& contactPool, std::shared_ptr<Location> result);
 
         /// Create a Coordinate based on the information stored in the provided ...
-        Coordinate ParseCoordinate(H5::Attribute& coordinate);
-*/
+        //Coordinate ParseCoordinate(H5::Attribute& coordinate);
+
         /// Create a Location based on the information stored in the provided ...
         std::shared_ptr<Location> ParseLocation(H5::Group& location);
 
