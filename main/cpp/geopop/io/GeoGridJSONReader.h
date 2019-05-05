@@ -47,12 +47,13 @@ public:
         void Read() override;
 
 private:
+        /// Parse all the contactpools of a certain class (type)
         void ParseContactPoolsClass(nlohmann::json& contactCenter, std::shared_ptr<Location> loc);
 
         /// Create a ContactCenter based on the information stored in the provided json structure
         std::shared_ptr<Location> ParseLocation(nlohmann::json& location);
 
-        /// Create a ContactCenter based on the information stored in the provided json structure.
+        /// Create a ContactPool based on the information stored in the provided json structure.
         void ParseContactPool(std::shared_ptr<Location> loc, nlohmann::json& contactPool,
                               stride::ContactType::Id typeId);
 

@@ -42,17 +42,6 @@ void Populator<stride::ContactType::Id::Workplace>::Apply(GeoGrid& geoGrid, cons
         vector<ContactPool*> nearbyWp{};
         vector<Location*>    commuteLocations{};
 
-        const auto participCollege      = geoGridConfig.param.participation_college;
-        const auto participWorkplace    = geoGridConfig.param.particpation_workplace;
-        const auto popCollege           = geoGridConfig.info.popcount_college;
-        const auto popWorkplace         = geoGridConfig.info.popcount_workplace;
-        const auto fracCollegeCommute   = geoGridConfig.param.fraction_college_commuters;
-        const auto fracWorkplaceCommute = geoGridConfig.param.fraction_workplace_commuters;
-
-        double fracCommuteStudents = 0.0;
-        if (static_cast<bool>(fracWorkplaceCommute) && popWorkplace) {
-                fracCommuteStudents = (popCollege * fracCollegeCommute) / (popWorkplace * fracWorkplaceCommute);
-        }
 
         // --------------------------------------------------------------------------------
         // For every location, if populated ...
@@ -60,6 +49,17 @@ void Populator<stride::ContactType::Id::Workplace>::Apply(GeoGrid& geoGrid, cons
         for (const auto& loc : geoGrid) {
                 if (loc->GetPopCount() == 0) {
                         continue;
+                }
+                const auto participCollege      = geoGridConfig.params.at(loc->GetProvince()).participation_college;
+                const auto participWorkplace    = geoGridConfig.params.at(loc->GetProvince()).participation_workplace;
+                const auto popCollege           = geoGridConfig.regionsInfo.at(loc->GetProvince()).popcount_college;
+                const auto popWorkplace         = geoGridConfig.regionsInfo.at(loc->GetProvince()).popcount_workplace;
+                const auto fracCollegeCommute   = geoGridConfig.params.at(loc->GetProvince()).fraction_college_commuters;
+                const auto fracWorkplaceCommute = geoGridConfig.params.at(loc->GetProvince()).fraction_workplace_commuters;
+
+                double fracCommuteStudents = 0.0;
+                if (static_cast<bool>(fracWorkplaceCommute) && popWorkplace) {
+                        fracCommuteStudents = (popCollege * fracCollegeCommute) / (popWorkplace * fracWorkplaceCommute);
                 }
 
                 // --------------------------------------------------------------------------------

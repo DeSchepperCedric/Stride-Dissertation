@@ -43,7 +43,7 @@ class Location
 public:
         /// Parametrized constructor with population count.
         Location(unsigned int id, unsigned int province, Coordinate coordinate = Coordinate(0.0, 0.0),
-                 std::string name = "", unsigned int popCount = 0U);
+                 std::string name = "", unsigned int popCount = 0U, bool major = false);
 
         /// Perform a full comparison with the other location.
         bool operator==(const Location& other) const;
@@ -80,8 +80,11 @@ public:
         /// Gets the province.
         unsigned int GetProvince() const { return m_province; }
 
-        /// Get Location's population fraction (of the total populaion count).
+        /// Get Location's population fraction (of the total population count).
         double GetPopFraction() const;
+
+        /// Check if this is a major city
+        bool IsMajor() const { return m_major_city; }
 
         /// Sets the Coordinate of this Location.
         void SetCoordinate(const Coordinate& coordinate) { m_coordinate = coordinate; }
@@ -91,6 +94,10 @@ public:
 
         /// Set Location's population fraction (of the total populaion count).
         void SetPopFraction(double relativePopulation);
+
+        /// Sets the Coordinate of this Location.
+        void SetMajor(const bool major) { m_major_city = major; }
+
 
 public:
         /// Access through const reference to ContactPools of type 'id'.
@@ -155,6 +162,7 @@ private:
         unsigned int m_pop_count;    ///< Population count (number of individuals) at this Location.
         double       m_pop_fraction; ///< Fraction of whole population at this Location.
         unsigned int m_province;     ///< Province id.
+        bool         m_major_city;    ///< whether this location is a major city (centrumstad)
 
         /// Incomming commutes stored as pair of Location and fraction of population at that Location.
         std::vector<std::pair<Location*, double>> m_inCommutes;

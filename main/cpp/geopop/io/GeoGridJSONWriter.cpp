@@ -38,7 +38,7 @@ void GeoGridJSONWriter::Write(GeoGrid& geoGrid, ostream& stream)
         for (const auto& location : geoGrid) {
                 nlohmann::json child;
                 child = WriteLocation(*location);
-                locations.push_back(move(child));
+                locations.push_back(child);
         }
 
         root["locations"] = locations;
@@ -48,7 +48,7 @@ void GeoGridJSONWriter::Write(GeoGrid& geoGrid, ostream& stream)
         for (const auto& person : m_persons_found) {
                 nlohmann::json child;
                 child = WritePerson(person);
-                persons.push_back(move(child));
+                persons.push_back(child);
         }
         root["persons"] = persons;
 
@@ -103,7 +103,7 @@ nlohmann::json GeoGridJSONWriter::WriteLocation(const Location& location)
             contactPoolClass["class"] = ToString(typ);
             nlohmann::json pools = nlohmann::json::array();
             for (const auto& c : location.CRefPools(typ)) {
-                        pools.push_back(move(WriteContactPool(c)));
+                        pools.push_back(WriteContactPool(c));
                 }
             if (pools.size() != 0){
                 contactPoolClass["pools"] = pools;

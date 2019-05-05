@@ -15,6 +15,7 @@
 
 #include "ReaderFactory.h"
 
+#include "MajorCitiesCSVReader.h"
 #include "CommutesCSVReader.h"
 #include "HouseholdCSVReader.h"
 #include "HouseholdJSONReader.h"
@@ -49,6 +50,16 @@ std::shared_ptr<CommutesReader> ReaderFactory::CreateCommutesReader(const std::s
 shared_ptr<CommutesReader> ReaderFactory::CreateCommutesReader(const filesys::path& path)
 {
         return make_shared<CommutesCSVReader>(OpenFile(path));
+}
+
+std::shared_ptr<MajorCitiesReader> ReaderFactory::CreateMajorCitiesReader(const std::string& filename)
+{
+    return CreateMajorCitiesReader(FileSys::GetDataDir() / filesys::path(filename));
+}
+
+shared_ptr<MajorCitiesReader> ReaderFactory::CreateMajorCitiesReader(const filesys::path& path)
+{
+    return make_shared<MajorCitiesCSVReader>(OpenFile(path));
 }
 
 std::shared_ptr<HouseholdReader> ReaderFactory::CreateHouseholdReader(const std::string& filename)

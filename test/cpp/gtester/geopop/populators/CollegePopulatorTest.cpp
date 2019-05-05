@@ -42,6 +42,11 @@ public:
             : m_rn_man(RnInfo()), m_college_populator(m_rn_man), m_gg_config(), m_pop(Population::Create()),
               m_geo_grid(m_pop->RefGeoGrid()), m_college_generator(m_rn_man)
         {
+                for (unsigned int i = 0; i < 5; ++i){
+                        GeoGridConfig::Param param;
+                        m_gg_config.params[i] = param;
+                }
+
         }
 
 protected:
@@ -65,8 +70,8 @@ TEST_F(CollegePopulatorTest, NoPopulation)
 TEST_F(CollegePopulatorTest, NoStudents)
 {
         MakeGeoGrid(m_gg_config, 3, 100, 12, 2, 3, 33, 3, m_pop.get());
-        m_gg_config.param.fraction_college_commuters = 0;
-        m_gg_config.param.participation_college      = 0;
+        m_gg_config.params.at(1).fraction_college_commuters = 0;
+        m_gg_config.params.at(1).participation_college      = 0;
 
         // Brasschaat and Schoten are close to each other. There is no commuting, but they will
         // receive students from each other. Kortrijk will only receive students from Kortrijk.
@@ -100,8 +105,8 @@ TEST_F(CollegePopulatorTest, NoStudents)
 TEST_F(CollegePopulatorTest, NotCommuting)
 {
         MakeGeoGrid(m_gg_config, 3, 100, 12, 2, 3, 33, 3, m_pop.get());
-        m_gg_config.param.fraction_college_commuters = 0;
-        m_gg_config.param.participation_college      = 1;
+        m_gg_config.params.at(1).fraction_college_commuters = 0;
+        m_gg_config.params.at(1).participation_college      = 1;
 
         // Brasschaat and Schoten are close to each other. There is no commuting, but they will
         // receive students from each other. Kortrijk will only receive students from Kortrijk.
@@ -203,8 +208,8 @@ TEST_F(CollegePopulatorTest, NotCommuting)
 TEST_F(CollegePopulatorTest, OnlyCommuting)
 {
         MakeGeoGrid(m_gg_config, 2, 100, 12, 2, 3, 50, 3, m_pop.get());
-        m_gg_config.param.fraction_college_commuters = 1;
-        m_gg_config.param.participation_college      = 1;
+        m_gg_config.params.at(1).fraction_college_commuters = 1;
+        m_gg_config.params.at(1).participation_college      = 1;
 
         auto schoten = *(m_geo_grid.begin());
         schoten->SetCoordinate(Coordinate(51.2497532, 4.4977063));
@@ -250,8 +255,8 @@ TEST_F(CollegePopulatorTest, OnlyCommuting)
 TEST_F(CollegePopulatorTest, OnlyCommutingButNoCommutingAvaiable)
 {
         MakeGeoGrid(m_gg_config, 3, 100, 12, 2, 3, 33, 3, m_pop.get());
-        m_gg_config.param.fraction_college_commuters = 1;
-        m_gg_config.param.participation_college      = 1;
+        m_gg_config.params.at(1).fraction_college_commuters = 1;
+        m_gg_config.params.at(1).participation_college      = 1;
 
         auto brasschaat = *m_geo_grid.begin();
         brasschaat->SetCoordinate(Coordinate(51.29227, 4.49419));
