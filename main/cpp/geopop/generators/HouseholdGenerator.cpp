@@ -39,7 +39,7 @@ void Generator<stride::ContactType::Id::Household>::Apply(GeoGrid& geoGrid, cons
         auto households = 0U;
         for (const auto & it : ggConfig.regionsInfo){
                 households += it.second.count_households;
-                households += it.second.major_count_households;
+//                households += it.second.major_count_households;
         }
 
         for (auto i = 0U; i < households; i++) {

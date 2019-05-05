@@ -64,6 +64,7 @@ void GeoGridConfig::SetData(const ptree& configPt)
         //TODO why no pools per preschool/ alternative: for all, but setters with default 1?
         pools[Id::K12School]           = configPt.get<unsigned int>("pools_per_K12School", 25U);
         pools[Id::College]             = configPt.get<unsigned int>("pools_per_College", 20U);
+
         auto regionArray = configPt.get_child("regions");
         for (auto it = regionArray.begin(); it != regionArray.end(); ++it){
                 Param param;
@@ -80,19 +81,17 @@ void GeoGridConfig::SetData(const ptree& configPt)
                 params[regionId] = param;
 
                 RefHH refHH;
+                Info info;
+
                 const auto householdsReader = ReaderFactory::CreateHouseholdReader(regionPt.get<string>("household_file"));
+                householdsReader->SetReferenceHouseholds(refHH.person_count, refHH.ages);
+                info = ParseHouseholdInfo(refHH.person_count, refHH.ages, param);
+
                 const auto major_household_file = regionPt.get<string>("major_household_file", "");
                 if (!major_household_file.empty()) {
                         const auto majorHouseholdsReader = ReaderFactory::CreateHouseholdReader(major_household_file);
                         majorHouseholdsReader->SetReferenceHouseholds(refHH.major_person_count, refHH.major_ages);
-                }
-                householdsReader->SetReferenceHouseholds(refHH.person_count, refHH.ages);
-                refHouseHolds[regionId] = refHH;
 
-
-                Info info;
-                info = ParseHouseholdInfo(refHH.person_count, refHH.ages, param);
-                if (!major_household_file.empty()) {
                         //Add the major info to the info struct
                         Info major_info = ParseHouseholdInfo(refHH.major_person_count, refHH.major_ages, param);
 
@@ -102,6 +101,7 @@ void GeoGridConfig::SetData(const ptree& configPt)
                         info.major_popcount_college = major_info.popcount_college;
                         info.major_popcount_workplace = major_info.popcount_workplace;
                         info.major_count_households = major_info.count_households;
+
                 } else {
                         info.major_popcount_daycare = 0;
                         info.major_popcount_preschool = 0;
@@ -109,8 +109,10 @@ void GeoGridConfig::SetData(const ptree& configPt)
                         info.major_popcount_college = 0;
                         info.major_popcount_workplace = 0;
                         info.major_count_households = 0;
+                        refHH.major_person_count = 0;
                 }
 
+                refHouseHolds[regionId] = refHH;
                 regionsInfo[regionId] = info;
 
         }

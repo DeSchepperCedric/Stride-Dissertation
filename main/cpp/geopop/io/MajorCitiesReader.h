@@ -37,7 +37,7 @@ namespace geopop {
         /// Default destructor needs to be virtual.
         virtual ~MajorCitiesReader() = default;
 
-        /// Add commutes onfo to the GeoGrid.
+        /// Add major city info to the GeoGrid.
         virtual void FillGeoGrid(GeoGrid&) const = 0;
 
     protected:

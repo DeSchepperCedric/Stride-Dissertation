@@ -35,7 +35,7 @@ void Generator<stride::ContactType::Id::Workplace>::Apply(GeoGrid& geoGrid, cons
         auto EmployeeCount = 0U;
         for (const auto & it : ggConfig.regionsInfo){
                 EmployeeCount += it.second.popcount_workplace;
-                EmployeeCount += it.second.major_popcount_workplace;
+//                EmployeeCount += it.second.major_popcount_workplace;
         }
         const auto WorkplacesCount =
             static_cast<unsigned int>(ceil(EmployeeCount / static_cast<double>(ggConfig.people[Id::Workplace])));
