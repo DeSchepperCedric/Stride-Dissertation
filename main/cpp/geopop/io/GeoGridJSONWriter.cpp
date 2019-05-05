@@ -27,9 +27,9 @@ using namespace std;
 using namespace stride;
 using namespace stride::ContactType;
 
-GeoGridJSONWriter::GeoGridJSONWriter() : m_persons_found() {}
+GeoGridJSONWriter::GeoGridJSONWriter(std::ostream& stream) : GeoGridStreamWriter(stream), m_persons_found() {}
 
-void GeoGridJSONWriter::Write(GeoGrid& geoGrid, ostream& stream)
+void GeoGridJSONWriter::Write(GeoGrid& geoGrid)
 {
 
         nlohmann::json root;
@@ -54,7 +54,7 @@ void GeoGridJSONWriter::Write(GeoGrid& geoGrid, ostream& stream)
 
         m_persons_found.clear();
 
-        stream << root;
+        StreamRef() << root;
 }
 
 nlohmann::json GeoGridJSONWriter::WriteContactPool(ContactPool* const& contactCenter)

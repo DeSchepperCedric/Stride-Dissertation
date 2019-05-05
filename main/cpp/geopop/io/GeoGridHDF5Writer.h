@@ -15,7 +15,7 @@
 
 #pragma once
 
-#include "GeoGridWriter.h"
+#include "GeoGridFileWriter.h"
 #include "geopop/Location.h"
 
 #include "H5Cpp.h"
@@ -34,14 +34,14 @@ class ContactCenter;
 /**
  * Writes a GeoGrid to a HDF5 file.
  */
-class GeoGridHDF5Writer : public GeoGridWriter
+class GeoGridHDF5Writer : public GeoGridFileWriter
 {
 public:
         /// Construct the GeoGridHDF5Writer.
-        GeoGridHDF5Writer();
+        GeoGridHDF5Writer(std::string& fileName);
 
         /// Write the provided GeoGrid to the proved ostream in HDF5 format.
-        void Write(GeoGrid& geoGrid, std::ostream& stream) override;
+        void Write(GeoGrid& geoGrid) override;
 
 private:
         /// Create a HDF5 containing all info needed to reconstruct a ContactPool.

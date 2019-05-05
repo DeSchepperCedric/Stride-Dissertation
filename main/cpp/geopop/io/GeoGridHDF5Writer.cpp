@@ -33,8 +33,8 @@ using namespace H5;
 
 const unsigned int RANK = 1;
 
-GeoGridHDF5Writer::GeoGridHDF5Writer()
-    : m_persons_found(), strdatatype(H5::PredType::C_S1, 256), person_type(sizeof(PERSON)), commute_type(sizeof(COMMUTE)), pool_type(sizeof(POOL))
+GeoGridHDF5Writer::GeoGridHDF5Writer(string& fileName)
+    : GeoGridFileWriter(fileName), m_persons_found(), strdatatype(H5::PredType::C_S1, 256), person_type(sizeof(PERSON)), commute_type(sizeof(COMMUTE)), pool_type(sizeof(POOL))
 {
         person_type.insertMember("Id", HOFFSET(PERSON, id), PredType::NATIVE_UINT);
         person_type.insertMember("Age", HOFFSET(PERSON, age), PredType::NATIVE_FLOAT);
@@ -53,11 +53,9 @@ GeoGridHDF5Writer::GeoGridHDF5Writer()
         pool_type.insertMember("People", HOFFSET(POOL, people), PredType::NATIVE_UINT);
 }
 
-void GeoGridHDF5Writer::Write(GeoGrid& geoGrid, std::ostream& stream)
+void GeoGridHDF5Writer::Write(GeoGrid& geoGrid)
 {
-        //ostringstream ss;
-        //ss << stream.rdbuf();
-        H5File file("test", H5F_ACC_TRUNC);
+        H5File file(GetFileName(), H5F_ACC_TRUNC);
 
         Group locations = file.createGroup("/locations");
         unsigned int count = 0;

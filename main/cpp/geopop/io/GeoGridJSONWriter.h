@@ -15,7 +15,7 @@
 
 #pragma once
 
-#include "GeoGridWriter.h"
+#include "GeoGridStreamWriter.h"
 #include "contact/ContactPool.h"
 #include "geopop/Location.h"
 
@@ -34,14 +34,14 @@ class ContactCenter;
 /**
  * Writes a GeoGrid to a JSON file.
  */
-class GeoGridJSONWriter : public GeoGridWriter
+class GeoGridJSONWriter : public GeoGridStreamWriter
 {
 public:
         /// Construct the GeoGridJSONWriter.
-        GeoGridJSONWriter();
+        GeoGridJSONWriter(std::ostream& stream);
 
         /// Write the provided GeoGrid to the proved ostream in JSON format.
-        void Write(GeoGrid& geoGrid, std::ostream& stream) override;
+        void Write(GeoGrid& geoGrid) override;
 
 private:
         /// Create a JSON Structure containing all info needed to reconstruct a ContactCenter.
