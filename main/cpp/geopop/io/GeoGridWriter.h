@@ -33,7 +33,7 @@ public:
         virtual ~GeoGridWriter() = default;
 
         /// Write the GeoGrid to ostream.
-        virtual void Write(GeoGrid& geoGrid, std::ostream& stream) = 0;
+        virtual void Write(GeoGrid& geoGrid) = 0;
 };
 
 } // namespace geopop

@@ -15,25 +15,34 @@
 
 #pragma once
 
-#include <memory>
+#include "GeoGridWriter.h"
+
 #include <string>
-#include <fstream>
+
+namespace stride {
+class ContactPool;
+class Person;
+} // namespace stride
 
 namespace geopop {
 
-class GeoGridFileWriter;
-class GeoGridStreamWriter;
-
-/**
- * Factory creates the correct implementation of a GeoGridWriter based on the filename extension.
- */
-class GeoGridWriterFactory
+class GeoGridFileWriter : public GeoGridWriter
 {
 public:
-        /// Create a GeoGridWriter based on the provided extension in the filename.
-        static std::shared_ptr<GeoGridStreamWriter> CreateGeoGridStreamWriter(const std::string& filename, std::ofstream& outputFileStream);
+        ///
+        explicit GeoGridFileWriter(const std::string& fileName) : m_file_name(fileName) {};
 
-        static std::shared_ptr<GeoGridFileWriter> CreateGeoGridFileWriter(const std::string& filename, std::string& outputFileName);
+        ///
+        virtual ~GeoGridFileWriter() = default;
+
+        ///
+        void Write(GeoGrid& geoGrid) override = 0;
+
+        ///
+        std::string GetFileName() {return m_file_name;}
+
+private:
+        std::string m_file_name;
 };
 
 } // namespace geopop

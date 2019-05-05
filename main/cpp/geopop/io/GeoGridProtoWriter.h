@@ -15,7 +15,7 @@
 
 #pragma once
 
-#include "GeoGridWriter.h"
+#include "GeoGridStreamWriter.h"
 #include "geopop/Location.h"
 
 #include <set>
@@ -39,14 +39,14 @@ namespace geopop {
  * An implementation of the GeoGridWriter using Protocol Buffers
  * This class is used to write a GeoGrid to a Proto file
  */
-class GeoGridProtoWriter : public GeoGridWriter
+class GeoGridProtoWriter : public GeoGridStreamWriter
 {
 public:
         /// Construct the GeoGridProtoWriter.
-        GeoGridProtoWriter();
+        GeoGridProtoWriter(std::ostream& stream);
 
         /// Write the GeoGrid to the ostream in Protobuf format.
-        void Write(GeoGrid& geoGrid, std::ostream& stream) override;
+        void Write(GeoGrid& geoGrid) override;
 
 private:
         /// Create a ProtoBuf ContactPools structure.
