@@ -59,9 +59,9 @@ void sortJSON(nlohmann::json& json)
 
 bool compareGeoGrid(GeoGrid& geoGrid, const string& testname)
 {
-        GeoGridJSONWriter writer;
         stringstream      ss;
-        writer.Write(geoGrid, ss);
+        GeoGridJSONWriter writer(ss);
+        writer.Write(geoGrid);
         nlohmann::json result;
         ss >> result;
         sortJSON(result);
