@@ -33,19 +33,23 @@ void Generator<stride::ContactType::Id::Daycare>::Apply(GeoGrid& geoGrid, const 
         //    to the relative population w.r.t the total population.
 
         for (const auto& it : ggConfig.regionsInfo) {
-                const auto pupilCount = it.second.popcount_daycare;
-                const auto schoolCount =
-                    static_cast<unsigned int>(ceil(pupilCount / static_cast<double>(ggConfig.people[Id::Daycare])));
-
                 vector<double> weights;
+                auto pupilCount = 0U;
                 for (const auto& loc : geoGrid) {
                         if (loc->GetProvince() == it.first) {
+                                if (loc->IsMajor()){
+                                        pupilCount += static_cast<unsigned int>(it.second.major_fraction_daycare * loc->GetPopCount());
+                                } else {
+                                        pupilCount += static_cast<unsigned int>(it.second.fraction_daycare * loc->GetPopCount());
+                                }
                                 weights.push_back(loc->GetPopFraction());
                         } else {
                                 // To make sure the index in weights corresponds to the correct location in the geogrid
                                 weights.push_back(0.0);
                         }
                 }
+                const auto schoolCount =
+                        static_cast<unsigned int>(ceil(pupilCount / static_cast<double>(ggConfig.people[Id::Daycare])));
 
                 if (weights.empty()) {
                         // trng can't handle empty vectors

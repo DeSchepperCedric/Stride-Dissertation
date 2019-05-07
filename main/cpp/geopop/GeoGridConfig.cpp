@@ -34,7 +34,7 @@ using namespace stride::AgeBrackets;
 using namespace stride::ContactType;
 using stride::util::intToDottedString;
 
-GeoGridConfig::GeoGridConfig() : params{}, refHouseHolds{}, regionsInfo{} {}
+GeoGridConfig::GeoGridConfig() : params{}, refHouseHolds{}, refWP{}, regionsInfo{} {}
 
 GeoGridConfig::GeoGridConfig(const ptree& configPt) : GeoGridConfig()
 {
@@ -107,19 +107,19 @@ void GeoGridConfig::SetData(const ptree& configPt)
                         // Add the major info to the info struct
                         Info major_info = ParseHouseholdInfo(refHH.major_person_count, refHH.major_ages, param);
 
-                        info.major_popcount_daycare   = major_info.popcount_daycare;
-                        info.major_popcount_preschool = major_info.popcount_preschool;
-                        info.major_popcount_k12school = major_info.popcount_k12school;
-                        info.major_popcount_college   = major_info.popcount_college;
-                        info.major_popcount_workplace = major_info.popcount_workplace;
+                        info.major_fraction_daycare   = major_info.fraction_daycare;
+                        info.major_fraction_preschool = major_info.fraction_preschool;
+                        info.major_fraction_k12school = major_info.fraction_k12school;
+                        info.major_fraction_college   = major_info.fraction_college;
+                        info.major_fraction_workplace = major_info.fraction_workplace;
                         info.major_count_households   = major_info.count_households;
 
                 } else {
-                        info.major_popcount_daycare   = 0;
-                        info.major_popcount_preschool = 0;
-                        info.major_popcount_k12school = 0;
-                        info.major_popcount_college   = 0;
-                        info.major_popcount_workplace = 0;
+                        info.major_fraction_daycare   = 0;
+                        info.major_fraction_preschool = 0;
+                        info.major_fraction_k12school = 0;
+                        info.major_fraction_college   = 0;
+                        info.major_fraction_workplace = 0;
                         info.major_count_households   = 0;
                         refHH.major_person_count      = 0;
                 }
@@ -174,20 +174,19 @@ GeoGridConfig::Info GeoGridConfig::ParseHouseholdInfo(unsigned int              
         const auto fraction_college_age   = static_cast<double>(ref_college) / static_cast<double>(ref_p_count);
         const auto fraction_workplace_age = static_cast<double>(ref_workplace) / static_cast<double>(ref_p_count);
 
-        const auto age_count_daycare   = static_cast<unsigned int>(floor(popSize * fraction_daycare_age));
-        const auto age_count_preschool = static_cast<unsigned int>(floor(popSize * fraction_preschool_age));
-        const auto age_count_k12school = static_cast<unsigned int>(floor(popSize * fraction_k12school_age));
-        const auto age_count_college   = static_cast<unsigned int>(floor(popSize * fraction_college_age));
-        const auto age_count_workplace = static_cast<unsigned int>(floor(popSize * fraction_workplace_age));
+//        const auto age_count_daycare   = static_cast<unsigned int>(floor(popSize * fraction_daycare_age));
+//        const auto age_count_preschool = static_cast<unsigned int>(floor(popSize * fraction_preschool_age));
+//        const auto age_count_k12school = static_cast<unsigned int>(floor(popSize * fraction_k12school_age));
+//        const auto age_count_college   = static_cast<unsigned int>(floor(popSize * fraction_college_age));
+//        const auto age_count_workplace = static_cast<unsigned int>(floor(popSize * fraction_workplace_age));
 
         Info info;
 
-        info.popcount_daycare   = static_cast<unsigned int>(floor(param.participation_daycare * age_count_daycare));
-        info.popcount_preschool = static_cast<unsigned int>(floor(param.participation_preschool * age_count_preschool));
-        info.popcount_k12school = age_count_k12school;
-        info.popcount_college   = static_cast<unsigned int>(floor(param.participation_college * age_count_college));
-        info.popcount_workplace = static_cast<unsigned int>(
-            floor(param.participation_workplace * (age_count_workplace - info.popcount_college)));
+        info.fraction_daycare   = param.participation_daycare * fraction_daycare_age;
+        info.fraction_preschool = param.participation_preschool * fraction_preschool_age;
+        info.fraction_k12school = fraction_k12school_age;
+        info.fraction_college   = param.participation_college * fraction_college_age;
+        info.fraction_workplace = param.participation_workplace * (fraction_workplace_age - info.fraction_college);
         info.count_households = static_cast<unsigned int>(floor(static_cast<double>(popSize) / averageHhSize));
 
         return info;
@@ -210,17 +209,17 @@ ostream& operator<<(ostream& out, const GeoGridConfig& config)
                 out << "Calculated:"
                     << "\n";
                 out << setw(w)
-                    << "Daycare student count:" << intToDottedString(config.regionsInfo.at(it.first).popcount_daycare)
+                    << "Daycare student fraction:" << intToDottedString(config.regionsInfo.at(it.first).fraction_daycare)
                     << "\n";
-                out << setw(w) << "PreSchool student count:"
-                    << intToDottedString(config.regionsInfo.at(it.first).popcount_preschool) << "\n";
-                out << setw(w) << "K12School student count:"
-                    << intToDottedString(config.regionsInfo.at(it.first).popcount_k12school) << "\n";
+                out << setw(w) << "PreSchool student fraction:"
+                    << intToDottedString(config.regionsInfo.at(it.first).fraction_preschool) << "\n";
+                out << setw(w) << "K12School student fraction:"
+                    << intToDottedString(config.regionsInfo.at(it.first).fraction_k12school) << "\n";
                 out << setw(w)
-                    << "College student count:" << intToDottedString(config.regionsInfo.at(it.first).popcount_college)
+                    << "College student fraction:" << intToDottedString(config.regionsInfo.at(it.first).fraction_college)
                     << "\n";
                 out << setw(w) << "Workplace person count:"
-                    << intToDottedString(config.regionsInfo.at(it.first).popcount_workplace) << "\n";
+                    << intToDottedString(config.regionsInfo.at(it.first).fraction_workplace) << "\n";
                 out << endl;
         }
         return out;

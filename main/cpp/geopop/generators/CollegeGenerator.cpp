@@ -30,7 +30,16 @@ void Generator<stride::ContactType::Id::College>::Apply(GeoGrid& geoGrid, const 
         auto studentCount = 0U;
         // can't generate colleges per region, because of the TopK() parameter
         for (const auto& it : ggConfig.regionsInfo) {
-                studentCount += it.second.popcount_college;
+                for (const auto& loc : geoGrid) {
+                        if (loc->GetProvince() == it.first) {
+                                if (loc->IsMajor()){
+                                        studentCount += static_cast<unsigned int>(it.second.major_fraction_college * loc->GetPopCount());
+                                } else {
+                                        studentCount += static_cast<unsigned int>(it.second.fraction_college * loc->GetPopCount());
+                                }
+                        }
+
+                }
         }
         const auto collegeCount =
             static_cast<unsigned int>(ceil(studentCount / static_cast<double>(ggConfig.people[Id::College])));

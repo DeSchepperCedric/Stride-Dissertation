@@ -136,40 +136,40 @@ public:
         struct Info
         {
                 /// Numbers of individuals in Daycare.
-                unsigned int popcount_daycare;
+                double fraction_daycare;
 
                 /// Numbers of individuals in PreSchool.
-                unsigned int popcount_preschool;
+                double fraction_preschool;
 
                 /// Numbers of individuals in K12School.
-                unsigned int popcount_k12school;
+                double fraction_k12school;
 
                 /// Number of individuals in College.
-                unsigned int popcount_college;
+                double fraction_college;
 
                 /// Number of individuals in Workplace.
-                unsigned int popcount_workplace;
+                double fraction_workplace;
 
                 /// The number of households.
-                unsigned int count_households;
+                double count_households;
 
                 /// Numbers of individuals in Daycare.
-                unsigned int major_popcount_daycare;
+                double major_fraction_daycare;
 
                 /// Numbers of individuals in PreSchool.
-                unsigned int major_popcount_preschool;
+                double major_fraction_preschool;
 
                 /// Numbers of individuals in K12School.
-                unsigned int major_popcount_k12school;
+                double major_fraction_k12school;
 
                 /// Number of individuals in College.
-                unsigned int major_popcount_college;
+                double major_fraction_college;
 
                 /// Number of individuals in Workplace.
-                unsigned int major_popcount_workplace;
+                double major_fraction_workplace;
 
                 /// The number of households.
-                unsigned int major_count_households;
+                double major_count_households;
         };
 
         std::map<unsigned int, Info> regionsInfo;
