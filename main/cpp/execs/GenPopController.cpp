@@ -21,7 +21,8 @@
 #include "GenPopController.h"
 
 #include "geopop/GeoGrid.h"
-#include "geopop/io/GeoGridWriter.h"
+#include "geopop/io/GeoGridFileWriter.h"
+#include "geopop/io/GeoGridStreamWriter.h"
 #include "geopop/io/GeoGridWriterFactory.h"
 
 #include "pop/GeoPopBuilder.h"
@@ -88,9 +89,9 @@ void GenPopController::Control()
         const auto popFileName = m_config.get<string>("run.population_file", "genpop.proto");
         const auto popFilePath = FileSys::BuildPath(prefix, popFileName);
         m_stride_logger->info("Population written to file {}.", popFilePath.string());
-        shared_ptr<GeoGridWriter> geoGridWriter = GeoGridWriterFactory::CreateGeoGridWriter(popFileName);
         ofstream                  outputFileStream(popFilePath.string());
-        geoGridWriter->Write(pop->RefGeoGrid(), outputFileStream);
+        shared_ptr<GeoGridStreamWriter> geoGridWriter = GeoGridWriterFactory::CreateGeoGridStreamWriter(popFileName, outputFileStream);
+        geoGridWriter->Write(pop->RefGeoGrid());
         outputFileStream.close();
 
         m_stride_logger->trace("Done writing population to file.");

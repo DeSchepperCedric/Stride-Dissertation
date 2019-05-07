@@ -8,12 +8,8 @@ using namespace std;
 
 namespace {
 
-    TEST(DemoGraphicTest, provincesTest){
-        EXPECT_TRUE(true);
-    }
+TEST(DemoGraphicTest, provincesTest) { EXPECT_TRUE(true); }
 
-    TEST(DemoGraphicTest, centralCitiesTest){
-        EXPECT_TRUE(true);
-    }
+TEST(DemoGraphicTest, centralCitiesTest) { EXPECT_TRUE(true); }
 
-}
+} // namespace

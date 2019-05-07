@@ -14,6 +14,7 @@
  */
 
 #include "Generator.h"
+#include <geopop/GeoGridConfig.h>
 
 #include "util/Assert.h"
 
@@ -37,8 +38,10 @@ void Generator<stride::ContactType::Id::Workplace>::Apply(GeoGrid& geoGrid, cons
                 EmployeeCount += it.second.popcount_workplace;
 //                EmployeeCount += it.second.major_popcount_workplace;
         }
+        const auto WorkplaceSize = ggConfig.refWP.average_workplace_size == 0U ? ggConfig.people[Id::Workplace]
+                                                                               : ggConfig.refWP.average_workplace_size;
         const auto WorkplacesCount =
-            static_cast<unsigned int>(ceil(EmployeeCount / static_cast<double>(ggConfig.people[Id::Workplace])));
+            static_cast<unsigned int>(ceil(EmployeeCount / static_cast<double>(WorkplaceSize)));
 
         // = for each location #residents + #incoming commuting people - #outgoing commuting people
         vector<double> weights;

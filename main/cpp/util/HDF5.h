@@ -15,25 +15,37 @@
 
 #pragma once
 
-#include <memory>
-#include <string>
-#include <fstream>
+#include <iostream>
 
-namespace geopop {
+namespace stride {
+namespace util {
 
-class GeoGridFileWriter;
-class GeoGridStreamWriter;
+using namespace std;
 
-/**
- * Factory creates the correct implementation of a GeoGridWriter based on the filename extension.
- */
-class GeoGridWriterFactory
+struct PERSON
 {
-public:
-        /// Create a GeoGridWriter based on the provided extension in the filename.
-        static std::shared_ptr<GeoGridStreamWriter> CreateGeoGridStreamWriter(const std::string& filename, std::ofstream& outputFileStream);
-
-        static std::shared_ptr<GeoGridFileWriter> CreateGeoGridFileWriter(const std::string& filename, std::string& outputFileName);
+        unsigned int  id;
+        float         age;
+        unsigned int  k12school;
+        unsigned int  college;
+        unsigned int  household;
+        unsigned int  workplace;
+        unsigned int  primarycommunity;
+        unsigned int  secondarycommunity;
+        unsigned int  daycare;
+        unsigned int  preschool;
 };
 
-} // namespace geopop
+struct COMMUTE
+{
+        unsigned int  to;
+        double        proportion;
+};
+
+struct POOL
+{
+        unsigned int  people;
+};
+
+} //namespace util
+} //namespace stride

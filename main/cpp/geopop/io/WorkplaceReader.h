@@ -15,25 +15,35 @@
 
 #pragma once
 
+#include "util/SegmentedVector.h"
+
 #include <memory>
-#include <string>
-#include <fstream>
+#include <vector>
+
+namespace stride {
+class Person;
+class ContactPool;
+} // namespace stride
 
 namespace geopop {
 
-class GeoGridFileWriter;
-class GeoGridStreamWriter;
-
 /**
- * Factory creates the correct implementation of a GeoGridWriter based on the filename extension.
+ * Retrieves the reference Workplace size distributions from file.
+ * This can be implemented using different input file types. Currently CSV and JSON are implemented.
  */
-class GeoGridWriterFactory
+class WorkplaceReader
 {
 public:
-        /// Create a GeoGridWriter based on the provided extension in the filename.
-        static std::shared_ptr<GeoGridStreamWriter> CreateGeoGridStreamWriter(const std::string& filename, std::ofstream& outputFileStream);
+        /// Construct the WorkplaceReader.
+        WorkplaceReader() = default;
 
-        static std::shared_ptr<GeoGridFileWriter> CreateGeoGridFileWriter(const std::string& filename, std::string& outputFileName);
+        /// Default destructor.
+        virtual ~WorkplaceReader() = default;
+
+        /// Add the info on reference households to the GeoGridConfig.
+        // TODO add arguments
+        virtual void SetReferenceWorkplaces(unsigned int&        ref_average_workplace_size,
+                                            std::vector<double>& ref_ratios) = 0;
 };
 
 } // namespace geopop
