@@ -32,7 +32,7 @@ using namespace stride::ContactType;
 template <>
 void Populator<stride::ContactType::Id::Daycare>::Apply(GeoGrid& geoGrid, const GeoGridConfig& geoGridConfig)
 {
-        m_logger->info("Starting to populate Daycares");
+        m_logger->trace("Starting to populate Daycares");
 
         // for every location
         for (const auto& loc : geoGrid) {
