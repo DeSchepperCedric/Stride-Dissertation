@@ -24,27 +24,32 @@ using namespace stride::ContactType;
 template <>
 void Generator<stride::ContactType::Id::Household>::Apply(GeoGrid& geoGrid, const GeoGridConfig& ggConfig)
 {
-        vector<double> weights;
-        for (const auto& loc : geoGrid) {
-                weights.push_back(loc->GetPopFraction());
-        }
+        //        auto households = 0U;
+        for (const auto& it : ggConfig.regionsInfo) {
+                vector<double> weights;
+                for (const auto& loc : geoGrid) {
+                        if (loc->GetProvince() == it.first) {
+                                weights.push_back(loc->GetPopFraction());
+                        } else {
+                                // To make sure the index in weights corresponds to the correct location in the geogrid
+                                weights.push_back(0.0);
+                        }
+                }
 
-        if (weights.empty()) {
-                // trng can't handle empty vectors
-                return;
-        }
+                if (weights.empty()) {
+                        // trng can't handle empty vectors
+                        return;
+                }
 
-        const auto dist = m_rn_man.GetDiscreteGenerator(weights, 0U);
-        auto       pop  = geoGrid.GetPopulation();
-        auto households = 0U;
-        for (const auto & it : ggConfig.regionsInfo){
-                households += it.second.count_households;
-//                households += it.second.major_count_households;
-        }
+                const auto dist = m_rn_man.GetDiscreteGenerator(weights, 0U);
+                auto       pop  = geoGrid.GetPopulation();
 
-        for (auto i = 0U; i < households; i++) {
-                const auto loc = geoGrid[dist()];
-                AddPools(*loc, pop, ggConfig);
+                const auto households = it.second.count_households;
+                //                households += it.second.major_count_households;
+                for (auto i = 0U; i < households; i++) {
+                        const auto loc = geoGrid[dist()];
+                        AddPools(*loc, pop, ggConfig);
+                }
         }
 }
 

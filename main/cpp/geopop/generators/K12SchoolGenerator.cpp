@@ -29,30 +29,35 @@ void Generator<stride::ContactType::Id::K12School>::Apply(GeoGrid& geoGrid, cons
         //    relative number of pupils for that location; the relative number of pupils is set
         //    to the relative population w.r.t the total population.
 
-        auto pupilCount = 0U;
-        for (const auto & it : ggConfig.regionsInfo){
-                pupilCount += it.second.popcount_k12school;
-//                pupilCount += it.second.major_popcount_k12school;
-        }
-        const auto schoolCount =
-            static_cast<unsigned int>(ceil(pupilCount / static_cast<double>(ggConfig.people[Id::K12School])));
+        //        auto pupilCount = 0U;
+        for (const auto& it : ggConfig.regionsInfo) {
+                // Generate schools per region, this way regions with a younger population have more schools
+                const auto pupilCount = it.second.popcount_k12school;
+                const auto schoolCount =
+                    static_cast<unsigned int>(ceil(pupilCount / static_cast<double>(ggConfig.people[Id::K12School])));
 
-        vector<double> weights;
-        for (const auto& loc : geoGrid) {
-                weights.push_back(loc->GetPopFraction());
-        }
+                vector<double> weights;
+                for (const auto& loc : geoGrid) {
+                        if (loc->GetProvince() == it.first) {
+                                weights.push_back(loc->GetPopFraction());
+                        } else {
+                                // To make sure the index in weights corresponds to the correct location in the geogrid
+                                weights.push_back(0.0);
+                        }
+                }
 
-        if (weights.empty()) {
-                // trng can't handle empty vectors
-                return;
-        }
+                if (weights.empty()) {
+                        // trng can't handle empty vectors
+                        return;
+                }
 
-        const auto dist = m_rn_man.GetDiscreteGenerator(weights, 0U);
-        auto       pop  = geoGrid.GetPopulation();
+                const auto dist = m_rn_man.GetDiscreteGenerator(weights, 0U);
+                auto       pop  = geoGrid.GetPopulation();
 
-        for (auto i = 0U; i < schoolCount; i++) {
-                const auto loc = geoGrid[dist()];
-                AddPools(*loc, pop, ggConfig);
+                for (auto i = 0U; i < schoolCount; i++) {
+                        const auto loc = geoGrid[dist()];
+                        AddPools(*loc, pop, ggConfig);
+                }
         }
 }
 

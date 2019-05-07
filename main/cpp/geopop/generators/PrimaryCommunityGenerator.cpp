@@ -34,33 +34,39 @@ void Generator<stride::ContactType::Id::PrimaryCommunity>::Apply(GeoGrid& geoGri
         // 2. assign communities to a location using a discrete distribution reflecting
         //    the relative number of people at that location
 
-        auto popCount = 0U;
-        for (const auto & it : ggConfig.params){
-                popCount += it.second.pop_size;
-        }
-        // const auto communitySize  = PoolParams<Id::PrimaryCommunity>::people;
-        const auto communitySize  = ggConfig.people[Id::PrimaryCommunity];
-        const auto communityCount = static_cast<unsigned int>(ceil(popCount / static_cast<double>(communitySize)));
+        //        auto popCount = 0U;
+        for (const auto& it : ggConfig.params) {
+                const auto popCount = it.second.pop_size;
+                // const auto communitySize  = PoolParams<Id::PrimaryCommunity>::people;
+                const auto communitySize = ggConfig.people[Id::PrimaryCommunity];
+                const auto communityCount =
+                    static_cast<unsigned int>(ceil(popCount / static_cast<double>(communitySize)));
 
-        vector<double> weights;
-        for (const auto& loc : geoGrid) {
-                const auto weight = static_cast<double>(loc->GetPopCount()) / static_cast<double>(popCount);
-                AssertThrow(weight >= 0 && weight <= 1 && !std::isnan(weight),
-                            "CommunityGenerator> Invalid weight: " + to_string(weight), m_logger);
-                weights.push_back(weight);
-        }
+                vector<double> weights;
+                for (const auto& loc : geoGrid) {
+                        if (loc->GetProvince() == it.first) {
+                                const auto weight =
+                                    static_cast<double>(loc->GetPopCount()) / static_cast<double>(popCount);
+                                AssertThrow(weight >= 0 && weight <= 1 && !std::isnan(weight),
+                                            "CommunityGenerator> Invalid weight: " + to_string(weight), m_logger);
+                                weights.push_back(weight);
+                        } else {
+                                weights.push_back(0.0);
+                        }
+                }
 
-        if (weights.empty()) {
-                // trng can't handle empty vectors
-                return;
-        }
+                if (weights.empty()) {
+                        // trng can't handle empty vectors
+                        return;
+                }
 
-        const auto dist = m_rn_man.GetDiscreteGenerator(weights, 0U);
-        auto       pop  = geoGrid.GetPopulation();
+                const auto dist = m_rn_man.GetDiscreteGenerator(weights, 0U);
+                auto       pop  = geoGrid.GetPopulation();
 
-        for (auto i = 0U; i < communityCount; i++) {
-                const auto loc = geoGrid[dist()];
-                AddPools(*loc, pop, ggConfig);
+                for (auto i = 0U; i < communityCount; i++) {
+                        const auto loc = geoGrid[dist()];
+                        AddPools(*loc, pop, ggConfig);
+                }
         }
 }
 
