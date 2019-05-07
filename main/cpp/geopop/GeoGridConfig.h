@@ -21,9 +21,9 @@
 
 #include <boost/property_tree/ptree_fwd.hpp>
 
+#include <map>
 #include <memory>
 #include <ostream>
-#include <map>
 
 namespace geopop {
 
@@ -103,17 +103,16 @@ public:
                 unsigned int person_count = 0U;
 
                 /// Age profile per reference household.
-                std::vector<std::vector<unsigned int>> ages {};
+                std::vector<std::vector<unsigned int>> ages{};
 
                 /// Number of persons in the reference household set for central cities.
                 unsigned int major_person_count = 0U;
 
                 /// Age profile per reference household of central cities.
-                std::vector<std::vector<unsigned int>> major_ages {};
+                std::vector<std::vector<unsigned int>> major_ages{};
         };
 
         std::map<unsigned int, RefHH> refHouseHolds;
-
 
         // -----------------------------------------------------------------------------------------
         // The reference Workplace types used to generate/populate workplaces
@@ -171,7 +170,6 @@ public:
 
                 /// The number of households.
                 unsigned int major_count_households;
-
         };
 
         std::map<unsigned int, Info> regionsInfo;
@@ -181,8 +179,7 @@ public:
         // -----------------------------------------------------------------------------------------
         void SetData(const boost::property_tree::ptree& configPt);
 
-
-        Info ParseHouseholdInfo(unsigned int ref_p_count, std::vector<std::vector<unsigned int>> &ages, Param &param);
+        Info ParseHouseholdInfo(unsigned int ref_p_count, std::vector<std::vector<unsigned int>>& ages, Param& param);
 };
 
 } // namespace geopop

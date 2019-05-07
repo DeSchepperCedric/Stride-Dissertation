@@ -44,32 +44,18 @@ void getGeoGridFromFile(const string& filename, Population* pop)
         geoGridHDF5Reader.Read();
 }
 
-TEST(GeoGridHDFReaderTest, locationsTest){
-    EXPECT_TRUE(true);
-}
+TEST(GeoGridHDFReaderTest, locationsTest) { EXPECT_TRUE(true); }
 
-TEST(GeoGridHDFReaderTest, commutesTest){
-    EXPECT_TRUE(true);
-}
+TEST(GeoGridHDFReaderTest, commutesTest) { EXPECT_TRUE(true); }
 
-TEST(GeoGridHDFReaderTest, contactCentersTest){
-    EXPECT_TRUE(true);
-}
+TEST(GeoGridHDFReaderTest, contactCentersTest) { EXPECT_TRUE(true); }
 
-TEST(GeoGridHDFReaderTest, peopleTest){
-    EXPECT_TRUE(true);
-}
+TEST(GeoGridHDFReaderTest, peopleTest) { EXPECT_TRUE(true); }
 
-TEST(GeoGridHDFReaderTest, invalidTypeTest){
-    EXPECT_TRUE(true);
-}
+TEST(GeoGridHDFReaderTest, invalidTypeTest) { EXPECT_TRUE(true); }
 
-TEST(GeoGridHDFReaderTest, invalidPersonTest){
-    EXPECT_TRUE(true);
-}
+TEST(GeoGridHDFReaderTest, invalidPersonTest) { EXPECT_TRUE(true); }
 
-TEST(GeoGridHDFReaderTest, invalidHDFTest){
-    EXPECT_TRUE(true);
-}
+TEST(GeoGridHDFReaderTest, invalidHDFTest) { EXPECT_TRUE(true); }
 
 } // namespace

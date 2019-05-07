@@ -60,7 +60,6 @@ private:
         /// Create a Coordinate based on the information stored in the provided json structure.
         Coordinate ParseCoordinate(nlohmann::json& coordinate);
 
-
         /// Create a Person based on the information stored in the provided json structure.
         stride::Person* ParsePerson(nlohmann::json& person);
 
@@ -69,6 +68,7 @@ private:
         T ParseNumerical(nlohmann::json& node)
         {
                 if (node.type() == nlohmann::json::value_t::string) {
+                        //                        OPTIONAL: log a warning, then we need to get hold of the logger though
                         return boost::lexical_cast<T>(node.get<std::string>());
                 } else {
                         return node.get<T>();

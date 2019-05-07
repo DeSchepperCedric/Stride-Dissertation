@@ -57,7 +57,7 @@ shared_ptr<Population> GeoPopBuilder::Build(shared_ptr<Population> pop)
         // Set the GeoGridConfig.
         // ------------------------------------------------------------
         GeoGridConfig ggConfig(m_config);
-        auto   geopop_gen = m_config.get_child("run.geopop_gen");
+        auto          geopop_gen = m_config.get_child("run.geopop_gen");
         ggConfig.SetData(geopop_gen);
 
         // ------------------------------------------------------------
@@ -122,7 +122,7 @@ void GeoPopBuilder::MakeLocations(GeoGrid& geoGrid, const GeoGridConfig& geoGrid
         }
 
         auto total_pop = 0U;
-        for (const auto& param : geoGridConfig.params){
+        for (const auto& param : geoGridConfig.params) {
                 total_pop += param.second.pop_size;
         }
 

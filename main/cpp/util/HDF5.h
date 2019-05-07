@@ -24,28 +24,28 @@ using namespace std;
 
 struct PERSON
 {
-        unsigned int  id;
-        float         age;
-        unsigned int  k12school;
-        unsigned int  college;
-        unsigned int  household;
-        unsigned int  workplace;
-        unsigned int  primarycommunity;
-        unsigned int  secondarycommunity;
-        unsigned int  daycare;
-        unsigned int  preschool;
+        unsigned int id;
+        float        age;
+        unsigned int k12school;
+        unsigned int college;
+        unsigned int household;
+        unsigned int workplace;
+        unsigned int primarycommunity;
+        unsigned int secondarycommunity;
+        unsigned int daycare;
+        unsigned int preschool;
 };
 
 struct COMMUTE
 {
-        unsigned int  to;
-        double        proportion;
+        unsigned int to;
+        double       proportion;
 };
 
 struct POOL
 {
-        unsigned int  people;
+        unsigned int people;
 };
 
-} //namespace util
-} //namespace stride
+} // namespace util
+} // namespace stride

@@ -24,14 +24,14 @@ namespace geopop {
 /**
  * Create a Reader that fills a GeoGrid with the major cities info from CSV file.
  */
-    class MajorCitiesCSVReader : public MajorCitiesReader
-    {
-    public:
+class MajorCitiesCSVReader : public MajorCitiesReader
+{
+public:
         /// Construct the MajorCitiesCSVReader with an istream containing the CSV data.
         explicit MajorCitiesCSVReader(std::unique_ptr<std::istream> istream);
 
         /// Add the found major city info to the provided GeoGrid
         void FillGeoGrid(GeoGrid& geoGrid) const override;
-    };
+};
 
 } // namespace geopop

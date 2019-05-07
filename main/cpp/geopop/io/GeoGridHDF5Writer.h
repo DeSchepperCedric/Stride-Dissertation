@@ -19,8 +19,8 @@
 #include "geopop/Location.h"
 
 #include "H5Cpp.h"
-#include <string>
 #include <set>
+#include <string>
 
 namespace stride {
 class ContactPool;
@@ -66,9 +66,9 @@ private:
         std::set<stride::Person*> m_persons_found; ///< The persons found when looping over the ContactPools.
 
         const H5::StrType strdatatype;
-        H5::CompType person_type;
-        H5::CompType commute_type;
-        H5::CompType pool_type;
+        H5::CompType      person_type;
+        H5::CompType      commute_type;
+        H5::CompType      pool_type;
 };
 
 } // namespace geopop

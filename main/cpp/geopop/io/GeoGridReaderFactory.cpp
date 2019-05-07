@@ -39,8 +39,8 @@ namespace geopop {
 std::shared_ptr<GeoGridReader> GeoGridReaderFactory::CreateReader(const std::string&  filename,
                                                                   stride::Population* pop) const
 {
-//        put "data/" in config file before filename, otherwise smoke import test needs to be updated
-//        const filesys::path path(FileSys::GetDataDir() / filesys::path(filename));
+        //        put "data/" in config file before filename, otherwise smoke import test needs to be updated
+        //        const filesys::path path(FileSys::GetDataDir() / filesys::path(filename));
         const filesys::path path(filename);
 
         if (!filesys::exists(path)) {

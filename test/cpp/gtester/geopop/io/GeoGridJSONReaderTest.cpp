@@ -38,7 +38,7 @@ namespace {
 void getGeoGridFromFile(const string& filename, Population* pop)
 {
         auto file = make_unique<ifstream>();
-//        std::cout <<FileSys::GetTestsDir().string() + "/testdata/GeoGridJSON/" + filename << std::endl;
+        //        std::cout <<FileSys::GetTestsDir().string() + "/testdata/GeoGridJSON/" + filename << std::endl;
         file->open(FileSys::GetTestsDir().string() + "/testdata/GeoGridJSON/" + filename);
         GeoGridJSONReader geoGridJSONReader(move(file), pop);
         geoGridJSONReader.Read();
@@ -160,7 +160,7 @@ TEST(GeoGridJSONReaderTest, contactPoolsTest)
         }
 
         for (Id typ : IdList) {
-            EXPECT_EQ(location->CRefPools(typ).size(), 0);
+                EXPECT_EQ(location->CRefPools(typ).size(), 0);
         }
 }
 
@@ -186,7 +186,7 @@ void runPeopleTest(const string& filename)
         }
 
         for (const auto& center : centers) {
-                auto person   = (*center)[0];
+                auto person = (*center)[0];
                 EXPECT_EQ(person->GetId(), 0);
                 EXPECT_EQ(person->GetAge(), 18);
                 EXPECT_EQ(person->GetPoolId(Id::K12School), 1);
