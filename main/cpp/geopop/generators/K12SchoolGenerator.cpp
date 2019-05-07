@@ -29,7 +29,6 @@ void Generator<stride::ContactType::Id::K12School>::Apply(GeoGrid& geoGrid, cons
         //    relative number of pupils for that location; the relative number of pupils is set
         //    to the relative population w.r.t the total population.
 
-        //        auto pupilCount = 0U;
         for (const auto& it : ggConfig.regionsInfo) {
                 // Generate schools per region, this way regions with a younger population have more schools
                 const auto pupilCount = it.second.popcount_k12school;

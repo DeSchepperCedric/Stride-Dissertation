@@ -27,15 +27,13 @@ template <>
 void Generator<stride::ContactType::Id::Daycare>::Apply(GeoGrid& geoGrid, const GeoGridConfig& ggConfig)
 {
         // 1. given the number of persons of daycare age, calculate number of daycares; daycares
-        //    have 3 pupils on average
+        //    have 18 pupils on average
         // 2. assign daycares to a location by using a discrete distribution which reflects the
         //    relative number of pupils for that location; the relative number of pupils is set
         //    to the relative population w.r.t the total population.
 
-        //        auto pupilCount = 0U;
         for (const auto& it : ggConfig.regionsInfo) {
                 const auto pupilCount = it.second.popcount_daycare;
-                //                pupilCount += it.second.major_popcount_daycare;
                 const auto schoolCount =
                     static_cast<unsigned int>(ceil(pupilCount / static_cast<double>(ggConfig.people[Id::Daycare])));
 
