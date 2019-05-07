@@ -29,8 +29,8 @@ using namespace stride::ContactType;
 using namespace stride::util;
 using namespace H5;
 
-GeoGridHDF5Reader::GeoGridHDF5Reader(unique_ptr<istream> inputStream, Population* pop)
-    : GeoGridReader(move(inputStream), pop), strdatatype(H5::PredType::C_S1, 256), person_type(sizeof(PERSON)), commute_type(sizeof(COMMUTE)), pool_type(sizeof(POOL))
+GeoGridHDF5Reader::GeoGridHDF5Reader(const string& inputFile, Population* pop)
+    : GeoGridFileReader(inputFile, pop), strdatatype(H5::PredType::C_S1, 256), person_type(sizeof(PERSON)), commute_type(sizeof(COMMUTE)), pool_type(sizeof(POOL))
 {
         person_type.insertMember("Id", HOFFSET(PERSON, id), PredType::NATIVE_UINT);
         person_type.insertMember("Age", HOFFSET(PERSON, age), PredType::NATIVE_FLOAT);
@@ -53,9 +53,7 @@ void GeoGridHDF5Reader::Read()
 {
         H5File file;
         try {
-                ostringstream ss;
-                ss << (*m_inputStream).rdbuf();
-                file = H5File(ss.str(), H5F_ACC_RDONLY);
+                file = H5File(m_inputFile, H5F_ACC_RDONLY);
         } catch (FileIException error) {
                 throw error.getDetailMsg();
         } /*catch (runtime_error&) {

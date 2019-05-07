@@ -15,7 +15,7 @@
 
 #pragma once
 
-#include "GeoGridReader.h"
+#include "GeoGridStreamReader.h"
 #include "contact/ContactPool.h"
 #include "contact/ContactType.h"
 #include "geopop/Location.h"
@@ -31,7 +31,7 @@ class GeoGrid;
  * An implementation of the GeoGridReader using JSON.
  * This class is used to read a GeoGrid from a JSON file.
  */
-class GeoGridJSONReader : public GeoGridReader
+class GeoGridJSONReader : public GeoGridStreamReader
 {
 public:
         /// Construct the GeoGridJSONReader with the istream which contains the JSON.

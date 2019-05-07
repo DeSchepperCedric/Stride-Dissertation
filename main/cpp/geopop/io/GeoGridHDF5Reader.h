@@ -15,7 +15,7 @@
 
 #pragma once
 
-#include "GeoGridReader.h"
+#include "GeoGridFileReader.h"
 #include "contact/ContactPool.h"
 #include "contact/ContactType.h"
 #include "geopop/Location.h"
@@ -32,11 +32,11 @@ class GeoGrid;
  * An implementation of the GeoGridReader using HDF5.
  * This class is used to read a GeoGrid from a HDF5 file.
  */
-class GeoGridHDF5Reader : public GeoGridReader
+class GeoGridHDF5Reader : public GeoGridFileReader
 {
 public:
-        /// Construct the GeoGridHDF5Reader with the istream which contains the HDF5.
-        GeoGridHDF5Reader(std::unique_ptr<std::istream> inputStream, stride::Population* pop);
+        /// Construct the GeoGridHDF5Reader with the file name which contains the HDF5.
+        GeoGridHDF5Reader(const std::string& inputFile, stride::Population* pop);
 
         /// No copy constructor.
         GeoGridHDF5Reader(const GeoGridHDF5Reader&) = delete;

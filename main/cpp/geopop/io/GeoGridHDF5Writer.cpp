@@ -33,7 +33,7 @@ using namespace H5;
 
 const unsigned int RANK = 1;
 
-GeoGridHDF5Writer::GeoGridHDF5Writer(string& fileName)
+GeoGridHDF5Writer::GeoGridHDF5Writer(const string& fileName)
     : GeoGridFileWriter(fileName), m_persons_found(), strdatatype(H5::PredType::C_S1, 256), person_type(sizeof(PERSON)), commute_type(sizeof(COMMUTE)), pool_type(sizeof(POOL))
 {
         person_type.insertMember("Id", HOFFSET(PERSON, id), PredType::NATIVE_UINT);

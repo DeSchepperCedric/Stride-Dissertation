@@ -29,7 +29,7 @@ using namespace stride::ContactType;
 using namespace stride::util;
 
 GeoGridJSONReader::GeoGridJSONReader(unique_ptr<istream> inputStream, Population* pop)
-    : GeoGridReader(move(inputStream), pop)
+    : GeoGridStreamReader(move(inputStream), pop)
 {
 }
 

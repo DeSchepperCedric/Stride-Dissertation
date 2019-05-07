@@ -29,7 +29,7 @@ using namespace std;
 using namespace stride::ContactType;
 
 GeoGridProtoReader::GeoGridProtoReader(unique_ptr<istream> inputStream, stride::Population* pop)
-    : GeoGridReader(move(inputStream), pop)
+    : GeoGridStreamReader(move(inputStream), pop)
 {
 }
 

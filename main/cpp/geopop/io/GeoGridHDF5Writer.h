@@ -38,7 +38,7 @@ class GeoGridHDF5Writer : public GeoGridFileWriter
 {
 public:
         /// Construct the GeoGridHDF5Writer.
-        GeoGridHDF5Writer(std::string& fileName);
+        GeoGridHDF5Writer(const std::string& fileName);
 
         /// Write the provided GeoGrid to the proved ostream in HDF5 format.
         void Write(GeoGrid& geoGrid) override;
