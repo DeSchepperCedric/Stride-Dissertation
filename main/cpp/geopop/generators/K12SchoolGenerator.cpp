@@ -31,7 +31,7 @@ void Generator<stride::ContactType::Id::K12School>::Apply(GeoGrid& geoGrid, cons
 
         for (const auto& it : ggConfig.regionsInfo) {
                 // Generate schools per region, this way regions with a younger population have more schools
-                auto pupilCount = 0U; //it.second.popcount_k12school;
+                auto pupilCount = 0U;
                 vector<double> weights;
                 for (const auto& loc : geoGrid) {
                         if (loc->GetProvince() == it.first) {
