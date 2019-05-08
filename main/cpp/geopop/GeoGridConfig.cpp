@@ -103,24 +103,7 @@ void GeoGridConfig::SetData(const ptree& configPt)
                 if (!major_household_file.empty()) {
                         const auto majorHouseholdsReader = ReaderFactory::CreateHouseholdReader(major_household_file);
                         majorHouseholdsReader->SetReferenceHouseholds(refHH.major_person_count, refHH.major_ages);
-
-                        // Add the major info to the info struct
-                        Info major_info = ParseHouseholdInfo(refHH.major_person_count, refHH.major_ages, param);
-
-                        info.major_popcount_daycare   = major_info.popcount_daycare;
-                        info.major_popcount_preschool = major_info.popcount_preschool;
-                        info.major_popcount_k12school = major_info.popcount_k12school;
-                        info.major_popcount_college   = major_info.popcount_college;
-                        info.major_popcount_workplace = major_info.popcount_workplace;
-                        info.major_count_households   = major_info.count_households;
-
                 } else {
-                        info.major_popcount_daycare   = 0;
-                        info.major_popcount_preschool = 0;
-                        info.major_popcount_k12school = 0;
-                        info.major_popcount_college   = 0;
-                        info.major_popcount_workplace = 0;
-                        info.major_count_households   = 0;
                         refHH.major_person_count      = 0;
                 }
 

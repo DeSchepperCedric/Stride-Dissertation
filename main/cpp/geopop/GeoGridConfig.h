@@ -152,24 +152,6 @@ public:
 
                 /// The number of households.
                 unsigned int count_households;
-
-                /// Numbers of individuals in Daycare.
-                unsigned int major_popcount_daycare;
-
-                /// Numbers of individuals in PreSchool.
-                unsigned int major_popcount_preschool;
-
-                /// Numbers of individuals in K12School.
-                unsigned int major_popcount_k12school;
-
-                /// Number of individuals in College.
-                unsigned int major_popcount_college;
-
-                /// Number of individuals in Workplace.
-                unsigned int major_popcount_workplace;
-
-                /// The number of households.
-                unsigned int major_count_households;
         };
 
         std::map<unsigned int, Info> regionsInfo;
