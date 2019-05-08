@@ -26,26 +26,47 @@ void Generator<stride::ContactType::Id::Household>::Apply(GeoGrid& geoGrid, cons
 {
         for (const auto& it : ggConfig.regionsInfo) {
                 vector<double> weights;
+                vector<double> majorWeights;
+                auto           majorPop = 0u;
                 for (const auto& loc : geoGrid) {
                         if (loc->GetProvince() == it.first) {
-                                weights.push_back(loc->GetPopFraction());
+                                if (loc->IsMajor()) {
+                                        majorWeights.push_back(loc->GetPopFraction());
+                                        weights.push_back(0.0);
+                                        majorPop += loc->GetPopCount();
+                                } else {
+                                        majorWeights.push_back(0.0);
+                                        weights.push_back(loc->GetPopFraction());
+                                }
                         } else {
                                 // To make sure the index in weights corresponds to the correct location in the geogrid
                                 weights.push_back(0.0);
                         }
                 }
 
+                // if this holds true, majorWeights will also be empty
                 if (weights.empty()) {
                         // trng can't handle empty vectors
                         return;
                 }
 
-                const auto dist = m_rn_man.GetDiscreteGenerator(weights, 0U);
-                auto       pop  = geoGrid.GetPopulation();
+                const auto dist      = m_rn_man.GetDiscreteGenerator(weights, 0U);
+                const auto majorDist = m_rn_man.GetDiscreteGenerator(majorWeights, 0U);
+                auto       pop       = geoGrid.GetPopulation();
+                const auto major_count_households =
+                    static_cast<unsigned int>(round((double)it.second.major_count_households *
+                                                    ((double)majorPop / ggConfig.params.at(it.first).pop_size)));
+                const auto count_households = static_cast<unsigned int>(
+                    round((double)it.second.count_households *
+                          (1.0 - ((double)majorPop / ggConfig.params.at(it.first).pop_size))));
 
-                const auto households = it.second.count_households;
-                for (auto i = 0U; i < households; i++) {
+                for (auto i = 0U; i < count_households; i++) {
                         const auto loc = geoGrid[dist()];
+                        AddPools(*loc, pop, ggConfig);
+                }
+
+                for (auto i = 0U; i < major_count_households; i++) {
+                        const auto loc = geoGrid[majorDist()];
                         AddPools(*loc, pop, ggConfig);
                 }
         }

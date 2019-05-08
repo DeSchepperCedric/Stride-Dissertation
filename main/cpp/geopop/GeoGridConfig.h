@@ -151,7 +151,7 @@ public:
                 double fraction_workplace;
 
                 /// The number of households.
-                double count_households;
+                unsigned int count_households;
 
                 /// Numbers of individuals in Daycare.
                 double major_fraction_daycare;
@@ -169,7 +169,7 @@ public:
                 double major_fraction_workplace;
 
                 /// The number of households.
-                double major_count_households;
+                unsigned int major_count_households;
         };
 
         std::map<unsigned int, Info> regionsInfo;

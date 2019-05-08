@@ -34,13 +34,14 @@ void Generator<stride::ContactType::Id::Daycare>::Apply(GeoGrid& geoGrid, const 
 
         for (const auto& it : ggConfig.regionsInfo) {
                 vector<double> weights;
-                auto pupilCount = 0U;
+                auto           popCount      = 0U;
+                auto           majorPopCount = 0U;
                 for (const auto& loc : geoGrid) {
                         if (loc->GetProvince() == it.first) {
-                                if (loc->IsMajor()){
-                                        pupilCount += static_cast<unsigned int>(it.second.major_fraction_daycare * loc->GetPopCount());
+                                if (loc->IsMajor()) {
+                                        majorPopCount += loc->GetPopCount();
                                 } else {
-                                        pupilCount += static_cast<unsigned int>(it.second.fraction_daycare * loc->GetPopCount());
+                                        popCount += loc->GetPopCount();
                                 }
                                 weights.push_back(loc->GetPopFraction());
                         } else {
@@ -48,8 +49,10 @@ void Generator<stride::ContactType::Id::Daycare>::Apply(GeoGrid& geoGrid, const 
                                 weights.push_back(0.0);
                         }
                 }
+                const auto pupilCount = static_cast<unsigned int>(
+                    ceil(it.second.fraction_daycare * popCount + it.second.major_fraction_daycare * majorPopCount));
                 const auto schoolCount =
-                        static_cast<unsigned int>(ceil(pupilCount / static_cast<double>(ggConfig.people[Id::Daycare])));
+                    static_cast<unsigned int>(ceil(pupilCount / static_cast<double>(ggConfig.people[Id::Daycare])));
 
                 if (weights.empty()) {
                         // trng can't handle empty vectors

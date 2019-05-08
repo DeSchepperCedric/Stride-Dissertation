@@ -60,6 +60,7 @@ protected:
 TEST_F(HouseholdGeneratorTest, OneLocationTest)
 {
         GeoGridConfig::Param param;
+        param.pop_size        = 2500;
         m_gg_config.params[4] = param;
         GeoGridConfig::Info info;
         m_gg_config.regionsInfo[4]                     = info;
@@ -78,6 +79,7 @@ TEST_F(HouseholdGeneratorTest, OneLocationTest)
 TEST_F(HouseholdGeneratorTest, ZeroLocationTest)
 {
         GeoGridConfig::Param param;
+        param.pop_size        = 2500;
         m_gg_config.params[4] = param;
         GeoGridConfig::Info info;
         m_gg_config.regionsInfo[4] = info;
@@ -94,11 +96,12 @@ TEST_F(HouseholdGeneratorTest, FiveLocationsTest)
         GeoGridConfig::Param param;
         m_gg_config.params[4] = param;
         GeoGridConfig::Info info;
-        m_gg_config.regionsInfo[4]                     = info;
-        m_gg_config.regionsInfo.at(4).count_households = 4000;
-        m_gg_config.params.at(4).pop_size              = 37542 * 100;
+        m_gg_config.regionsInfo[4]                           = info;
+        m_gg_config.regionsInfo.at(4).count_households       = 4000;
+        m_gg_config.regionsInfo.at(4).major_count_households = 4000;
+        m_gg_config.params.at(4).pop_size                    = 35042 * 100;
 
-        auto loc1 = make_shared<Location>(1, 4, Coordinate(0, 0), "Antwerpen", 10150 * 100);
+        auto loc1 = make_shared<Location>(1, 4, Coordinate(0, 0), "Antwerpen", 10150 * 100, true);
         auto loc2 = make_shared<Location>(2, 4, Coordinate(0, 0), "Vlaams-Brabant", 10040 * 100);
         auto loc3 = make_shared<Location>(3, 4, Coordinate(0, 0), "Henegouwen", 7460 * 100);
         auto loc4 = make_shared<Location>(4, 4, Coordinate(0, 0), "Limburg", 3269 * 100);
@@ -117,7 +120,7 @@ TEST_F(HouseholdGeneratorTest, FiveLocationsTest)
 
         m_household_generator.Apply(m_geo_grid, m_gg_config);
 
-        array<unsigned int, 5> sizes{1179, 1137, 868, 358, 458};
+        array<unsigned int, 5> sizes{1159, 1159, 816, 395, 471};
         for (auto i = 0U; i < sizes.size(); i++) {
                 EXPECT_EQ(sizes[i] * m_pph, m_geo_grid[i]->CRefPools(Id::Household).size());
         }
