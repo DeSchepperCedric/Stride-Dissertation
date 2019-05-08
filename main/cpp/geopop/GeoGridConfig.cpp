@@ -174,11 +174,11 @@ GeoGridConfig::Info GeoGridConfig::ParseHouseholdInfo(unsigned int              
         const auto fraction_college_age   = static_cast<double>(ref_college) / static_cast<double>(ref_p_count);
         const auto fraction_workplace_age = static_cast<double>(ref_workplace) / static_cast<double>(ref_p_count);
 
-//        const auto age_count_daycare   = static_cast<unsigned int>(floor(popSize * fraction_daycare_age));
-//        const auto age_count_preschool = static_cast<unsigned int>(floor(popSize * fraction_preschool_age));
-//        const auto age_count_k12school = static_cast<unsigned int>(floor(popSize * fraction_k12school_age));
-//        const auto age_count_college   = static_cast<unsigned int>(floor(popSize * fraction_college_age));
-//        const auto age_count_workplace = static_cast<unsigned int>(floor(popSize * fraction_workplace_age));
+        //        const auto age_count_daycare   = static_cast<unsigned int>(floor(popSize * fraction_daycare_age));
+        //        const auto age_count_preschool = static_cast<unsigned int>(floor(popSize * fraction_preschool_age));
+        //        const auto age_count_k12school = static_cast<unsigned int>(floor(popSize * fraction_k12school_age));
+        //        const auto age_count_college   = static_cast<unsigned int>(floor(popSize * fraction_college_age));
+        //        const auto age_count_workplace = static_cast<unsigned int>(floor(popSize * fraction_workplace_age));
 
         Info info;
 
@@ -187,7 +187,7 @@ GeoGridConfig::Info GeoGridConfig::ParseHouseholdInfo(unsigned int              
         info.fraction_k12school = fraction_k12school_age;
         info.fraction_college   = param.participation_college * fraction_college_age;
         info.fraction_workplace = param.participation_workplace * (fraction_workplace_age - info.fraction_college);
-        info.count_households = static_cast<unsigned int>(floor(static_cast<double>(popSize) / averageHhSize));
+        info.count_households   = static_cast<unsigned int>(floor(static_cast<double>(popSize) / averageHhSize));
 
         return info;
 }
@@ -208,16 +208,14 @@ ostream& operator<<(ostream& out, const GeoGridConfig& config)
                     << "\n";
                 out << "Calculated:"
                     << "\n";
-                out << setw(w)
-                    << "Daycare student fraction:" << intToDottedString(config.regionsInfo.at(it.first).fraction_daycare)
-                    << "\n";
+                out << setw(w) << "Daycare student fraction:"
+                    << intToDottedString(config.regionsInfo.at(it.first).fraction_daycare) << "\n";
                 out << setw(w) << "PreSchool student fraction:"
                     << intToDottedString(config.regionsInfo.at(it.first).fraction_preschool) << "\n";
                 out << setw(w) << "K12School student fraction:"
                     << intToDottedString(config.regionsInfo.at(it.first).fraction_k12school) << "\n";
-                out << setw(w)
-                    << "College student fraction:" << intToDottedString(config.regionsInfo.at(it.first).fraction_college)
-                    << "\n";
+                out << setw(w) << "College student fraction:"
+                    << intToDottedString(config.regionsInfo.at(it.first).fraction_college) << "\n";
                 out << setw(w) << "Workplace person count:"
                     << intToDottedString(config.regionsInfo.at(it.first).fraction_workplace) << "\n";
                 out << endl;
