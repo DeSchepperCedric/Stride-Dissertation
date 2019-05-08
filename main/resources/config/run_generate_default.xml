@@ -34,7 +34,7 @@
         <fraction_college_commuters>0.5</fraction_college_commuters>
         <fraction_workplace_commuters>0.5</fraction_workplace_commuters>
         <household_file>households_flanders.csv</household_file>
-	<workplace_file>workplace_size_distribution.csv</workplace_file>
+	<workplace_file>workplace_size_distribution_debug.csv</workplace_file>
         <participation_daycare>0.45</participation_daycare>
         <participation_preschool>0.99</participation_preschool>
         <participation_college>0.5</participation_college>

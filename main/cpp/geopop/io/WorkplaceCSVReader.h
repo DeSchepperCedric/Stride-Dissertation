@@ -39,7 +39,8 @@ public:
 
         /// Add the locations to the GeoGrid.
         // TODO add setter
-        void SetReferenceWorkplaces(unsigned int& ref_average_workplace_size, std::vector<double>& ref_ratios) override;
+        void SetReferenceWorkplaces(unsigned int& ref_average_workplace_size, std::vector<double>& ref_ratios,
+                                    std::vector<unsigned int>& ref_min, std::vector<unsigned int>& ref_max) override;
 
 private:
         /// Input stream  connected to input data file.
