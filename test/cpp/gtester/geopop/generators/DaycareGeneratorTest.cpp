@@ -64,7 +64,7 @@ TEST_F(DaycareGeneratorTest, OneLocationTest)
         GeoGridConfig::Info info;
         m_gg_config.regionsInfo[4]                     = info;
         m_gg_config.params.at(4).pop_size              = 10000;
-        m_gg_config.regionsInfo.at(4).popcount_daycare = 300;
+        m_gg_config.regionsInfo.at(4).fraction_daycare = 300.0/m_gg_config.params.at(4).pop_size;
 
         auto loc1 = make_shared<Location>(1, 4, Coordinate(0, 0), "Antwerpen", m_gg_config.params.at(4).pop_size);
         m_geo_grid.AddLocation(loc1);
@@ -83,7 +83,7 @@ TEST_F(DaycareGeneratorTest, ZeroLocationTest)
         m_gg_config.regionsInfo[0] = info;
 
         m_gg_config.params.at(0).pop_size              = 10000;
-        m_gg_config.regionsInfo.at(0).popcount_daycare = 300;
+        m_gg_config.regionsInfo.at(0).fraction_daycare = 300.0/m_gg_config.params.at(0).pop_size;
 
         m_daycare_generator.Apply(m_geo_grid, m_gg_config);
 
@@ -98,7 +98,7 @@ TEST_F(DaycareGeneratorTest, FiveLocationsTest)
         m_gg_config.regionsInfo[4] = info;
 
         m_gg_config.params.at(4).pop_size              = 37542 * 100;
-        m_gg_config.regionsInfo.at(4).popcount_daycare = 125140;
+        m_gg_config.regionsInfo.at(4).fraction_daycare = 125140.0/m_gg_config.params.at(4).pop_size;
 
         auto loc1 = make_shared<Location>(1, 4, Coordinate(0, 0), "Antwerpen", 10150 * 100);
         auto loc2 = make_shared<Location>(1, 4, Coordinate(0, 0), "Vlaams-Brabant", 10040 * 100);
