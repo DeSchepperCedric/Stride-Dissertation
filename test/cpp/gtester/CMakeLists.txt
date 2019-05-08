@@ -49,12 +49,12 @@ set(SRC
         #---
         #---
 #        geopop/generators/CollegeGeneratorTest.cpp
-#        geopop/generators/HouseholdGeneratorTest.cpp
+        geopop/generators/HouseholdGeneratorTest.cpp
 #        geopop/generators/K12SchoolGeneratorTest.cpp
 #        geopop/generators/PrimaryCommunityGeneratorTest.cpp
 #        geopop/generators/SecondaryCommunityGeneratorTest.cpp
 #        geopop/generators/WorkplaceGeneratorTest.cpp
-#        geopop/generators/DaycareGeneratorTest.cpp
+        geopop/generators/DaycareGeneratorTest.cpp
 #        geopop/generators/PreSchoolGeneratorTest.cpp
 #        geopop/generators/WorkplaceGeneratorTest.cpp
         #---
