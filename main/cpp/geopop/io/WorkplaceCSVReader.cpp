@@ -31,9 +31,9 @@ void WorkplaceCSVReader::SetReferenceWorkplaces(unsigned int&        ref_average
                                                 std::vector<double>& ref_ratios, std::vector<unsigned int>& ref_min,
                                                 std::vector<unsigned int>& ref_max)
 {
-        CSV            reader(*(m_input_stream.get()));
-        double         average_size = 0U;
-        vector<double> ratios;
+        CSV                  reader(*(m_input_stream.get()));
+        double               average_size = 0U;
+        vector<double>       ratios;
         vector<unsigned int> max_values;
         vector<unsigned int> min_values;
         for (const CSVRow& row : reader) {
@@ -53,17 +53,16 @@ void WorkplaceCSVReader::SetReferenceWorkplaces(unsigned int&        ref_average
                 ratios.emplace_back(ratio);
                 max_values.emplace_back(max);
                 min_values.emplace_back(min);
-            std::cout << "----------------" << std::endl;
-            std::cout << "min: " << min << std::endl;
-            std::cout << "max: " << max << std::endl;
-            std::cout << "ratio: " << ratio << std::endl;
+                std::cout << "----------------" << std::endl;
+                std::cout << "min: " << min << std::endl;
+                std::cout << "max: " << max << std::endl;
+                std::cout << "ratio: " << ratio << std::endl;
         }
         ref_average_workplace_size = (unsigned int)round(average_size);
 
         ref_ratios = ratios;
-        ref_min = min_values;
-        ref_max = max_values;
-
+        ref_min    = min_values;
+        ref_max    = max_values;
 }
 
 } // namespace geopop

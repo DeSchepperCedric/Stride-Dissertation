@@ -58,8 +58,8 @@ TEST_F(WorkplacePopulatorDistributionTest, NoCommutingAvailable)
         m_gg_config.param.participation_college        = 0.5;
         m_gg_config.refWP.average_workplace_size       = 290;
         m_gg_config.refWP.ratios                       = {0.05, 0.95};
-        m_gg_config.refWP.min = {1,200};
-    m_gg_config.refWP.max = {199,400};
+        m_gg_config.refWP.min                          = {1, 200};
+        m_gg_config.refWP.max                          = {199, 400};
 
         auto brasschaat = *m_geo_grid.begin();
         brasschaat->SetCoordinate(Coordinate(51.29227, 4.49419));
@@ -138,10 +138,10 @@ TEST_F(WorkplacePopulatorDistributionTest, OnlyCommuting)
         m_gg_config.info.popcount_workplace            = 1;
         m_gg_config.param.particpation_workplace       = 1;
         m_gg_config.param.participation_college        = 0.5;
-    m_gg_config.refWP.average_workplace_size       = 290;
-    m_gg_config.refWP.ratios                       = {0.05, 0.95};
-    m_gg_config.refWP.min = {1,200};
-    m_gg_config.refWP.max = {199,400};
+        m_gg_config.refWP.average_workplace_size       = 290;
+        m_gg_config.refWP.ratios                       = {0.05, 0.95};
+        m_gg_config.refWP.min                          = {1, 200};
+        m_gg_config.refWP.max                          = {199, 400};
         // only commuting
 
         auto schoten = *(m_geo_grid.begin());
