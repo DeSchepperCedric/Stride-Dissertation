@@ -41,6 +41,7 @@ void Generator<stride::ContactType::Id::Household>::Apply(GeoGrid& geoGrid, cons
                         } else {
                                 // To make sure the index in weights corresponds to the correct location in the geogrid
                                 weights.push_back(0.0);
+                                majorWeights.push_back(0.0);
                         }
                 }
 

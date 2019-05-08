@@ -34,24 +34,30 @@ void Generator<stride::ContactType::Id::PreSchool>::Apply(GeoGrid& geoGrid, cons
 
         for (const auto& it : ggConfig.regionsInfo) {
                 vector<double> weights;
-                auto           pupilCount = 0;
+                vector<double> majorWeights;
+                auto           popCount      = 0U;
+                auto           majorPopCount = 0U;
                 for (const auto& loc : geoGrid) {
                         if (loc->GetProvince() == it.first) {
                                 if (loc->IsMajor()) {
-                                        pupilCount += static_cast<unsigned int>(it.second.major_fraction_preschool *
-                                                                                loc->GetPopCount());
+                                        majorPopCount += loc->GetPopCount();
+                                        majorWeights.push_back(loc->GetPopFraction());
+                                        weights.push_back(0.0);
                                 } else {
-                                        pupilCount += static_cast<unsigned int>(it.second.fraction_preschool *
-                                                                                loc->GetPopCount());
+                                        popCount += loc->GetPopCount();
+                                        majorWeights.push_back(0.0);
+                                        weights.push_back(loc->GetPopFraction());
                                 }
-                                weights.push_back(loc->GetPopFraction());
                         } else {
                                 // To make sure the index in weights corresponds to the correct location in the geogrid
                                 weights.push_back(0.0);
+                                majorWeights.push_back(0.0);
                         }
                 }
-                const auto schoolCount =
-                    static_cast<unsigned int>(ceil(pupilCount / static_cast<double>(ggConfig.people[Id::PreSchool])));
+                const auto majorPupilCount  = static_cast<unsigned int>(ceil(it.second.major_fraction_preschool * majorPopCount));
+                const auto majorSchoolCount = static_cast<unsigned int>(round(majorPupilCount / static_cast<double>(ggConfig.people[Id::PreSchool])));
+                const auto pupilCount       = static_cast<unsigned int>(ceil(it.second.fraction_preschool * popCount));
+                const auto schoolCount      = static_cast<unsigned int>(round(pupilCount / static_cast<double>(ggConfig.people[Id::PreSchool])));
 
                 if (weights.empty()) {
                         // trng can't handle empty vectors
@@ -59,10 +65,15 @@ void Generator<stride::ContactType::Id::PreSchool>::Apply(GeoGrid& geoGrid, cons
                 }
 
                 const auto dist = m_rn_man.GetDiscreteGenerator(weights, 0U);
+                const auto majorDist = m_rn_man.GetDiscreteGenerator(majorWeights, 0U);
                 auto       pop  = geoGrid.GetPopulation();
 
                 for (auto i = 0U; i < schoolCount; i++) {
                         const auto loc = geoGrid[dist()];
+                        AddPools(*loc, pop, ggConfig);
+                }
+                for (auto i = 0U; i < majorSchoolCount; i++) {
+                        const auto loc = geoGrid[majorDist()];
                         AddPools(*loc, pop, ggConfig);
                 }
         }
