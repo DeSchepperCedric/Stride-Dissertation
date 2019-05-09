@@ -64,7 +64,7 @@ TEST_F(K12SchoolGeneratorTest, OneLocationTest)
         GeoGridConfig::Info info;
         m_gg_config.regionsInfo[4] = info;
 
-        m_gg_config.params.at(4).pop_size                = 10000;
+        m_gg_config.params.at(4).pop_size                = 2500;
         m_gg_config.regionsInfo.at(4).fraction_k12school = 2000.0 / m_gg_config.params.at(4).pop_size;
 
         auto loc1 = make_shared<Location>(1, 4, Coordinate(0, 0), "Antwerpen", 2500);
@@ -84,8 +84,8 @@ TEST_F(K12SchoolGeneratorTest, ZeroLocationTest)
         GeoGridConfig::Info info;
         m_gg_config.regionsInfo[4] = info;
 
-        m_gg_config.params.at(4).pop_size                = 10000;
-        m_gg_config.regionsInfo.at(4).fraction_k12school = 2000.0 / m_gg_config.params.at(4).pop_size;
+        m_gg_config.params.at(4).pop_size                = 0;
+        m_gg_config.regionsInfo.at(4).fraction_k12school = 0;
 
         m_k12school_generator.Apply(m_geo_grid, m_gg_config);
 
@@ -123,7 +123,7 @@ TEST_F(K12SchoolGeneratorTest, FiveLocationsTest)
 
         m_k12school_generator.Apply(m_geo_grid, m_gg_config);
 
-        array<unsigned int, 5> sizes{444, 416, 330, 133, 179};
+        array<unsigned int, 5> sizes{435, 428, 311, 148, 180};
         for (auto i = 0U; i < sizes.size(); i++) {
                 EXPECT_EQ(sizes[i] * m_ppk12, m_geo_grid[i]->CRefPools(Id::K12School).size());
         }
