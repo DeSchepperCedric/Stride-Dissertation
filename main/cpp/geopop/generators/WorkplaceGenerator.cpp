@@ -37,8 +37,8 @@ void Generator<stride::ContactType::Id::Workplace>::Apply(GeoGrid& geoGrid, cons
                 // = for each location #residents + #incoming commuting people - #outgoing commuting people
                 vector<double> weights;
                 vector<double> majorWeights;
-                auto popCount = 0U;
-                auto majorPopCount = 0U;
+                auto           popCount      = 0U;
+                auto           majorPopCount = 0U;
                 for (const auto& loc : geoGrid) {
                         if (loc->GetProvince() == it.first) {
                                 const double ActivePeopleCount =
@@ -52,7 +52,7 @@ void Generator<stride::ContactType::Id::Workplace>::Apply(GeoGrid& geoGrid, cons
                                 const double weight = ActivePeopleCount; // / EmployeeCount;
                                 AssertThrow(weight >= 0 && weight <= 1 && !std::isnan(weight),
                                             "Invalid weight: " + to_string(weight), m_logger);
-                                if (loc->IsMajor()){
+                                if (loc->IsMajor()) {
                                         majorPopCount += loc->GetPopCount();
                                         weights.push_back(0.0);
                                         majorWeights.push_back((weight));
@@ -68,35 +68,34 @@ void Generator<stride::ContactType::Id::Workplace>::Apply(GeoGrid& geoGrid, cons
                         }
                 }
 
-                const auto EmployeeCount =
-                        static_cast<unsigned int>(it.second.fraction_workplace * popCount);
+                const auto EmployeeCount = static_cast<unsigned int>(it.second.fraction_workplace * popCount);
                 const auto WorkplaceSize = ggConfig.refWP.average_workplace_size == 0U
-                                           ? ggConfig.people[Id::Workplace]
-                                           : ggConfig.refWP.average_workplace_size;
+                                               ? ggConfig.people[Id::Workplace]
+                                               : ggConfig.refWP.average_workplace_size;
                 const auto WorkplacesCount =
-                        static_cast<unsigned int>(ceil(EmployeeCount / static_cast<double>(WorkplaceSize)));
+                    static_cast<unsigned int>(ceil(EmployeeCount / static_cast<double>(WorkplaceSize)));
 
                 const auto majorEmployeeCount =
-                        static_cast<unsigned int>(it.second.major_fraction_workplace * majorPopCount);
+                    static_cast<unsigned int>(it.second.major_fraction_workplace * majorPopCount);
 
                 const auto majorWorkplacesCount =
-                        static_cast<unsigned int>(ceil(majorEmployeeCount / static_cast<double>(WorkplaceSize)));
+                    static_cast<unsigned int>(ceil(majorEmployeeCount / static_cast<double>(WorkplaceSize)));
 
                 if (weights.empty()) {
                         // trng can't handle empty vectors
                         return;
                 }
 
-                for (auto &w : weights){
+                for (auto& w : weights) {
                         w /= EmployeeCount;
                 }
-                for (auto &w : majorWeights){
+                for (auto& w : majorWeights) {
                         w /= majorEmployeeCount;
                 }
 
-                const auto dist = m_rn_man.GetDiscreteGenerator(weights, 0U);
+                const auto dist      = m_rn_man.GetDiscreteGenerator(weights, 0U);
                 const auto majorDist = m_rn_man.GetDiscreteGenerator(majorWeights, 0U);
-                auto       pop  = geoGrid.GetPopulation();
+                auto       pop       = geoGrid.GetPopulation();
 
                 for (auto i = 0U; i < WorkplacesCount; i++) {
                         const auto loc = geoGrid[dist()];

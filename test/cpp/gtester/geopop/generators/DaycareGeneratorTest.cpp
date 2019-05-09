@@ -97,8 +97,8 @@ TEST_F(DaycareGeneratorTest, FiveLocationsTest)
         GeoGridConfig::Info info;
         m_gg_config.regionsInfo[4] = info;
 
-        m_gg_config.params.at(4).pop_size              = 35042 * 100;
-        m_gg_config.regionsInfo.at(4).fraction_daycare = 125140.0 / m_gg_config.params.at(4).pop_size;
+        m_gg_config.params.at(4).pop_size                    = 35042 * 100;
+        m_gg_config.regionsInfo.at(4).fraction_daycare       = 125140.0 / m_gg_config.params.at(4).pop_size;
         m_gg_config.regionsInfo.at(4).major_fraction_daycare = 125140.0 / m_gg_config.params.at(4).pop_size;
 
         auto loc1 = make_shared<Location>(1, 4, Coordinate(0, 0), "Antwerpen", 10150 * 100, true);

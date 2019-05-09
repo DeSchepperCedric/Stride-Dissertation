@@ -63,8 +63,8 @@ TEST_F(PreSchoolGeneratorTest, OneLocationTest)
         GeoGridConfig::Info info;
         m_gg_config.regionsInfo[4] = info;
 
-        m_gg_config.params.at(4).pop_size                = 10000;
-        m_gg_config.regionsInfo.at(4).fraction_preschool = 300.0 / m_gg_config.params.at(4).pop_size;
+        m_gg_config.params.at(4).pop_size                      = 10000;
+        m_gg_config.regionsInfo.at(4).fraction_preschool       = 300.0 / m_gg_config.params.at(4).pop_size;
         m_gg_config.regionsInfo.at(4).major_fraction_preschool = 300.0 / m_gg_config.params.at(4).pop_size;
 
         auto loc1 = make_shared<Location>(1, 4, Coordinate(0, 0), "Antwerpen", m_gg_config.params.at(4).pop_size);
@@ -83,8 +83,8 @@ TEST_F(PreSchoolGeneratorTest, ZeroLocationTest)
         GeoGridConfig::Info info;
         m_gg_config.regionsInfo[4] = info;
 
-        m_gg_config.params.at(4).pop_size                = 10000;
-        m_gg_config.regionsInfo.at(4).fraction_preschool = 300.0 / m_gg_config.params.at(4).pop_size;
+        m_gg_config.params.at(4).pop_size                      = 10000;
+        m_gg_config.regionsInfo.at(4).fraction_preschool       = 300.0 / m_gg_config.params.at(4).pop_size;
         m_gg_config.regionsInfo.at(4).major_fraction_preschool = 300.0 / m_gg_config.params.at(4).pop_size;
 
         m_preschool_generator.Apply(m_geo_grid, m_gg_config);
@@ -99,8 +99,8 @@ TEST_F(PreSchoolGeneratorTest, FiveLocationsTest)
         GeoGridConfig::Info info;
         m_gg_config.regionsInfo[4] = info;
 
-        m_gg_config.params.at(4).pop_size                = 35042 * 100;
-        m_gg_config.regionsInfo.at(4).fraction_preschool = 125140.0 / m_gg_config.params.at(4).pop_size;
+        m_gg_config.params.at(4).pop_size                      = 35042 * 100;
+        m_gg_config.regionsInfo.at(4).fraction_preschool       = 125140.0 / m_gg_config.params.at(4).pop_size;
         m_gg_config.regionsInfo.at(4).major_fraction_preschool = 125140.0 / m_gg_config.params.at(4).pop_size;
 
         auto loc1 = make_shared<Location>(1, 4, Coordinate(0, 0), "Antwerpen", 10150 * 100, true);

@@ -79,9 +79,9 @@ TEST_F(WorkplaceGeneratorTest, NoCommuting)
         GeoGridConfig::Info info;
         m_gg_config.regionsInfo[4] = info;
 
-        m_gg_config.params.at(4).pop_size                     = 5 * 1000 * 1000;
-        m_gg_config.regionsInfo.at(4).fraction_workplace      = (0.20 * 5 * 1000 * 1000) / m_gg_config.params.at(4).pop_size;
-        m_gg_config.params.at(4).participation_workplace      = 0.20;
+        m_gg_config.params.at(4).pop_size                = 5 * 1000 * 1000;
+        m_gg_config.regionsInfo.at(4).fraction_workplace = (0.20 * 5 * 1000 * 1000) / m_gg_config.params.at(4).pop_size;
+        m_gg_config.params.at(4).participation_workplace = 0.20;
         m_gg_config.params.at(4).fraction_workplace_commuters = 0;
 
         array<unsigned int, 50> sizes{128331, 50784,  191020, 174476, 186595, 105032, 136388, 577,   111380, 171014,
@@ -112,9 +112,9 @@ TEST_F(WorkplaceGeneratorTest, NullCommuting)
         GeoGridConfig::Info info;
         m_gg_config.regionsInfo[4] = info;
 
-        m_gg_config.params.at(4).pop_size                     = 5 * 1000 * 1000;
-        m_gg_config.regionsInfo.at(4).fraction_workplace      = (0.20 * 5 * 1000 * 1000) / m_gg_config.params.at(4).pop_size;
-        m_gg_config.params.at(4).participation_workplace      = 0.20;
+        m_gg_config.params.at(4).pop_size                = 5 * 1000 * 1000;
+        m_gg_config.regionsInfo.at(4).fraction_workplace = (0.20 * 5 * 1000 * 1000) / m_gg_config.params.at(4).pop_size;
+        m_gg_config.params.at(4).participation_workplace = 0.20;
         m_gg_config.params.at(4).fraction_workplace_commuters = 0.10;
 
         array<unsigned int, 50> sizes{128331, 50784,  191020, 174476, 186595, 105032, 136388, 577,   111380, 171014,
@@ -157,9 +157,9 @@ TEST_F(WorkplaceGeneratorTest, TenCommuting)
         GeoGridConfig::Info info;
         m_gg_config.regionsInfo[4] = info;
 
-        m_gg_config.params.at(4).pop_size                     = 5 * 1000 * 1000;
-        m_gg_config.regionsInfo.at(4).fraction_workplace      = (0.20 * 5 * 1000 * 1000) / m_gg_config.params.at(4).pop_size;
-        m_gg_config.params.at(4).participation_workplace      = 0.20;
+        m_gg_config.params.at(4).pop_size                = 5 * 1000 * 1000;
+        m_gg_config.regionsInfo.at(4).fraction_workplace = (0.20 * 5 * 1000 * 1000) / m_gg_config.params.at(4).pop_size;
+        m_gg_config.params.at(4).participation_workplace = 0.20;
         m_gg_config.params.at(4).fraction_workplace_commuters = 0.10;
 
         array<unsigned int, 50> sizes{128331, 50784,  191020, 174476, 186595, 105032, 136388, 577,   111380, 171014,

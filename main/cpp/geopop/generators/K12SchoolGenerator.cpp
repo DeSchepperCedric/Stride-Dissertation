@@ -52,19 +52,22 @@ void Generator<stride::ContactType::Id::K12School>::Apply(GeoGrid& geoGrid, cons
                                 majorWeights.push_back(0.0);
                         }
                 }
-                const auto majorPupilCount  = static_cast<unsigned int>(ceil(it.second.major_fraction_k12school * majorPopCount));
-                const auto majorSchoolCount = static_cast<unsigned int>(round(majorPupilCount / static_cast<double>(ggConfig.people[Id::K12School])));
-                const auto pupilCount       = static_cast<unsigned int>(ceil(it.second.fraction_k12school * popCount));
-                const auto schoolCount      = static_cast<unsigned int>(round(pupilCount / static_cast<double>(ggConfig.people[Id::K12School])));
+                const auto majorPupilCount =
+                    static_cast<unsigned int>(ceil(it.second.major_fraction_k12school * majorPopCount));
+                const auto majorSchoolCount = static_cast<unsigned int>(
+                    round(majorPupilCount / static_cast<double>(ggConfig.people[Id::K12School])));
+                const auto pupilCount = static_cast<unsigned int>(ceil(it.second.fraction_k12school * popCount));
+                const auto schoolCount =
+                    static_cast<unsigned int>(round(pupilCount / static_cast<double>(ggConfig.people[Id::K12School])));
 
                 if (weights.empty()) {
                         // trng can't handle empty vectors
                         return;
                 }
 
-                const auto dist = m_rn_man.GetDiscreteGenerator(weights, 0U);
+                const auto dist      = m_rn_man.GetDiscreteGenerator(weights, 0U);
                 const auto majorDist = m_rn_man.GetDiscreteGenerator(majorWeights, 0U);
-                auto       pop  = geoGrid.GetPopulation();
+                auto       pop       = geoGrid.GetPopulation();
 
                 for (auto i = 0U; i < schoolCount; i++) {
                         const auto loc = geoGrid[dist()];
