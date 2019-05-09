@@ -42,7 +42,7 @@ double GetWorkplaceWeight(const GeoGridConfig& geoGridConfig, const stride::Cont
         }
         // pool is full and largest workplace possible
         else if (pool->size() >= geoGridConfig.refWP.max[index]) {
-                return 0.0;
+                return 0.00000000000000000000001;
         }
         // pool size is below minimum value
         else if (pool->size() < geoGridConfig.refWP.min[index]) {
@@ -181,13 +181,13 @@ void Populator<stride::ContactType::Id::Workplace>::Apply(GeoGrid& geoGrid, cons
                                                 }
                                                 auto t = gen();
 
-                                            if(t > pools.size() - 1){
+//                                            if(t > pools.size() - 1){
                                                 //std::cout <<"WTF"<<std::endl;
                                                 //std::cout<< "t: "<< t<<std::endl;
                                                 // std::cout <<"size: "<<pools.size()-1<<std::endl;
-                                            }
+//                                            }
 
-                                            auto pool      = pools[std::min(t, (int) pools.size() - 1)];
+                                            auto pool      = pools[t];
 
                                             auto pool_type = poolTypes[pool->GetId()];
                                                 pool->AddMember(person);
@@ -224,7 +224,7 @@ void Populator<stride::ContactType::Id::Workplace>::Apply(GeoGrid& geoGrid, cons
                                                             m_rn_man.GetDiscreteGenerator(weightsNonCommutePools, 0U);
                                                 }
 
-                                                auto pool = nearbyWp[std::min(genNonCommute(), (int)nearbyWp.size()-1)];
+                                                auto pool = nearbyWp[genNonCommute()];
 
                                                 const auto pool_type = poolTypes[pool->GetId()];
 
