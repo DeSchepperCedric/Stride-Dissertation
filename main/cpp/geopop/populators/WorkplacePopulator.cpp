@@ -40,9 +40,9 @@ double GetWorkplaceWeight(const GeoGridConfig& geoGridConfig, const stride::Cont
         if (pool->size() >= geoGridConfig.refWP.max[index] && index != (geoGridConfig.refWP.max.size()) - 1) {
                 return 0.000001;
         }
-        // pool is full and largest workplace possible
+        // pool is full and largest workplace possible (only when absolutely necessary)
         else if (pool->size() >= geoGridConfig.refWP.max[index]) {
-                return 0.00000000000000000000001;
+                return 0.00000000001 / (pool->size() - geoGridConfig.refWP.max[index] + 1);
         }
         // pool size is below minimum value
         else if (pool->size() < geoGridConfig.refWP.min[index]) {
@@ -74,9 +74,12 @@ void Populator<stride::ContactType::Id::Workplace>::Apply(GeoGrid& geoGrid, cons
         auto genCommute{function<int()>()};
         auto genNonCommute{function<int()>()};
         auto gen{function<int()>()};
+        auto genWorkPlaceSize = m_rn_man.GetDiscreteGenerator(geoGridConfig.refWP.ratios, 0U);
 
         vector<ContactPool*> nearbyWp{};
         vector<Location*>    commuteLocations{};
+
+        set<ContactPool*> all_pools_used;
 
         // unsigned int : pool ID
         // int : index of pool type
@@ -159,13 +162,15 @@ void Populator<stride::ContactType::Id::Workplace>::Apply(GeoGrid& geoGrid, cons
 
                                                 auto s = static_cast<int>(pools.size());
                                                 if (wp_types_present) {
-                                                        auto genWorkPlaceSize = m_rn_man.GetDiscreteGenerator(
-                                                            geoGridConfig.refWP.ratios, 0U);
+                                                        // -------------------------------------
+                                                        // Handling workplace size distribution
+                                                        // -------------------------------------
                                                         std::vector<double> weightsCommutePools;
                                                         for (int i = 0; i < s; i++) {
                                                                 const unsigned int index = geopop::GetWorkplaceIndex(
                                                                     poolTypes, pools[i]->GetId(), genWorkPlaceSize);
 
+                                                                all_pools_used.insert(pools[i]);
                                                                 const auto weight =
                                                                     GetWorkplaceWeight(geoGridConfig, pools[i], index);
 
@@ -174,24 +179,18 @@ void Populator<stride::ContactType::Id::Workplace>::Apply(GeoGrid& geoGrid, cons
                                                                     weight >= 0.0 && weight <= 1.0 && !isnan(weight),
                                                                     "Invalid weight: " + to_string(weight), m_logger);
                                                         }
-                                                        // std::cout << "weight size: "<< weightsCommutePools.size()<<std::endl;
                                                         gen = m_rn_man.GetDiscreteGenerator(weightsCommutePools, 0U);
                                                 } else {
                                                         gen = m_rn_man.GetUniformIntGenerator(0, s);
                                                 }
-                                                auto t = gen();
+                                                auto t    = gen();
+                                                auto pool = pools[t];
 
-//                                            if(t > pools.size() - 1){
-                                                //std::cout <<"WTF"<<std::endl;
-                                                //std::cout<< "t: "<< t<<std::endl;
-                                                // std::cout <<"size: "<<pools.size()-1<<std::endl;
-//                                            }
-
-                                            auto pool      = pools[t];
-
-                                            auto pool_type = poolTypes[pool->GetId()];
+                                                auto pool_type = poolTypes[pool->GetId()];
                                                 pool->AddMember(person);
                                                 person->SetPoolId(Id::Workplace, pool->GetId());
+
+                                                all_pools_used.insert(pool);
 
                                                 if (wp_types_present &&
                                                     pool->size() > geoGridConfig.refWP.max[pool_type] &&
@@ -199,14 +198,14 @@ void Populator<stride::ContactType::Id::Workplace>::Apply(GeoGrid& geoGrid, cons
                                                         poolTypes[pool->GetId()] += 1;
                                                 }
 
-
                                         } else {
                                                 // ----------------------------
                                                 // this person does not commute
                                                 // ----------------------------
                                                 if (wp_types_present) {
-                                                        auto genWorkPlaceSize = m_rn_man.GetDiscreteGenerator(
-                                                            geoGridConfig.refWP.ratios, 0U);
+                                                        // -------------------------------------
+                                                        // Handling workplace size distribution
+                                                        // -------------------------------------
                                                         std::vector<double> weightsNonCommutePools;
                                                         std::vector<int>    tempIndex;
                                                         for (auto& wp : nearbyWp) {
@@ -214,7 +213,7 @@ void Populator<stride::ContactType::Id::Workplace>::Apply(GeoGrid& geoGrid, cons
                                                                     poolTypes, wp->GetId(), genWorkPlaceSize);
                                                                 const auto weight = geopop::GetWorkplaceWeight(
                                                                     geoGridConfig, wp, index);
-
+                                                                all_pools_used.insert(wp);
                                                                 weightsNonCommutePools.push_back(weight);
                                                                 AssertThrow(
                                                                     weight >= 0.0 && weight <= 1.0 && !isnan(weight),
@@ -231,13 +230,14 @@ void Populator<stride::ContactType::Id::Workplace>::Apply(GeoGrid& geoGrid, cons
                                                 pool->AddMember(person);
                                                 person->SetPoolId(Id::Workplace, pool->GetId());
 
+                                                all_pools_used.insert(pool);
+
                                                 if (wp_types_present &&
                                                     pool->size() > geoGridConfig.refWP.max[pool_type] &&
                                                     pool_type < geoGridConfig.refWP.ratios.size() - 1) {
 
                                                         poolTypes[pool->GetId()] += 1;
                                                 }
-
                                         }
                                 } else {
                                         // -----------------------------
