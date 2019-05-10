@@ -55,6 +55,7 @@ TEST_F(WorkplacePopulatorTest, NoPopulation)
 {
         m_geo_grid.AddLocation(make_shared<Location>(0, 0, Coordinate(0.0, 0.0), "", 0));
         m_geo_grid.Finalize();
+        m_workplace_populator.Apply(m_geo_grid, m_gg_config);
 
         EXPECT_NO_THROW(m_workplace_populator.Apply(m_geo_grid, m_gg_config));
 }

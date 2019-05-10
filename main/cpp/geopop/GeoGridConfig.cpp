@@ -34,7 +34,7 @@ using namespace stride::AgeBrackets;
 using namespace stride::ContactType;
 using stride::util::intToDottedString;
 
-GeoGridConfig::GeoGridConfig() : param{}, refHH{}, info{} {}
+GeoGridConfig::GeoGridConfig() : param{}, refHH{}, refWP{}, info{} {}
 
 GeoGridConfig::GeoGridConfig(const ptree& configPt) : GeoGridConfig()
 {

@@ -70,19 +70,17 @@ template <>
 void Populator<stride::ContactType::Id::Workplace>::Apply(GeoGrid& geoGrid, const GeoGridConfig& geoGridConfig)
 {
         m_logger->trace("Starting to populate Workplaces");
-
         auto genCommute{function<int()>()};
         auto genNonCommute{function<int()>()};
         auto gen{function<int()>()};
-        auto genWorkPlaceSize = m_rn_man.GetDiscreteGenerator(geoGridConfig.refWP.ratios, 0U);
+        auto genWorkPlaceSize{function<int()>()};
 
         vector<ContactPool*> nearbyWp{};
-        vector<Location*>    commuteLocations{};
 
-        set<ContactPool*> all_pools_used;
+        vector<Location*> commuteLocations{};
 
-        // unsigned int : pool ID
-        // int : index of pool type
+        // key : pool ID
+        // value : index of pool type
         std::unordered_map<unsigned int, unsigned int> poolTypes;
 
         const bool wp_types_present = !geoGridConfig.refWP.ratios.empty();
@@ -97,6 +95,10 @@ void Populator<stride::ContactType::Id::Workplace>::Apply(GeoGrid& geoGrid, cons
         double fracCommuteStudents = 0.0;
         if (static_cast<bool>(fracWorkplaceCommute) && popWorkplace) {
                 fracCommuteStudents = (popCollege * fracCollegeCommute) / (popWorkplace * fracWorkplaceCommute);
+        }
+
+        if (wp_types_present) {
+                genWorkPlaceSize = m_rn_man.GetDiscreteGenerator(geoGridConfig.refWP.ratios, 0U);
         }
 
         // --------------------------------------------------------------------------------
@@ -170,7 +172,6 @@ void Populator<stride::ContactType::Id::Workplace>::Apply(GeoGrid& geoGrid, cons
                                                                 const unsigned int index = geopop::GetWorkplaceIndex(
                                                                     poolTypes, pools[i]->GetId(), genWorkPlaceSize);
 
-                                                                all_pools_used.insert(pools[i]);
                                                                 const auto weight =
                                                                     GetWorkplaceWeight(geoGridConfig, pools[i], index);
 
@@ -189,8 +190,6 @@ void Populator<stride::ContactType::Id::Workplace>::Apply(GeoGrid& geoGrid, cons
                                                 auto pool_type = poolTypes[pool->GetId()];
                                                 pool->AddMember(person);
                                                 person->SetPoolId(Id::Workplace, pool->GetId());
-
-                                                all_pools_used.insert(pool);
 
                                                 if (wp_types_present &&
                                                     pool->size() > geoGridConfig.refWP.max[pool_type] &&
@@ -213,7 +212,6 @@ void Populator<stride::ContactType::Id::Workplace>::Apply(GeoGrid& geoGrid, cons
                                                                     poolTypes, wp->GetId(), genWorkPlaceSize);
                                                                 const auto weight = geopop::GetWorkplaceWeight(
                                                                     geoGridConfig, wp, index);
-                                                                all_pools_used.insert(wp);
                                                                 weightsNonCommutePools.push_back(weight);
                                                                 AssertThrow(
                                                                     weight >= 0.0 && weight <= 1.0 && !isnan(weight),
@@ -229,8 +227,6 @@ void Populator<stride::ContactType::Id::Workplace>::Apply(GeoGrid& geoGrid, cons
 
                                                 pool->AddMember(person);
                                                 person->SetPoolId(Id::Workplace, pool->GetId());
-
-                                                all_pools_used.insert(pool);
 
                                                 if (wp_types_present &&
                                                     pool->size() > geoGridConfig.refWP.max[pool_type] &&
