@@ -69,8 +69,8 @@ set(SRC
         geopop/io/HouseholdJSONReaderTest.cpp
         geopop/io/ReaderFactoryTest.cpp
         geopop/io/DataVisualisationTest.cpp
-        geopop/io/GeoGridHDF5Reader.cpp
-        geopop/io/GeoGridHDF5Writer.cpp
+        #geopop/io/GeoGridHDF5ReaderTest.cpp
+        #geopop/io/GeoGridHDF5WriterTest.cpp
         geopop/io/WorkPlaceReaderTest.cpp
         #---
         geopop/kdtree.cpp

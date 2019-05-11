@@ -15,14 +15,14 @@
 
 #pragma once
 
+#include "H5Cpp.h"
+
 #include <iostream>
 
 namespace stride {
 namespace util {
 
-using namespace std;
-
-struct PERSON
+struct PersonType
 {
         unsigned int  id;
         float         age;
@@ -36,16 +36,32 @@ struct PERSON
         unsigned int  preschool;
 };
 
-struct COMMUTE
+struct CommuteType
 {
         unsigned int  to;
         double        proportion;
 };
 
-struct POOL
+struct PoolType
 {
         unsigned int  people;
 };
+
+H5::CompType  GetPersonType();
+
+H5::CompType  GetCommuteType();
+
+H5::CompType  GetPoolType();
+
+H5::PredType  GetPredType(const unsigned int& data);
+
+H5::PredType  GetPredType(const unsigned long& data);
+
+H5::PredType  GetPredType(const float& data);
+
+H5::PredType  GetPredType(const double& data);
+
+H5::StrType   GetPredType(const std::string& data);
 
 } //namespace util
 } //namespace stride

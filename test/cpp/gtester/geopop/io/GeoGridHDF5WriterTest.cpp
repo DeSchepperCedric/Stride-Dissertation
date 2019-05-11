@@ -15,7 +15,6 @@
 
 #include "GeoGridIOUtils.h"
 
-#include "geopop/ContactCenter.h"
 #include "geopop/GeoGridConfig.h"
 #include "geopop/io/GeoGridHDF5Writer.h"
 #include "pop/Population.h"
@@ -33,16 +32,17 @@ using namespace stride;
 using namespace stride::ContactType;
 using namespace stride::util;
 
-using boost::property_tree::ptree;
-
 namespace {
 
 bool compareGeoGrid(GeoGrid& geoGrid, const string& testname)
 {
-        GeoGridHDF5Writer writer;
-        stringstream ss;
-        writer.Write(geoGrid, ss);
-        
+        const string filename = "test";
+        GeoGridHDF5Writer writer(filename);
+        writer.Write(geoGrid);
+
+        (FileSys::GetTestDir().string() + "/testdata/GeoGridHDF5/" + testname);
+
+        return false
 }
 
 TEST(GeoGridHDF5WriterTest, locationsTest)

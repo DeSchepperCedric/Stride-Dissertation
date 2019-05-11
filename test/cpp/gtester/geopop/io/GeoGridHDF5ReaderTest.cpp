@@ -38,37 +38,68 @@ namespace {
 
 void getGeoGridFromFile(const string& filename, Population* pop)
 {
-        auto file = make_unique<ifstream>();
-        file->open(FileSys::GetTestsDir().string() + "/testdata/GeoGridHDF5/" + filename);
-        GeoGridHDF5Reader geoGridHDF5Reader(move(file), pop);
+        const string path = FileSys::GetTestsDir().string() + "/testdata/GeoGridHDF5/" + filename;
+        GeoGridHDF5Reader geoGridHDF5Reader(move(path), pop);
         geoGridHDF5Reader.Read();
 }
 
-TEST(GeoGridHDFReaderTest, locationsTest){
+TEST(GeoGridHDF5ReaderTest, locationsTest){
+        auto pop = Population::Create();
+        getGeoGridFromFile("test0.h5", pop.get());
+        auto& geoGrid = pop->RefGeoGrid();
+
+        map<unsigned int, shared_ptr<Location>> locations;
+        locations[geoGrid[0]->GetID()] = geoGrid[0];
+        locations[geoGrid[1]->GetID()] = geoGrid[1];
+        locations[geoGrid[2]->GetID()] = geoGrid[2];
+
+        const auto location1 = locations[1];
+        const auto location2 = locations[2];
+        const auto location3 = locations[3];
+
+        EXPECT_EQ(location1->GetID(), 1);
+        EXPECT_EQ(location1->GetName(), "Bavikhove");
+        EXPECT_EQ(location1->GetProvince(), 4);
+        EXPECT_EQ(location1->GetPopCount(), 2500);
+        EXPECT_EQ(get<0>(location1->GetCoordinate()), 0);
+        EXPECT_EQ(get<1>(location1->GetCoordinate()), 0);
+
+        EXPECT_EQ(location2->GetID(), 2);
+        EXPECT_EQ(location2->GetName(), "Gent");
+        EXPECT_EQ(location2->GetProvince(), 3);
+        EXPECT_EQ(location2->GetPopCount(), 5000);
+        EXPECT_EQ(get<0>(location2->GetCoordinate()), 0);
+        EXPECT_EQ(get<1>(location2->GetCoordinate()), 0);
+
+        EXPECT_EQ(location3->GetID(), 3);
+        EXPECT_EQ(location3->GetName(), "Mons");
+        EXPECT_EQ(location3->GetProvince(), 2);
+        EXPECT_EQ(location3->GetPopCount(), 2500);
+        EXPECT_EQ(get<0>(location3->GetCoordinate()), 0);
+        EXPECT_EQ(get<1>(location3->GetCoordinate()), 0);
+}
+
+TEST(GeoGridHDF5ReaderTest, commutesTest){
     EXPECT_TRUE(true);
 }
 
-TEST(GeoGridHDFReaderTest, commutesTest){
+TEST(GeoGridHDF5ReaderTest, contactCentersTest){
     EXPECT_TRUE(true);
 }
 
-TEST(GeoGridHDFReaderTest, contactCentersTest){
+TEST(GeoGridHDF5ReaderTest, peopleTest){
     EXPECT_TRUE(true);
 }
 
-TEST(GeoGridHDFReaderTest, peopleTest){
+TEST(GeoGridHDF5ReaderTest, invalidTypeTest){
     EXPECT_TRUE(true);
 }
 
-TEST(GeoGridHDFReaderTest, invalidTypeTest){
+TEST(GeoGridHDF5ReaderTest, invalidPersonTest){
     EXPECT_TRUE(true);
 }
 
-TEST(GeoGridHDFReaderTest, invalidPersonTest){
-    EXPECT_TRUE(true);
-}
-
-TEST(GeoGridHDFReaderTest, invalidHDFTest){
+TEST(GeoGridHDF5ReaderTest, invalidHDFTest){
     EXPECT_TRUE(true);
 }
 

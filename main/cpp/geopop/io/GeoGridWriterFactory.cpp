@@ -45,7 +45,7 @@ std::shared_ptr<GeoGridWriter> GeoGridWriterFactory::CreateGeoGridWriter(const s
         } else if (path.extension().string() == ".h5") {
                 return std::make_shared<GeoGridHDF5Writer>(filename);
         } else {
-                throw stride::util::Exception("GeoGridWriterFactory::CreateStreamWriter> Unsupported file extension: " +
+                throw stride::util::Exception("GeoGridWriterFactory::CreateWriter> Unsupported file extension: " +
                                               path.extension().string());
         }
 }

@@ -61,12 +61,9 @@ private:
         std::shared_ptr<Location> ParseLocation(H5::Group& location);
 
         /// Create a Person based on the information stored in the provided ...
-        stride::Person* ParsePerson(stride::util::PERSON& person);
+        stride::Person* ParsePerson(stride::util::PersonType& person);
 
         const H5::StrType strdatatype;
-        H5::CompType person_type;
-        H5::CompType commute_type;
-        H5::CompType pool_type;
 };
 
 } // namespace geopop

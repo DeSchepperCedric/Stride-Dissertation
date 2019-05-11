@@ -134,6 +134,7 @@ set(STRIDE_SRC
     util/CSV.cpp
     util/CSVRow.cpp
     util/FileSys.cpp
+    util/HDF5.cpp
     util/LogUtils.cpp
     util/Rn.cpp
     util/RnMan.cpp
@@ -184,10 +185,6 @@ include(CheckIPOSupported)
 # Build the stride binary.
 #============================================================================
 add_executable(stride execs/stride.cpp)
-add_executable(HDF5proto prototypes/h5tutr_crtgrpd.cpp)
 target_link_libraries(stride libstride)
-target_link_libraries(HDF5proto libstride)
 install(TARGETS stride DESTINATION ${BIN_INSTALL_LOCATION})
-install(TARGETS HDF5proto DESTINATION ${BIN_INSTALL_LOCATION})
-
 #############################################################################
