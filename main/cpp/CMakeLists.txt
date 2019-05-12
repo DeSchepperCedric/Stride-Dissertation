@@ -108,6 +108,12 @@ set(STRIDE_SRC
     geopop/populators/WorkplacePopulator.cpp
     geopop/populators/DaycarePopulator.cpp
     geopop/populators/PreSchoolPopulator.cpp
+
+    geopop/io/EpiJSONWriter.cpp
+    geopop/io/EpiWriter.h
+    geopop/io/EpiWriterFactory.cpp
+    geopop/io/EpiJSONReader.cpp
+
     #---
     ${PROTO_HEADER}
     ${PROTO_SRC}
@@ -146,7 +152,9 @@ set(STRIDE_SRC
     viewers/InfectedViewer.cpp
     viewers/PersonsFileViewer.cpp
     viewers/SummaryFileViewer.cpp
-)
+    viewers/EpiViewer.cpp
+        )
+
 
 #============================================================================
 # Build the Stride library.

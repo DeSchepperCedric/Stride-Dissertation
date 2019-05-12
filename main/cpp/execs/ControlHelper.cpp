@@ -30,6 +30,7 @@
 #include "viewers/InfectedFileViewer.h"
 #include "viewers/PersonsFileViewer.h"
 #include "viewers/SummaryFileViewer.h"
+#include "viewers/EpiViewer.h"
 
 #include <boost/property_tree/xml_parser.hpp>
 #include <regex>
@@ -158,6 +159,12 @@ void ControlHelper::RegisterViewers(shared_ptr<SimRunner> runner)
                 m_stride_logger->info("Registering SummaryFileViewer");
                 const auto v = make_shared<viewers::SummaryFileViewer>(runner, m_output_prefix);
                 runner->Register(v, bind(&viewers::SummaryFileViewer::Update, v, placeholders::_1));
+        }
+
+        if (m_config.get<bool>("run.output_epi", false)) {
+                m_stride_logger->info("Registering EpiFileViewer");
+                const auto v = make_shared<viewers::EpiViewer>(runner, m_output_prefix);
+                runner->Register(v, bind(&viewers::EpiViewer::Update, v, placeholders::_1));
         }
 }
 

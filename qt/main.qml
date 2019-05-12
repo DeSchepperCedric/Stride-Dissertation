@@ -1,68 +1,40 @@
-import QtQuick 2.9
-import QtQuick.Controls 2.2
-import QtLocation 5.6
-import QtPositioning 5.5
+import QtQuick 2.12
+import QtQuick.Window 2.12
+import QtLocation 5.12
+import QtPositioning 5.12
 
-ApplicationWindow {
-    id: window
+Window {
     visible: true
     width: 640
     height: 480
-    title: qsTr("Stack")
+    title: qsTr("Stride data visualization")
 
-    header: ToolBar {
-        contentHeight: toolButton.implicitHeight
-
-        ToolButton {
-            id: toolButton
-            text: stackView.depth > 1 ? "\u25C0" : "\u2630"
-            font.pixelSize: Qt.application.font.pixelSize * 1.6
-            onClicked: {
-                if (stackView.depth > 1) {
-                    stackView.pop()
-                } else {
-                    drawer.open()
-                }
-            }
-        }
-
-        Label {
-            text: stackView.currentItem.title
-            anchors.centerIn: parent
-        }
+    Plugin {
+        id: mapPlugin
+        name: "osm"
     }
 
-    Drawer {
-        id: drawer
-        width: window.width * 0.66
-        height: window.height
+    Map {
+        id: map
 
-        Column {
-            anchors.fill: parent
-
-            ItemDelegate {
-                text: qsTr("Page 1")
-                width: parent.width
-                onClicked: {
-                    stackView.push("Page1Form.ui.qml")
-                    drawer.close()
-                }
-            }
-            ItemDelegate {
-                text: qsTr("Page 2")
-                width: parent.width
-                onClicked: {
-                    stackView.push("Page2Form.ui.qml")
-                    drawer.close()
-                }
-            }
-        }
-    }
-
-    StackView {
-        id: stackView
-        initialItem: "Page1Form.ui.qml"
         anchors.fill: parent
-    }
-}
+        anchors.bottomMargin: 30
 
+        plugin: mapPlugin
+        center: QtPositioning.coordinate(50.85, 4.35)
+        zoomLevel: 10
+    }
+
+   function addLocation(locationId, latitude, longitude, radius) {
+           var component = Qt.createComponent("mapcircle.qml");
+           if (component.status === Component.Ready) {
+           	   console.log("lol")
+               var location = component.createObject(map);
+               location.id = locationId;
+               location.lat = latitude;
+               location.longt = longitude;
+               location.rad = radius;
+               map.addMapItem(location);
+           }
+       }
+}

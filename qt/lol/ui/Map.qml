@@ -19,14 +19,16 @@ MapForm {
             center: QtPositioning.coordinate(51.260197, 4.402771)
             zoomLevel: 7
 
-            MapCircle {
-                center {
-                    latitude: 51.260197
-                    longitude: 4.402771
-                }
-                radius: 200
-                color: "green"
-                opacity: 0.5
+            Repeater{
+            	MapCircle {
+                                center {
+                                    latitude: 51.260197
+                                    longitude: 4.402771
+                                }
+                                radius: 200
+                                color: "green"
+                                opacity: 0.5
+                            }
             }
         }
     }
