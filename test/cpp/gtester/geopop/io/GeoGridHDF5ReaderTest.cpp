@@ -16,7 +16,6 @@
 #include "geopop/io/GeoGridHDF5Reader.h"
 
 #include "contact/ContactType.h"
-#include "geopop/ContactCenter.h"
 #include "geopop/GeoGrid.h"
 #include "pop/Population.h"
 #include "util/Exception.h"

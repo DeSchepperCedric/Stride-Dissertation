@@ -45,10 +45,9 @@ void GeoGridHDF5Writer::Write(GeoGrid& geoGrid)
         unsigned int count = 0;
         const string name = "location";
         for (const auto& location : geoGrid) {
-                count++;
+                ++count;
                 string location_name = name + to_string(count);
                 WriteLocation(*location, locations, location_name);
-                count++;
         }
         WriteAttribute(count, "size", locations);
 
@@ -92,7 +91,7 @@ void GeoGridHDF5Writer::WriteCoordinate(const Coordinate& coordinate, Group& loc
                                   }
                               };
         DataSpace dataspace(2, dims);
-        Attribute attribute = location.createAttribute("coordinate", GetPredType(data[0][0]), dataspace);
+        Attribute attribute = location.createAttribute("coordinates", GetPredType(data[0][0]), dataspace);
         attribute.write(GetPredType(data[0][0]), data);
 
 }
@@ -107,24 +106,25 @@ void GeoGridHDF5Writer::WriteLocation(const Location& location, Group& locations
         WriteCoordinate(location.GetCoordinate(), loc);
 
         auto commutes = location.CRefOutgoingCommutes();
+        hsize_t     dimsf[1] = {commutes.size()};
+        DataSpace dataspace(RANK, dimsf);
+        DataSet commutes_dataset = loc.createDataSet("commutes", GetCommuteType(), dataspace);
         if (!commutes.empty()) {
-                hsize_t     dimsf[1] = {commutes.size()};
-                DataSpace dataspace(RANK, dimsf);
-                DataSet commutes_dataset = loc.createDataSet("commutes", GetCommuteType(), dataspace);
                 vector<CommuteType> commute_data;
                 for (auto commute_pair : commutes) {
                         commute_data.push_back(WriteCommute(commute_pair));
                 }
                 commutes_dataset.write(commute_data.data(), GetCommuteType());
-                WriteAttribute(commutes.size(), "size", commutes_dataset);
         }
+        unsigned int commutes_size = commutes.size();
+        WriteAttribute(commutes_size, "size", commutes_dataset);
 
         Group contactPools(loc.createGroup("contactPools"));
         unsigned int count = 0;
         const string name = "pool";
         for (Id typ : IdList) {
                 for (const auto& c : location.CRefPools(typ)) {
-                        count++;
+                        ++count;
                         string pool_name = name + to_string(count);
                         WriteContactPool(c, contactPools, pool_name);
                 }
@@ -174,6 +174,15 @@ void GeoGridHDF5Writer::WriteAttribute(const T& data, const string& name, H5Obje
         T         data_buffer[1] = {data};
         Attribute attribute = object.createAttribute(name, GetPredType(data), dataspace);
         attribute.write(GetPredType(data), data_buffer);
+}
+
+template<>
+void GeoGridHDF5Writer::WriteAttribute(const string& data, const string& name, H5Object& object)
+{
+        hsize_t   dims[1] = {1};
+        DataSpace dataspace(1, dims);
+        Attribute attribute = object.createAttribute(name, GetPredType(data), dataspace);
+        attribute.write(GetPredType(data), data);
 }
 
 } // namespace geopop

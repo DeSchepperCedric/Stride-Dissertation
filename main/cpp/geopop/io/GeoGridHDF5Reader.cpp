@@ -30,62 +30,54 @@ using namespace stride::util;
 using namespace H5;
 
 GeoGridHDF5Reader::GeoGridHDF5Reader(const string& inputFile, Population* pop)
-    : GeoGridFileReader(inputFile, pop), strdatatype(H5::PredType::C_S1, 256)
+    : GeoGridFileReader(inputFile, pop)
 {
 }
 
 void GeoGridHDF5Reader::Read()
 {
-        /*H5File file;
+        H5File file;
         try {
                 file = H5File(m_inputFile, H5F_ACC_RDONLY);
         } catch (FileIException error) {
                 throw error.getDetailMsg();
         } /*catch (runtime_error&) {
                 throw Exception("Problem parsing HDF5 file, check whether empty or invalid HDF5.");
-        }
+        }*/
 
         auto& geoGrid = m_population->RefGeoGrid();
-        auto people = file.openDataSet("persons");
 
-        const int person_dataset_size = people.getStorageSize();
-        PERSON person_data[person_dataset_size];
-        people.read(&person_data, person_type);
+        auto people = file.openDataSet("persons");
+        unsigned int people_size = ReadAttribute<unsigned int>("size", people);
+        vector<PersonType> person_data(people_size);
+        people.read(person_data.data(), GetPersonType());
         for (auto prsn : person_data) {
                 auto person               = ParsePerson(prsn);
                 m_people[person->GetId()] = person;
         }
 
         auto locations = file.openGroup("locations");
-        Attribute locations_size = locations.openAttribute("size");
-        unsigned int size;
-        locations_size.read(locations_size.getDataType(), &size);
+        unsigned int size = ReadAttribute<unsigned int>("size", locations);
         const string name = "location";
-        for (unsigned int i = 1; i <= size; i++) {
+        for (unsigned int i = 1; i <= size; ++i) {
                 string location_name = name + to_string(i);
                 shared_ptr<Location> loc;
                 auto location = locations.openGroup(location_name);
-                loc = ParseLocation(location);
+                loc = move(ParseLocation(location));
                 geoGrid.AddLocation(move(loc));
         }
 
         AddCommutes(geoGrid);
         m_commutes.clear();
         m_people.clear();
-        */
+        file.close();
 }
 
 void GeoGridHDF5Reader::ParseContactPool(H5::DataSet& contactPool, shared_ptr<Location> result)
 {
-        /*Attribute attr_id     = contactPool.openAttribute("id");
-        Attribute attr_size   = contactPool.openAttribute("size");
-        Attribute attr_type   = contactPool.openAttribute("type");
-        unsigned int  id;
-        unsigned int  size;
-        string        type;
-        attr_id.read(attr_id.getDataType(), &id);
-        attr_size.read(attr_size.getDataType(), &size);
-        attr_type.read(attr_type.getDataType(), &type);
+        //unsigned int  id    = ReadAttribute<unsigned int>("id", contactPool);   //unused
+        unsigned int  size  = ReadAttribute<unsigned int>("size", contactPool);
+        string        type  = ReadAttribute<string>("type", contactPool);
 
         ContactType::Id typeId;
         if (type == ToString(Id::K12School)) {
@@ -108,11 +100,11 @@ void GeoGridHDF5Reader::ParseContactPool(H5::DataSet& contactPool, shared_ptr<Lo
                 throw ("No such ContactPool type: " + type);
         }
 
+        // Don't use the id of the ContactPool but the let the Population create an id.
         auto cp = m_population->RefPoolSys().CreateContactPool(typeId);
-
-        const int pool_dataset_size = contactPool.getStorageSize();
-        POOL pool_data[pool_dataset_size];
-        contactPool.read(&pool_data, pool_type);
+        result->RefPools(typeId).emplace_back(cp);
+        vector<PoolType> pool_data(size);
+        contactPool.read(pool_data.data(), GetPoolType());
         for (auto pool : pool_data) {
               unsigned int people_id = pool.people;
               try {
@@ -125,54 +117,43 @@ void GeoGridHDF5Reader::ParseContactPool(H5::DataSet& contactPool, shared_ptr<Lo
         }
 
         result->RegisterPool(cp, typeId);
-        */
 }
 
 shared_ptr<Location> GeoGridHDF5Reader::ParseLocation(Group& location)
 {
-        /*Attribute attr_id     = location.openAttribute("id");
-        Attribute attr_name   = location.openAttribute("name");
-        Attribute attr_prov   = location.openAttribute("province");
-        Attribute attr_pop    = location.openAttribute("population");
-        Attribute attr_coord  = location.openAttribute("coordination");
-        unsigned int  id;
-        string        name;
-        unsigned int  prov;
-        unsigned int  pop;
+        unsigned int  id    = ReadAttribute<unsigned int>("id", location);
+        string        name  = ReadAttribute<string>("name", location);
+        unsigned int  prov  = ReadAttribute<unsigned int>("province", location);
+        unsigned int  pop   = ReadAttribute<unsigned int>("population", location);
+        Attribute attr_coord  = location.openAttribute("coordinates");
         double        coord[2];
-        attr_id.read(attr_id.getDataType(), &id);
-        attr_name.read(attr_id.getDataType(), &name);
-        attr_prov.read(attr_id.getDataType(), &prov);
-        attr_pop.read(attr_id.getDataType(), &pop);
-        attr_coord.read(attr_id.getDataType(), &coord);
+        attr_coord.read(attr_coord.getDataType(), &coord);
         Coordinate c = {boost::lexical_cast<double>(coord[0]), boost::lexical_cast<double>(coord[1])};
         auto result = make_shared<Location>(id, prov, c, name, pop);
 
         auto contactPools = location.openGroup("contactPools");
-        Attribute pool_size = contactPools.openAttribute("size");
-        unsigned int size;
-        pool_size.read(pool_size.getDataType(), &size);
+        unsigned int pool_size = ReadAttribute<unsigned int>("size", contactPools);
         const string pool_name = "pool";
-        for (unsigned int i = 1; i <= size; i++) {
+        for (unsigned int i = 1; i <= pool_size; i++) {
                 auto pool = contactPools.openDataSet((name + to_string(i)));
                 ParseContactPool(pool, result);
         }
 
         auto commutes = location.openDataSet("commutes");
-        const int commutes_dataset_size = commutes.getStorageSize();;
-        COMMUTE commutes_data[commutes_dataset_size];
-        commutes.read(&commutes_data, commute_type);
+        unsigned int commute_size = ReadAttribute<unsigned int>("size", commutes);
+        vector<CommuteType> commutes_data(commute_size);
+        commutes.read(commutes_data.data(), GetCommuteType());
         for (auto cmmt : commutes_data) {
                 m_commutes.emplace_back(id, cmmt.to, cmmt.proportion);
         }
 
         return result;
-        */
+
 }
 
 Person* GeoGridHDF5Reader::ParsePerson(PersonType& person)
 {
-        /*return m_population->CreatePerson(
+        return m_population->CreatePerson(
                                             person.id,
                                             person.age,
                                             person.household,
@@ -184,7 +165,24 @@ Person* GeoGridHDF5Reader::ParsePerson(PersonType& person)
                                             person.daycare,
                                             person.preschool
                                           );
-                                          */
+}
+
+template<typename T>
+T GeoGridHDF5Reader::ReadAttribute(const string& name, H5Object& object)
+{
+          T data;
+          Attribute attribute = object.openAttribute(name);
+          attribute.read(attribute.getDataType(), &data);
+          return data;
+}
+
+template<>
+string GeoGridHDF5Reader::ReadAttribute(const string& name, H5Object& object)
+{
+        string data;
+        Attribute attribute = object.openAttribute(name);
+        attribute.read(attribute.getStrType(), data);
+        return data;
 }
 
 } // namespace geopop

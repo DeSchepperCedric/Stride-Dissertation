@@ -63,7 +63,13 @@ private:
         /// Create a Person based on the information stored in the provided ...
         stride::Person* ParsePerson(stride::util::PersonType& person);
 
-        const H5::StrType strdatatype;
+        template<typename T>
+        T ReadAttribute(const std::string& name, H5::H5Object& object);
+
+        //std::string ReadAttribute(const std::string& name, H5::H5Object& object);
 };
+
+template<>
+std::string GeoGridHDF5Reader::ReadAttribute(const std::string& name, H5::H5Object& object);
 
 } // namespace geopop
