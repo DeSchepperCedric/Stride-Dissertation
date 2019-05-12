@@ -101,15 +101,21 @@ find_package(Threads)
 #----------------------------------------------------------------------------
 # ProtoBuf
 #----------------------------------------------------------------------------
+set(Protobuf_USE_STATIC_LIBS ON)
 if(NOT STRIDE_FORCE_NO_PROTOC)
     include(FindProtobuf)
     find_package(Protobuf)
     if(NOT Protobuf_FOUND)
-            set(Protobuf_VERSION "0.0.0")
+        set(Protobuf_VERSION "0.0.0")
     endif()
+    if((Protobuf_FOUND) AND (${Protobuf_VERSION} VERSION_LESS 3.0.0))
+         set(Protobuf_FOUND FALSE)
+    endif()
+else()
+    set(Protobuf_FOUND FALSE)
 endif()
 #
-if(Protobuf_FOUND AND ${Protobuf_VERSION} VERSION_GREATER_EQUAL 3.0.0)
+if(Protobuf_FOUND)
     set(Protobuf_PBS_DIR ${CMAKE_BINARY_DIR}/main/cpp)
     include_directories(SYSTEM ${Protobuf_INCLUDE_DIRS})
 else()
@@ -173,6 +179,26 @@ endif()
 # If not found, use the dummy omp.
 if(NOT OPENMP_FOUND)
     include_directories(${CMAKE_HOME_DIRECTORY}/main/resources/lib/domp/include)
+endif()
+#----------------------------------------------------------------------------
+# nlohmann_json
+#----------------------------------------------------------------------------
+include_directories(SYSTEM ${CMAKE_HOME_DIRECTORY}/main/resources/lib/nlohmann_json/include)
+
+#----------------------------------------------------------------------------
+# HDF5
+#----------------------------------------------------------------------------
+if(NOT STRIDE_FORCE_NO_HDF5)
+    find_package(HDF5 1.10.5 COMPONENTS CXX HL)
+endif()
+if(HDF5_FOUND)
+    include_directories(SYSTEM ${HDF5_CXX_INCLUDE_DIRS})
+else()
+		include_directories(SYSTEM ${CMAKE_HOME_DIRECTORY}/main/resources/lib/hdf5/src)
+		include_directories(SYSTEM ${CMAKE_HOME_DIRECTORY}/main/resources/lib/hdf5/c++/src)
+    include_directories(SYSTEM ${CMAKE_HOME_DIRECTORY}/main/resources/lib/hdf5/hl/c++/src)
+    include_directories(SYSTEM ${CMAKE_HOME_DIRECTORY}/main/resources/lib/hdf5/hl/src)
+    include_directories(SYSTEM ${CMAKE_BINARY_DIR}/main/resources/lib/hdf5/config)
 endif()
 
 #############################################################################

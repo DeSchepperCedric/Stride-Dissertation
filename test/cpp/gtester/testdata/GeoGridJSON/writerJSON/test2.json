@@ -1,0 +1,118 @@
+{
+    "locations": [
+        {
+            "id": 1,
+            "name": "Bavikhove",
+            "province": 4,
+            "population": 2500,
+            "coordinate": {
+                "longitude": 0.0,
+                "latitude": 0.0
+            },
+            "contactPools": [
+                {
+                    "class": "K12School",
+                    "pools": [
+                        {
+                            "id": 1,
+                            "people": [
+                                0
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "class": "PrimaryCommunity",
+                    "pools": [
+                        {
+                            "id": 1,
+                            "people": [
+                                0
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "class": "SecondaryCommunity",
+                    "pools": [
+                        {
+                            "id": 1,
+                            "people": [
+                                0
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "class": "College",
+                    "pools": [
+                        {
+                            "id": 1,
+                            "people": [
+                                0
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "class": "Household",
+                    "pools": [
+                        {
+                            "id": 1,
+                            "people": [
+                                0
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "class": "Workplace",
+                    "pools": [
+                        {
+                            "id": 1,
+                            "people": [
+                                0
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "class": "Daycare",
+                    "pools": [
+                        {
+                            "id": 1,
+                            "people": [
+                                0
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "class": "PreSchool",
+                    "pools": [
+                        {
+                            "id": 1,
+                            "people": [
+                                0
+                            ]
+                        }
+                    ]
+                }
+            ]
+        }
+    ],
+    "persons": [
+        {
+            "id": 0,
+            "age": 18,
+            "K12School": 1,
+            "College": 1,
+            "Household": 1,
+            "Workplace": 1,
+            "PrimaryCommunity": 1,
+            "SecondaryCommunity": 1,
+            "Daycare": 1,
+            "PreSchool": 1
+        }
+    ]
+}

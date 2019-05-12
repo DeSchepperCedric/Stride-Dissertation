@@ -33,9 +33,9 @@ using namespace std;
 using namespace stride::util;
 using namespace stride::ContactType;
 
-GeoGridProtoWriter::GeoGridProtoWriter() : m_persons_found() {}
+GeoGridProtoWriter::GeoGridProtoWriter(std::ostream& stream) : GeoGridStreamWriter(stream), m_persons_found() {}
 
-void GeoGridProtoWriter::Write(GeoGrid& geoGrid, ostream& stream)
+void GeoGridProtoWriter::Write(GeoGrid& geoGrid)
 {
         GOOGLE_PROTOBUF_VERIFY_VERSION;
 
@@ -48,11 +48,11 @@ void GeoGridProtoWriter::Write(GeoGrid& geoGrid, ostream& stream)
         }
 
         m_persons_found.clear();
-        if (!protoGrid.SerializeToOstream(&stream)) {
+        if (!protoGrid.SerializeToOstream(&StreamRef())) {
                 throw stride::util::Exception("There was an error writing the GeoGrid to the file.");
         }
         google::protobuf::ShutdownProtobufLibrary();
-        stream.flush();
+        StreamRef().flush();
 }
 
 void GeoGridProtoWriter::WriteContactPools(Id typeId, SegmentedVector<stride::ContactPool*>& contactPools,
@@ -64,7 +64,9 @@ void GeoGridProtoWriter::WriteContactPools(Id typeId, SegmentedVector<stride::Co
             {Id::SecondaryCommunity, proto::GeoGrid_Location_ContactPools_Type_SecondaryCommunity},
             {Id::College, proto::GeoGrid_Location_ContactPools_Type_College},
             {Id::Household, proto::GeoGrid_Location_ContactPools_Type_Household},
-            {Id::Workplace, proto::GeoGrid_Location_ContactPools_Type_Workplace}};
+            {Id::Workplace, proto::GeoGrid_Location_ContactPools_Type_Workplace},
+            {Id::Daycare, proto::GeoGrid_Location_ContactPools_Type_Daycare},
+            {Id::PreSchool, proto::GeoGrid_Location_ContactPools_Type_PreSchool}};
 
         protoContactPools->set_type(types.at(typeId));
         for (stride::ContactPool* pool : contactPools) {

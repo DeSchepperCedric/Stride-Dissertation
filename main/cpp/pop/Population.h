@@ -44,7 +44,7 @@ class RnMan;
  * (b) the ContactPoolSys wchich is used to loop over ContactPools of each type
  * (c) (if present) GeoGrid of Locations, each having an index of ContactPools at that location.
  */
-class Population : public util::SegmentedVector<Person>
+class Population : public util::SegmentedVector<Person, 2048>
 {
 public:
         /// Create a Population initialized by the configuration in property tree.
@@ -61,8 +61,8 @@ public:
 public:
         /// Create Person in the population.
         Person* CreatePerson(unsigned int id, double age, unsigned int householdId, unsigned int k12SchoolId,
-                             unsigned int collegeId, unsigned int workId, unsigned int primaryCommunityId,
-                             unsigned int secondaryCommunityId);
+                             unsigned int college, unsigned int workId, unsigned int primaryCommunityId,
+                             unsigned int secondaryCommunityId, unsigned int daycareId, unsigned int preSchoolId);
 
         /// Get the cumulative number of cases.
         unsigned int GetInfectedCount() const;

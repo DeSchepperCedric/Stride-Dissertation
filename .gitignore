@@ -96,6 +96,13 @@ doc/doxygen/Doxyfile
 doc/doxygen/html
 doc/doxygen/latex
 doc/doxygen/tex
+#----------------
+# HDF5 stuff (auto-generated)
+#----------------
+H5Edefin.h
+H5Einit.h
+H5Epubgen.h
+H5Eterm.h
 
 venv
 main/resources/commuting/

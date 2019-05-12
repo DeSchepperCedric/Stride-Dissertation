@@ -49,6 +49,8 @@ TEST(GeoGridProtoWriterTest, contactPoolsTest)
         loc->RefPools(Id::College).emplace_back(pop->RefPoolSys().CreateContactPool(Id::College));
         loc->RefPools(Id::Household).emplace_back(pop->RefPoolSys().CreateContactPool(Id::Household));
         loc->RefPools(Id::Workplace).emplace_back(pop->RefPoolSys().CreateContactPool(Id::Workplace));
+        loc->RefPools(Id::Daycare).emplace_back(pop->RefPoolSys().CreateContactPool(Id::Daycare));
+        loc->RefPools(Id::PreSchool).emplace_back(pop->RefPoolSys().CreateContactPool(Id::PreSchool));
         geoGrid.AddLocation(loc);
 
         CompareGeoGrid(geoGrid);

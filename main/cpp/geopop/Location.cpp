@@ -29,7 +29,7 @@ using namespace stride::ContactType;
 
 Location::Location(unsigned int id, unsigned int province, Coordinate coordinate, string name, unsigned int popCount)
     : m_coordinate(coordinate), m_id(id), m_name(move(name)), m_pop_count(popCount), m_pop_fraction(0.0),
-      m_province(province), m_inCommutes(), m_outCommutes(),/* m_cc(),*/ m_pool_index()
+      m_province(province), m_inCommutes(), m_outCommutes(), /* m_cc(),*/ m_pool_index()
 {
 }
 

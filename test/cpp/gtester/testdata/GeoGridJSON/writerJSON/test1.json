@@ -1,0 +1,80 @@
+{
+    "locations": [
+        {
+            "id": 1,
+            "name": "Bavikhove",
+            "province": 4,
+            "population": 2500,
+            "coordinate": {
+                "longitude": 0.0,
+                "latitude": 0.0
+            },
+            "contactPools": [
+                {
+                    "class": "K12School",
+                    "pools": [
+                        {
+                            "id": 1,
+                            "people": []
+                        }
+                    ]
+                },
+                {
+                    "class": "PrimaryCommunity",
+                    "pools": [
+                        {
+                            "id": 1,
+                            "people": []
+                        }
+                    ]
+                },
+                {
+                    "class": "College",
+                    "pools": [
+                        {
+                            "id": 1,
+                            "people": []
+                        }
+                    ]
+                },
+                {
+                    "class": "Household",
+                    "pools": [
+                        {
+                            "id": 1,
+                            "people": []
+                        }
+                    ]
+                },
+                {
+                    "class": "Workplace",
+                    "pools": [
+                        {
+                            "id": 1,
+                            "people": []
+                        }
+                    ]
+                },
+                {
+                    "class": "Daycare",
+                    "pools": [
+                        {
+                            "id": 1,
+                            "people": []
+                        }
+                    ]
+                },
+                {
+                    "class": "PreSchool",
+                    "pools": [
+                        {
+                            "id": 1,
+                            "people": []
+                        }
+                    ]
+                }
+            ]
+        }
+    ],
+    "persons": []
+}

@@ -77,7 +77,9 @@ void CompareContactPools(Id typeId, const stride::util::SegmentedVector<stride::
             {Id::SecondaryCommunity, proto::GeoGrid_Location_ContactPools_Type_SecondaryCommunity},
             {Id::College, proto::GeoGrid_Location_ContactPools_Type_College},
             {Id::Household, proto::GeoGrid_Location_ContactPools_Type_Household},
-            {Id::Workplace, proto::GeoGrid_Location_ContactPools_Type_Workplace}};
+            {Id::Workplace, proto::GeoGrid_Location_ContactPools_Type_Workplace},
+            {Id::Daycare, proto::GeoGrid_Location_ContactPools_Type_Daycare},
+            {Id::PreSchool, proto::GeoGrid_Location_ContactPools_Type_PreSchool}};
 
         EXPECT_EQ(types.at(typeId), protoContactPools.type());
         ASSERT_EQ(protoContactPools.pools_size(), contactPools.size());
@@ -111,7 +113,9 @@ void CompareLocation(const Location& location, const proto::GeoGrid_Location& pr
             {proto::GeoGrid_Location_ContactPools_Type_SecondaryCommunity, Id::SecondaryCommunity},
             {proto::GeoGrid_Location_ContactPools_Type_College, Id::College},
             {proto::GeoGrid_Location_ContactPools_Type_Household, Id::Household},
-            {proto::GeoGrid_Location_ContactPools_Type_Workplace, Id::Workplace}};
+            {proto::GeoGrid_Location_ContactPools_Type_Workplace, Id::Workplace},
+            {proto::GeoGrid_Location_ContactPools_Type_Daycare, Id::Daycare},
+            {proto::GeoGrid_Location_ContactPools_Type_PreSchool, Id::PreSchool}};
 
         for (int idx = 0; idx < protoLocation.contactpools_size(); idx++) {
                 const auto& protoContactPools     = protoLocation.contactpools(idx);
@@ -141,13 +145,15 @@ void ComparePerson(const proto::GeoGrid_Person& protoPerson)
                   person->GetPoolId(Id::PrimaryCommunity));
         EXPECT_EQ(persons_pools[make_pair(protoPerson.id(), Id::SecondaryCommunity)],
                   person->GetPoolId(Id::SecondaryCommunity));
+        EXPECT_EQ(persons_pools[make_pair(protoPerson.id(), Id::Daycare)], person->GetPoolId(Id::Daycare));
+        EXPECT_EQ(persons_pools[make_pair(protoPerson.id(), Id::PreSchool)], person->GetPoolId(Id::PreSchool));
 }
 
 void CompareGeoGrid(GeoGrid& geoGrid)
 {
-        GeoGridProtoWriter writer;
         stringstream       ss;
-        writer.Write(geoGrid, ss);
+        GeoGridProtoWriter writer(ss);
+        writer.Write(geoGrid);
         proto::GeoGrid protoGrid;
         protoGrid.ParseFromIstream(&ss);
         compareGeoGrid(geoGrid, protoGrid);
@@ -181,16 +187,23 @@ shared_ptr<GeoGrid> GetPopulatedGeoGrid(Population* pop)
         loc->RefPools(Id::Household).emplace_back(hPool);
         auto wPool = pop->RefPoolSys().CreateContactPool(Id::Workplace);
         loc->RefPools(Id::Workplace).emplace_back(wPool);
+        auto dPool = pop->RefPoolSys().CreateContactPool(Id::Daycare);
+        loc->RefPools(Id::Daycare).emplace_back(dPool);
+        auto prePool = pop->RefPoolSys().CreateContactPool(Id::PreSchool);
+        loc->RefPools(Id::PreSchool).emplace_back(prePool);
 
         geoGrid->AddLocation(loc);
-        const auto person = geoGrid->GetPopulation()->CreatePerson(
-            0, 18, hPool->GetId(), k12Pool->GetId(), cPool->GetId(), wPool->GetId(), pcPool->GetId(), scPool->GetId());
+        const auto person = geoGrid->GetPopulation()->CreatePerson(0, 18, hPool->GetId(), k12Pool->GetId(),
+                                                                   cPool->GetId(), wPool->GetId(), pcPool->GetId(),
+                                                                   scPool->GetId(), dPool->GetId(), prePool->GetId());
         k12Pool->AddMember(person);
         pcPool->AddMember(person);
         scPool->AddMember(person);
         cPool->AddMember(person);
         hPool->AddMember(person);
         wPool->AddMember(person);
+        dPool->AddMember(person);
+        prePool->AddMember(person);
         return geoGrid;
 }
 

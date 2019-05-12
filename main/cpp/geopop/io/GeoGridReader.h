@@ -15,7 +15,6 @@
 
 #pragma once
 
-#include <istream>
 #include <map>
 #include <memory>
 #include <tuple>
@@ -38,7 +37,7 @@ class GeoGridReader
 {
 public:
         /// Parametrized constructor.
-        GeoGridReader(std::unique_ptr<std::istream> inputStream, stride::Population* pop);
+        GeoGridReader(stride::Population* pop);
 
         /// No copy constructor.
         GeoGridReader(const GeoGridReader&) = delete;
@@ -63,7 +62,6 @@ protected:
         ///< Commutes from, to, number.
         std::vector<std::tuple<unsigned int, unsigned int, double>> m_commutes;
 
-        std::unique_ptr<std::istream> m_inputStream; ///< File to read.
         stride::Population*           m_population;  ///< Population to use in the GeoGrid may be nullptr.
 };
 

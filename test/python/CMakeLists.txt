@@ -18,41 +18,41 @@
 # Install the python test scripts.
 #============================================================================
 set (SCRIPTS
-	testForker.py
-	testInfected.py
-    testPrint.py
-	testSmoke.py
-	testVaccinate.py
-)
+		testForker.py
+		testInfected.py
+		testPrint.py
+		testSmoke.py
+		testVaccinate.py
+		)
 
 INSTALL (FILES
-	${SCRIPTS}
-	DESTINATION ${BIN_INSTALL_LOCATION}
-)
+		${SCRIPTS}
+		DESTINATION ${BIN_INSTALL_LOCATION}
+		)
 
 #============================================================================
 # Define tests.
 #============================================================================
 add_test(NAME infected_py
-	WORKING_DIRECTORY ${TESTS_DIR}
-	COMMAND python3 ${CMAKE_INSTALL_PREFIX}/${BIN_INSTALL_LOCATION}/testInfected.py
-	)
+		WORKING_DIRECTORY ${TESTS_DIR}
+		COMMAND python3 ${CMAKE_INSTALL_PREFIX}/${BIN_INSTALL_LOCATION}/testInfected.py
+		)
 add_test(NAME forker_py
-	WORKING_DIRECTORY ${TESTS_DIR}
-	COMMAND python3 ${CMAKE_INSTALL_PREFIX}/${BIN_INSTALL_LOCATION}/testForker.py
-	)
+		WORKING_DIRECTORY ${TESTS_DIR}
+		COMMAND python3 ${CMAKE_INSTALL_PREFIX}/${BIN_INSTALL_LOCATION}/testForker.py
+		)
 add_test(NAME print_py
-    WORKING_DIRECTORY ${TESTS_DIR}
-    COMMAND python3 ${CMAKE_INSTALL_PREFIX}/${BIN_INSTALL_LOCATION}/testPrint.py
-    )
+		WORKING_DIRECTORY ${TESTS_DIR}
+		COMMAND python3 ${CMAKE_INSTALL_PREFIX}/${BIN_INSTALL_LOCATION}/testPrint.py
+		)
 add_test(NAME smoke_py
-	WORKING_DIRECTORY ${TESTS_DIR}
-	COMMAND python3 ${CMAKE_INSTALL_PREFIX}/${BIN_INSTALL_LOCATION}/testSmoke.py
-	)
+		WORKING_DIRECTORY ${TESTS_DIR}
+		COMMAND python3 ${CMAKE_INSTALL_PREFIX}/${BIN_INSTALL_LOCATION}/testSmoke.py
+		)
 add_test(NAME vaccinate_py
-	WORKING_DIRECTORY ${TESTS_DIR}
-	COMMAND  python3 ${CMAKE_INSTALL_PREFIX}/${BIN_INSTALL_LOCATION}/testVaccinate.py
-	)
+		WORKING_DIRECTORY ${TESTS_DIR}
+		COMMAND  python3 ${CMAKE_INSTALL_PREFIX}/${BIN_INSTALL_LOCATION}/testVaccinate.py
+		)
 
 #============================================================================
 # Clean up.

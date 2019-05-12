@@ -60,9 +60,9 @@ include(CMakeCPP.cmake)
 # Configuration for Swig & Python.
 #============================================================================
 if(NOT STRIDE_FORCE_NO_PYTHON)
-	find_package(SWIG)
-	find_package(PythonInterp 3)
-	find_package(PythonLibs 3)
+    find_package(SWIG)
+    find_package(PythonInterp 3)
+    find_package(PythonLibs 3)
 endif()
 
 #============================================================================
@@ -75,7 +75,8 @@ endif()
 #============================================================================
 # Configuration for Qt5
 #============================================================================
-if(NOT STRiDE_FORCE_NO_QT5)
+list(APPEND CMAKE_PREFIX_PATH "/opt/Qt/5.12.2/gcc_64/lib/cmake")
+if(NOT STRIDE_FORCE_NO_QT5)
     if(APPLE AND EXISTS /usr/local/opt/qt5)
         list(APPEND CMAKE_PREFIX_PATH "/usr/local/opt/qt5")
     endif()
@@ -106,7 +107,7 @@ endif()
 add_subdirectory(main)
 add_subdirectory(test)
 if(STRIDE_INCLUDE_DOC)
-	add_subdirectory(doc)
+    add_subdirectory(doc)
 endif()
 
 #============================================================================

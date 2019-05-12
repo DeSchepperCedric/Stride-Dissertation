@@ -49,4 +49,3 @@ void QtViewer::Update(const sim_event::Id id)
 
 } // namespace viewers
 } // namespace stride
-

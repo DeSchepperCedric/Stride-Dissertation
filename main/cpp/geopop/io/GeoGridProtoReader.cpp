@@ -29,7 +29,7 @@ using namespace std;
 using namespace stride::ContactType;
 
 GeoGridProtoReader::GeoGridProtoReader(unique_ptr<istream> inputStream, stride::Population* pop)
-    : GeoGridReader(move(inputStream), pop)
+    : GeoGridStreamReader(move(inputStream), pop)
 {
 }
 
@@ -69,7 +69,9 @@ void GeoGridProtoReader::ParseContactPools(shared_ptr<Location>                 
             {proto::GeoGrid_Location_ContactPools_Type_SecondaryCommunity, Id::SecondaryCommunity},
             {proto::GeoGrid_Location_ContactPools_Type_College, Id::College},
             {proto::GeoGrid_Location_ContactPools_Type_Household, Id::Household},
-            {proto::GeoGrid_Location_ContactPools_Type_Workplace, Id::Workplace}};
+            {proto::GeoGrid_Location_ContactPools_Type_Workplace, Id::Workplace},
+            {proto::GeoGrid_Location_ContactPools_Type_Daycare, Id::Daycare},
+            {proto::GeoGrid_Location_ContactPools_Type_PreSchool, Id::PreSchool}};
 
         const auto typeId = types.at(protoType);
 
@@ -127,7 +129,7 @@ shared_ptr<Location> GeoGridProtoReader::ParseLocation(const proto::GeoGrid_Loca
 stride::Person* GeoGridProtoReader::ParsePerson(const proto::GeoGrid_Person& protoPerson)
 {
         const auto id = static_cast<unsigned int>(protoPerson.id());
-        return m_population->CreatePerson(id, protoPerson.age(), 0, 0, 0, 0, 0, 0);
+        return m_population->CreatePerson(id, protoPerson.age(), 0, 0, 0, 0, 0, 0, 0, 0);
 }
 
 } // namespace geopop

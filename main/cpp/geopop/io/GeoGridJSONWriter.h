@@ -15,10 +15,11 @@
 
 #pragma once
 
-#include "GeoGridWriter.h"
+#include "GeoGridStreamWriter.h"
+#include "contact/ContactPool.h"
 #include "geopop/Location.h"
 
-#include <boost/property_tree/ptree.hpp>
+#include <nlohmann/json.hpp>
 #include <set>
 
 namespace stride {
@@ -33,30 +34,27 @@ class ContactCenter;
 /**
  * Writes a GeoGrid to a JSON file.
  */
-class GeoGridJSONWriter : public GeoGridWriter
+class GeoGridJSONWriter : public GeoGridStreamWriter
 {
 public:
         /// Construct the GeoGridJSONWriter.
-        GeoGridJSONWriter();
+        GeoGridJSONWriter(std::ostream& stream);
 
         /// Write the provided GeoGrid to the proved ostream in JSON format.
-        void Write(GeoGrid& geoGrid, std::ostream& stream) override;
+        void Write(GeoGrid& geoGrid) override;
 
 private:
-        /// Create a Boost Property Tree containing all info needed to reconstruct a ContactCenter.
-        boost::property_tree::ptree WriteContactCenter(std::shared_ptr<ContactCenter> contactCenter);
+        /// Create a JSON Structure containing all info needed to reconstruct a ContactCenter.
+        nlohmann::json WriteContactPool(stride::ContactPool* const& contactPool);
 
-        /// Create a Boost Property Tree containing all info needed to reconstruct a ContactPool.
-        boost::property_tree::ptree WriteContactPool(stride::ContactPool* contactPool);
+        /// Create a JSON Structure containing all info needed to reconstruct a Coordinate.
+        nlohmann::json WriteCoordinate(const Coordinate& coordinate);
 
-        /// Create a Boost Property Tree containing all info needed to reconstruct a Coordinate.
-        boost::property_tree::ptree WriteCoordinate(const Coordinate& coordinate);
+        /// Create a JSON Structure containing all info needed to reconstruct a Location.
+        nlohmann::json WriteLocation(const Location& location);
 
-        /// Create a Boost Property Tree containing all info needed to reconstruct a Location.
-        boost::property_tree::ptree WriteLocation(const Location& location);
-
-        /// Create a Boost Property Tree containing all info needed to reconstruct a Person.
-        boost::property_tree::ptree WritePerson(stride::Person* person);
+        /// Create a JSON Structure containing all info needed to reconstruct a Person.
+        nlohmann::json WritePerson(stride::Person* person);
 
 private:
         std::set<stride::Person*> m_persons_found; ///< The persons found when looping over the ContactPools.
