@@ -65,8 +65,6 @@ private:
 
         template<typename T>
         T ReadAttribute(const std::string& name, H5::H5Object& object);
-
-        //std::string ReadAttribute(const std::string& name, H5::H5Object& object);
 };
 
 template<>

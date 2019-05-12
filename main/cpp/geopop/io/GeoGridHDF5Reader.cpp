@@ -135,7 +135,7 @@ shared_ptr<Location> GeoGridHDF5Reader::ParseLocation(Group& location)
         unsigned int pool_size = ReadAttribute<unsigned int>("size", contactPools);
         const string pool_name = "pool";
         for (unsigned int i = 1; i <= pool_size; i++) {
-                auto pool = contactPools.openDataSet((name + to_string(i)));
+                auto pool = contactPools.openDataSet((pool_name + to_string(i)));
                 ParseContactPool(pool, result);
         }
 

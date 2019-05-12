@@ -69,6 +69,8 @@ private:
         /// Write to a HDF5 Dataset containing all info needed to reconstruct a pool.
         stride::util::PoolType WritePool(stride::Person* person);
 
+        void WriteAttribute(const std::string& data, const std::string& name, H5::H5Object& object);
+
         /// Write an attribute of size 1 for data to a group or dataset
         template<typename T>
         void WriteAttribute(const T& data, const std::string& name, H5::H5Object& object);
@@ -76,8 +78,5 @@ private:
 private:
         std::set<stride::Person*> m_persons_found; ///< The persons found when looping over the ContactPools.
 };
-
-template<>
-void GeoGridHDF5Writer::WriteAttribute(const std::string& data, const std::string& name, H5::H5Object& object);
 
 } // namespace geopop

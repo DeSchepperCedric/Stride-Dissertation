@@ -166,6 +166,14 @@ PoolType GeoGridHDF5Writer::WritePool(stride::Person* person)
         return pool;
 }
 
+void GeoGridHDF5Writer::WriteAttribute(const string& data, const string& name, H5Object& object)
+{
+        hsize_t   dims[1] = {1};
+        DataSpace dataspace(1, dims);
+        Attribute attribute = object.createAttribute(name, GetPredType(data), dataspace);
+        attribute.write(GetPredType(data), data);
+}
+
 template<typename T>
 void GeoGridHDF5Writer::WriteAttribute(const T& data, const string& name, H5Object& object)
 {
@@ -174,15 +182,6 @@ void GeoGridHDF5Writer::WriteAttribute(const T& data, const string& name, H5Obje
         T         data_buffer[1] = {data};
         Attribute attribute = object.createAttribute(name, GetPredType(data), dataspace);
         attribute.write(GetPredType(data), data_buffer);
-}
-
-template<>
-void GeoGridHDF5Writer::WriteAttribute(const string& data, const string& name, H5Object& object)
-{
-        hsize_t   dims[1] = {1};
-        DataSpace dataspace(1, dims);
-        Attribute attribute = object.createAttribute(name, GetPredType(data), dataspace);
-        attribute.write(GetPredType(data), data);
 }
 
 } // namespace geopop
