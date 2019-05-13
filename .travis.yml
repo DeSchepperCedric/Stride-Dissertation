@@ -89,6 +89,7 @@ before_install:
   - |
     if [[ "$TRAVIS_OS_NAME" == "osx" ]] && [[ "$CXX_ID" == "gcc" ]]; then
       brew install gcc
+      brew install -qq g++-8
       export PATH="/usr/local/bin:$PATH"
     fi
   - |
