@@ -141,11 +141,27 @@ TEST(GeoGridHDF5ReaderTest, commutesTest) {
         }
 }
 
-TEST(GeoGridHDF5ReaderTest, contactCentersTest){
-    EXPECT_TRUE(true);
+TEST(GeoGridHDF5ReaderTest, contactPoolsTest)
+{
+        auto pop = Population::Create();
+        getGeoGridFromFile("test1.h5", pop.get());
+        auto& geoGrid  = pop->RefGeoGrid();
+        auto  location = geoGrid[0];
+
+        vector<shared_ptr<ContactPool>> centers;
+        for (Id typ : IdList) {
+                for (const auto& p : location->CRefPools(typ)) {
+                        centers.emplace_back(p);
+                }
+        }
+
+        for (Id typ : IdList) {
+            EXPECT_EQ(location->CRefPools(typ).size(), 0);
+        }
 }
 
-TEST(GeoGridHDF5ReaderTest, peopleTest) {
+TEST(GeoGridHDF5ReaderTest, peopleTest)
+{
         auto pop = Population::Create();
         getGeoGridFromFile("test2.h5", pop.get());
         auto& geoGrid  = pop->RefGeoGrid();
@@ -181,15 +197,23 @@ TEST(GeoGridHDF5ReaderTest, peopleTest) {
 }
 
 TEST(GeoGridHDF5ReaderTest, invalidTypeTest){
-    EXPECT_TRUE(true);
+        auto pop = Population::Create();
+        EXPECT_THROW(getGeoGridFromFile("test4.h5", pop.get()), Exception);
 }
 
 TEST(GeoGridHDF5ReaderTest, invalidPersonTest){
-    EXPECT_TRUE(true);
+        auto pop = Population::Create();
+        EXPECT_THROW(getGeoGridFromFile("test5.h5", pop.get()), Exception);
 }
 
-TEST(GeoGridHDF5ReaderTest, invalidHDFTest){
-    EXPECT_TRUE(true);
+TEST(GeoGridHDF5ReaderTest, invalidHDF5Test)
+{
+        auto pop = Population::Create();
+        //no locations group
+        EXPECT_THROW(getGeoGridFromFile("test8.h5", pop.get()), Exception);
+
+        //no persons dataset
+        EXPECT_THROW(getGeoGridFromFile("test9.h5", pop.get()), Exception);
 }
 
 } // namespace

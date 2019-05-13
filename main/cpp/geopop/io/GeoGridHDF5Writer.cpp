@@ -76,8 +76,9 @@ void GeoGridHDF5Writer::WriteContactPool(stride::ContactPool* contactPool, Group
                 pool_data.push_back(WritePool(person));
         }
         pool.write(pool_data.data(), GetPoolType());
+        unsigned int pool_size = contactPool->size();
         WriteAttribute(contactPool->GetId(), "id",   pool);
-        WriteAttribute(contactPool->size(), "size", pool);
+        WriteAttribute(pool_size, "size", pool);
         WriteAttribute(ToString(contactPool->GetType()), "type", pool);
 }
 

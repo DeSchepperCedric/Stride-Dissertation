@@ -38,39 +38,45 @@ void GeoGridHDF5Reader::Read()
 {
         H5File file;
         try {
+                H5::Exception::dontPrint();
+
                 file = H5File(m_inputFile, H5F_ACC_RDONLY);
+
+                auto& geoGrid = m_population->RefGeoGrid();
+
+                auto people = file.openDataSet("persons");
+                unsigned int people_size = ReadAttribute<unsigned int>("size", people);
+                vector<PersonType> person_data(people_size);
+                people.read(person_data.data(), GetPersonType());
+                for (auto prsn : person_data) {
+                        auto person               = ParsePerson(prsn);
+                        m_people[person->GetId()] = person;
+                }
+
+                auto locations = file.openGroup("locations");
+                unsigned int size = ReadAttribute<unsigned int>("size", locations);
+                const string name = "location";
+                for (unsigned int i = 1; i <= size; ++i) {
+                        string location_name = name + to_string(i);
+                        shared_ptr<Location> loc;
+                        auto location = locations.openGroup(location_name);
+                        loc = move(ParseLocation(location));
+                        geoGrid.AddLocation(move(loc));
+                }
+
+                AddCommutes(geoGrid);
+                m_commutes.clear();
+                m_people.clear();
+                file.close();
         } catch (FileIException error) {
-                throw error.getDetailMsg();
-        } /*catch (runtime_error&) {
-                throw Exception("Problem parsing HDF5 file, check whether empty or invalid HDF5.");
-        }*/
-
-        auto& geoGrid = m_population->RefGeoGrid();
-
-        auto people = file.openDataSet("persons");
-        unsigned int people_size = ReadAttribute<unsigned int>("size", people);
-        vector<PersonType> person_data(people_size);
-        people.read(person_data.data(), GetPersonType());
-        for (auto prsn : person_data) {
-                auto person               = ParsePerson(prsn);
-                m_people[person->GetId()] = person;
+                throw util::Exception(error.getDetailMsg());
+        } catch (DataSetIException error) {
+                 throw util::Exception(error.getDetailMsg());
+        } catch (GroupIException error) {
+                 throw util::Exception(error.getDetailMsg());
+        } catch (runtime_error&) {
+                throw util::Exception("Problem parsing HDF5 file, check whether empty or invalid HDF5.");
         }
-
-        auto locations = file.openGroup("locations");
-        unsigned int size = ReadAttribute<unsigned int>("size", locations);
-        const string name = "location";
-        for (unsigned int i = 1; i <= size; ++i) {
-                string location_name = name + to_string(i);
-                shared_ptr<Location> loc;
-                auto location = locations.openGroup(location_name);
-                loc = move(ParseLocation(location));
-                geoGrid.AddLocation(move(loc));
-        }
-
-        AddCommutes(geoGrid);
-        m_commutes.clear();
-        m_people.clear();
-        file.close();
 }
 
 void GeoGridHDF5Reader::ParseContactPool(H5::DataSet& contactPool, shared_ptr<Location> result)
@@ -97,26 +103,28 @@ void GeoGridHDF5Reader::ParseContactPool(H5::DataSet& contactPool, shared_ptr<Lo
         } else if (type == ToString(Id::PreSchool)) {
                 typeId = Id::PreSchool;
         } else {
-                throw ("No such ContactPool type: " + type);
+                throw util::Exception("No such ContactPool type: " + type);
         }
 
-        // Don't use the id of the ContactPool but the let the Population create an id.
-        auto cp = m_population->RefPoolSys().CreateContactPool(typeId);
-        result->RefPools(typeId).emplace_back(cp);
-        vector<PoolType> pool_data(size);
-        contactPool.read(pool_data.data(), GetPoolType());
-        for (auto pool : pool_data) {
-              unsigned int people_id = pool.people;
-              try {
-                      const auto person = m_people.at(people_id);
-                      cp->AddMember(person);
-                      person->SetPoolId(typeId, result->GetID());
-              } catch (out_of_range& e) {
-                      throw ("No such person with id: " + to_string(people_id));
-              }
-        }
+        if (size != 0) {
+                // Don't use the id of the ContactPool but the let the Population create an id.
+                auto cp = m_population->RefPoolSys().CreateContactPool(typeId);
+                result->RefPools(typeId).emplace_back(cp);
+                vector<PoolType> pool_data(size);
+                contactPool.read(pool_data.data(), GetPoolType());
+                for (auto pool : pool_data) {
+                        unsigned int people_id = pool.people;
+                        try {
+                                const auto person = m_people.at(people_id);
+                                cp->AddMember(person);
+                                person->SetPoolId(typeId, result->GetID());
+                        } catch (out_of_range& e) {
+                                throw util::Exception("No such person with id: " + to_string(people_id));
+                        }
+                }
 
-        result->RegisterPool(cp, typeId);
+                result->RegisterPool(cp, typeId);
+        }
 }
 
 shared_ptr<Location> GeoGridHDF5Reader::ParseLocation(Group& location)
@@ -154,16 +162,16 @@ shared_ptr<Location> GeoGridHDF5Reader::ParseLocation(Group& location)
 Person* GeoGridHDF5Reader::ParsePerson(PersonType& person)
 {
         return m_population->CreatePerson(
-                                            person.id,
-                                            person.age,
-                                            person.household,
-                                            person.k12school,
-                                            person.college,
-                                            person.workplace,
-                                            person.primarycommunity,
-                                            person.secondarycommunity,
-                                            person.daycare,
-                                            person.preschool
+                                                  person.id,
+                                                  person.age,
+                                                  person.household,
+                                                  person.k12school,
+                                                  person.college,
+                                                  person.workplace,
+                                                  person.primarycommunity,
+                                                  person.secondarycommunity,
+                                                  person.daycare,
+                                                  person.preschool
                                           );
 }
 
