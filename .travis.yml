@@ -88,7 +88,7 @@ before_install:
     fi
   - |
     if [[ "$TRAVIS_OS_NAME" == "osx" ]] && [[ "$CXX_ID" == "gcc" ]]; then
-      brew install gcc
+      brew install gcc@8
       export PATH="/usr/local/bin:$PATH"
       export LD_LIBRARY_PATH="/usr/local/lib:$LD_LIBRARY_PATH"
       export STRIDE_FORCE_NO_PROTOC=ON
@@ -114,6 +114,11 @@ install:
         echo "Already have swig cache"
       fi
       export CMAKE_PREFIX_PATH=$SWIGHOME:$CMAKE_PREFIX_PATH
+      #--------- Linux - qt 5.12.1 (xenial) from Stephan Binner's ppa
+      sudo apt-add-repository ppa:beineri/opt-qt-5.12.1-xenial -y
+      sudo apt-get update 
+      sudo apt-get install -y -q qt512base qt512charts-no-lgpl qt512svg qt512declarative qt512qbs
+      sudo apt-get install -y -q qt512quickcontrols qt512connectivity qt512graphicaleffects qt512tools qt512quickcontrols2 qt512location
     fi
     #--------- OSX
   - |
