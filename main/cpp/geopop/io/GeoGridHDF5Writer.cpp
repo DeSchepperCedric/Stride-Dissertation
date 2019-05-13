@@ -17,6 +17,7 @@
 
 #include "contact/ContactPool.h"
 #include "geopop/GeoGrid.h"
+#include "util/Exception.h"
 #include "util/HDF5.h"
 #include "pop/Person.h"
 #include <iostream>
@@ -39,7 +40,14 @@ GeoGridHDF5Writer::GeoGridHDF5Writer(const string& fileName)
 
 void GeoGridHDF5Writer::Write(GeoGrid& geoGrid)
 {
-        H5File file(GetFileName(), H5F_ACC_TRUNC);
+        H5::Exception::dontPrint();
+
+        H5File file;
+        try {
+                file = H5File(GetFileName(), H5F_ACC_TRUNC);
+        } catch (FileIException error) {
+                throw util::Exception(error.getDetailMsg());
+        }
 
         Group locations = file.createGroup("/locations");
         unsigned int count = 0;
@@ -76,9 +84,8 @@ void GeoGridHDF5Writer::WriteContactPool(stride::ContactPool* contactPool, Group
                 pool_data.push_back(WritePool(person));
         }
         pool.write(pool_data.data(), GetPoolType());
-        unsigned int pool_size = contactPool->size();
         WriteAttribute(contactPool->GetId(), "id",   pool);
-        WriteAttribute(pool_size, "size", pool);
+        WriteAttribute(contactPool->size(), "size", pool);
         WriteAttribute(ToString(contactPool->GetType()), "type", pool);
 }
 
@@ -117,8 +124,7 @@ void GeoGridHDF5Writer::WriteLocation(const Location& location, Group& locations
                 }
                 commutes_dataset.write(commute_data.data(), GetCommuteType());
         }
-        unsigned int commutes_size = commutes.size();
-        WriteAttribute(commutes_size, "size", commutes_dataset);
+        WriteAttribute(commutes.size(), "size", commutes_dataset);
 
         Group contactPools(loc.createGroup("contactPools"));
         unsigned int count = 0;

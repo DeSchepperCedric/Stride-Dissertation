@@ -206,14 +206,16 @@ TEST(GeoGridHDF5ReaderTest, invalidPersonTest){
         EXPECT_THROW(getGeoGridFromFile("test5.h5", pop.get()), Exception);
 }
 
-TEST(GeoGridHDF5ReaderTest, invalidHDF5Test)
+TEST(GeoGridHDF5ReaderTest, missingLocationsGroupTest)
 {
         auto pop = Population::Create();
-        //no locations group
         EXPECT_THROW(getGeoGridFromFile("test8.h5", pop.get()), Exception);
+}
 
-        //no persons dataset
-        EXPECT_THROW(getGeoGridFromFile("test9.h5", pop.get()), Exception);
+TEST(GeoGridHDF5ReaderTest, missingPersonsDataSetTest)
+{
+        auto pop = Population::Create();
+        EXPECT_THROW(getGeoGridFromFile("test6.h5", pop.get()), Exception);
 }
 
 } // namespace
