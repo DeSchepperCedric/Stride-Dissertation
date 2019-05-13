@@ -16,9 +16,6 @@
 #pragma once
 
 #include "EpiStreamReader.h"
-#include "contact/ContactPool.h"
-#include "contact/ContactType.h"
-#include "geopop/Location.h"
 
 #include <boost/lexical_cast.hpp>
 #include <nlohmann/json.hpp>

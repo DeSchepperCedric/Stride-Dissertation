@@ -20,37 +20,48 @@
 #include <QString>
 #include <iostream>
 
+#include <QtPositioning/QGeoRectangle>
+
 #include "location.h"
 
 namespace visualization {
 
-class MapController : public QObject
-{
+    class MapController : public QObject {
     Q_OBJECT
-    Q_PROPERTY(QString day READ getDay WRITE setDay NOTIFY dayChanged)
+        Q_PROPERTY(QString day READ getDay WRITE setDay)
+        Q_PROPERTY(QString naam READ getNaam)
+        Q_PROPERTY(QString info READ getInfo)
+        Q_PROPERTY(QString ID WRITE setID)
 
-public:
-    MapController() = default;
+    public:
+        MapController() = default;
 
-    MapController(const std::string& file);
+        explicit MapController(const std::string &file);
 
-    void setDay(const QString& day);
-    QString getDay();
+        void setDay(const QString &day);
 
-    void initialize(QObject* root);
+        QString getDay();
 
-    Q_INVOKABLE void test(){std::cout << "lol" << std::endl;}
+        void initialize(QObject *root);
 
-signals:
-    void dayChanged();
+        void Update();
 
-private:
-    int m_day = 0;
+        Q_INVOKABLE void center();
 
-    std::vector<Location> m_locations;
+        QString getInfo();
 
-    QObject* m_root = nullptr;
-};
+        QString getNaam();
+
+        void setID(const QString &id);
+
+    private:
+        int m_day = 0;
+        int m_id = -1;
+
+        std::vector<Location> m_locations;
+
+        QObject *m_root = nullptr;
+    };
 
 }
 

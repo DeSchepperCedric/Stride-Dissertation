@@ -38,6 +38,9 @@ namespace stride {
             switch (id) {
                 case Id::AtStart: {
                     auto &geo = m_runner->GetSim()->GetPopulation()->RefGeoGrid();
+
+                   stride::Population
+
                     for (shared_ptr<geopop::Location> &loc: geo) {
                         visualization::Location location;
                         location.id = loc->GetID();
@@ -52,6 +55,7 @@ namespace stride {
                     auto &geo = m_runner->GetSim()->GetPopulation()->RefGeoGrid();
                     for (auto &loc: geo) {
                         m_Locations[loc->GetID()].infected.push_back(loc->GetInfectedCount());
+                        loc->GetPopFraction()
                     }
                     break;
                 }

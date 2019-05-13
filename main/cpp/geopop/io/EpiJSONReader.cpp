@@ -53,18 +53,18 @@ namespace geopop {
     }
 
     visualization::Location EpiJSONReader::parseLocation(nlohmann::json &node) {
-        auto coordinate = node["coordiante"];
-        auto id = node["id"];
-        auto name = node["name"];
-        auto population = node["population"];
-        auto infected = ParseArray(node["infected"]);
-
         visualization::Location loc;
-        loc.size = population;
-        loc.name = name;
-        loc.id = id;
+
+        loc.size = node["population"];
+        loc.name = node["name"];
+        loc.id = node["id"];
         loc.latitude = double(node["coordinate"]["latitude"]);
         loc.longitude = double(node["coordinate"]["longitude"]);
+
+        auto infected = ParseArray(node["infected"]);
+
+        for(auto i: infected) loc.infected.push_back(i);
+
         return loc;
     }
 
