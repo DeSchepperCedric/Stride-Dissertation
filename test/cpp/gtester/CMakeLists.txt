@@ -48,12 +48,12 @@ set(SRC
         UnitSlice2.cpp
         #---
         #---
-#        geopop/generators/CollegeGeneratorTest.cpp
+        geopop/generators/CollegeGeneratorTest.cpp
         geopop/generators/HouseholdGeneratorTest.cpp
         geopop/generators/K12SchoolGeneratorTest.cpp
-#        geopop/generators/PrimaryCommunityGeneratorTest.cpp
-#        geopop/generators/SecondaryCommunityGeneratorTest.cpp
-#        geopop/generators/WorkplaceGeneratorTest.cpp
+        geopop/generators/PrimaryCommunityGeneratorTest.cpp
+        geopop/generators/SecondaryCommunityGeneratorTest.cpp
+        geopop/generators/WorkplaceGeneratorTest.cpp
         geopop/generators/DaycareGeneratorTest.cpp
         geopop/generators/PreSchoolGeneratorTest.cpp
         geopop/generators/WorkplaceGeneratorTest.cpp
@@ -75,16 +75,16 @@ set(SRC
         #---
         geopop/kdtree.cpp
         #---
-#        geopop/populators/MakeGeoGrid.cpp
-#        geopop/populators/CollegePopulatorTest.cpp
-#        geopop/populators/HouseholdPopulatorTest.cpp
-#        geopop/populators/K12SchoolPopulatorTest.cpp
-#        geopop/populators/PrimaryCommunityPopulatorTests.cpp
-#        geopop/populators/SecondaryCommunityPopulatorTests.cpp
-#        geopop/populators/WorkplacePopulatorTest.cpp
-#        geopop/populators/DaycarePopulatorTest.cpp
-#        geopop/populators/PreSchoolPopulatorTest.cpp
-#        geopop/populators/WorkPlacePopulatorDistributionTest.cpp
+        geopop/populators/MakeGeoGrid.cpp
+        geopop/populators/CollegePopulatorTest.cpp
+        geopop/populators/HouseholdPopulatorTest.cpp
+        geopop/populators/K12SchoolPopulatorTest.cpp
+        geopop/populators/PrimaryCommunityPopulatorTests.cpp
+        geopop/populators/SecondaryCommunityPopulatorTests.cpp
+        geopop/populators/WorkplacePopulatorTest.cpp
+        geopop/populators/DaycarePopulatorTest.cpp
+        geopop/populators/PreSchoolPopulatorTest.cpp
+        geopop/populators/WorkPlacePopulatorDistributionTest.cpp
         #---
         myhayai/DeliveryMan.cpp
         myhayai/MyhayaiTests.cpp
