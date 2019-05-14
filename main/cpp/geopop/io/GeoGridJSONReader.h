@@ -59,7 +59,6 @@ private:
         /// Create a Coordinate based on the information stored in the provided json structure.
         Coordinate ParseCoordinate(nlohmann::json& coordinate);
 
-
         /// Create a Person based on the information stored in the provided json structure.
         stride::Person* ParsePerson(nlohmann::json& person);
 

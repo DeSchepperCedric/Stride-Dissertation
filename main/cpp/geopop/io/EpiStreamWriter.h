@@ -22,23 +22,23 @@
 
 namespace geopop {
 
-    class EpiStreamWriter : public EpiWriter
-    {
-    public:
+class EpiStreamWriter : public EpiWriter
+{
+public:
         ///
-        explicit EpiStreamWriter(std::ostream& stream) : m_stream(stream) {};
+        explicit EpiStreamWriter(std::ostream& stream) : m_stream(stream){};
 
         ///
         virtual ~EpiStreamWriter() = default;
 
         ///
-        void Write(std::map<int,visualization::Location> locations) = 0;
+        void Write(std::map<int, visualization::Location> locations) = 0;
 
         ///
-        std::ostream& StreamRef() {return m_stream;}
+        std::ostream& StreamRef() { return m_stream; }
 
-    private:
+private:
         std::ostream& m_stream;
-    };
+};
 
 } // namespace geopop

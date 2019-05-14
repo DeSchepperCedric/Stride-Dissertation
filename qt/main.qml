@@ -91,9 +91,10 @@ Window {
         Text {
             id: element
             x: 44
-            y: 33
+            y: 93
             color: "#ffffff"
             text: qsTr("0")
+            anchors.horizontalCenterOffset: 0
             anchors.horizontalCenter: parent.horizontalCenter
             elide: Text.ElideRight
             font.pixelSize: 19

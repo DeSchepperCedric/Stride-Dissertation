@@ -54,8 +54,8 @@ GeoGridConfig::GeoGridConfig(const ptree& configPt) : GeoGridConfig()
         people[Id::PrimaryCommunity]   = pt.get<unsigned int>("people_per_PrimaryCommunity", 2000U);
         people[Id::SecondaryCommunity] = pt.get<unsigned int>("people_per_SecondaryCommunity", 2000U);
 
-        pools[Id::K12School]              = pt.get<unsigned int>("pools_per_K12School", 25U);
-        pools[Id::College]                = pt.get<unsigned int>("pools_per_College", 20U);
+        pools[Id::K12School] = pt.get<unsigned int>("pools_per_K12School", 25U);
+        pools[Id::College]   = pt.get<unsigned int>("pools_per_College", 20U);
 }
 
 void GeoGridConfig::SetData(const string& householdsFileName)

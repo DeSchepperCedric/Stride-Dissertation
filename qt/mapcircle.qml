@@ -54,6 +54,7 @@ MapCircle {
             dia.visible = false
         }
     }
+
     function getColor(value){
         var hue=((1-value*10)*120);
         return hue;

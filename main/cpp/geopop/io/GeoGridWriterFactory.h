@@ -15,9 +15,9 @@
 
 #pragma once
 
+#include <fstream>
 #include <memory>
 #include <string>
-#include <fstream>
 
 namespace geopop {
 
@@ -30,7 +30,8 @@ class GeoGridWriterFactory
 {
 public:
         /// Create a GeoGridWriter based on the provided extension in the filename.
-        static std::shared_ptr<GeoGridWriter> CreateGeoGridWriter(const std::string& filename, std::ofstream& outputFileStream);
+        static std::shared_ptr<GeoGridWriter> CreateGeoGridWriter(const std::string& filename,
+                                                                  std::ofstream&     outputFileStream);
 };
 
 } // namespace geopop

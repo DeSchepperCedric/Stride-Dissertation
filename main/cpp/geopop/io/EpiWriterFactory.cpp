@@ -13,7 +13,6 @@
  *  Copyright 2018, Jan Broeckhove and Bistromatics group.
  */
 
-
 #include "EpiJSONWriter.h"
 #include "util/Exception.h"
 #include <iostream>
@@ -29,24 +28,24 @@ namespace filesys = boost::filesystem;
 namespace filesys = std::filesystem;
 #endif
 
-
 #include "EpiWriterFactory.h"
 
 namespace geopop {
 
-    std::shared_ptr<EpiWriter> EpiWriterFactory::CreateEpiWriter(const std::string &filename,
-                                                                 std::ofstream &outputFileStream) {
+std::shared_ptr<EpiWriter> EpiWriterFactory::CreateEpiWriter(const std::string& filename,
+                                                             std::ofstream&     outputFileStream)
+{
         filesys::path path(filename);
 
         if (path.extension().string() == ".json") {
-            return std::make_shared<EpiJSONWriter>(outputFileStream);
+                return std::make_shared<EpiJSONWriter>(outputFileStream);
         } /*else
     if (path.extension().string() == ".proto") {
         return std::make_shared<GeoGridProtoWriter>();
-    } */else {
-            throw stride::util::Exception("GeoGridWriterFactory::CreateWriter> Unsupported file extension: " +
-                                          path.extension().string());
+    } */ else {
+                throw stride::util::Exception("GeoGridWriterFactory::CreateWriter> Unsupported file extension: " +
+                                              path.extension().string());
         }
-    }
-
 }
+
+} // namespace geopop

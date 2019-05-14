@@ -24,11 +24,11 @@ namespace geopop {
 
 class EpiWriter;
 
-class EpiWriterFactory {
+class EpiWriterFactory
+{
 public:
-    /// Create a EpiWriter based on the provided extension in the filename.
-    static std::shared_ptr<EpiWriter> CreateEpiWriter(const std::string &filename, std::ofstream& outputFileStream);
+        /// Create a EpiWriter based on the provided extension in the filename.
+        static std::shared_ptr<EpiWriter> CreateEpiWriter(const std::string& filename, std::ofstream& outputFileStream);
 };
 
 } // namespace geopop
-

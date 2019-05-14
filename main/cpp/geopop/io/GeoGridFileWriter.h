@@ -30,7 +30,7 @@ class GeoGridFileWriter : public GeoGridWriter
 {
 public:
         ///
-        explicit GeoGridFileWriter(const std::string& fileName) : m_file_name(fileName) {};
+        explicit GeoGridFileWriter(const std::string& fileName) : m_file_name(fileName){};
 
         ///
         virtual ~GeoGridFileWriter() = default;
@@ -39,7 +39,7 @@ public:
         void Write(GeoGrid& geoGrid) override = 0;
 
         ///
-        std::string GetFileName() {return m_file_name;}
+        std::string GetFileName() { return m_file_name; }
 
 private:
         std::string m_file_name;

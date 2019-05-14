@@ -20,10 +20,7 @@
 
 namespace geopop {
 
-GeoGridReader::GeoGridReader(stride::Population* pop)
-    : m_people(), m_commutes(), m_population(pop)
-{
-}
+GeoGridReader::GeoGridReader(stride::Population* pop) : m_people(), m_commutes(), m_population(pop) {}
 
 void GeoGridReader::AddCommutes(GeoGrid& geoGrid)
 {

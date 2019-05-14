@@ -21,26 +21,23 @@
 #include <set>
 
 namespace stride {
-    class ContactPool;
-    class Person;
+class ContactPool;
+class Person;
 } // namespace stride
 
 namespace geopop {
 /**
  * Writes a GeoGrid to a JSON file.
  */
-    class EpiJSONWriter : public EpiStreamWriter {
-    public:
-
+class EpiJSONWriter : public EpiStreamWriter
+{
+public:
         explicit EpiJSONWriter(std::ostream& stream);
 
         /// Write the provided GeoGrid to the proved ostream in JSON format.
-        void Write(std::map<int,visualization::Location> location) override;
+        void Write(std::map<int, visualization::Location> location) override;
 
-    private:
+private:
         nlohmann::json WriteLocation(const visualization::Location& location);
-
-
-    };
-}
-
+};
+} // namespace geopop

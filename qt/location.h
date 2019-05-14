@@ -15,6 +15,7 @@
 
 #include <string>
 #include <map>
+#include <vector>
 
 #ifndef LOCATION_H
 #define LOCATION_H
@@ -31,7 +32,9 @@ public:
     double latitude = 0;
     double longitude = 0;
 
-    std::vector<int> infected = std::vector<int>();
+    std::vector<int> infected;
+
+    Location() = default;
 };
 
 }

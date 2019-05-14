@@ -27,10 +27,10 @@
 #include "util/LogUtils.h"
 #include "util/TimeStamp.h"
 #include "viewers/CliViewer.h"
+#include "viewers/EpiViewer.h"
 #include "viewers/InfectedFileViewer.h"
 #include "viewers/PersonsFileViewer.h"
 #include "viewers/SummaryFileViewer.h"
-#include "viewers/EpiViewer.h"
 
 #include <boost/property_tree/xml_parser.hpp>
 #include <regex>

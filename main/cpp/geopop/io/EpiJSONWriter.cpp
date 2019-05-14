@@ -20,44 +20,46 @@
 
 namespace geopop {
 
-    using namespace std;
-    using namespace stride;
-    using namespace nlohmann;
+using namespace std;
+using namespace stride;
+using namespace nlohmann;
 
-    EpiJSONWriter::EpiJSONWriter(std::ostream &stream): EpiStreamWriter(stream) {}
+EpiJSONWriter::EpiJSONWriter(std::ostream& stream) : EpiStreamWriter(stream) {}
 
-
-    void EpiJSONWriter::Write(std::map<int,visualization::Location> locations) {
+void EpiJSONWriter::Write(std::map<int, visualization::Location> locations)
+{
 
         json root;
         json locs = json::array();
 
-        for (auto& loc: locations){
-            nlohmann::json child;
-            child = WriteLocation(loc.second);
-            locs.push_back(move(child));
+        for (auto& loc : locations) {
+                nlohmann::json child;
+                child = WriteLocation(loc.second);
+                locs.push_back(move(child));
         }
 
         root["locations"] = locs;
 
         StreamRef() << root;
-    }
+}
 
-    json EpiJSONWriter::WriteLocation(const visualization::Location& location){
+json EpiJSONWriter::WriteLocation(const visualization::Location& location)
+{
 
         nlohmann::json location_root;
         location_root["id"]         = location.id;
         location_root["name"]       = location.name;
         location_root["population"] = location.size;
         json coordinate;
-        coordinate["longitude"] = location.longitude;
-        coordinate["latitude"]  = location.latitude;
+        coordinate["longitude"]     = location.longitude;
+        coordinate["latitude"]      = location.latitude;
         location_root["coordinate"] = coordinate;
-        json infected = json::array();
-        for(auto i: location.infected) infected.push_back(i);
+        json infected               = json::array();
+        for (auto i : location.infected)
+                infected.push_back(i);
         location_root["infected"] = infected;
 
         return location_root;
-    }
+}
 
 } // namespace geopop

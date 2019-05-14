@@ -21,7 +21,6 @@
 
 namespace geopop {
 
-
 /**
  * An abstract class for creating a GeoGrid that was read from a file, can be implemented
  * using multiple file types (proto and json are currently implemented)
@@ -30,7 +29,8 @@ class EpiStreamReader : public EpiReader
 {
 public:
         /// Parametrized constructor.
-        explicit EpiStreamReader(std::unique_ptr<std::istream> inputStream) : EpiReader(), m_inputStream(std::move(inputStream)) {};
+        explicit EpiStreamReader(std::unique_ptr<std::istream> inputStream)
+            : EpiReader(), m_inputStream(std::move(inputStream)){};
 
         /// No copy constructor.
         EpiStreamReader(const EpiStreamReader&) = delete;
@@ -42,7 +42,7 @@ public:
         virtual ~EpiStreamReader() = default;
 
         /// Perform the actual read and return the created GeoGrid.
-        virtual std::vector<visualization::Location>  Read() override = 0;
+        virtual std::vector<visualization::Location> Read() override = 0;
 
 protected:
         std::unique_ptr<std::istream> m_inputStream; ///< File to read.

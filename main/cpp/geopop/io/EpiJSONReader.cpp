@@ -19,25 +19,25 @@
 #include "pop/Population.h"
 #include "util/Exception.h"
 
-#include <memory>
 #include <iostream>
+#include <memory>
 
 namespace geopop {
 
-    using namespace std;
-    using namespace stride;
-    using namespace stride::ContactType;
-    using namespace stride::util;
+using namespace std;
+using namespace stride;
+using namespace stride::ContactType;
+using namespace stride::util;
 
-    EpiJSONReader::EpiJSONReader(unique_ptr<istream> inputStream)
-            : EpiStreamReader(move(inputStream)) {}
+EpiJSONReader::EpiJSONReader(unique_ptr<istream> inputStream) : EpiStreamReader(move(inputStream)) {}
 
-    std::vector<visualization::Location> EpiJSONReader::Read() {
+std::vector<visualization::Location> EpiJSONReader::Read()
+{
         nlohmann::json root;
         try {
-            *m_inputStream >> root;
-        } catch (nlohmann::json::parse_error &e) {
-            throw Exception("Problem parsing JSON file, check whether empty or invalid JSON.");
+                *m_inputStream >> root;
+        } catch (nlohmann::json::parse_error& e) {
+                throw Exception("Problem parsing JSON file, check whether empty or invalid JSON.");
         } /*catch (runtime_error&) {
                 throw Exception("Problem parsing JSON file, check whether empty or invalid JSON.");
         }*/
@@ -46,34 +46,37 @@ namespace geopop {
 
         auto locations = ParseArray(root.at("locations"));
         for (auto it = locations.begin(); it != locations.end(); it++) {
-            visualization::Location loc = parseLocation(*it);
-            locs.push_back(loc);
+                visualization::Location loc = parseLocation(*it);
+                locs.push_back(loc);
         }
         return locs;
-    }
+}
 
-    visualization::Location EpiJSONReader::parseLocation(nlohmann::json &node) {
+visualization::Location EpiJSONReader::parseLocation(nlohmann::json& node)
+{
         visualization::Location loc;
 
-        loc.size = node["population"];
-        loc.name = node["name"];
-        loc.id = node["id"];
-        loc.latitude = double(node["coordinate"]["latitude"]);
+        loc.size      = node["population"];
+        loc.name      = node["name"];
+        loc.id        = node["id"];
+        loc.latitude  = double(node["coordinate"]["latitude"]);
         loc.longitude = double(node["coordinate"]["longitude"]);
 
         auto infected = ParseArray(node["infected"]);
 
-        for(auto i: infected) loc.infected.push_back(i);
+        for (auto i : infected)
+                loc.infected.push_back(i);
 
         return loc;
-    }
+}
 
-    nlohmann::json EpiJSONReader::ParseArray(nlohmann::json &node) {
+nlohmann::json EpiJSONReader::ParseArray(nlohmann::json& node)
+{
         if (node.type() == nlohmann::json::value_t::string) {
-            return nlohmann::json::array();
+                return nlohmann::json::array();
         } else {
-            return node;
+                return node;
         }
-    }
+}
 
 } // namespace geopop

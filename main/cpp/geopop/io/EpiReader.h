@@ -15,29 +15,28 @@
 
 #pragma once
 
+#include "../../../../qt/location.h"
 #include <map>
 #include <memory>
 #include <tuple>
 #include <vector>
-#include "../../../../qt/location.h"
 
 namespace stride {
-    class Person;
-    class Population;
+class Person;
+class Population;
 } // namespace stride
-
 
 namespace geopop {
 
-    class GeoGrid;
+class GeoGrid;
 
 /**
  * An abstract base class for creating a GeoGrid that was read from a file, can be implemented
  * using multiple file types (proto and json are currently implemented)
  */
-    class EpiReader
-    {
-    public:
+class EpiReader
+{
+public:
         EpiReader() = default;
 
         /// No copy constructor.
@@ -50,7 +49,7 @@ namespace geopop {
         virtual ~EpiReader() = default;
 
         /// Perform the actual read and return the created vector<Location>.
-        virtual std::vector<visualization::Location>  Read() = 0;
-    };
+        virtual std::vector<visualization::Location> Read() = 0;
+};
 
 } // namespace geopop

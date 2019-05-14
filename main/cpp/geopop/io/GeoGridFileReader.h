@@ -31,7 +31,8 @@ class GeoGridFileReader : public GeoGridReader
 {
 public:
         /// Parametrized constructor.
-        explicit GeoGridFileReader(const std::string& inputFile, stride::Population* pop) : GeoGridReader(pop), m_inputFile(inputFile) {};
+        explicit GeoGridFileReader(const std::string& inputFile, stride::Population* pop)
+            : GeoGridReader(pop), m_inputFile(inputFile){};
 
         /// No copy constructor.
         GeoGridFileReader(const GeoGridFileReader&) = delete;

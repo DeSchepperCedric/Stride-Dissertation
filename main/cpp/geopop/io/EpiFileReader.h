@@ -31,7 +31,7 @@ class EpiFileReader : public EpiReader
 {
 public:
         /// Parametrized constructor.
-        explicit EpiFileReader(const std::string& inputFile) : GeoGridReader(), m_inputFile(inputFile) {};
+        explicit EpiFileReader(const std::string& inputFile) : GeoGridReader(), m_inputFile(inputFile){};
 
         /// No copy constructor.
         EpiFileReader(const GeoGridFileReader&) = delete;
