@@ -20,10 +20,10 @@
 
 #include "EpiViewer.h"
 
+#include "geopop/Location.h"
 #include "pop/Population.h"
 #include "sim/Sim.h"
 #include "sim/SimRunner.h"
-#include "geopop/Location.h"
 
 #include "../geopop/io/EpiWriterFactory.h"
 
@@ -33,46 +33,40 @@ using namespace std;
 using namespace stride::sim_event;
 
 namespace stride {
-    namespace viewers {
-        void EpiViewer::Update(stride::sim_event::Id id) {
-            switch (id) {
-                case Id::AtStart: {
-                    auto &geo = m_runner->GetSim()->GetPopulation()->RefGeoGrid();
+namespace viewers {
+void EpiViewer::Update(stride::sim_event::Id id)
+{
+        switch (id) {
+        case Id::AtStart: {
+                auto& geo = m_runner->GetSim()->GetPopulation()->RefGeoGrid();
 
-                   stride::Population
-
-                    for (shared_ptr<geopop::Location> &loc: geo) {
+                    for(shared_ptr<geopop::Location>& loc : geo){
                         visualization::Location location;
-                        location.id = loc->GetID();
-                        location.name = loc->GetName();
-                        location.longitude = loc->GetCoordinate().get<0>();
-                        location.latitude = loc->GetCoordinate().get<1>();
-                        location.size = loc->GetPopCount();
+                        location.id               = loc->GetID();
+                        location.name             = loc->GetName();
+                        location.longitude        = loc->GetCoordinate().get<0>();
+                        location.latitude         = loc->GetCoordinate().get<1>();
+                        location.size             = loc->GetPopCount();
                         m_Locations[loc->GetID()] = location;
-                    }
                 }
-                case Id::Stepped: {
-                    auto &geo = m_runner->GetSim()->GetPopulation()->RefGeoGrid();
-                    for (auto &loc: geo) {
-                        m_Locations[loc->GetID()].infected.push_back(loc->GetInfectedCount());
-                        loc->GetPopFraction()
-                    }
-                    break;
-                }
-                case Id::Finished: {
-                    ofstream outputFileStream("/home/wannes/temp.json");
-                    shared_ptr<geopop::EpiWriter> writer = geopop::EpiWriterFactory::CreateEpiWriter("temp.json", outputFileStream);
-                    writer->Write(m_Locations);
-                    outputFileStream.close();
-                }
-                default:
-                    break;
-            }
         }
+        case Id::Stepped: {
+                auto& geo = m_runner->GetSim()->GetPopulation()->RefGeoGrid();
+                for (auto& loc : geo) {
+                        m_Locations[loc->GetID()].infected.push_back(loc->GetInfectedCount());
+                }
+                break;
+        }
+        case Id::Finished: {
+                ofstream                      outputFileStream("/home/wannes/temp.json");
+                shared_ptr<geopop::EpiWriter> writer =
+                    geopop::EpiWriterFactory::CreateEpiWriter("temp.json", outputFileStream);
+                writer->Write(m_Locations);
+                outputFileStream.close();
+        }
+        default: break;
+        }
+}
 
-    }   // namespace stride
-}   // namespace viewers
-
-
-
-
+} // namespace viewers
+} // namespace stride

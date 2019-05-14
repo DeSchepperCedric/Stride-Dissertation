@@ -19,9 +19,9 @@
  * Observer for Epi output.
  */
 
+#include "../../../qt/location.h"
 #include "InfectedFile.h"
 #include "sim/event/Id.h"
-#include "../../../qt/location.h"
 
 #include <iostream>
 #include <spdlog/spdlog.h>
@@ -29,33 +29,31 @@
 #ifndef STRIDE_EPIVIEWER_H
 #define STRIDE_EPIVIEWER_H
 
-
 namespace stride {
 
 class SimRunner;
 
 namespace viewers {
 
-    class EpiViewer {
-    public:
+class EpiViewer
+{
+public:
         EpiViewer(std::shared_ptr<SimRunner> runner, std::string filename)
-            : m_Locations(), m_runner(std::move(runner)), m_filename(std::move(filename)){}
+            : m_Locations(), m_runner(std::move(runner)), m_filename(std::move(filename))
+        {
+        }
 
         ~EpiViewer() = default;
 
-        //Let viewer perform update
+        // Let viewer perform update
         void Update(sim_event::Id id);
 
-    private:
-        std::map<int, visualization::Location>  m_Locations;
-        std::shared_ptr<SimRunner>              m_runner;
-        std::string                             m_filename;
+private:
+        std::map<int, visualization::Location> m_Locations;
+        std::shared_ptr<SimRunner>             m_runner;
+        std::string                            m_filename;
+};
+} // namespace viewers
+} // namespace stride
 
-    };
-}       //namespace viewers
-}       //namespace stride
-
-
-
-
-#endif //STRIDE_EPIVIEWER_H
+#endif // STRIDE_EPIVIEWER_H
