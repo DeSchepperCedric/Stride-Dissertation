@@ -36,8 +36,8 @@ void Generator<stride::ContactType::Id::Workplace>::Apply(GeoGrid& geoGrid, cons
         auto EmployeeCount = 0U;
         for (const auto & it : ggConfig.regionsInfo){
                 EmployeeCount += it.second.popcount_workplace;
-//                EmployeeCount += it.second.major_popcount_workplace;
         }
+
         const auto WorkplaceSize = ggConfig.refWP.average_workplace_size == 0U ? ggConfig.people[Id::Workplace]
                                                                                : ggConfig.refWP.average_workplace_size;
         const auto WorkplacesCount =

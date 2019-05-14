@@ -34,12 +34,11 @@ using namespace stride::AgeBrackets;
 using namespace stride::ContactType;
 using stride::util::intToDottedString;
 
-GeoGridConfig::GeoGridConfig() : params{}, refHouseHolds{}, regionsInfo{} {}
+GeoGridConfig::GeoGridConfig() : params{}, refHouseHolds{}, regionsInfo{}, refWP{} {}
 
 GeoGridConfig::GeoGridConfig(const ptree& configPt) : GeoGridConfig()
 {
 //        const auto pt                      = configPt.get_child("run.geopop_gen");
-
 }
 
 void GeoGridConfig::SetData(const ptree& configPt)
@@ -47,24 +46,15 @@ void GeoGridConfig::SetData(const ptree& configPt)
 //        configPt contains the run.geopop_gen child of the configPt
 //        make SetData be able to handle a variable number of regions
 
-
-//        arrays in boost ptrees:
-//        auto array = configPt.get_child("array");
-//        for (auto it = array.begin(); it != array.end(); it++) {
-//                // it->second.get_child("") is now a ptree from the array
-//        }
         std::string workplacesFileName = configPt.get<string>("workplace_file", "");
 
         //----------------------------------------------------------------
         // Set workplace size distribution values when file present.
         //----------------------------------------------------------------
         if (!workplacesFileName.empty()) {
-//                std::cout << "READING" <<std::endl;
                 auto workplaceReader = ReaderFactory::CreateWorkplaceReader(workplacesFileName);
-                workplaceReader->SetReferenceWorkplaces(refWP.average_workplace_size, refWP.ratios);
-        }
-        else{
-//                std::cout << "NOT READING" <<std::endl;
+                workplaceReader->SetWorkplaceSizeDistributions(refWP.average_workplace_size, refWP.ratios, refWP.min,
+                                                               refWP.max);
         }
 
         people[Id::Daycare]            = configPt.get<unsigned int>("people_per_Daycare", 18U);

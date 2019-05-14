@@ -29,7 +29,7 @@ class Person;
 namespace geopop {
 
 /**
- * Creates a Reader that retrieves the different Workplace size distributions from a given CSV file.
+ * Create a Reader that retrieves the different Workplace size distributions from a given CSV file.
  */
 class WorkplaceCSVReader : public WorkplaceReader
 {
@@ -37,9 +37,10 @@ public:
         /// Construct the WorkplaceCSVReader with an istream containing the CSV data.
         explicit WorkplaceCSVReader(std::unique_ptr<std::istream> inputStream);
 
-        /// Add the locations to the GeoGrid.
-        // TODO add setter
-        void SetReferenceWorkplaces(unsigned int& ref_average_workplace_size, std::vector<double>& ref_ratios) override;
+        /// Add the Workplace size distribution values to geogridConfig variables
+        void SetWorkplaceSizeDistributions(unsigned int& ref_average_workplace_size, std::vector<double>& ref_ratios,
+                                           std::vector<unsigned int>& ref_min,
+                                           std::vector<unsigned int>& ref_max) override;
 
 private:
         /// Input stream  connected to input data file.
