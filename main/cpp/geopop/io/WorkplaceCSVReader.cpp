@@ -27,9 +27,10 @@ WorkplaceCSVReader::WorkplaceCSVReader(std::unique_ptr<std::istream> inputStream
 {
 }
 
-void WorkplaceCSVReader::SetReferenceWorkplaces(unsigned int&        ref_average_workplace_size,
-                                                std::vector<double>& ref_ratios, std::vector<unsigned int>& ref_min,
-                                                std::vector<unsigned int>& ref_max)
+void WorkplaceCSVReader::SetWorkplaceSizeDistributions(unsigned int&              ref_average_workplace_size,
+                                                       std::vector<double>&       ref_ratios,
+                                                       std::vector<unsigned int>& ref_min,
+                                                       std::vector<unsigned int>& ref_max)
 {
         CSV                  reader(*(m_input_stream.get()));
         double               average_size = 0U;

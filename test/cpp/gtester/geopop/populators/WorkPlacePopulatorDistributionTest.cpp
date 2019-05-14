@@ -78,6 +78,8 @@ TEST_F(WorkplacePopulatorDistributionTest, Commuting)
         vector<unsigned int>   count = {0, 0, 0, 0};
         std::set<ContactPool*> all;
         unsigned int           total_size = 0U;
+
+        // count how many workplaces there are of each type
         for (const auto& loc : m_geo_grid) {
                 for (const auto& pool : loc->RefPools(Id::Workplace)) {
                         auto size = pool->size();
@@ -94,7 +96,7 @@ TEST_F(WorkplacePopulatorDistributionTest, Commuting)
                         }
                 }
         }
-
+        // Calculate the actual ratio and compare to expected ratio (within a range)
         for (unsigned int i = 0; i < count.size(); i++) {
                 const auto lower_bound = m_gg_config.refWP.ratios[i] > 0.1
                                              ? m_gg_config.refWP.ratios[i] - m_gg_config.refWP.ratios[i] * 0.20
@@ -133,6 +135,7 @@ TEST_F(WorkplacePopulatorDistributionTest, NoCommuting)
         m_workplace_generator.Apply(m_geo_grid, m_gg_config);
         m_workplace_populator.Apply(m_geo_grid, m_gg_config);
 
+        // count how many workplaces there are of each type
         vector<unsigned int>   count = {0, 0, 0, 0};
         std::set<ContactPool*> all;
         unsigned int           total_size = 0U;
@@ -152,7 +155,7 @@ TEST_F(WorkplacePopulatorDistributionTest, NoCommuting)
                         }
                 }
         }
-
+        // Calculate the actual ratio and compare to expected ratio (within a range)
         for (unsigned int i = 0; i < count.size(); i++) {
                 const auto lower_bound = m_gg_config.refWP.ratios[i] > 0.1
                                              ? m_gg_config.refWP.ratios[i] - m_gg_config.refWP.ratios[i] * 0.10

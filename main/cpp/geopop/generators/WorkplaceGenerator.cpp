@@ -34,7 +34,9 @@ void Generator<stride::ContactType::Id::Workplace>::Apply(GeoGrid& geoGrid, cons
         // 5. assign each workplaces to a location
 
         const auto EmployeeCount = ggConfig.info.popcount_workplace;
-        auto       WorkplaceSize = ggConfig.refWP.average_workplace_size == 0U ? ggConfig.people[Id::Workplace]
+        // When workplace distribution present, use the caculated average_worplace_size.
+        // Otherwise, use default value
+        auto WorkplaceSize = ggConfig.refWP.average_workplace_size == 0U ? ggConfig.people[Id::Workplace]
                                                                          : ggConfig.refWP.average_workplace_size;
 
         const auto WorkplacesCount =

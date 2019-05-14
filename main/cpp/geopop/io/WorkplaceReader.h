@@ -40,9 +40,10 @@ public:
         /// Default destructor.
         virtual ~WorkplaceReader() = default;
 
-        /// Add the info on reference workpalces to the GeoGridConfig.
-        virtual void SetReferenceWorkplaces(unsigned int& ref_average_workplace_size, std::vector<double>& ref_ratios,
-                                            std::vector<unsigned int>& ref_min, std::vector<unsigned int>& ref_max) = 0;
+        /// Add the Workplace size distribution values to geogridConfig variables
+        virtual void SetWorkplaceSizeDistributions(unsigned int&        ref_average_workplace_size,
+                                                   std::vector<double>& ref_ratios, std::vector<unsigned int>& ref_min,
+                                                   std::vector<unsigned int>& ref_max) = 0;
 };
 
 } // namespace geopop

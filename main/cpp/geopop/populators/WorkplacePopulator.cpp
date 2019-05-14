@@ -97,6 +97,7 @@ void Populator<stride::ContactType::Id::Workplace>::Apply(GeoGrid& geoGrid, cons
                 fracCommuteStudents = (popCollege * fracCollegeCommute) / (popWorkplace * fracWorkplaceCommute);
         }
 
+        // discrete generator to decide workplace type
         if (wp_types_present) {
                 genWorkPlaceSize = m_rn_man.GetDiscreteGenerator(geoGridConfig.refWP.ratios, 0U);
         }
@@ -183,13 +184,14 @@ void Populator<stride::ContactType::Id::Workplace>::Apply(GeoGrid& geoGrid, cons
                                                 } else {
                                                         gen = m_rn_man.GetUniformIntGenerator(0, s);
                                                 }
-                                                auto t    = gen();
-                                                auto pool = pools[t];
+
+                                                auto pool = pools[gen()];
 
                                                 auto pool_type = poolTypes[pool->GetId()];
                                                 pool->AddMember(person);
                                                 person->SetPoolId(Id::Workplace, pool->GetId());
 
+                                                // increase workplace type to larger size
                                                 if (wp_types_present &&
                                                     pool->size() > geoGridConfig.refWP.max[pool_type] &&
                                                     pool_type < geoGridConfig.refWP.ratios.size() - 1) {
@@ -227,6 +229,7 @@ void Populator<stride::ContactType::Id::Workplace>::Apply(GeoGrid& geoGrid, cons
                                                 pool->AddMember(person);
                                                 person->SetPoolId(Id::Workplace, pool->GetId());
 
+                                                // increase workplace type to larger size
                                                 if (wp_types_present &&
                                                     pool->size() > geoGridConfig.refWP.max[pool_type] &&
                                                     pool_type < geoGridConfig.refWP.ratios.size() - 1) {

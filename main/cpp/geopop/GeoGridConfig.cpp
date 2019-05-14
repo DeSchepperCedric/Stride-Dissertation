@@ -69,8 +69,8 @@ void GeoGridConfig::SetData(const string& householdsFileName, const string& work
         //----------------------------------------------------------------
         if (!workplacesFileName.empty()) {
                 auto workplaceReader = ReaderFactory::CreateWorkplaceReader(workplacesFileName);
-                workplaceReader->SetReferenceWorkplaces(refWP.average_workplace_size, refWP.ratios, refWP.min,
-                                                        refWP.max);
+                workplaceReader->SetWorkplaceSizeDistributions(refWP.average_workplace_size, refWP.ratios, refWP.min,
+                                                               refWP.max);
         }
 
         const auto popSize = param.pop_size;

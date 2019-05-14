@@ -61,10 +61,10 @@ public:
         /// Create a HouseholdReader based on the absolute filesystem path the input file.
         static std::shared_ptr<HouseholdReader> CreateHouseholdReader(const filesys::path& path);
 
-        /// Create a HouseholdReader based on the filename relative to the data directory.
+        /// Create a WorkplaceReader based on the filename relative to the data directory.
         static std::shared_ptr<WorkplaceReader> CreateWorkplaceReader(const std::string& filename);
 
-        /// Create a HouseholdReader based on the absolute filesystem path the input file.
+        /// Create a WorkplaceReader based on the absolute filesystem path the input file.
         static std::shared_ptr<WorkplaceReader> CreateWorkplaceReader(const filesys::path& path);
 
 private:
