@@ -46,7 +46,7 @@ double GetWorkplaceWeight(const GeoGridConfig& geoGridConfig, const stride::Cont
         }
         // pool size is below minimum value
         else if (pool->size() < geoGridConfig.refWP.min[index]) {
-                return 1 - geoGridConfig.refWP.ratios[index];
+                return (1 - geoGridConfig.refWP.ratios[index]);
         } else {
                 return (1 - geoGridConfig.refWP.ratios[index]) / 10;
         }
@@ -171,7 +171,6 @@ void Populator<stride::ContactType::Id::Workplace>::Apply(GeoGrid& geoGrid, cons
                                                         for (int i = 0; i < s; i++) {
                                                                 const unsigned int index = geopop::GetWorkplaceIndex(
                                                                     poolTypes, pools[i]->GetId(), genWorkPlaceSize);
-
                                                                 const auto weight =
                                                                     GetWorkplaceWeight(geoGridConfig, pools[i], index);
 

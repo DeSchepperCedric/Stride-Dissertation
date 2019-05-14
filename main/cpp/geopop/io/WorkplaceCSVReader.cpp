@@ -53,10 +53,6 @@ void WorkplaceCSVReader::SetReferenceWorkplaces(unsigned int&        ref_average
                 ratios.emplace_back(ratio);
                 max_values.emplace_back(max);
                 min_values.emplace_back(min);
-                std::cout << "----------------" << std::endl;
-                std::cout << "min: " << min << std::endl;
-                std::cout << "max: " << max << std::endl;
-                std::cout << "ratio: " << ratio << std::endl;
         }
         ref_average_workplace_size = (unsigned int)round(average_size);
 
