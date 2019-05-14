@@ -34,32 +34,36 @@ using namespace stride::util;
 
 namespace {
 
+template<typename InputIterator1, typename InputIterator2>
+bool
+range_equal(InputIterator1 first1, InputIterator1 last1,
+        InputIterator2 first2, InputIterator2 last2)
+{
+    while(first1 != last1 && first2 != last2)
+    {
+        if(*first1 != *first2) return false;
+        ++first1;
+        ++first2;
+    }
+    return (first1 == last1) && (first2 == last2);
+}
+
 bool compareGeoGrid(GeoGrid& geoGrid, const string& testname)
 {
-        //const string filename = FileSys::GetTestsDir().string() + "/testdata/GeoGridHDF5/" + testname;
-        GeoGridHDF5Writer writer(testname);
+        const string filename = FileSys::GetTestsDir().string() + "/testdata/GeoGridHDF5/test.h5";
+        const string comparefilename = FileSys::GetTestsDir().string() + "/testdata/GeoGridHDF5/" + testname;
+        GeoGridHDF5Writer writer(filename);
         writer.Write(geoGrid);
 
-        return true;
-        /*
-        //(FileSys::GetTestDir().string() + "/testdata/GeoGridHDF5/" + "test.h5");
-        std::ifstream  f1(testname, std::ifstream::binary|std::ifstream::ate);
-        std::ifstream  f2(FileSys::GetTestsDir().string() + "/testdata/GeoGridHDF5/test10.h5", std::ifstream::binary|std::ifstream::ate);
+        std::ifstream  file1(filename, std::ifstream::binary|std::ifstream::ate);
+        std::ifstream  file2(comparefilename, std::ifstream::binary|std::ifstream::ate);
 
-        if (f1.fail() || f2.fail()) {
-                return false; //file problem
-        }
+        std::istreambuf_iterator<char> begin1(file1);
+        std::istreambuf_iterator<char> begin2(file2);
 
-        if (f1.tellg() != f2.tellg()) {
-                return false; //size mismatch
-        }
+        std::istreambuf_iterator<char> end;
 
-        //seek back to beginning and use std::equal to compare contents
-        f1.seekg(0, std::ifstream::beg);
-        f2.seekg(0, std::ifstream::beg);
-        return std::equal(std::istreambuf_iterator<char>(f1.rdbuf()),
-                          std::istreambuf_iterator<char>(),
-                          std::istreambuf_iterator<char>(f2.rdbuf()));*/
+        return range_equal(begin1, end, begin2, end);
 }
 
 TEST(GeoGridHDF5WriterTest, locationsTest)
@@ -72,7 +76,6 @@ TEST(GeoGridHDF5WriterTest, locationsTest)
 
         EXPECT_TRUE(compareGeoGrid(geoGrid, "test0.h5"));
 }
-
 
 TEST(GeoGridHDF5WriterTest, contactPoolsTest)
 {
