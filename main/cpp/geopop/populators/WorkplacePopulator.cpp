@@ -35,13 +35,13 @@ using namespace util;
 
 double GetWorkplaceWeight(const GeoGridConfig& geoGridConfig, const stride::ContactPool* pool, const unsigned int index)
 {
-
         // pool is full but possibility to transform to larger workplace
         if (pool->size() >= geoGridConfig.refWP.max[index] && index != (geoGridConfig.refWP.max.size()) - 1) {
                 return 0.000001;
         }
         // pool is full and largest workplace possible (only when absolutely necessary)
         else if (pool->size() >= geoGridConfig.refWP.max[index]) {
+
                 return 0.00000000001 / (pool->size() - geoGridConfig.refWP.max[index] + 1);
         }
         // pool size is below minimum value
@@ -85,12 +85,10 @@ void Populator<stride::ContactType::Id::Workplace>::Apply(GeoGrid& geoGrid, cons
 
         const bool wp_types_present = !geoGridConfig.refWP.ratios.empty();
 
-
         // discrete generator to decide workplace type
         if (wp_types_present) {
                 genWorkPlaceSize = m_rn_man.GetDiscreteGenerator(geoGridConfig.refWP.ratios, 0U);
         }
-
         // --------------------------------------------------------------------------------
         // For every location, if populated ...
         // --------------------------------------------------------------------------------
@@ -98,12 +96,13 @@ void Populator<stride::ContactType::Id::Workplace>::Apply(GeoGrid& geoGrid, cons
                 if (loc->GetPopCount() == 0) {
                         continue;
                 }
-                const auto participCollege      = geoGridConfig.params.at(loc->GetProvince()).participation_college;
-                const auto participWorkplace    = geoGridConfig.params.at(loc->GetProvince()).participation_workplace;
-                const auto popCollege           = geoGridConfig.regionsInfo.at(loc->GetProvince()).popcount_college;
-                const auto popWorkplace         = geoGridConfig.regionsInfo.at(loc->GetProvince()).popcount_workplace;
-                const auto fracCollegeCommute   = geoGridConfig.params.at(loc->GetProvince()).fraction_college_commuters;
-                const auto fracWorkplaceCommute = geoGridConfig.params.at(loc->GetProvince()).fraction_workplace_commuters;
+                const auto participCollege    = geoGridConfig.params.at(loc->GetProvince()).participation_college;
+                const auto participWorkplace  = geoGridConfig.params.at(loc->GetProvince()).participation_workplace;
+                const auto popCollege         = geoGridConfig.regionsInfo.at(loc->GetProvince()).popcount_college;
+                const auto popWorkplace       = geoGridConfig.regionsInfo.at(loc->GetProvince()).popcount_workplace;
+                const auto fracCollegeCommute = geoGridConfig.params.at(loc->GetProvince()).fraction_college_commuters;
+                const auto fracWorkplaceCommute =
+                    geoGridConfig.params.at(loc->GetProvince()).fraction_workplace_commuters;
 
                 double fracCommuteStudents = 0.0;
                 if (static_cast<bool>(fracWorkplaceCommute) && popWorkplace) {
@@ -127,11 +126,9 @@ void Populator<stride::ContactType::Id::Workplace>::Apply(GeoGrid& geoGrid, cons
                                             "Invalid weight: " + to_string(weight), m_logger);
                         }
                 }
-
                 if (!commutingWeights.empty()) {
                         genCommute = m_rn_man.GetDiscreteGenerator(commutingWeights, 0U);
                 }
-
                 // --------------------------------------------------------------------------------
                 // Set NearbyWorkspacePools and associated generator
                 // When dealing with different workplace types, the generator will be updated later
@@ -143,11 +140,11 @@ void Populator<stride::ContactType::Id::Workplace>::Apply(GeoGrid& geoGrid, cons
                 // For everyone of working age: decide between work or college (iff of College age)
                 // --------------------------------------------------------------------------------
                 for (auto& hhPool : loc->RefPools(Id::Household)) {
+
                         for (auto person : *hhPool) {
                                 if (!Workplace::HasAge(person->GetAge())) {
                                         continue;
                                 }
-
                                 bool isStudent      = m_rn_man.MakeWeightedCoinFlip(participCollege);
                                 bool isActiveWorker = m_rn_man.MakeWeightedCoinFlip(participWorkplace);
 
@@ -162,8 +159,7 @@ void Populator<stride::ContactType::Id::Workplace>::Apply(GeoGrid& geoGrid, cons
                                                 // this person commutes to the Location and in particular to Pool
                                                 // --------------------------------------------------------------
                                                 auto& pools = commuteLocations[genCommute()]->RefPools(Id::Workplace);
-
-                                                auto s = static_cast<int>(pools.size());
+                                                auto  s     = static_cast<int>(pools.size());
                                                 if (wp_types_present) {
                                                         // -------------------------------------
                                                         // Handling workplace size distribution
@@ -174,7 +170,6 @@ void Populator<stride::ContactType::Id::Workplace>::Apply(GeoGrid& geoGrid, cons
                                                                     poolTypes, pools[i]->GetId(), genWorkPlaceSize);
                                                                 const auto weight =
                                                                     GetWorkplaceWeight(geoGridConfig, pools[i], index);
-
                                                                 weightsCommutePools.push_back(weight);
                                                                 AssertThrow(
                                                                     weight >= 0.0 && weight <= 1.0 && !isnan(weight),
@@ -184,13 +179,11 @@ void Populator<stride::ContactType::Id::Workplace>::Apply(GeoGrid& geoGrid, cons
                                                 } else {
                                                         gen = m_rn_man.GetUniformIntGenerator(0, s);
                                                 }
-
-                                                auto pool = pools[gen()];
-
+                                                auto pool      = pools[gen()];
                                                 auto pool_type = poolTypes[pool->GetId()];
+
                                                 pool->AddMember(person);
                                                 person->SetPoolId(Id::Workplace, pool->GetId());
-
                                                 // increase workplace type to larger size
                                                 if (wp_types_present &&
                                                     pool->size() > geoGridConfig.refWP.max[pool_type] &&

@@ -39,12 +39,12 @@ public:
             : m_rn_man(RnInfo()), m_workplace_generator(m_rn_man), m_gg_config(), m_pop(Population::Create()),
               m_geo_grid(m_pop.get())
         {
-//                for (unsigned int i = 0; i < 5; ++i){
-//                        GeoGridConfig::Param param;
-//                        m_gg_config.params[i] = param;
-//                        GeoGridConfig::Info info;
-//                        m_gg_config.regionsInfo[i] = info;
-//                }
+                //                for (unsigned int i = 0; i < 5; ++i){
+                //                        GeoGridConfig::Param param;
+                //                        m_gg_config.params[i] = param;
+                //                        GeoGridConfig::Info info;
+                //                        m_gg_config.regionsInfo[i] = info;
+                //                }
         }
 
 protected:
@@ -64,7 +64,7 @@ TEST_F(WorkplaceGeneratorTest, ZeroLocationTest)
         GeoGridConfig::Info info;
         m_gg_config.regionsInfo[4] = info;
 
-        m_gg_config.params.at(4).pop_size        = 10000;
+        m_gg_config.params.at(4).pop_size              = 10000;
         m_gg_config.regionsInfo.at(4).popcount_college = 20000;
         m_workplace_generator.Apply(m_geo_grid, m_gg_config);
 
@@ -80,8 +80,8 @@ TEST_F(WorkplaceGeneratorTest, NoCommuting)
         m_gg_config.regionsInfo[4] = info;
 
         m_gg_config.params.at(4).pop_size                     = 5 * 1000 * 1000;
-        m_gg_config.regionsInfo.at(4).popcount_workplace            = static_cast<unsigned int>(0.20 * 5 * 1000 * 1000);
-        m_gg_config.params.at(4).participation_workplace       = 0.20;
+        m_gg_config.regionsInfo.at(4).popcount_workplace      = static_cast<unsigned int>(0.20 * 5 * 1000 * 1000);
+        m_gg_config.params.at(4).participation_workplace      = 0.20;
         m_gg_config.params.at(4).fraction_workplace_commuters = 0;
 
         array<unsigned int, 50> sizes{128331, 50784,  191020, 174476, 186595, 105032, 136388, 577,   111380, 171014,
@@ -113,8 +113,8 @@ TEST_F(WorkplaceGeneratorTest, NullCommuting)
         m_gg_config.regionsInfo[4] = info;
 
         m_gg_config.params.at(4).pop_size                     = 5 * 1000 * 1000;
-        m_gg_config.regionsInfo.at(4).popcount_workplace            = static_cast<unsigned int>(0.20 * 5 * 1000 * 1000);
-        m_gg_config.params.at(4).participation_workplace       = 0.20;
+        m_gg_config.regionsInfo.at(4).popcount_workplace      = static_cast<unsigned int>(0.20 * 5 * 1000 * 1000);
+        m_gg_config.params.at(4).participation_workplace      = 0.20;
         m_gg_config.params.at(4).fraction_workplace_commuters = 0.10;
 
         array<unsigned int, 50> sizes{128331, 50784,  191020, 174476, 186595, 105032, 136388, 577,   111380, 171014,
@@ -158,8 +158,8 @@ TEST_F(WorkplaceGeneratorTest, TenCommuting)
         m_gg_config.regionsInfo[4] = info;
 
         m_gg_config.params.at(4).pop_size                     = 5 * 1000 * 1000;
-        m_gg_config.regionsInfo.at(4).popcount_workplace            = static_cast<unsigned int>(0.20 * 5 * 1000 * 1000);
-        m_gg_config.params.at(4).participation_workplace       = 0.20;
+        m_gg_config.regionsInfo.at(4).popcount_workplace      = static_cast<unsigned int>(0.20 * 5 * 1000 * 1000);
+        m_gg_config.params.at(4).participation_workplace      = 0.20;
         m_gg_config.params.at(4).fraction_workplace_commuters = 0.10;
 
         array<unsigned int, 50> sizes{128331, 50784,  191020, 174476, 186595, 105032, 136388, 577,   111380, 171014,
@@ -200,7 +200,8 @@ TEST_F(WorkplaceGeneratorTest, TenCommuting)
         EXPECT_EQ(0, m_geo_grid[17]->GetOutgoingCommuteCount(m_gg_config.params.at(4).fraction_workplace_commuters));
 
         // = 0,10 * (0,65 * 76946 + 0,22 * 141389 + 0,47 * 20775 + 0,25*63673) = 10680,298
-        EXPECT_EQ(10680, m_geo_grid[17]->GetIncomingCommuteCount(m_gg_config.params.at(4).fraction_workplace_commuters));
+        EXPECT_EQ(10680,
+                  m_geo_grid[17]->GetIncomingCommuteCount(m_gg_config.params.at(4).fraction_workplace_commuters));
 
         // = 0,65 * 76946 * 0,10 = 5001,048
         EXPECT_EQ(5001, m_geo_grid[38]->GetOutgoingCommuteCount(m_gg_config.params.at(4).fraction_workplace_commuters));
@@ -212,7 +213,8 @@ TEST_F(WorkplaceGeneratorTest, TenCommuting)
         EXPECT_EQ(0, m_geo_grid[17]->GetOutgoingCommuteCount(m_gg_config.params.at(4).fraction_workplace_commuters));
 
         // = 0,10 * (0,65 * 76946 + 0,22  * 141389 + 0,47 * 20775 + 0,25* 63673) = 10680,298
-        EXPECT_EQ(10680, m_geo_grid[17]->GetIncomingCommuteCount(m_gg_config.params.at(4).fraction_workplace_commuters));
+        EXPECT_EQ(10680,
+                  m_geo_grid[17]->GetIncomingCommuteCount(m_gg_config.params.at(4).fraction_workplace_commuters));
 
         m_workplace_generator.Apply(m_geo_grid, m_gg_config);
 

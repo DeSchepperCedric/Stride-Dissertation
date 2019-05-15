@@ -39,11 +39,10 @@ public:
             : m_rn_man(RnInfo()), m_workplace_populator(m_rn_man), m_gg_config(), m_pop(Population::Create()),
               m_geo_grid(m_pop->RefGeoGrid()), m_workplace_generator(m_rn_man)
         {
-                for (unsigned int i = 0; i < 5; ++i){
+                for (unsigned int i = 0; i < 5; ++i) {
                         GeoGridConfig::Param param;
                         m_gg_config.params[i] = param;
                 }
-
         }
 
 protected:
@@ -68,10 +67,9 @@ TEST_F(WorkplacePopulatorTest, NoPopulation)
 TEST_F(WorkplacePopulatorTest, NoActive)
 {
         MakeGeoGrid(m_gg_config, 3, 100, 12, 2, 3, 33, 3, m_pop.get());
-        GeoGridConfig::Info info;
-        m_gg_config.regionsInfo[1] = info;
+        m_gg_config.regionsInfo[1]                       = GeoGridConfig::Info{};
         m_gg_config.params.at(1).participation_workplace = 0;
-        m_gg_config.params.at(1).participation_college  = 1;
+        m_gg_config.params.at(1).participation_college   = 1;
 
         // Nobody works, everybody in the student age bracket goes to college: so workplace is empty.
         // Brasschaat and Schoten are close to each other. There is no commuting, but they are so close
@@ -96,11 +94,10 @@ TEST_F(WorkplacePopulatorTest, NoActive)
 TEST_F(WorkplacePopulatorTest, NoCommuting)
 {
         MakeGeoGrid(m_gg_config, 3, 100, 12, 2, 3, 33, 3, m_pop.get());
-        GeoGridConfig::Info info;
-        m_gg_config.regionsInfo[1] = info;
+        m_gg_config.regionsInfo[1] = GeoGridConfig::Info{};
 
         m_gg_config.params.at(1).fraction_workplace_commuters = 0;
-        m_gg_config.params.at(1).participation_workplace       = 1;
+        m_gg_config.params.at(1).participation_workplace      = 1;
         m_gg_config.params.at(1).participation_college        = 0.5;
 
         // Brasschaat and Schoten are close to each other
@@ -171,13 +168,12 @@ TEST_F(WorkplacePopulatorTest, NoCommuting)
 TEST_F(WorkplacePopulatorTest, OnlyCommuting)
 {
         MakeGeoGrid(m_gg_config, 3, 100, 12, 90, 3, 33, 3, m_pop.get());
-        GeoGridConfig::Info info;
-        m_gg_config.regionsInfo[1] = info;
+        m_gg_config.regionsInfo[1]                            = GeoGridConfig::Info{};
         m_gg_config.params.at(1).fraction_workplace_commuters = 0;
         m_gg_config.params.at(1).fraction_workplace_commuters = 1;
         m_gg_config.params.at(1).fraction_college_commuters   = 0;
-        m_gg_config.regionsInfo.at(1).popcount_workplace            = 1;
-        m_gg_config.params.at(1).participation_workplace       = 1;
+        m_gg_config.regionsInfo.at(1).popcount_workplace      = 1;
+        m_gg_config.params.at(1).participation_workplace      = 1;
         m_gg_config.params.at(1).participation_college        = 0.5;
 
         // only commuting
@@ -232,13 +228,12 @@ TEST_F(WorkplacePopulatorTest, OnlyCommuting)
 TEST_F(WorkplacePopulatorTest, NoCommutingAvailable)
 {
         MakeGeoGrid(m_gg_config, 3, 100, 12, 2, 3, 33, 3, m_pop.get());
-        GeoGridConfig::Info info;
-        m_gg_config.regionsInfo[1] = info;
+        m_gg_config.regionsInfo[1]                            = GeoGridConfig::Info{};
         m_gg_config.params.at(1).fraction_workplace_commuters = 0;
         m_gg_config.params.at(1).fraction_workplace_commuters = 1;
         m_gg_config.params.at(1).fraction_college_commuters   = 0;
-        m_gg_config.regionsInfo.at(1).popcount_workplace            = 1;
-        m_gg_config.params.at(1).participation_workplace       = 1;
+        m_gg_config.regionsInfo.at(1).popcount_workplace      = 1;
+        m_gg_config.params.at(1).participation_workplace      = 1;
         m_gg_config.params.at(1).participation_college        = 0.5;
 
         auto brasschaat = *m_geo_grid.begin();

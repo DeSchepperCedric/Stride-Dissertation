@@ -40,9 +40,8 @@ namespace {
 bool compareGeoGrid(GeoGrid& geoGrid, const string& testname)
 {
         GeoGridHDF5Writer writer;
-        stringstream ss;
+        stringstream      ss;
         writer.Write(geoGrid, ss);
-        
 }
 
 TEST(GeoGridHDF5WriterTest, locationsTest)

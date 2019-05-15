@@ -33,9 +33,9 @@ void Generator<stride::ContactType::Id::Daycare>::Apply(GeoGrid& geoGrid, const 
         //    to the relative population w.r.t the total population.
 
         auto pupilCount = 0U;
-        for (const auto & it : ggConfig.regionsInfo){
+        for (const auto& it : ggConfig.regionsInfo) {
                 pupilCount += it.second.popcount_daycare;
-//                pupilCount += it.second.major_popcount_daycare;
+                //                pupilCount += it.second.major_popcount_daycare;
         }
         const auto schoolCount =
             static_cast<unsigned int>(ceil(pupilCount / static_cast<double>(ggConfig.people[Id::Daycare])));

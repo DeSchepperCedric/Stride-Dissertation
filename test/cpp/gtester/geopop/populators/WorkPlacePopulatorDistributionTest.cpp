@@ -39,10 +39,6 @@ public:
             : m_rn_man(RnInfo()), m_workplace_populator(m_rn_man), m_gg_config(), m_pop(Population::Create()),
               m_geo_grid(m_pop->RefGeoGrid()), m_workplace_generator(m_rn_man)
         {
-                for (unsigned int i = 0; i < 5; ++i){
-                        GeoGridConfig::Param param;
-                        m_gg_config.params[i] = param;
-                }
         }
 
 protected:
@@ -58,25 +54,27 @@ protected:
 TEST_F(WorkplacePopulatorDistributionTest, Commuting)
 {
         MakeGeoGrid(m_gg_config, 3, 100, 12, 2, 3, 33, 3, m_pop.get());
-        GeoGridConfig::Info info;
-        m_gg_config.regionsInfo[1] = info;
 
+        m_gg_config.params[1]                                 = GeoGridConfig::Param{};
         m_gg_config.params.at(1).fraction_workplace_commuters = 0;
         m_gg_config.params.at(1).fraction_workplace_commuters = 1;
         m_gg_config.params.at(1).fraction_college_commuters   = 0;
-        m_gg_config.regionsInfo.at(1).popcount_workplace            = 1;
-        m_gg_config.params.at(1).participation_workplace       = 1;
+        m_gg_config.params.at(1).participation_workplace      = 1;
         m_gg_config.params.at(1).participation_college        = 0.5;
-        m_gg_config.refWP.average_workplace_size       = 10;
-        m_gg_config.refWP.ratios                       = {0.60, 0.25, 0.10, 0.05};
+
+        m_gg_config.regionsInfo[1]                       = GeoGridConfig::Info{};
+        m_gg_config.regionsInfo.at(1).popcount_workplace = 1;
+
+        m_gg_config.refWP.average_workplace_size = 16;
+        m_gg_config.refWP.ratios                 = {0.760, 0.191, 0.041, 0.008};
+        m_gg_config.refWP.min                    = {1, 10, 50, 200};
+        m_gg_config.refWP.max                    = {9, 49, 199, 400};
 
         auto schoten = *(m_geo_grid.begin());
         schoten->SetCoordinate(Coordinate(51.2497532, 4.4977063));
-
         auto kortrijk = *(m_geo_grid.begin() + 1);
         kortrijk->SetCoordinate(Coordinate(50.82900246, 3.264406009));
-
-        for (int i = 0; i < 15; i++) {
+        for (int k = 0; k < 15; k++) {
                 m_workplace_generator.AddPools(*schoten, m_pop.get(), m_gg_config);
                 m_workplace_generator.AddPools(*kortrijk, m_pop.get(), m_gg_config);
         }
@@ -87,6 +85,7 @@ TEST_F(WorkplacePopulatorDistributionTest, Commuting)
         schoten->AddIncomingCommute(kortrijk, 0.5);
 
         m_geo_grid.Finalize();
+
         m_workplace_generator.Apply(m_geo_grid, m_gg_config);
         m_workplace_populator.Apply(m_geo_grid, m_gg_config);
 
@@ -124,25 +123,28 @@ TEST_F(WorkplacePopulatorDistributionTest, Commuting)
 }
 
 TEST_F(WorkplacePopulatorDistributionTest, OnlyCommuting)
-    {
+{
         MakeGeoGrid(m_gg_config, 3, 100, 12, 90, 3, 33, 3, m_pop.get());
-        GeoGridConfig::Info info;
-        m_gg_config.regionsInfo[1] = info;
 
+        m_gg_config.params[1]                                 = GeoGridConfig::Param{};
         m_gg_config.params.at(1).fraction_workplace_commuters = 0;
         m_gg_config.params.at(1).fraction_workplace_commuters = 1;
         m_gg_config.params.at(1).fraction_college_commuters   = 0;
-        m_gg_config.regionsInfo.at(1).popcount_workplace            = 1;
-        m_gg_config.params.at(1).participation_workplace       = 1;
+        m_gg_config.params.at(1).participation_workplace      = 1;
         m_gg_config.params.at(1).participation_college        = 0.5;
-        m_gg_config.refWP.average_workplace_size       = 50;
-        m_gg_config.refWP.ratios                       = {0.60, 0.25, 0.10, 0.05};
+
+        m_gg_config.regionsInfo[1]                       = GeoGridConfig::Info{};
+        m_gg_config.regionsInfo.at(1).popcount_workplace = 1;
+
+        m_gg_config.refWP.average_workplace_size = 16;
+        m_gg_config.refWP.ratios                 = {0.760, 0.191, 0.041, 0.008};
+        m_gg_config.refWP.min                    = {1, 10, 50, 200};
+        m_gg_config.refWP.max                    = {9, 49, 199, 400};
         // only commuting
 
         // Brasschaat and Schoten are close to each other
         // There is no commuting, but since they will still receive students from each other
         // Kortrijk will only receive students from Kortrijik
-
         for (int k = 0; k < 3; k++) {
                 auto t = *(m_geo_grid.begin() + k);
                 for (int i = 0; i < 15; i++) {

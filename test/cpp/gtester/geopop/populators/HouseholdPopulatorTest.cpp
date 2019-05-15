@@ -39,13 +39,12 @@ public:
             : m_rn_man(RnInfo()), m_household_populator(m_rn_man), m_gg_config(), m_pop(Population::Create()),
               m_geo_grid(m_pop->RefGeoGrid()), m_household_generator(m_rn_man)
         {
-                for (unsigned int i = 0; i < 5; ++i){
+                for (unsigned int i = 0; i < 5; ++i) {
                         GeoGridConfig::Param param;
                         m_gg_config.params[i] = param;
                         GeoGridConfig::Info info;
                         m_gg_config.regionsInfo[i] = info;
                 }
-
         }
 
 protected:
@@ -60,7 +59,7 @@ protected:
 TEST_F(HouseholdPopulatorTest, OneHouseholdTest)
 {
         GeoGridConfig::RefHH reff;
-        m_gg_config.refHouseHolds[4] = reff;
+        m_gg_config.refHouseHolds[4]         = reff;
         m_gg_config.refHouseHolds.at(4).ages = vector<vector<unsigned int>>{{8U}};
 
         auto loc1 = make_shared<Location>(1, 4, Coordinate(0, 0), "Antwerpen", 2500);
@@ -103,7 +102,7 @@ TEST_F(HouseholdPopulatorTest, FiveHouseholdsTest)
 TEST_F(HouseholdPopulatorTest, MultipleHouseholdTypesTest)
 {
         GeoGridConfig::RefHH reff;
-        m_gg_config.refHouseHolds[4] = reff;
+        m_gg_config.refHouseHolds[4]         = reff;
         m_gg_config.refHouseHolds.at(4).ages = vector<vector<unsigned int>>{{18U}, {12U, 56U}};
 
         const auto loc1 = make_shared<Location>(1, 4, Coordinate(0, 0), "Antwerpen", 2500);

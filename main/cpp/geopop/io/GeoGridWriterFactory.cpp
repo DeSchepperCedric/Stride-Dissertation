@@ -15,10 +15,10 @@
 
 #include "GeoGridWriterFactory.h"
 
+#include "GeoGridFileWriter.h"
+#include "GeoGridHDF5Writer.h"
 #include "GeoGridJSONWriter.h"
 #include "GeoGridProtoWriter.h"
-#include "GeoGridHDF5Writer.h"
-#include "GeoGridFileWriter.h"
 #include "GeoGridStreamWriter.h"
 #include "util/Exception.h"
 
@@ -35,14 +35,14 @@ namespace filesys = std::filesystem;
 
 namespace geopop {
 
-std::shared_ptr<GeoGridStreamWriter> GeoGridWriterFactory::CreateGeoGridStreamWriter(const std::string& filename, std::ofstream& outputFileStream)
+std::shared_ptr<GeoGridStreamWriter> GeoGridWriterFactory::CreateGeoGridStreamWriter(const std::string& filename,
+                                                                                     std::ofstream& outputFileStream)
 {
         const filesys::path path(filename);
 
         if (path.extension().string() == ".json") {
                 return std::make_shared<GeoGridJSONWriter>(outputFileStream);
-        } else
-        if (path.extension().string() == ".proto") {
+        } else if (path.extension().string() == ".proto") {
                 return std::make_shared<GeoGridProtoWriter>(outputFileStream);
         } else {
                 throw stride::util::Exception("GeoGridWriterFactory::CreateStreamWriter> Unsupported file extension: " +
@@ -50,8 +50,8 @@ std::shared_ptr<GeoGridStreamWriter> GeoGridWriterFactory::CreateGeoGridStreamWr
         }
 }
 
-
-std::shared_ptr<GeoGridFileWriter> GeoGridWriterFactory::CreateGeoGridFileWriter(const std::string& filename, std::string& outputFileName)
+std::shared_ptr<GeoGridFileWriter> GeoGridWriterFactory::CreateGeoGridFileWriter(const std::string& filename,
+                                                                                 std::string&       outputFileName)
 {
         const filesys::path path(filename);
 
@@ -62,6 +62,5 @@ std::shared_ptr<GeoGridFileWriter> GeoGridWriterFactory::CreateGeoGridFileWriter
                                               path.extension().string());
         }
 }
-
 
 } // namespace geopop

@@ -34,7 +34,7 @@ void MajorCitiesCSVReader::FillGeoGrid(GeoGrid& geoGrid) const
         CSV reader(*(m_inputStream.get()));
 
         for (const CSVRow& row : reader) {
-                //do stuff
+                // do stuff
                 const auto CityId = row.GetValue<unsigned int>(0);
                 geoGrid.GetById(CityId)->SetMajor(true);
         }

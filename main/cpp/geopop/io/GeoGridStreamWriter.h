@@ -30,7 +30,7 @@ class GeoGridStreamWriter : public GeoGridWriter
 {
 public:
         ///
-        explicit GeoGridStreamWriter(std::ostream& stream) : m_stream(stream) {};
+        explicit GeoGridStreamWriter(std::ostream& stream) : m_stream(stream){};
 
         ///
         virtual ~GeoGridStreamWriter() = default;
@@ -39,7 +39,7 @@ public:
         void Write(GeoGrid& geoGrid) override = 0;
 
         ///
-        std::ostream& StreamRef() {return m_stream;}
+        std::ostream& StreamRef() { return m_stream; }
 
 private:
         std::ostream& m_stream;

@@ -39,12 +39,12 @@ public:
             : m_rn_man(RnInfo()), m_household_generator(m_rn_man), m_gg_config(), m_pop(Population::Create()),
               m_geo_grid(m_pop.get())
         {
-//                for (unsigned int i = 0; i < 5; ++i){
-//                        GeoGridConfig::Param param;
-//                        m_gg_config.params[i] = param;
-//                        GeoGridConfig::Info info;
-//                        m_gg_config.regionsInfo[i] = info;
-//                }
+                //                for (unsigned int i = 0; i < 5; ++i){
+                //                        GeoGridConfig::Param param;
+                //                        m_gg_config.params[i] = param;
+                //                        GeoGridConfig::Info info;
+                //                        m_gg_config.regionsInfo[i] = info;
+                //                }
         }
 
 protected:
@@ -62,7 +62,7 @@ TEST_F(HouseholdGeneratorTest, OneLocationTest)
         GeoGridConfig::Param param;
         m_gg_config.params[4] = param;
         GeoGridConfig::Info info;
-        m_gg_config.regionsInfo[4] = info;
+        m_gg_config.regionsInfo[4]                     = info;
         m_gg_config.regionsInfo.at(4).count_households = 4;
 
         auto loc1 = make_shared<Location>(1, 4, Coordinate(0, 0), "Antwerpen", 2500);
@@ -82,7 +82,6 @@ TEST_F(HouseholdGeneratorTest, ZeroLocationTest)
         GeoGridConfig::Info info;
         m_gg_config.regionsInfo[4] = info;
 
-
         m_gg_config.regionsInfo.at(4).count_households = 4;
         m_household_generator.Apply(m_geo_grid, m_gg_config);
 
@@ -95,9 +94,9 @@ TEST_F(HouseholdGeneratorTest, FiveLocationsTest)
         GeoGridConfig::Param param;
         m_gg_config.params[4] = param;
         GeoGridConfig::Info info;
-        m_gg_config.regionsInfo[4] = info;
+        m_gg_config.regionsInfo[4]                     = info;
         m_gg_config.regionsInfo.at(4).count_households = 4000;
-        m_gg_config.params.at(4).pop_size        = 37542 * 100;
+        m_gg_config.params.at(4).pop_size              = 37542 * 100;
 
         auto loc1 = make_shared<Location>(1, 4, Coordinate(0, 0), "Antwerpen", 10150 * 100);
         auto loc2 = make_shared<Location>(2, 4, Coordinate(0, 0), "Vlaams-Brabant", 10040 * 100);

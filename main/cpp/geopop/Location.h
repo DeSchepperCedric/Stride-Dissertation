@@ -98,7 +98,6 @@ public:
         /// Sets the Coordinate of this Location.
         void SetMajor(const bool major) { m_major_city = major; }
 
-
 public:
         /// Access through const reference to ContactPools of type 'id'.
         /// \param id   ContactType::Id of pools container you want to access.
@@ -162,7 +161,7 @@ private:
         unsigned int m_pop_count;    ///< Population count (number of individuals) at this Location.
         double       m_pop_fraction; ///< Fraction of whole population at this Location.
         unsigned int m_province;     ///< Province id.
-        bool         m_major_city;    ///< whether this location is a major city (centrumstad)
+        bool         m_major_city;   ///< whether this location is a major city (centrumstad)
 
         /// Incomming commutes stored as pair of Location and fraction of population at that Location.
         std::vector<std::pair<Location*, double>> m_inCommutes;

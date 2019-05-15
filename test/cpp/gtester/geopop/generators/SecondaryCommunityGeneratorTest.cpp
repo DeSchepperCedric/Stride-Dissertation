@@ -39,12 +39,12 @@ public:
             : m_rn_man(RnInfo()), m_community_generator(m_rn_man), m_gg_config(), m_pop(Population::Create()),
               m_geo_grid(m_pop.get())
         {
-//                for (unsigned int i = 0; i < 5; ++i){
-//                        GeoGridConfig::Param param;
-//                        m_gg_config.params[i] = param;
-//                        GeoGridConfig::Info info;
-//                        m_gg_config.regionsInfo[i] = info;
-//                }
+                //                for (unsigned int i = 0; i < 5; ++i){
+                //                        GeoGridConfig::Param param;
+                //                        m_gg_config.params[i] = param;
+                //                        GeoGridConfig::Info info;
+                //                        m_gg_config.regionsInfo[i] = info;
+                //                }
         }
 
 protected:
@@ -119,7 +119,7 @@ TEST_F(SecondaryCommunityGeneratorTest, FiveLocationsTest)
         GeoGridConfig::Info info;
         m_gg_config.regionsInfo[4] = info;
 
-        m_gg_config.params.at(4).pop_size          = 37542 * 100;
+        m_gg_config.params.at(4).pop_size                = 37542 * 100;
         m_gg_config.regionsInfo.at(4).popcount_k12school = 750840;
 
         auto loc1 = make_shared<Location>(1, 4, Coordinate(0, 0), "Antwerpen", 10150 * 100);
