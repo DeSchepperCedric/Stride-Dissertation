@@ -99,8 +99,8 @@ void GeoGridHDF5Writer::WriteCoordinate(const Coordinate& coordinate, Group& loc
                                   }
                               };
         DataSpace dataspace(2, dims);
-        Attribute attribute = location.createAttribute("coordinates", GetPredType(data[0][0]), dataspace);
-        attribute.write(GetPredType(data[0][0]), data);
+        Attribute attribute = location.createAttribute("coordinates", GetPredType<double>(), dataspace);
+        attribute.write(GetPredType<double>(), data);
 
 }
 
@@ -187,8 +187,8 @@ void GeoGridHDF5Writer::WriteAttribute(const T& data, const string& name, H5Obje
         hsize_t   dims[1] = {1};
         DataSpace dataspace(1, dims);
         T         data_buffer[1] = {data};
-        Attribute attribute = object.createAttribute(name, GetPredType(data), dataspace);
-        attribute.write(GetPredType(data), data_buffer);
+        Attribute attribute = object.createAttribute(name, GetPredType<T>(), dataspace);
+        attribute.write(GetPredType<T>(), data_buffer);
 }
 
 } // namespace geopop

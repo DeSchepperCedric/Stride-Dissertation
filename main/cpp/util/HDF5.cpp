@@ -58,6 +58,8 @@ CompType GetPoolType()
         return pool_type;
 }
 
+
+/*
 PredType GetPredType(const unsigned int& data)
 {
         return PredType::NATIVE_UINT;
@@ -77,11 +79,12 @@ PredType GetPredType(const double& data)
 {
         return PredType::NATIVE_DOUBLE;
 }
-
+*/
 StrType GetPredType(const string& data)
 {
         return StrType(H5::PredType::C_S1, data.length());
 }
+
 
 } // namespace util
 } // namespace stride

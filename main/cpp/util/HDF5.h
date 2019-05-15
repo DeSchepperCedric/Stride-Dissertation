@@ -53,6 +53,24 @@ H5::CompType  GetCommuteType();
 
 H5::CompType  GetPoolType();
 
+template<typename T>
+H5::PredType GetPredType()
+{
+        if (std::is_same<T, unsigned int>::value) {
+                return H5::PredType::NATIVE_UINT;
+        }
+        if (std::is_same<T, unsigned long>::value) {
+                return H5::PredType::NATIVE_ULONG;
+        }
+        if (std::is_same<T, float>::value) {
+                return H5::PredType::NATIVE_FLOAT;
+        }
+        if (std::is_same<T, double>::value) {
+                return H5::PredType::NATIVE_DOUBLE;
+        }
+}
+
+/*
 H5::PredType  GetPredType(const unsigned int& data);
 
 H5::PredType  GetPredType(const unsigned long& data);
@@ -60,7 +78,7 @@ H5::PredType  GetPredType(const unsigned long& data);
 H5::PredType  GetPredType(const float& data);
 
 H5::PredType  GetPredType(const double& data);
-
+*/
 H5::StrType   GetPredType(const std::string& data);
 
 } //namespace util
