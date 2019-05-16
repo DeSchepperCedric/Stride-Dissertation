@@ -19,12 +19,19 @@
 #include "geopop/Location.h"
 
 #include "H5Cpp.h"
-#include <set>
 #include <string>
+#include <set>
 
 namespace stride {
 class ContactPool;
 class Person;
+
+namespace util {
+struct PersonType;
+struct CommuteType;
+struct PoolType;
+} // namespace util
+
 } // namespace stride
 
 namespace geopop {
@@ -38,7 +45,7 @@ class GeoGridHDF5Writer : public GeoGridFileWriter
 {
 public:
         /// Construct the GeoGridHDF5Writer.
-        GeoGridHDF5Writer(std::string& fileName);
+        GeoGridHDF5Writer(const std::string& fileName);
 
         /// Write the provided GeoGrid to the proved ostream in HDF5 format.
         void Write(GeoGrid& geoGrid) override;
@@ -48,27 +55,28 @@ private:
         void WriteContactPool(stride::ContactPool* contactPool, H5::Group& contactPools, const std::string& name);
 
         /// Create a HDF5 containing all info needed to reconstruct a Coordinate.
-        void WriteCoordinate(const Coordinate& coordinate);
+        void WriteCoordinate(const Coordinate& coordinate, H5::Group& location);
 
         /// Create a HDF5 Group containing all info needed to reconstruct a Location.
         void WriteLocation(const Location& location, H5::Group& locations, const std::string& location_name);
 
-        /// Write to a HDF5 Dataset containing all info needed to reconstruct a pool.
-        void WritePeople(stride::Person* person, H5::DataSet& pool);
+        /// Write to a HDF5 Dataset containing all info needed to reconstruct a Person.
+        stride::util::PersonType WritePerson(stride::Person* person);//, H5::DataSet& persons);
 
         /// Write to a HDF5 Dataset containing all info needed to reconstruct a commute.
-        void WriteCommute(std::pair<Location*, double> commute_pair, H5::DataSet& locations);
+        stride::util::CommuteType WriteCommute(std::pair<Location*, double> commute_pair);
 
-        /// Write to a HDF5 Dataset containing all info needed to reconstruct a Person.
-        void WritePerson(stride::Person* person, H5::DataSet& persons);
+        /// Write to a HDF5 Dataset containing all info needed to reconstruct a pool.
+        stride::util::PoolType WritePool(stride::Person* person);
+
+        void WriteAttribute(const std::string& data, const std::string& name, H5::H5Object& object);
+
+        /// Write an attribute of size 1 for data to a group or dataset
+        template<typename T>
+        void WriteAttribute(const T& data, const std::string& name, H5::H5Object& object);
 
 private:
         std::set<stride::Person*> m_persons_found; ///< The persons found when looping over the ContactPools.
-
-        const H5::StrType strdatatype;
-        H5::CompType      person_type;
-        H5::CompType      commute_type;
-        H5::CompType      pool_type;
 };
 
 } // namespace geopop

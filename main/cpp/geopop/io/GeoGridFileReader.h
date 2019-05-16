@@ -15,15 +15,9 @@
 
 #pragma once
 
-#include <map>
-#include <memory>
-#include <tuple>
-#include <vector>
+#include "GeoGridReader.h"
 
-namespace stride {
-class Person;
-class Population;
-} // namespace stride
+#include <istream>
 
 namespace geopop {
 
@@ -33,36 +27,26 @@ class GeoGrid;
  * An abstract base class for creating a GeoGrid that was read from a file, can be implemented
  * using multiple file types (proto and json are currently implemented)
  */
-class GeoGridReader
+class GeoGridFileReader : public GeoGridReader
 {
 public:
         /// Parametrized constructor.
-        GeoGridReader(stride::Population* pop);
+        explicit GeoGridFileReader(const std::string& inputFile, stride::Population* pop) : GeoGridReader(pop), m_inputFile(inputFile) {};
 
         /// No copy constructor.
-        GeoGridReader(const GeoGridReader&) = delete;
+        GeoGridFileReader(const GeoGridFileReader&) = delete;
 
         /// No copy assignment.
-        GeoGridReader& operator=(const GeoGridReader&) = delete;
+        GeoGridFileReader& operator=(const GeoGridFileReader&) = delete;
 
         /// Default destructor.
-        virtual ~GeoGridReader() = default;
+        virtual ~GeoGridFileReader() = default;
 
         /// Perform the actual read and return the created GeoGrid.
-        virtual void Read() = 0;
+        virtual void Read() override = 0;
 
 protected:
-        /// Add the commutes that were found to their respective Locations symmetrically.
-        void AddCommutes(GeoGrid& geoGrid);
-
-protected:
-        ///< Store the persons (id->person) that were found while loping over the ContactPools.
-        std::map<unsigned int, stride::Person*> m_people;
-
-        ///< Commutes from, to, number.
-        std::vector<std::tuple<unsigned int, unsigned int, double>> m_commutes;
-
-        stride::Population*           m_population;  ///< Population to use in the GeoGrid may be nullptr.
+        std::string m_inputFile; ///< File to read.
 };
 
 } // namespace geopop

@@ -15,11 +15,10 @@
 
 #include "GeoGridWriterFactory.h"
 
-#include "GeoGridFileWriter.h"
-#include "GeoGridHDF5Writer.h"
 #include "GeoGridJSONWriter.h"
 #include "GeoGridProtoWriter.h"
-#include "GeoGridStreamWriter.h"
+#include "GeoGridHDF5Writer.h"
+#include "GeoGridWriter.h"
 #include "util/Exception.h"
 
 #include <iostream>
@@ -35,8 +34,7 @@ namespace filesys = std::filesystem;
 
 namespace geopop {
 
-std::shared_ptr<GeoGridStreamWriter> GeoGridWriterFactory::CreateGeoGridStreamWriter(const std::string& filename,
-                                                                                     std::ofstream& outputFileStream)
+std::shared_ptr<GeoGridWriter> GeoGridWriterFactory::CreateGeoGridWriter(const std::string& filename, std::ofstream& outputFileStream)
 {
         const filesys::path path(filename);
 
@@ -44,21 +42,10 @@ std::shared_ptr<GeoGridStreamWriter> GeoGridWriterFactory::CreateGeoGridStreamWr
                 return std::make_shared<GeoGridJSONWriter>(outputFileStream);
         } else if (path.extension().string() == ".proto") {
                 return std::make_shared<GeoGridProtoWriter>(outputFileStream);
+        } else if (path.extension().string() == ".h5") {
+                return std::make_shared<GeoGridHDF5Writer>(filename);
         } else {
-                throw stride::util::Exception("GeoGridWriterFactory::CreateStreamWriter> Unsupported file extension: " +
-                                              path.extension().string());
-        }
-}
-
-std::shared_ptr<GeoGridFileWriter> GeoGridWriterFactory::CreateGeoGridFileWriter(const std::string& filename,
-                                                                                 std::string&       outputFileName)
-{
-        const filesys::path path(filename);
-
-        if (path.extension().string() == ".h5") {
-                return std::make_shared<GeoGridHDF5Writer>(outputFileName);
-        } else {
-                throw stride::util::Exception("GeoGridWriterFactory::CreateFileWriter> Unsupported file extension: " +
+                throw stride::util::Exception("GeoGridWriterFactory::CreateWriter> Unsupported file extension: " +
                                               path.extension().string());
         }
 }

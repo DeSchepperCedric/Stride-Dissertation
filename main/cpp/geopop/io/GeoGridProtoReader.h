@@ -15,7 +15,7 @@
 
 #pragma once
 
-#include "GeoGridReader.h"
+#include "GeoGridStreamReader.h"
 #include "contact/ContactPool.h"
 #include "contact/ContactType.h"
 #include "geopop/Location.h"
@@ -37,7 +37,7 @@ namespace geopop {
  * An implementation of the GeoGridReader using Protocol Buffers.
  * This class is used to read a GeoGrid from a Proto file.
  */
-class GeoGridProtoReader : public GeoGridReader
+class GeoGridProtoReader : public GeoGridStreamReader
 {
 public:
         /// Construct the GeoGridJSONReader with the istream which contains the Protobuf info.

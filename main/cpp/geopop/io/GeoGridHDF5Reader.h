@@ -15,14 +15,14 @@
 
 #pragma once
 
-#include "GeoGridReader.h"
+#include "GeoGridFileReader.h"
 #include "contact/ContactPool.h"
 #include "contact/ContactType.h"
 #include "geopop/Location.h"
 
+#include <boost/lexical_cast.hpp>
 #include "H5Cpp.h"
 #include "util/HDF5.h"
-#include <boost/lexical_cast.hpp>
 
 namespace geopop {
 
@@ -32,11 +32,11 @@ class GeoGrid;
  * An implementation of the GeoGridReader using HDF5.
  * This class is used to read a GeoGrid from a HDF5 file.
  */
-class GeoGridHDF5Reader : public GeoGridReader
+class GeoGridHDF5Reader : public GeoGridFileReader
 {
 public:
-        /// Construct the GeoGridHDF5Reader with the istream which contains the HDF5.
-        GeoGridHDF5Reader(std::unique_ptr<std::istream> inputStream, stride::Population* pop);
+        /// Construct the GeoGridHDF5Reader with the file name which contains the HDF5.
+        GeoGridHDF5Reader(const std::string& inputFile, stride::Population* pop);
 
         /// No copy constructor.
         GeoGridHDF5Reader(const GeoGridHDF5Reader&) = delete;
@@ -49,24 +49,25 @@ public:
 
 private:
         /// Create a ContactCenter based on the information stored in the provided ...
-        /// std::shared_ptr<ContactCenter> ParseContactCenter(H5::& contactCenter);
+        ///std::shared_ptr<ContactCenter> ParseContactCenter(H5::& contactCenter);
 
         /// Create a ContactCenter based on the information stored in the provided ...
         void ParseContactPool(H5::DataSet& contactPool, std::shared_ptr<Location> result);
 
         /// Create a Coordinate based on the information stored in the provided ...
-        // Coordinate ParseCoordinate(H5::Attribute& coordinate);
+        //Coordinate ParseCoordinate(H5::Attribute& coordinate);
 
         /// Create a Location based on the information stored in the provided ...
         std::shared_ptr<Location> ParseLocation(H5::Group& location);
 
         /// Create a Person based on the information stored in the provided ...
-        stride::Person* ParsePerson(stride::util::PERSON& person);
+        stride::Person* ParsePerson(stride::util::PersonType& person);
 
-        const H5::StrType strdatatype;
-        H5::CompType      person_type;
-        H5::CompType      commute_type;
-        H5::CompType      pool_type;
+        template<typename T>
+        T ReadAttribute(const std::string& name, H5::H5Object& object);
 };
+
+template<>
+std::string GeoGridHDF5Reader::ReadAttribute(const std::string& name, H5::H5Object& object);
 
 } // namespace geopop
