@@ -15,9 +15,9 @@
 
 #include "GeoGridReaderFactory.h"
 
+#include "GeoGridHDF5Reader.h"
 #include "GeoGridJSONReader.h"
 #include "GeoGridProtoReader.h"
-#include "GeoGridHDF5Reader.h"
 #include "GeoGridReader.h"
 #include "util/Exception.h"
 #include "util/FileSys.h"

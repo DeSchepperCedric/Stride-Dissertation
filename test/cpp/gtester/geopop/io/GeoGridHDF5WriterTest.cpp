@@ -34,29 +34,27 @@ using namespace stride::util;
 
 namespace {
 
-template<typename InputIterator1, typename InputIterator2>
-bool
-range_equal(InputIterator1 first1, InputIterator1 last1,
-        InputIterator2 first2, InputIterator2 last2)
+template <typename InputIterator1, typename InputIterator2>
+bool range_equal(InputIterator1 first1, InputIterator1 last1, InputIterator2 first2, InputIterator2 last2)
 {
-    while(first1 != last1 && first2 != last2)
-    {
-        if(*first1 != *first2) return false;
-        ++first1;
-        ++first2;
-    }
-    return (first1 == last1) && (first2 == last2);
+        while (first1 != last1 && first2 != last2) {
+                if (*first1 != *first2)
+                        return false;
+                ++first1;
+                ++first2;
+        }
+        return (first1 == last1) && (first2 == last2);
 }
 
 bool compareGeoGrid(GeoGrid& geoGrid, const string& testname)
 {
-        const string filename = FileSys::GetTestsDir().string() + "/testdata/GeoGridHDF5/test.h5";
-        const string comparefilename = FileSys::GetTestsDir().string() + "/testdata/GeoGridHDF5/" + testname;
+        const string      filename        = FileSys::GetTestsDir().string() + "/testdata/GeoGridHDF5/test.h5";
+        const string      comparefilename = FileSys::GetTestsDir().string() + "/testdata/GeoGridHDF5/" + testname;
         GeoGridHDF5Writer writer(filename);
         writer.Write(geoGrid);
 
-        std::ifstream  file1(filename, std::ifstream::binary|std::ifstream::ate);
-        std::ifstream  file2(comparefilename, std::ifstream::binary|std::ifstream::ate);
+        std::ifstream file1(filename, std::ifstream::binary | std::ifstream::ate);
+        std::ifstream file2(comparefilename, std::ifstream::binary | std::ifstream::ate);
 
         std::istreambuf_iterator<char> begin1(file1);
         std::istreambuf_iterator<char> begin2(file2);

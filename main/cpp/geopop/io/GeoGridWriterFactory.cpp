@@ -15,9 +15,9 @@
 
 #include "GeoGridWriterFactory.h"
 
+#include "GeoGridHDF5Writer.h"
 #include "GeoGridJSONWriter.h"
 #include "GeoGridProtoWriter.h"
-#include "GeoGridHDF5Writer.h"
 #include "GeoGridWriter.h"
 #include "util/Exception.h"
 
@@ -34,7 +34,8 @@ namespace filesys = std::filesystem;
 
 namespace geopop {
 
-std::shared_ptr<GeoGridWriter> GeoGridWriterFactory::CreateGeoGridWriter(const std::string& filename, std::ofstream& outputFileStream)
+std::shared_ptr<GeoGridWriter> GeoGridWriterFactory::CreateGeoGridWriter(const std::string& filename,
+                                                                         std::ofstream&     outputFileStream)
 {
         const filesys::path path(filename);
 

@@ -31,7 +31,8 @@ class GeoGridStreamReader : public GeoGridReader
 {
 public:
         /// Parametrized constructor.
-        explicit GeoGridStreamReader(std::unique_ptr<std::istream> inputStream, stride::Population* pop) : GeoGridReader(pop), m_inputStream(std::move(inputStream)) {};
+        explicit GeoGridStreamReader(std::unique_ptr<std::istream> inputStream, stride::Population* pop)
+            : GeoGridReader(pop), m_inputStream(std::move(inputStream)){};
 
         /// No copy constructor.
         GeoGridStreamReader(const GeoGridStreamReader&) = delete;

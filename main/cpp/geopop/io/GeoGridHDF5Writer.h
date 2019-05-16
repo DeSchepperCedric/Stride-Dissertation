@@ -19,8 +19,8 @@
 #include "geopop/Location.h"
 
 #include "H5Cpp.h"
-#include <string>
 #include <set>
+#include <string>
 
 namespace stride {
 class ContactPool;
@@ -61,7 +61,7 @@ private:
         void WriteLocation(const Location& location, H5::Group& locations, const std::string& location_name);
 
         /// Write to a HDF5 Dataset containing all info needed to reconstruct a Person.
-        stride::util::PersonType WritePerson(stride::Person* person);//, H5::DataSet& persons);
+        stride::util::PersonType WritePerson(stride::Person* person); //, H5::DataSet& persons);
 
         /// Write to a HDF5 Dataset containing all info needed to reconstruct a commute.
         stride::util::CommuteType WriteCommute(std::pair<Location*, double> commute_pair);
@@ -72,7 +72,7 @@ private:
         void WriteAttribute(const std::string& data, const std::string& name, H5::H5Object& object);
 
         /// Write an attribute of size 1 for data to a group or dataset
-        template<typename T>
+        template <typename T>
         void WriteAttribute(const T& data, const std::string& name, H5::H5Object& object);
 
 private:

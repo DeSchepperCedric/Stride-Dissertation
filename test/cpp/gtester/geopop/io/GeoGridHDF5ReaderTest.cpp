@@ -37,12 +37,13 @@ namespace {
 
 void getGeoGridFromFile(const string& filename, Population* pop)
 {
-        const string path = FileSys::GetTestsDir().string() + "/testdata/GeoGridHDF5/" + filename;
+        const string      path = FileSys::GetTestsDir().string() + "/testdata/GeoGridHDF5/" + filename;
         GeoGridHDF5Reader geoGridHDF5Reader(move(path), pop);
         geoGridHDF5Reader.Read();
 }
 
-TEST(GeoGridHDF5ReaderTest, locationsTest) {
+TEST(GeoGridHDF5ReaderTest, locationsTest)
+{
         auto pop = Population::Create();
         getGeoGridFromFile("test0.h5", pop.get());
         auto& geoGrid = pop->RefGeoGrid();
@@ -78,7 +79,8 @@ TEST(GeoGridHDF5ReaderTest, locationsTest) {
         EXPECT_EQ(get<1>(location3->GetCoordinate()), 0);
 }
 
-TEST(GeoGridHDF5ReaderTest, commutesTest) {
+TEST(GeoGridHDF5ReaderTest, commutesTest)
+{
         auto pop = Population::Create();
         getGeoGridFromFile("test7.h5", pop.get());
         auto& geoGrid = pop->RefGeoGrid();
@@ -156,7 +158,7 @@ TEST(GeoGridHDF5ReaderTest, contactPoolsTest)
         }
 
         for (Id typ : IdList) {
-            EXPECT_EQ(location->CRefPools(typ).size(), 0);
+                EXPECT_EQ(location->CRefPools(typ).size(), 0);
         }
 }
 
@@ -182,7 +184,7 @@ TEST(GeoGridHDF5ReaderTest, peopleTest)
         }
 
         for (const auto& center : centers) {
-                auto person   = (*center)[0];
+                auto person = (*center)[0];
                 EXPECT_EQ(person->GetId(), 0);
                 EXPECT_EQ(person->GetAge(), 18);
                 EXPECT_EQ(person->GetPoolId(Id::K12School), 1);
@@ -196,12 +198,14 @@ TEST(GeoGridHDF5ReaderTest, peopleTest)
         }
 }
 
-TEST(GeoGridHDF5ReaderTest, invalidTypeTest){
+TEST(GeoGridHDF5ReaderTest, invalidTypeTest)
+{
         auto pop = Population::Create();
         EXPECT_THROW(getGeoGridFromFile("test4.h5", pop.get()), Exception);
 }
 
-TEST(GeoGridHDF5ReaderTest, invalidPersonTest){
+TEST(GeoGridHDF5ReaderTest, invalidPersonTest)
+{
         auto pop = Population::Create();
         EXPECT_THROW(getGeoGridFromFile("test5.h5", pop.get()), Exception);
 }

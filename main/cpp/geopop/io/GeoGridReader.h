@@ -62,7 +62,7 @@ protected:
         ///< Commutes from, to, number.
         std::vector<std::tuple<unsigned int, unsigned int, double>> m_commutes;
 
-        stride::Population*           m_population;  ///< Population to use in the GeoGrid may be nullptr.
+        stride::Population* m_population; ///< Population to use in the GeoGrid may be nullptr.
 };
 
 } // namespace geopop

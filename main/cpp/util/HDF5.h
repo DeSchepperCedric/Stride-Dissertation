@@ -24,36 +24,36 @@ namespace util {
 
 struct PersonType
 {
-        unsigned int  id;
-        float         age;
-        unsigned int  k12school;
-        unsigned int  college;
-        unsigned int  household;
-        unsigned int  workplace;
-        unsigned int  primarycommunity;
-        unsigned int  secondarycommunity;
-        unsigned int  daycare;
-        unsigned int  preschool;
+        unsigned int id;
+        float        age;
+        unsigned int k12school;
+        unsigned int college;
+        unsigned int household;
+        unsigned int workplace;
+        unsigned int primarycommunity;
+        unsigned int secondarycommunity;
+        unsigned int daycare;
+        unsigned int preschool;
 };
 
 struct CommuteType
 {
-        unsigned int  to;
-        double        proportion;
+        unsigned int to;
+        double       proportion;
 };
 
 struct PoolType
 {
-        unsigned int  people;
+        unsigned int people;
 };
 
-H5::CompType  GetPersonType();
+H5::CompType GetPersonType();
 
-H5::CompType  GetCommuteType();
+H5::CompType GetCommuteType();
 
-H5::CompType  GetPoolType();
+H5::CompType GetPoolType();
 
-template<typename T>
+template <typename T>
 H5::PredType GetPredType()
 {
         if (std::is_same<T, unsigned int>::value) {
@@ -79,7 +79,7 @@ H5::PredType  GetPredType(const float& data);
 
 H5::PredType  GetPredType(const double& data);
 */
-H5::StrType   GetPredType(const std::string& data);
+H5::StrType GetPredType(const std::string& data);
 
-} //namespace util
-} //namespace stride
+} // namespace util
+} // namespace stride

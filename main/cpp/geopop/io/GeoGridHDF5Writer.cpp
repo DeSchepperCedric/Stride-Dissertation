@@ -17,9 +17,9 @@
 
 #include "contact/ContactPool.h"
 #include "geopop/GeoGrid.h"
+#include "pop/Person.h"
 #include "util/Exception.h"
 #include "util/HDF5.h"
-#include "pop/Person.h"
 #include <iostream>
 #include <omp.h>
 
@@ -33,10 +33,7 @@ using namespace H5;
 
 const unsigned int RANK = 1;
 
-GeoGridHDF5Writer::GeoGridHDF5Writer(const string& fileName)
-    : GeoGridFileWriter(fileName), m_persons_found()
-{
-}
+GeoGridHDF5Writer::GeoGridHDF5Writer(const string& fileName) : GeoGridFileWriter(fileName), m_persons_found() {}
 
 void GeoGridHDF5Writer::Write(GeoGrid& geoGrid)
 {
@@ -49,9 +46,9 @@ void GeoGridHDF5Writer::Write(GeoGrid& geoGrid)
                 throw util::Exception(error.getDetailMsg());
         }
 
-        Group locations = file.createGroup("/locations");
-        unsigned int count = 0;
-        const string name = "location";
+        Group        locations = file.createGroup("/locations");
+        unsigned int count     = 0;
+        const string name      = "location";
         for (const auto& location : geoGrid) {
                 ++count;
                 string location_name = name + to_string(count);
@@ -59,9 +56,9 @@ void GeoGridHDF5Writer::Write(GeoGrid& geoGrid)
         }
         WriteAttribute(count, "size", locations);
 
-        hsize_t   dimsf[1] = {m_persons_found.size()};
-        DataSpace dataspace(RANK, dimsf);
-        DataSet persons = file.createDataSet("/persons", GetPersonType(), dataspace);
+        hsize_t            dimsf[1] = {m_persons_found.size()};
+        DataSpace          dataspace(RANK, dimsf);
+        DataSet            persons = file.createDataSet("/persons", GetPersonType(), dataspace);
         vector<PersonType> persons_data;
         for (const auto& person : m_persons_found) {
                 persons_data.push_back(WritePerson(person));
@@ -75,33 +72,27 @@ void GeoGridHDF5Writer::Write(GeoGrid& geoGrid)
 
 void GeoGridHDF5Writer::WriteContactPool(stride::ContactPool* contactPool, Group& contactPools, const string& name)
 {
-        hsize_t   dimsf[1] = {contactPool->size()};
-        DataSpace dataspace(RANK, dimsf);
-        DataSet pool = contactPools.createDataSet(name, GetPoolType(), dataspace);
+        hsize_t          dimsf[1] = {contactPool->size()};
+        DataSpace        dataspace(RANK, dimsf);
+        DataSet          pool = contactPools.createDataSet(name, GetPoolType(), dataspace);
         vector<PoolType> pool_data;
         for (auto person : *contactPool) {
                 m_persons_found.insert(person);
                 pool_data.push_back(WritePool(person));
         }
         pool.write(pool_data.data(), GetPoolType());
-        WriteAttribute(contactPool->GetId(), "id",   pool);
+        WriteAttribute(contactPool->GetId(), "id", pool);
         WriteAttribute(contactPool->size(), "size", pool);
         WriteAttribute(ToString(contactPool->GetType()), "type", pool);
 }
 
 void GeoGridHDF5Writer::WriteCoordinate(const Coordinate& coordinate, Group& location)
 {
-        hsize_t dims[2]     = {1,2};
-        double  data[1][2]  = {
-                                  {
-                                      boost::geometry::get<0>(coordinate),
-                                      boost::geometry::get<1>(coordinate)
-                                  }
-                              };
+        hsize_t   dims[2]    = {1, 2};
+        double    data[1][2] = {{boost::geometry::get<0>(coordinate), boost::geometry::get<1>(coordinate)}};
         DataSpace dataspace(2, dims);
         Attribute attribute = location.createAttribute("coordinates", GetPredType<double>(), dataspace);
         attribute.write(GetPredType<double>(), data);
-
 }
 
 void GeoGridHDF5Writer::WriteLocation(const Location& location, Group& locations, const string& location_name)
@@ -113,10 +104,10 @@ void GeoGridHDF5Writer::WriteLocation(const Location& location, Group& locations
         WriteAttribute(location.GetPopCount(), "population", loc);
         WriteCoordinate(location.GetCoordinate(), loc);
 
-        auto commutes = location.CRefOutgoingCommutes();
-        hsize_t     dimsf[1] = {commutes.size()};
+        auto      commutes = location.CRefOutgoingCommutes();
+        hsize_t   dimsf[1] = {commutes.size()};
         DataSpace dataspace(RANK, dimsf);
-        DataSet commutes_dataset = loc.createDataSet("commutes", GetCommuteType(), dataspace);
+        DataSet   commutes_dataset = loc.createDataSet("commutes", GetCommuteType(), dataspace);
         if (!commutes.empty()) {
                 vector<CommuteType> commute_data;
                 for (auto commute_pair : commutes) {
@@ -126,9 +117,9 @@ void GeoGridHDF5Writer::WriteLocation(const Location& location, Group& locations
         }
         WriteAttribute(commutes.size(), "size", commutes_dataset);
 
-        Group contactPools(loc.createGroup("contactPools"));
+        Group        contactPools(loc.createGroup("contactPools"));
         unsigned int count = 0;
-        const string name = "pool";
+        const string name  = "pool";
         for (Id typ : IdList) {
                 for (const auto& c : location.CRefPools(typ)) {
                         ++count;
@@ -159,8 +150,8 @@ PersonType GeoGridHDF5Writer::WritePerson(stride::Person* person)
 CommuteType GeoGridHDF5Writer::WriteCommute(pair<Location*, double> commute_pair)
 {
         CommuteType commute;
-        commute.to          = commute_pair.first->GetID();
-        commute.proportion  = commute_pair.second;
+        commute.to         = commute_pair.first->GetID();
+        commute.proportion = commute_pair.second;
 
         return commute;
 }
@@ -181,13 +172,13 @@ void GeoGridHDF5Writer::WriteAttribute(const string& data, const string& name, H
         attribute.write(GetPredType(data), data);
 }
 
-template<typename T>
+template <typename T>
 void GeoGridHDF5Writer::WriteAttribute(const T& data, const string& name, H5Object& object)
 {
         hsize_t   dims[1] = {1};
         DataSpace dataspace(1, dims);
         T         data_buffer[1] = {data};
-        Attribute attribute = object.createAttribute(name, GetPredType<T>(), dataspace);
+        Attribute attribute      = object.createAttribute(name, GetPredType<T>(), dataspace);
         attribute.write(GetPredType<T>(), data_buffer);
 }
 
