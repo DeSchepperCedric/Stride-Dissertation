@@ -41,8 +41,7 @@ public:
         virtual ~WorkplaceReader() = default;
 
         /// Add the Workplace size distribution values to geogridConfig variables
-        virtual void SetWorkplaceSizeDistributions(unsigned int&        ref_average_workplace_size,
-                                                   std::vector<double>& ref_ratios, std::vector<unsigned int>& ref_min,
+        virtual void SetWorkplaceSizeDistributions(std::vector<double>& ref_ratios, std::vector<unsigned int>& ref_min,
                                                    std::vector<unsigned int>& ref_max) = 0;
 };
 

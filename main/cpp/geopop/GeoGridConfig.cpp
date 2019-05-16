@@ -63,7 +63,7 @@ void GeoGridConfig::SetData(const ptree& configPt)
         //----------------------------------------------------------------
         if (!workplacesFileName.empty()) {
                 auto workplaceReader = ReaderFactory::CreateWorkplaceReader(workplacesFileName);
-                workplaceReader->SetWorkplaceSizeDistributions(refWP.average_workplace_size, refWP.ratios, refWP.min,
+                workplaceReader->SetWorkplaceSizeDistributions(refWP.ratios, refWP.min,
                                                                refWP.max);
         }
 

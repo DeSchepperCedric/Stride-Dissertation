@@ -38,8 +38,7 @@ public:
         explicit WorkplaceCSVReader(std::unique_ptr<std::istream> inputStream);
 
         /// Add the Workplace size distribution values to geogridConfig variables
-        void SetWorkplaceSizeDistributions(unsigned int& ref_average_workplace_size, std::vector<double>& ref_ratios,
-                                           std::vector<unsigned int>& ref_min,
+        void SetWorkplaceSizeDistributions(std::vector<double>& ref_ratios, std::vector<unsigned int>& ref_min,
                                            std::vector<unsigned int>& ref_max) override;
 
 private:

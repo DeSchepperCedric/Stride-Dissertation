@@ -16,6 +16,7 @@
 #include "WorkplaceCSVReader.h"
 
 #include "util/CSV.h"
+#include "util/Exception.h"
 
 namespace geopop {
 
@@ -27,39 +28,36 @@ WorkplaceCSVReader::WorkplaceCSVReader(std::unique_ptr<std::istream> inputStream
 {
 }
 
-void WorkplaceCSVReader::SetWorkplaceSizeDistributions(unsigned int&              ref_average_workplace_size,
-                                                       std::vector<double>&       ref_ratios,
+void WorkplaceCSVReader::SetWorkplaceSizeDistributions(std::vector<double>&       ref_ratios,
                                                        std::vector<unsigned int>& ref_min,
                                                        std::vector<unsigned int>& ref_max)
 {
-        CSV                  reader(*(m_input_stream.get()));
-        double               average_size = 0U;
-        vector<double>       ratios;
-        vector<unsigned int> max_values;
-        vector<unsigned int> min_values;
-        for (const CSVRow& row : reader) {
-                double       ratio;
-                unsigned int min;
-                unsigned int max;
-                try {
+        try {
+                CSV                  reader(*(m_input_stream.get()));
+                vector<double>       ratios;
+                vector<unsigned int> max_values;
+                vector<unsigned int> min_values;
+                for (const CSVRow& row : reader) {
+                        double       ratio;
+                        unsigned int min;
+                        unsigned int max;
                         ratio = row.GetValue<double>(0);
                         min   = row.GetValue<unsigned int>(1);
                         max   = row.GetValue<unsigned int>(2);
-                } catch (const std::bad_cast& e) {
-                        // NA
-                        break;
+
+                        ratios.emplace_back(ratio);
+                        max_values.emplace_back(max);
+                        min_values.emplace_back(min);
                 }
-                average_size += ratio * (max + min) / 2;
+                ref_ratios = ratios;
+                ref_min    = min_values;
+                ref_max    = max_values;
 
-                ratios.emplace_back(ratio);
-                max_values.emplace_back(max);
-                min_values.emplace_back(min);
+        } catch (const std::bad_cast& e) {
+                throw Exception("Problem parsing CSV file: bad lexical cast");
+        } catch (...) {
+                throw Exception("Problem parsing CSV file");
         }
-        ref_average_workplace_size = (unsigned int)round(average_size);
-
-        ref_ratios = ratios;
-        ref_min    = min_values;
-        ref_max    = max_values;
 }
 
 } // namespace geopop

@@ -65,7 +65,6 @@ TEST_F(WorkplacePopulatorDistributionTest, Commuting)
         m_gg_config.regionsInfo[1]                       = GeoGridConfig::Info{};
         m_gg_config.regionsInfo.at(1).popcount_workplace = 1;
 
-        m_gg_config.refWP.average_workplace_size = 16;
         m_gg_config.refWP.ratios                 = {0.760, 0.191, 0.041, 0.008};
         m_gg_config.refWP.min                    = {1, 10, 50, 200};
         m_gg_config.refWP.max                    = {9, 49, 199, 400};
@@ -136,7 +135,6 @@ TEST_F(WorkplacePopulatorDistributionTest, OnlyCommuting)
         m_gg_config.regionsInfo[1]                       = GeoGridConfig::Info{};
         m_gg_config.regionsInfo.at(1).popcount_workplace = 1;
 
-        m_gg_config.refWP.average_workplace_size = 16;
         m_gg_config.refWP.ratios                 = {0.760, 0.191, 0.041, 0.008};
         m_gg_config.refWP.min                    = {1, 10, 50, 200};
         m_gg_config.refWP.max                    = {9, 49, 199, 400};
