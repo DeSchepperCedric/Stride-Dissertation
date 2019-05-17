@@ -15,7 +15,7 @@ using namespace stride::util;
 
 namespace {
 
-TEST(HouseholdJSONReader, householdTest)
+TEST(HouseholdJSONReader, householdParsedCorrectlyTest)
 {
         string jsonString =
             R"({
@@ -69,7 +69,7 @@ TEST(HouseholdJSONReader, householdTest)
         EXPECT_EQ(HHages[7][1], 75U);
 }
 
-TEST(HouseholdJSONReader, invalidJSONTest)
+TEST(HouseholdJSONReader, invalidJSONCorrectExceptionTest)
 {
         string jsonString =
             R"({
@@ -95,7 +95,7 @@ TEST(HouseholdJSONReader, invalidJSONTest)
                      Exception);
 }
 
-TEST(HouseholdJSONReader, emptyStreamTest)
+TEST(HouseholdJSONReader, emptyStreamCorrectExceptionTest)
 {
 
         GeoGridConfig       geoConfig{};

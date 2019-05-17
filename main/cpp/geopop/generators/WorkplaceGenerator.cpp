@@ -41,14 +41,15 @@ void Generator<stride::ContactType::Id::Workplace>::Apply(GeoGrid& geoGrid, cons
         auto averageWorkplaceSize = 0.0;
 
         // When dealing with workplace size distribution, calculate average workplace size
-        if(!ggConfig.refWP.ratios.empty()){
-            for(unsigned int i = 0; i < ggConfig.refWP.ratios.size(); i++){
-                averageWorkplaceSize += ggConfig.refWP.ratios[i] * (ggConfig.refWP.max[i] + ggConfig.refWP.min[i]) / 2;
-            }
+        if (!ggConfig.refWP.ratios.empty()) {
+                for (unsigned int i = 0; i < ggConfig.refWP.ratios.size(); i++) {
+                        averageWorkplaceSize +=
+                            ggConfig.refWP.ratios[i] * (ggConfig.refWP.max[i] + ggConfig.refWP.min[i]) / 2;
+                }
         }
 
-        const auto WorkplaceSize = averageWorkplaceSize == 0.0 ? ggConfig.people[Id::Workplace]
-                                                                               : (unsigned  int) round(averageWorkplaceSize);
+        const auto WorkplaceSize =
+            averageWorkplaceSize == 0.0 ? ggConfig.people[Id::Workplace] : (unsigned int)round(averageWorkplaceSize);
         const auto WorkplacesCount =
             static_cast<unsigned int>(ceil(EmployeeCount / static_cast<double>(WorkplaceSize)));
 

@@ -39,7 +39,6 @@ public:
             : m_rn_man(RnInfo()), m_workplace_generator(m_rn_man), m_gg_config(), m_pop(Population::Create()),
               m_geo_grid(m_pop.get())
         {
-
         }
 
 protected:
@@ -59,9 +58,9 @@ TEST_F(WorkplaceGeneratorDistributionTest, ZeroLocationTest)
         GeoGridConfig::Info info;
         m_gg_config.regionsInfo[4] = info;
 
-        m_gg_config.refWP.ratios                 = {0.730, 0.201, 0.060, 0.009};
-        m_gg_config.refWP.min                    = {1, 10, 50, 200};
-        m_gg_config.refWP.max                    = {9, 49, 199, 400};
+        m_gg_config.refWP.ratios = {0.730, 0.201, 0.060, 0.009};
+        m_gg_config.refWP.min    = {1, 10, 50, 200};
+        m_gg_config.refWP.max    = {9, 49, 199, 400};
 
         m_gg_config.params.at(4).pop_size              = 10000;
         m_gg_config.regionsInfo.at(4).popcount_college = 20000;
@@ -78,15 +77,14 @@ TEST_F(WorkplaceGeneratorDistributionTest, NoCommuting)
         GeoGridConfig::Info info;
         m_gg_config.regionsInfo[4] = info;
 
-        m_gg_config.refWP.ratios                 = {0.730, 0.201, 0.060, 0.009};
-        m_gg_config.refWP.min                    = {1, 10, 50, 200};
-        m_gg_config.refWP.max                    = {9, 49, 199, 400};
+        m_gg_config.refWP.ratios = {0.730, 0.201, 0.060, 0.009};
+        m_gg_config.refWP.min    = {1, 10, 50, 200};
+        m_gg_config.refWP.max    = {9, 49, 199, 400};
 
         m_gg_config.params.at(4).pop_size                     = 5 * 1000 * 1000;
         m_gg_config.regionsInfo.at(4).popcount_workplace      = static_cast<unsigned int>(0.20 * 5 * 1000 * 1000);
         m_gg_config.params.at(4).participation_workplace      = 0.20;
         m_gg_config.params.at(4).fraction_workplace_commuters = 0;
-
 
         array<unsigned int, 50> sizes{128331, 50784,  191020, 174476, 186595, 105032, 136388, 577,   111380, 171014,
                                       63673,  49438,  45590,  164666, 185249, 141389, 82525,  40397, 123307, 168128,
@@ -109,16 +107,16 @@ TEST_F(WorkplaceGeneratorDistributionTest, NoCommuting)
 }
 
 // As many commutes from A to B as from B to A.
-TEST_F(WorkplaceGeneratorDistributionTest, NullCommuting)
+TEST_F(WorkplaceGeneratorDistributionTest, NettoNullCommuting)
 {
         GeoGridConfig::Param param;
         m_gg_config.params[4] = param;
         GeoGridConfig::Info info;
         m_gg_config.regionsInfo[4] = info;
 
-        m_gg_config.refWP.ratios                 = {0.730, 0.201, 0.060, 0.009};
-        m_gg_config.refWP.min                    = {1, 10, 50, 200};
-        m_gg_config.refWP.max                    = {9, 49, 199, 400};
+        m_gg_config.refWP.ratios = {0.730, 0.201, 0.060, 0.009};
+        m_gg_config.refWP.min    = {1, 10, 50, 200};
+        m_gg_config.refWP.max    = {9, 49, 199, 400};
 
         m_gg_config.params.at(4).pop_size                     = 5 * 1000 * 1000;
         m_gg_config.regionsInfo.at(4).popcount_workplace      = static_cast<unsigned int>(0.20 * 5 * 1000 * 1000);
@@ -165,9 +163,9 @@ TEST_F(WorkplaceGeneratorDistributionTest, TenCommuting)
         GeoGridConfig::Info info;
         m_gg_config.regionsInfo[4] = info;
 
-        m_gg_config.refWP.ratios                 = {0.730, 0.201, 0.060, 0.009};
-        m_gg_config.refWP.min                    = {1, 10, 50, 200};
-        m_gg_config.refWP.max                    = {9, 49, 199, 400};
+        m_gg_config.refWP.ratios = {0.730, 0.201, 0.060, 0.009};
+        m_gg_config.refWP.min    = {1, 10, 50, 200};
+        m_gg_config.refWP.max    = {9, 49, 199, 400};
 
         m_gg_config.params.at(4).pop_size                     = 5 * 1000 * 1000;
         m_gg_config.regionsInfo.at(4).popcount_workplace      = static_cast<unsigned int>(0.20 * 5 * 1000 * 1000);

@@ -42,7 +42,7 @@ void getGeoGridFromFile(const string& filename, Population* pop)
         geoGridHDF5Reader.Read();
 }
 
-TEST(GeoGridHDF5ReaderTest, locationsTest)
+TEST(GeoGridHDF5ReaderTest, locationsParsedCorrectlyTest)
 {
         auto pop = Population::Create();
         getGeoGridFromFile("test0.h5", pop.get());
@@ -79,7 +79,7 @@ TEST(GeoGridHDF5ReaderTest, locationsTest)
         EXPECT_EQ(get<1>(location3->GetCoordinate()), 0);
 }
 
-TEST(GeoGridHDF5ReaderTest, commutesTest)
+TEST(GeoGridHDF5ReaderTest, commutesParsedCorrectlyTest)
 {
         auto pop = Population::Create();
         getGeoGridFromFile("test7.h5", pop.get());
@@ -143,7 +143,7 @@ TEST(GeoGridHDF5ReaderTest, commutesTest)
         }
 }
 
-TEST(GeoGridHDF5ReaderTest, contactPoolsTest)
+TEST(GeoGridHDF5ReaderTest, contactPoolsParsedCorrectlyTest)
 {
         auto pop = Population::Create();
         getGeoGridFromFile("test1.h5", pop.get());
@@ -162,7 +162,7 @@ TEST(GeoGridHDF5ReaderTest, contactPoolsTest)
         }
 }
 
-TEST(GeoGridHDF5ReaderTest, peopleTest)
+TEST(GeoGridHDF5ReaderTest, peopleParsedCorrectlyTest)
 {
         auto pop = Population::Create();
         getGeoGridFromFile("test2.h5", pop.get());
@@ -198,25 +198,25 @@ TEST(GeoGridHDF5ReaderTest, peopleTest)
         }
 }
 
-TEST(GeoGridHDF5ReaderTest, invalidTypeTest)
+TEST(GeoGridHDF5ReaderTest, invalidTypeCorrectExceptionTest)
 {
         auto pop = Population::Create();
         EXPECT_THROW(getGeoGridFromFile("test4.h5", pop.get()), Exception);
 }
 
-TEST(GeoGridHDF5ReaderTest, invalidPersonTest)
+TEST(GeoGridHDF5ReaderTest, invalidPersonCorrectExceptionTest)
 {
         auto pop = Population::Create();
         EXPECT_THROW(getGeoGridFromFile("test5.h5", pop.get()), Exception);
 }
 
-TEST(GeoGridHDF5ReaderTest, missingLocationsGroupTest)
+TEST(GeoGridHDF5ReaderTest, missingLocationsGroupCorrectExceptionTest)
 {
         auto pop = Population::Create();
         EXPECT_THROW(getGeoGridFromFile("test8.h5", pop.get()), Exception);
 }
 
-TEST(GeoGridHDF5ReaderTest, missingPersonsDataSetTest)
+TEST(GeoGridHDF5ReaderTest, missingPersonsDataSetCorrectExceptionTest)
 {
         auto pop = Population::Create();
         EXPECT_THROW(getGeoGridFromFile("test6.h5", pop.get()), Exception);

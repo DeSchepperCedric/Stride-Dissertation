@@ -63,8 +63,7 @@ void GeoGridConfig::SetData(const ptree& configPt)
         //----------------------------------------------------------------
         if (!workplacesFileName.empty()) {
                 auto workplaceReader = ReaderFactory::CreateWorkplaceReader(workplacesFileName);
-                workplaceReader->SetWorkplaceSizeDistributions(refWP.ratios, refWP.min,
-                                                               refWP.max);
+                workplaceReader->SetWorkplaceSizeDistributions(refWP.ratios, refWP.min, refWP.max);
         }
 
         people[Id::Daycare]            = configPt.get<unsigned int>("people_per_Daycare", 18U);

@@ -74,7 +74,7 @@ bool compareGeoGrid(GeoGrid& geoGrid, const string& testname)
         return result == expected;
 }
 
-TEST(GeoGridJSONWriterTest, locationTest)
+TEST(GeoGridJSONWriterTest, locationWrittenCorrectlyTest)
 {
         auto pop     = Population::Create();
         auto geoGrid = GeoGrid(pop.get());
@@ -85,7 +85,7 @@ TEST(GeoGridJSONWriterTest, locationTest)
         EXPECT_TRUE(compareGeoGrid(geoGrid, "test0.json"));
 }
 
-TEST(GeoGridJSONWriterTest, contactCentersTest)
+TEST(GeoGridJSONWriterTest, contactCentersWrittenCorrectlyTest)
 {
         const auto pop     = Population::Create();
         auto&      geoGrid = pop->RefGeoGrid();
@@ -104,13 +104,13 @@ TEST(GeoGridJSONWriterTest, contactCentersTest)
         EXPECT_TRUE(compareGeoGrid(geoGrid, "test1.json"));
 }
 
-TEST(GeoGridJSONWriterTest, peopleTest)
+TEST(GeoGridJSONWriterTest, peopleWrittenCorrectlyTest)
 {
         auto pop = Population::Create();
         EXPECT_TRUE(compareGeoGrid(*GetPopulatedGeoGrid(pop.get()), "test2.json"));
 }
 
-TEST(GeoGridJSONWriterTest, commutesTest)
+TEST(GeoGridJSONWriterTest, commutesWrittenCorrectlyTest)
 {
         auto pop = Population::Create();
         EXPECT_TRUE(compareGeoGrid(*GetCommutesGeoGrid(pop.get()), "test7.json"));

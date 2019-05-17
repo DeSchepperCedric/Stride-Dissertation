@@ -64,7 +64,7 @@ bool compareGeoGrid(GeoGrid& geoGrid, const string& testname)
         return range_equal(begin1, end, begin2, end);
 }
 
-TEST(GeoGridHDF5WriterTest, locationsTest)
+TEST(GeoGridHDF5WriterTest, locationsWrittenCorrectlyTest)
 {
         auto pop     = Population::Create();
         auto geoGrid = GeoGrid(pop.get());
@@ -75,7 +75,7 @@ TEST(GeoGridHDF5WriterTest, locationsTest)
         EXPECT_TRUE(compareGeoGrid(geoGrid, "test0.h5"));
 }
 
-TEST(GeoGridHDF5WriterTest, contactPoolsTest)
+TEST(GeoGridHDF5WriterTest, contactPoolsWrittenCorrectlyTest)
 {
         const auto pop     = Population::Create();
         auto&      geoGrid = pop->RefGeoGrid();
@@ -94,13 +94,13 @@ TEST(GeoGridHDF5WriterTest, contactPoolsTest)
         EXPECT_TRUE(compareGeoGrid(geoGrid, "test1.h5"));
 }
 
-TEST(GeoGridHDF5WriterTest, peopleTest)
+TEST(GeoGridHDF5WriterTest, peopleWrittenCorrectlyTest)
 {
         auto pop = Population::Create();
         EXPECT_TRUE(compareGeoGrid(*GetPopulatedGeoGrid(pop.get()), "test2.h5"));
 }
 
-TEST(GeoGridHDF5WriterTest, commutesTest)
+TEST(GeoGridHDF5WriterTest, commutesWrittenCorrectlyTest)
 {
         auto pop = Population::Create();
         EXPECT_TRUE(compareGeoGrid(*GetCommutesGeoGrid(pop.get()), "test7.h5"));

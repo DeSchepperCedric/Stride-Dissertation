@@ -19,7 +19,7 @@ using namespace std;
 
 namespace {
 
-TEST(workplaceCSVReaderTest, workplaceReaderTest)
+TEST(workplaceCSVReaderTest, fileParsedCorrectly)
 {
         string csvString =
             R"(ratio,size_min,size_max
@@ -43,7 +43,7 @@ TEST(workplaceCSVReaderTest, workplaceReaderTest)
         }
 }
 
-TEST(workplaceCSVReaderTest, invalidStreamTest)
+TEST(workplaceCSVReaderTest, invalidStreamCorrectExceptionTest)
 {
         string csvString =
             R"(ratio,size_min,size_max
@@ -55,12 +55,12 @@ TEST(workplaceCSVReaderTest, invalidStreamTest)
         auto               instream = make_unique<istringstream>(csvString);
         WorkplaceCSVReader reader(move(instream));
 
-        EXPECT_THROW(reader.SetWorkplaceSizeDistributions(geoConfig.refWP.ratios, geoConfig.refWP.min,
-                                                          geoConfig.refWP.max),
-                     Exception);
+        EXPECT_THROW(
+            reader.SetWorkplaceSizeDistributions(geoConfig.refWP.ratios, geoConfig.refWP.min, geoConfig.refWP.max),
+            Exception);
 }
 
-TEST(workplaceCSVReaderTest, invalidTypeTest)
+TEST(workplaceCSVReaderTest, invalidTypeCorrectExceptionTest)
 {
         string csvString =
             R"(ratio,size_min,size_max
@@ -72,12 +72,12 @@ TEST(workplaceCSVReaderTest, invalidTypeTest)
         auto               instream = make_unique<istringstream>(csvString);
         WorkplaceCSVReader reader(move(instream));
 
-        EXPECT_THROW(reader.SetWorkplaceSizeDistributions(geoConfig.refWP.ratios, geoConfig.refWP.min,
-                                                          geoConfig.refWP.max),
-                     Exception);
+        EXPECT_THROW(
+            reader.SetWorkplaceSizeDistributions(geoConfig.refWP.ratios, geoConfig.refWP.min, geoConfig.refWP.max),
+            Exception);
 }
 
-TEST(workplaceCSVReaderTest, emptyStreamTest)
+TEST(workplaceCSVReaderTest, emptyStreamHandledCorrectlyTest)
 {
 
         GeoGridConfig      geoConfig{};

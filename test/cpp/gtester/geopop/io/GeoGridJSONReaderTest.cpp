@@ -44,7 +44,7 @@ void getGeoGridFromFile(const string& filename, Population* pop)
         geoGridJSONReader.Read();
 }
 
-TEST(GeoGridJSONReaderTest, locationsTest)
+TEST(GeoGridJSONReaderTest, locationsParsedCorrectlyTest)
 {
         auto pop = Population::Create();
         getGeoGridFromFile("test0.json", pop.get());
@@ -81,7 +81,7 @@ TEST(GeoGridJSONReaderTest, locationsTest)
         EXPECT_EQ(get<1>(location3->GetCoordinate()), 0);
 }
 
-TEST(GeoGridJSONReaderTest, commutesTest)
+TEST(GeoGridJSONReaderTest, commutesParsedCorrectlyTest)
 {
         auto pop = Population::Create();
         getGeoGridFromFile("test7.json", pop.get());
@@ -145,7 +145,7 @@ TEST(GeoGridJSONReaderTest, commutesTest)
         }
 }
 
-TEST(GeoGridJSONReaderTest, contactPoolsTest)
+TEST(GeoGridJSONReaderTest, contactPoolsParsedCorrectlyTest)
 {
         auto pop = Population::Create();
         getGeoGridFromFile("test1.json", pop.get());
@@ -200,11 +200,11 @@ void runPeopleTest(const string& filename)
         }
 }
 
-TEST(GeoGridJSONReaderTest, peopleTest) { runPeopleTest("test2.json"); }
+TEST(GeoGridJSONReaderTest, peopleParsedCorrectlyTest) { runPeopleTest("test2.json"); }
 
-TEST(GeoGridJSONReaderTest, intTest) { runPeopleTest("test3.json"); }
+TEST(GeoGridJSONReaderTest, integerParsedCorrectlyTest) { runPeopleTest("test3.json"); }
 
-TEST(GeoGridJSONReaderTest, emptyStreamTest)
+TEST(GeoGridJSONReaderTest, emptyStreamCorrectExceptionTest)
 {
         auto              instream = make_unique<istringstream>("");
         auto              pop      = Population::Create();
@@ -212,19 +212,19 @@ TEST(GeoGridJSONReaderTest, emptyStreamTest)
         EXPECT_THROW(geoGridJSONReader.Read(), Exception);
 }
 
-TEST(GeoGridJSONReaderTest, invalidTypeTest)
+TEST(GeoGridJSONReaderTest, invalidTypeCorrectExceptionTest)
 {
         auto pop = Population::Create();
         EXPECT_THROW(getGeoGridFromFile("test4.json", pop.get()), Exception);
 }
 
-TEST(GeoGridJSONReaderTest, invalidPersonTest)
+TEST(GeoGridJSONReaderTest, invalidPersonCorrectExceptionTest)
 {
         auto pop = Population::Create();
         EXPECT_THROW(getGeoGridFromFile("test5.json", pop.get()), Exception);
 }
 
-TEST(GeoGridJSONReaderTest, invalidJSONTest)
+TEST(GeoGridJSONReaderTest, invalidJSONCorrectExceptionTest)
 {
         auto pop = Population::Create();
         EXPECT_THROW(getGeoGridFromFile("test6.json", pop.get()), Exception);

@@ -38,7 +38,8 @@ public:
         WorkplaceGeneratorTest()
             : m_rn_man(RnInfo()), m_workplace_generator(m_rn_man), m_gg_config(), m_pop(Population::Create()),
               m_geo_grid(m_pop.get())
-        {}
+        {
+        }
 
 protected:
         RnMan                  m_rn_man;
