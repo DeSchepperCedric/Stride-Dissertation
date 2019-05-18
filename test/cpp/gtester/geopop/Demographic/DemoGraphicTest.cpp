@@ -36,7 +36,8 @@ class DemographicTest : public testing::Test
 {
 public:
     DemographicTest()
-            : m_rn_man(RnInfo()), m_daycare_generator(m_rn_man), m_preschool_generator(m_rn_man), m_k12school_generator(m_rn_man), m_workplace_generator(m_rn_man), m_college_generator(m_rn_man),
+            : m_rn_man(RnInfo()), m_daycare_generator(m_rn_man), m_preschool_generator(m_rn_man),
+             m_k12school_generator(m_rn_man), m_workplace_generator(m_rn_man), m_college_generator(m_rn_man),
              m_gg_config(), m_pop(Population::Create()), m_geo_grid(m_pop.get())
     {
 
@@ -107,6 +108,34 @@ TEST_F(DemographicTest, provincesTest)
     }
 }
 
-TEST(DemoGraphicTest, centralCitiesTest) { EXPECT_TRUE(true); }
+TEST_F(DemographicTest, centralCitiesTest)
+{
+    for (unsigned int i = 0; i < 5; ++i){
+        GeoGridConfig::Param param;
+        m_gg_config.params[i] = param;
+        GeoGridConfig::Info info;
+        m_gg_config.regionsInfo[i]                     = info;
+        m_gg_config.params.at(i).pop_size              = 10000;
+        m_gg_config.regionsInfo.at(i).fraction_daycare = (float) i / 10;
+        m_gg_config.regionsInfo.at(i).fraction_preschool = (float) i / 10;
+        m_gg_config.regionsInfo.at(i).fraction_k12school = (float) i / 10;
+        m_gg_config.regionsInfo.at(i).fraction_workplace = (float) i / 10;
+
+    }
+
+    for (unsigned int i = 0; i < 5; ++i){
+        for (unsigned int nrOfLocations = 0; nrOfLocations < 10; ++nrOfLocations) {
+            const auto loc = make_shared<Location>(10*i+nrOfLocations, i, Coordinate(0, 0), "loc" + to_string(nrOfLocations), m_gg_config.params.at(i).pop_size/10);
+            m_geo_grid.AddLocation(loc);
+        }
+    }
+    for (const auto& loc : m_geo_grid) {
+        loc->SetPopFraction(static_cast<double>(loc->GetPopCount()) /
+                            static_cast<double>(m_gg_config.params.at(loc->GetProvince()).pop_size));
+    }
+
+
+    EXPECT_TRUE(true);
+}
 
 } // namespace
