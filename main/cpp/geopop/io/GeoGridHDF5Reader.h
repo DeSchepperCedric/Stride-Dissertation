@@ -52,7 +52,7 @@ private:
         /// std::shared_ptr<ContactCenter> ParseContactCenter(H5::& contactCenter);
 
         /// Create a ContactCenter based on the information stored in the provided ...
-        void ParseContactPool(H5::DataSet& contactPool, std::shared_ptr<Location> result);
+        void ParseContactPool(H5::DataSet& contactPool, const std::shared_ptr<Location>& result);
 
         /// Create a Coordinate based on the information stored in the provided ...
         // Coordinate ParseCoordinate(H5::Attribute& coordinate);

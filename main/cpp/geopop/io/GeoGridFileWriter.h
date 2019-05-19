@@ -29,16 +29,16 @@ namespace geopop {
 class GeoGridFileWriter : public GeoGridWriter
 {
 public:
-        ///
+        /// Construct the GeoGridFileWriter.
         explicit GeoGridFileWriter(const std::string& fileName) : m_file_name(fileName){};
 
-        ///
+        /// Default desctructor.
         virtual ~GeoGridFileWriter() = default;
 
-        ///
+        /// Write the Geogrid to the proved ostream.
         void Write(GeoGrid& geoGrid) override = 0;
 
-        ///
+        /// Get the file name.
         std::string GetFileName() { return m_file_name; }
 
 private:
