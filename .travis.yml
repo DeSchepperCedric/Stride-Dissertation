@@ -116,7 +116,12 @@ install:
       #--------- Linux - qt 5.12.1 (xenial) from Stephan Binner's ppa
       sudo apt-add-repository ppa:beineri/opt-qt-5.12.1-xenial -y
       sudo apt-get update -qq
+
+      if [[ "$CC" == "clang" ]]; then
+      sudo apt install libomp-dev
+      fi
       sudo apt-get install libgl-dev
+    
       sudo apt-get install -y -q qt512base qt512charts-no-lgpl qt512svg qt512declarative qt512qbs
       sudo apt-get install -y -q qt512quickcontrols qt512connectivity qt512graphicaleffects qt512tools qt512quickcontrols2 qt512location
       source /opt/qt512/bin/qt512-env.sh
