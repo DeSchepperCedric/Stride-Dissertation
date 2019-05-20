@@ -112,8 +112,6 @@ set(STRIDE_SRC
     geopop/io/EpiJSONWriter.cpp
     geopop/io/EpiWriter.h
     geopop/io/EpiWriterFactory.cpp
-    geopop/io/EpiWriterFactory.h
-    geopop/io/EpiReader.h
     geopop/io/EpiJSONReader.cpp
 
     #---

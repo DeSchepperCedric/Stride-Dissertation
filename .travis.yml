@@ -150,6 +150,7 @@ install:
       export STRIDE_FORCE_NO_BOOST=ON
       export STRIDE_FORCE_NO_HDF5=ON
       export STRIDE_BOOST_NO_SYSTEM_PATHS=ON
+      export STRIDE_FORCE_NO_PROTOC=ON
     else
       export BOOST_ROOT=$HOME/deps/boost_1_69_0
       if [[ -z "$(ls -A $BOOST_ROOT)" ]]; then
