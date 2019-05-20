@@ -110,22 +110,23 @@ TEST_F(DemographicTest, provincesTest)
 
 TEST_F(DemographicTest, centralCitiesTest)
 {
-    for (unsigned int i = 0; i < 5; ++i){
-        GeoGridConfig::Param param;
-        m_gg_config.params[i] = param;
-        GeoGridConfig::Info info;
-        m_gg_config.regionsInfo[i]                     = info;
-        m_gg_config.params.at(i).pop_size              = 10000;
-        m_gg_config.regionsInfo.at(i).fraction_daycare = (float) i / 10;
-        m_gg_config.regionsInfo.at(i).fraction_preschool = (float) i / 10;
-        m_gg_config.regionsInfo.at(i).fraction_k12school = (float) i / 10;
-        m_gg_config.regionsInfo.at(i).fraction_workplace = (float) i / 10;
+    GeoGridConfig::Param param;
+    m_gg_config.params[0] = param;
+    GeoGridConfig::Info info;
+    m_gg_config.regionsInfo[0]                     = info;
+    m_gg_config.params.at(0).pop_size              = 10000;
+    m_gg_config.regionsInfo.at(0).fraction_daycare = 0;
+    m_gg_config.regionsInfo.at(0).fraction_preschool = 0;
+    m_gg_config.regionsInfo.at(0).fraction_k12school = 0;
+    m_gg_config.regionsInfo.at(0).fraction_workplace = 0;
+    m_gg_config.regionsInfo.at(0).major_fraction_daycare = 1;
+    m_gg_config.regionsInfo.at(0).major_fraction_preschool = 1;
+    m_gg_config.regionsInfo.at(0).major_fraction_k12school = 1;
+    m_gg_config.regionsInfo.at(0).major_fraction_workplace = 1;
 
-    }
-
-    for (unsigned int i = 0; i < 5; ++i){
-        for (unsigned int nrOfLocations = 0; nrOfLocations < 10; ++nrOfLocations) {
-            const auto loc = make_shared<Location>(10*i+nrOfLocations, i, Coordinate(0, 0), "loc" + to_string(nrOfLocations), m_gg_config.params.at(i).pop_size/10);
+    for (unsigned int i = 0; i < 2; ++i){
+        for (unsigned int nrOfLocations = 0; nrOfLocations < 5; ++nrOfLocations) {
+            const auto loc = make_shared<Location>(2*i+nrOfLocations, 0, Coordinate(0, 0), "loc" + to_string(nrOfLocations), m_gg_config.params.at(0).pop_size/10, bool(i));
             m_geo_grid.AddLocation(loc);
         }
     }
@@ -134,8 +135,42 @@ TEST_F(DemographicTest, centralCitiesTest)
                             static_cast<double>(m_gg_config.params.at(loc->GetProvince()).pop_size));
     }
 
+    m_daycare_generator.Apply(m_geo_grid, m_gg_config);
+    m_preschool_generator.Apply(m_geo_grid, m_gg_config);
+    m_k12school_generator.Apply(m_geo_grid, m_gg_config);
+    m_workplace_generator.Apply(m_geo_grid, m_gg_config);
 
-    EXPECT_TRUE(true);
+    auto daycares = 0U;
+    auto preschools = 0U;
+    auto k12schools = 0U;
+    auto workplaces = 0U;
+    auto major_daycares = 0U;
+    auto major_preschools = 0U;
+    auto major_k12schools = 0U;
+    auto major_workplaces = 0U;
+    for (const auto& loc : m_geo_grid) {
+        if (loc->IsMajor()){
+            major_daycares += loc->CRefPools<Id::Daycare>().size();
+            major_preschools += loc->CRefPools<Id::PreSchool>().size();
+            major_k12schools += loc->CRefPools<Id::K12School>().size();
+            major_workplaces += loc->CRefPools<Id::Workplace>().size();
+        } else {
+            daycares += loc->CRefPools<Id::Daycare>().size();
+            preschools += loc->CRefPools<Id::PreSchool>().size();
+            k12schools += loc->CRefPools<Id::K12School>().size();
+            workplaces += loc->CRefPools<Id::Workplace>().size();
+        }
+    }
+    EXPECT_EQ(0, daycares);
+    EXPECT_EQ(0, preschools);
+    EXPECT_EQ(0, k12schools);
+    EXPECT_EQ(0, workplaces);
+
+    EXPECT_EQ(278, major_daycares);
+    EXPECT_EQ(252, major_preschools);
+    EXPECT_EQ(250, major_k12schools);
+    EXPECT_EQ(250, major_workplaces);
+
 }
 
 } // namespace
