@@ -15,7 +15,7 @@ addons:
     update: true
     sources: &default_sources
       - ubuntu-toolchain-r-test
-      # - boost-latest
+      - boost-latest
     packages: &default_packages
       # - libhdf5-dev
       - doxygen
@@ -66,11 +66,6 @@ matrix:
 
 before_install:
   - eval "${MATRIX_EVAL}"
-  -|
-   if [["$TRAVIS_OS_NAME" == "linux"]]; then
-     sudo add-apt-repository ppa:beineri/opt-qt-5.12.3-xenial -y;
-     sudo apt-get update;
-   fi
   # OpenMP issue with linux+clang
   #- export LD_LIBRARY_PATH=/usr/local/clang/lib:$LD_LIBRARY_PATH
   # Check commit matches expected commit (because of Travis bug)
@@ -102,13 +97,10 @@ before_install:
     if [[ "$TRAVIS_OS_NAME" == "linux" ]] && [[ "$CC" == "clang" ]]; then
       export LD_LIBRARY_PATH="/usr/local/clang/lib:$LD_LIBRARY_PATH"
     fi
-
 install:
   #--------- Linux
   - |
     if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then
-      sudo apt-get install qt512base qt512svg qt512charts-no-lgpl qt512xmlpatterns
-      source /opt/qt512/bin/qt512-env.sh
       SWIGHOME=$HOME/deps/swig_3.0.12
       if [[ -z "$(ls -A $SWIGHOME)" ]]; then
         cd /tmp/;
@@ -121,12 +113,33 @@ install:
         echo "Already have swig cache"
       fi
       export CMAKE_PREFIX_PATH=$SWIGHOME:$CMAKE_PREFIX_PATH
+      #--------- Linux - qt 5.12.1 (xenial) from Stephan Binner's ppa
+      sudo apt-add-repository ppa:beineri/opt-qt-5.12.1-xenial -y
+      sudo apt-get update -qq
+
+      if [[ "$CC" == "clang" ]]; then
+      sudo apt install libomp-dev
+      fi
+      sudo apt-get install libgl-dev
+    
+      sudo apt-get install -y -q qt512base qt512charts-no-lgpl qt512svg qt512declarative qt512qbs
+      sudo apt-get install -y -q qt512quickcontrols qt512connectivity qt512graphicaleffects qt512tools qt512quickcontrols2 qt512location
+      source /opt/qt512/bin/qt512-env.sh
+      sudo ldconfig /opt/qt512/lib
+      export CMAKE_PREFIX_PATH=/opt/qt512/:$CMAKE_PREFIX_PATH
+      export LD_LIBRARY_PATH=/opt/qt512/lib/
+
     fi
     #--------- OSX
   - |
     if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then
       brew upgrade python cmake
-      brew install ccache swig
+      brew install ccache swig qt
+      brew link --force qt
+      sudo ln -s /usr/local/Cellar/qt/5.12.2/plugins /usr/local/plugins
+      sudo ln -s /usr/local/Cellar/qt/5.12.2/mkspecs/ /usr/local/mkspecs
+      export CMAKE_PREFIX_PATH=/usr/local/opt/qt5:$CMAKE_PREFIX_PATH
+      export LD_LIBRARY_PATH=/usr/local/opt/qt5/lib/
     fi
     #--------- All platforms
   - |
@@ -135,7 +148,7 @@ install:
     #			STRIDE_BOOST_NO_SYSTEM_PATHS: should be ON to prevent mixing different versions of boost
     if [[ "$TRAVIS_OS_NAME" == "osx" ]] && [[ "$CXX_ID" == "gcc" ]]; then
       export STRIDE_FORCE_NO_BOOST=ON
-    export STRIDE_FORCE_NO_HDF5=ON
+      export STRIDE_FORCE_NO_HDF5=ON
       export STRIDE_BOOST_NO_SYSTEM_PATHS=ON
     else
       export BOOST_ROOT=$HOME/deps/boost_1_69_0
@@ -154,25 +167,8 @@ install:
       sudo rm -f /usr/local/lib/libboost*.dylib*
       sudo ln -s $BOOST_ROOT/lib/*.{so,dylib}* /usr/local/lib
     fi
-
 script:
-  - /opt/qt512/bin/qmake PREFIX=/usr
-  - make
-  # Generate AppImage
-  - sudo apt-get -y install checkinstall
-  - sudo checkinstall --pkgname=app --pkgversion="1" --pkgrelease="1" --backup=no --fstrans=no --default --deldoc
-  - mkdir -p appdir/usr/bin ; cd appdir
-  - dpkg -x ../app_1-1_amd64.deb . ; find .
-  - mv ./usr/local/bin/* ./usr/bin/
-  - cp ./usr/share/icons/hicolor/48x48/apps/YOUR_APP_ICON.png .
-  - cp ./usr/share/applications/YOUR_APP.desktop .
-  - cd ..
-  - wget -c "https://github.com/probonopd/linuxdeployqt/releases/download/3/linuxdeployqt-3-x86_64.AppImage"
-  - chmod a+x linuxdeployqt*.AppImage
-  - unset QTDIR; unset QT_PLUGIN_PATH ; unset LD_LIBRARY_PATH
-  - ./linuxdeployqt*.AppImage ./appdir/usr/bin/* -bundle-non-qt-libs
-  - ./linuxdeployqt*.AppImage ./appdir/usr/bin/* -appimage
-  - curl --upload-file ./YOUR_APPLICATION*.AppImage https://transfer.sh/YOUR_APPLICATION-git.$(git rev-parse --short HEAD)-x86_64.AppImage
+  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then source /opt/qt512/bin/qt512-env.sh; fi
   - make all && if [[ "$MAKE_TEST" = "true" ]]; then make test; fi
 
 after_success:
