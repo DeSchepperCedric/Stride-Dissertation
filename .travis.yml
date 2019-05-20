@@ -15,11 +15,11 @@ addons:
     update: true
     sources: &default_sources
       - ubuntu-toolchain-r-test
-      # - boost-latest
     packages: &default_packages
       # - libhdf5-dev
       - doxygen
       - graphviz
+      - libboost-all-dev
 
 matrix:
   include:
