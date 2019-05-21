@@ -15,7 +15,6 @@
 
 #include "Location.h"
 #include "contact/ContactPool.h"
-#include "contact/ContactType.h"
 #include "disease/Health.h"
 #include "pop/Person.h"
 #include "util/Exception.h"
@@ -78,6 +77,29 @@ unsigned int Location::GetInfectedCount() const
                 }
         }
         return total;
+}
+
+std::unordered_map<stride::ContactType::Id, unsigned int> Location::GetInfectedCountAgeGroups() const
+{
+    std::unordered_map<stride::ContactType::Id, unsigned int> totals =
+            {{Id::Daycare, 0U},
+            {Id::PreSchool, 0U},
+             {Id::College, 0U},
+             {Id::Workplace, 0U},
+             {Id::PrimaryCommunity, 0U}};
+
+    for (const auto& pool : CRefPools<Id::Household>()) {
+        for (const auto& person : *pool) {
+
+            const auto& h = person->GetHealth();
+
+            for(auto it = totals.begin(); it != totals.end(); it++){
+
+                totals[it->first] += (person->IsInPool(it->first) && (h.IsInfected() || h.IsRecovered()));
+            }
+        }
+    }
+    return totals;
 }
 
 unsigned int Location::GetOutgoingCommuteCount(double fractionCommuters) const
