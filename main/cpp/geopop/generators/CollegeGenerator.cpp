@@ -28,20 +28,16 @@ void Generator<stride::ContactType::Id::College>::Apply(GeoGrid& geoGrid, const 
 {
 
         auto studentCount = 0U;
-        // wrong, popcount is per regio
-        // other idea: (more correct, maybe for beta: keep fractions of refHH (normal and major) and mul with pop of
-        // city)
-        //        for (const auto& loc : geoGrid) {
-        //                if (loc->IsMajor()){
-        //                        studentCount += ggConfig.regionsInfo.at(loc->GetProvince()).major_popcount_college;
-        //                } else {
-        //                        studentCount += ggConfig.regionsInfo.at(loc->GetProvince()).popcount_college;
-        //                }
-        //        }
-
-        for (const auto& it : ggConfig.regionsInfo) {
-                studentCount += it.second.popcount_college;
-                //                studentCount += it.second.major_popcount_college; // wrong: dit gaat dubbel tellen
+        // can't generate colleges per region, because of the TopK() parameter
+        // TODO we have the fraction parameter per region though, so we need to fix that
+        for (const auto& loc : geoGrid) {
+                if (loc->IsMajor()) {
+                        studentCount += static_cast<unsigned int>(
+                            ggConfig.regionsInfo.at(loc->GetProvince()).major_fraction_college * loc->GetPopCount());
+                } else {
+                        studentCount += static_cast<unsigned int>(
+                            ggConfig.regionsInfo.at(loc->GetProvince()).fraction_college * loc->GetPopCount());
+                }
         }
         const auto collegeCount =
             static_cast<unsigned int>(ceil(studentCount / static_cast<double>(ggConfig.people[Id::College])));

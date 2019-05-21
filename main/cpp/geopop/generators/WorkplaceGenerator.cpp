@@ -33,10 +33,11 @@ void Generator<stride::ContactType::Id::Workplace>::Apply(GeoGrid& geoGrid, cons
         // 4. use that information for the distribution
         // 5. assign each workplaces to a location
 
-        auto EmployeeCount = 0U;
-        for (const auto& it : ggConfig.regionsInfo) {
-                EmployeeCount += it.second.popcount_workplace;
-        }
+//<<<<<<< HEAD
+//        auto EmployeeCount = 0U;
+//        for (const auto& it : ggConfig.regionsInfo) {
+//                EmployeeCount += it.second.popcount_workplace;
+//        }
 
         auto averageWorkplaceSize = 0.0;
 
@@ -48,36 +49,102 @@ void Generator<stride::ContactType::Id::Workplace>::Apply(GeoGrid& geoGrid, cons
                 }
         }
 
-        const auto WorkplaceSize =
-            averageWorkplaceSize == 0.0 ? ggConfig.people[Id::Workplace] : (unsigned int)round(averageWorkplaceSize);
-        const auto WorkplacesCount =
-            static_cast<unsigned int>(ceil(EmployeeCount / static_cast<double>(WorkplaceSize)));
+//        const auto WorkplacesCount =
+//            static_cast<unsigned int>(ceil(EmployeeCount / static_cast<double>(WorkplaceSize)));
+//
+//        // = for each location #residents + #incoming commuting people - #outgoing commuting people
+//        vector<double> weights;
+//        for (const auto& loc : geoGrid) {
+//                const double ActivePeopleCount =
+//                    (loc->GetPopCount() +
+//                     loc->GetIncomingCommuteCount(ggConfig.params.at(loc->GetProvince()).fraction_workplace_commuters) -
+//                     loc->GetOutgoingCommuteCount(ggConfig.params.at(loc->GetProvince()).fraction_workplace_commuters) *
+//                         ggConfig.params.at(loc->GetProvince()).participation_workplace);
+//                const double weight = ActivePeopleCount / EmployeeCount;
+//                AssertThrow(weight >= 0 && weight <= 1 && !std::isnan(weight), "Invalid weight: " + to_string(weight),
+//                            m_logger);
+//                weights.push_back(weight);
+//        }
+//=======
+        for (const auto& it : ggConfig.regionsInfo) {
+                // = for each location #residents + #incoming commuting people - #outgoing commuting people
+                vector<double> weights;
+                vector<double> majorWeights;
+                auto           popCount      = 0U;
+                auto           majorPopCount = 0U;
+                for (const auto& loc : geoGrid) {
+                        if (loc->GetProvince() == it.first) {
+                                const double ActivePeopleCount =
+                                    (loc->GetPopCount() +
+                                     loc->GetIncomingCommuteCount(
+                                         ggConfig.params.at(loc->GetProvince()).fraction_workplace_commuters) -
+                                     loc->GetOutgoingCommuteCount(
+                                         ggConfig.params.at(loc->GetProvince()).fraction_workplace_commuters) *
+                                         ggConfig.params.at(loc->GetProvince()).participation_workplace);
+//>>>>>>> centrumStedenExacter
 
-        // = for each location #residents + #incoming commuting people - #outgoing commuting people
-        vector<double> weights;
-        for (const auto& loc : geoGrid) {
-                const double ActivePeopleCount =
-                    (loc->GetPopCount() +
-                     loc->GetIncomingCommuteCount(ggConfig.params.at(loc->GetProvince()).fraction_workplace_commuters) -
-                     loc->GetOutgoingCommuteCount(ggConfig.params.at(loc->GetProvince()).fraction_workplace_commuters) *
-                         ggConfig.params.at(loc->GetProvince()).participation_workplace);
-                const double weight = ActivePeopleCount / EmployeeCount;
-                AssertThrow(weight >= 0 && weight <= 1 && !std::isnan(weight), "Invalid weight: " + to_string(weight),
-                            m_logger);
-                weights.push_back(weight);
-        }
+                                const double weight = ActivePeopleCount; // / EmployeeCount;
+                                if (loc->IsMajor()) {
+                                        majorPopCount += loc->GetPopCount();
+                                        weights.push_back(0.0);
+                                        majorWeights.push_back((weight));
 
-        if (weights.empty()) {
-                // trng can't handle empty vectors
-                return;
-        }
+                                } else {
+                                        popCount += loc->GetPopCount();
+                                        weights.push_back(weight);
+                                        majorWeights.push_back((0.0));
+                                }
+                        } else {
+                                weights.push_back(0.0);
+                                majorWeights.push_back((0.0));
+                        }
+                }
 
-        const auto dist = m_rn_man.GetDiscreteGenerator(weights, 0U);
-        auto       pop  = geoGrid.GetPopulation();
+                const auto EmployeeCount = static_cast<unsigned int>(it.second.fraction_workplace * popCount);
 
-        for (auto i = 0U; i < WorkplacesCount; i++) {
-                const auto loc = geoGrid[dist()];
-                AddPools(*loc, pop, ggConfig);
+                const auto WorkplaceSize =
+                    averageWorkplaceSize == 0.0 ? ggConfig.people[Id::Workplace] : (unsigned int)round(averageWorkplaceSize);
+
+//                const auto WorkplaceSize = ggConfig.refWP.average_workplace_size == 0U
+//                                               ? ggConfig.people[Id::Workplace]
+//                                               : ggConfig.refWP.average_workplace_size;
+                const auto WorkplacesCount =
+                    static_cast<unsigned int>(ceil(EmployeeCount / static_cast<double>(WorkplaceSize)));
+
+                const auto majorEmployeeCount =
+                    static_cast<unsigned int>(it.second.major_fraction_workplace * majorPopCount);
+
+                const auto majorWorkplacesCount =
+                    static_cast<unsigned int>(ceil(majorEmployeeCount / static_cast<double>(WorkplaceSize)));
+
+                if (weights.empty()) {
+                        // trng can't handle empty vectors
+                        return;
+                }
+
+                for (auto& w : weights) {
+                        w /= EmployeeCount;
+                    AssertThrow(weight >= 0 && w <= 1 && !std::isnan(w),
+                                "Invalid weight: " + to_string(w), m_logger);
+                }
+                for (auto& w : majorWeights) {
+                        w /= majorEmployeeCount;
+                    AssertThrow(weight >= 0 && w <= 1 && !std::isnan(w),
+                                "Invalid weight: " + to_string(w), m_logger);
+                }
+
+                const auto dist      = m_rn_man.GetDiscreteGenerator(weights, 0U);
+                const auto majorDist = m_rn_man.GetDiscreteGenerator(majorWeights, 0U);
+                auto       pop       = geoGrid.GetPopulation();
+
+                for (auto i = 0U; i < WorkplacesCount; i++) {
+                        const auto loc = geoGrid[dist()];
+                        AddPools(*loc, pop, ggConfig);
+                }
+                for (auto i = 0U; i < majorWorkplacesCount; i++) {
+                        const auto loc = geoGrid[majorDist()];
+                        AddPools(*loc, pop, ggConfig);
+                }
         }
 }
 

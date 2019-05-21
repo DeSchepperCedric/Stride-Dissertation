@@ -174,6 +174,7 @@ TEST_F(WorkplacePopulatorTest, OnlyCommuting)
         m_gg_config.params.at(1).fraction_college_commuters   = 0;
         m_gg_config.regionsInfo.at(1).popcount_workplace      = 1;
         m_gg_config.params.at(1).participation_workplace      = 1;
+        m_gg_config.regionsInfo.at(1).fraction_workplace      = 0.01;
         m_gg_config.params.at(1).participation_college        = 0.5;
 
         // only commuting
@@ -234,6 +235,7 @@ TEST_F(WorkplacePopulatorTest, NoCommutingAvailable)
         m_gg_config.params.at(1).fraction_college_commuters   = 0;
         m_gg_config.regionsInfo.at(1).popcount_workplace      = 1;
         m_gg_config.params.at(1).participation_workplace      = 1;
+        m_gg_config.regionsInfo.at(1).fraction_workplace      = 0.01;
         m_gg_config.params.at(1).participation_college        = 0.5;
 
         auto brasschaat = *m_geo_grid.begin();

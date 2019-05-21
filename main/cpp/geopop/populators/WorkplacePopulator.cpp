@@ -96,13 +96,15 @@ void Populator<stride::ContactType::Id::Workplace>::Apply(GeoGrid& geoGrid, cons
                 if (loc->GetPopCount() == 0) {
                         continue;
                 }
-                const auto participCollege    = geoGridConfig.params.at(loc->GetProvince()).participation_college;
-                const auto participWorkplace  = geoGridConfig.params.at(loc->GetProvince()).participation_workplace;
-                const auto popCollege         = geoGridConfig.regionsInfo.at(loc->GetProvince()).popcount_college;
-                const auto popWorkplace       = geoGridConfig.regionsInfo.at(loc->GetProvince()).popcount_workplace;
-                const auto fracCollegeCommute = geoGridConfig.params.at(loc->GetProvince()).fraction_college_commuters;
-                const auto fracWorkplaceCommute =
-                    geoGridConfig.params.at(loc->GetProvince()).fraction_workplace_commuters;
+                const auto prov              = loc->GetProvince();
+                const auto participCollege   = geoGridConfig.params.at(prov).participation_college;
+                const auto participWorkplace = geoGridConfig.params.at(prov).participation_workplace;
+                const auto popCollege = static_cast<unsigned int>(geoGridConfig.regionsInfo.at(prov).fraction_college *
+                                                                  geoGridConfig.params.at(prov).pop_size);
+                const auto popWorkplace = static_cast<unsigned int>(
+                    geoGridConfig.regionsInfo.at(prov).fraction_workplace * geoGridConfig.params.at(prov).pop_size);
+                const auto fracCollegeCommute   = geoGridConfig.params.at(prov).fraction_college_commuters;
+                const auto fracWorkplaceCommute = geoGridConfig.params.at(prov).fraction_workplace_commuters;
 
                 double fracCommuteStudents = 0.0;
                 if (static_cast<bool>(fracWorkplaceCommute) && popWorkplace) {

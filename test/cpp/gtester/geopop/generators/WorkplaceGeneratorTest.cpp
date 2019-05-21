@@ -39,6 +39,12 @@ public:
             : m_rn_man(RnInfo()), m_workplace_generator(m_rn_man), m_gg_config(), m_pop(Population::Create()),
               m_geo_grid(m_pop.get())
         {
+                //                for (unsigned int i = 0; i < 5; ++i){
+                //                        GeoGridConfig::Param param;
+                //                        m_gg_config.params[i] = param;
+                //                        GeoGridConfig::Info info;
+                //                        m_gg_config.regionsInfo[i] = info;
+                //                }
         }
 
 protected:
@@ -59,7 +65,7 @@ TEST_F(WorkplaceGeneratorTest, ZeroLocationTest)
         m_gg_config.regionsInfo[4] = info;
 
         m_gg_config.params.at(4).pop_size              = 10000;
-        m_gg_config.regionsInfo.at(4).popcount_college = 20000;
+        m_gg_config.regionsInfo.at(4).fraction_college = 20000.0 / m_gg_config.params.at(4).pop_size;
         m_workplace_generator.Apply(m_geo_grid, m_gg_config);
 
         EXPECT_EQ(m_geo_grid.size(), 0);
@@ -73,9 +79,9 @@ TEST_F(WorkplaceGeneratorTest, NoCommuting)
         GeoGridConfig::Info info;
         m_gg_config.regionsInfo[4] = info;
 
-        m_gg_config.params.at(4).pop_size                     = 5 * 1000 * 1000;
-        m_gg_config.regionsInfo.at(4).popcount_workplace      = static_cast<unsigned int>(0.20 * 5 * 1000 * 1000);
-        m_gg_config.params.at(4).participation_workplace      = 0.20;
+        m_gg_config.params.at(4).pop_size                = 5 * 1000 * 1000;
+        m_gg_config.regionsInfo.at(4).fraction_workplace = (0.20 * 5 * 1000 * 1000) / m_gg_config.params.at(4).pop_size;
+        m_gg_config.params.at(4).participation_workplace = 0.20;
         m_gg_config.params.at(4).fraction_workplace_commuters = 0;
 
         array<unsigned int, 50> sizes{128331, 50784,  191020, 174476, 186595, 105032, 136388, 577,   111380, 171014,
@@ -106,9 +112,9 @@ TEST_F(WorkplaceGeneratorTest, NullCommuting)
         GeoGridConfig::Info info;
         m_gg_config.regionsInfo[4] = info;
 
-        m_gg_config.params.at(4).pop_size                     = 5 * 1000 * 1000;
-        m_gg_config.regionsInfo.at(4).popcount_workplace      = static_cast<unsigned int>(0.20 * 5 * 1000 * 1000);
-        m_gg_config.params.at(4).participation_workplace      = 0.20;
+        m_gg_config.params.at(4).pop_size                = 5 * 1000 * 1000;
+        m_gg_config.regionsInfo.at(4).fraction_workplace = (0.20 * 5 * 1000 * 1000) / m_gg_config.params.at(4).pop_size;
+        m_gg_config.params.at(4).participation_workplace = 0.20;
         m_gg_config.params.at(4).fraction_workplace_commuters = 0.10;
 
         array<unsigned int, 50> sizes{128331, 50784,  191020, 174476, 186595, 105032, 136388, 577,   111380, 171014,
@@ -151,9 +157,9 @@ TEST_F(WorkplaceGeneratorTest, TenCommuting)
         GeoGridConfig::Info info;
         m_gg_config.regionsInfo[4] = info;
 
-        m_gg_config.params.at(4).pop_size                     = 5 * 1000 * 1000;
-        m_gg_config.regionsInfo.at(4).popcount_workplace      = static_cast<unsigned int>(0.20 * 5 * 1000 * 1000);
-        m_gg_config.params.at(4).participation_workplace      = 0.20;
+        m_gg_config.params.at(4).pop_size                = 5 * 1000 * 1000;
+        m_gg_config.regionsInfo.at(4).fraction_workplace = (0.20 * 5 * 1000 * 1000) / m_gg_config.params.at(4).pop_size;
+        m_gg_config.params.at(4).participation_workplace = 0.20;
         m_gg_config.params.at(4).fraction_workplace_commuters = 0.10;
 
         array<unsigned int, 50> sizes{128331, 50784,  191020, 174476, 186595, 105032, 136388, 577,   111380, 171014,

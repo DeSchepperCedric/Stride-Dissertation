@@ -64,8 +64,8 @@ TEST_F(K12SchoolGeneratorTest, OneLocationTest)
         GeoGridConfig::Info info;
         m_gg_config.regionsInfo[4] = info;
 
-        m_gg_config.params.at(4).pop_size                = 10000;
-        m_gg_config.regionsInfo.at(4).popcount_k12school = 2000;
+        m_gg_config.params.at(4).pop_size                = 2500;
+        m_gg_config.regionsInfo.at(4).fraction_k12school = 2000.0 / m_gg_config.params.at(4).pop_size;
 
         auto loc1 = make_shared<Location>(1, 4, Coordinate(0, 0), "Antwerpen", 2500);
         m_geo_grid.AddLocation(loc1);
@@ -84,8 +84,8 @@ TEST_F(K12SchoolGeneratorTest, ZeroLocationTest)
         GeoGridConfig::Info info;
         m_gg_config.regionsInfo[4] = info;
 
-        m_gg_config.params.at(4).pop_size                = 10000;
-        m_gg_config.regionsInfo.at(4).popcount_k12school = 2000;
+        m_gg_config.params.at(4).pop_size                = 0;
+        m_gg_config.regionsInfo.at(4).fraction_k12school = 0;
 
         m_k12school_generator.Apply(m_geo_grid, m_gg_config);
 
@@ -100,10 +100,11 @@ TEST_F(K12SchoolGeneratorTest, FiveLocationsTest)
         GeoGridConfig::Info info;
         m_gg_config.regionsInfo[4] = info;
 
-        m_gg_config.params.at(4).pop_size                = 37542 * 100;
-        m_gg_config.regionsInfo.at(4).popcount_k12school = 750840;
+        m_gg_config.params.at(4).pop_size                      = 35042 * 100;
+        m_gg_config.regionsInfo.at(4).fraction_k12school       = 750840.0 / m_gg_config.params.at(4).pop_size;
+        m_gg_config.regionsInfo.at(4).major_fraction_k12school = 750840.0 / m_gg_config.params.at(4).pop_size;
 
-        auto loc1 = make_shared<Location>(1, 4, Coordinate(0, 0), "Antwerpen", 10150 * 100);
+        auto loc1 = make_shared<Location>(1, 4, Coordinate(0, 0), "Antwerpen", 10150 * 100, true);
         auto loc2 = make_shared<Location>(1, 4, Coordinate(0, 0), "Vlaams-Brabant", 10040 * 100);
         auto loc3 = make_shared<Location>(1, 4, Coordinate(0, 0), "Henegouwen", 7460 * 100);
         auto loc4 = make_shared<Location>(1, 4, Coordinate(0, 0), "Limburg", 3269 * 100);
@@ -122,7 +123,7 @@ TEST_F(K12SchoolGeneratorTest, FiveLocationsTest)
 
         m_k12school_generator.Apply(m_geo_grid, m_gg_config);
 
-        array<unsigned int, 5> sizes{444, 416, 330, 133, 179};
+        array<unsigned int, 5> sizes{435, 428, 311, 148, 180};
         for (auto i = 0U; i < sizes.size(); i++) {
                 EXPECT_EQ(sizes[i] * m_ppk12, m_geo_grid[i]->CRefPools(Id::K12School).size());
         }

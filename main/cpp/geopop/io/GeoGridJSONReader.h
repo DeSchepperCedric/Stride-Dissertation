@@ -68,6 +68,7 @@ private:
         T ParseNumerical(nlohmann::json& node)
         {
                 if (node.type() == nlohmann::json::value_t::string) {
+                        //                        OPTIONAL: log a warning, then we need to get hold of the logger though
                         return boost::lexical_cast<T>(node.get<std::string>());
                 } else {
                         return node.get<T>();

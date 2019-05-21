@@ -32,7 +32,7 @@ using namespace stride::ContactType;
 template <>
 void Populator<stride::ContactType::Id::PreSchool>::Apply(GeoGrid& geoGrid, const GeoGridConfig& geoGridConfig)
 {
-        m_logger->info("Starting to populate PreSchools");
+        m_logger->trace("Starting to populate PreSchools");
 
         // for every location
         for (const auto& loc : geoGrid) {

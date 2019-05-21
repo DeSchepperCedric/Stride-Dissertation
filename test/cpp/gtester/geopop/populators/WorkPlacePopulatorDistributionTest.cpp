@@ -59,6 +59,7 @@ TEST_F(WorkplacePopulatorDistributionTest, NoCommuting)
 
         m_gg_config.params.at(1).fraction_workplace_commuters = 0;
         m_gg_config.params.at(1).fraction_college_commuters   = 0;
+        m_gg_config.regionsInfo.at(1).fraction_workplace      = 0.01;
         m_gg_config.params.at(1).participation_workplace      = 1;
         m_gg_config.params.at(1).participation_college        = 0.5;
 
