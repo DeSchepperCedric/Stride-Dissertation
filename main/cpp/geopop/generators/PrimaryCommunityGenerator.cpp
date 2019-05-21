@@ -35,6 +35,10 @@ void Generator<stride::ContactType::Id::PrimaryCommunity>::Apply(GeoGrid& geoGri
         //    the relative number of people at that location
 
         for (const auto& it : ggConfig.params) {
+                if (it.first == -1) {
+                        continue;
+                }
+
                 const auto popCount      = it.second.pop_size;
                 const auto communitySize = ggConfig.people[Id::PrimaryCommunity];
                 const auto communityCount =
@@ -42,7 +46,7 @@ void Generator<stride::ContactType::Id::PrimaryCommunity>::Apply(GeoGrid& geoGri
 
                 vector<double> weights;
                 for (const auto& loc : geoGrid) {
-                        if (loc->GetProvince() == it.first) {
+                        if (loc->GetProvince() == (unsigned)it.first) {
                                 const auto weight =
                                     static_cast<double>(loc->GetPopCount()) / static_cast<double>(popCount);
                                 AssertThrow(weight >= 0 && weight <= 1 && !std::isnan(weight),

@@ -92,7 +92,7 @@ public:
                 unsigned int pop_size;
         };
 
-        std::map<unsigned int, Param> params;
+        std::map<int, Param> params;
 
         // -----------------------------------------------------------------------------------------
         // The reference Households used to generate the population by random draws.
@@ -112,7 +112,7 @@ public:
                 std::vector<std::vector<unsigned int>> major_ages{};
         };
 
-        std::map<unsigned int, RefHH> refHouseHolds;
+        std::map<int, RefHH> refHouseHolds;
 
         // -----------------------------------------------------------------------------------------
         // The reference Workplace types used to generate/populate workplaces
@@ -176,7 +176,7 @@ public:
                 unsigned int major_count_households;
         };
 
-        std::map<unsigned int, Info> regionsInfo;
+        std::map<int, Info> regionsInfo;
 
         // -----------------------------------------------------------------------------------------
         /// Read the househould data file, parse it and set data.

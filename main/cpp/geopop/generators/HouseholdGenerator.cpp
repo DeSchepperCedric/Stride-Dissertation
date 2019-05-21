@@ -25,11 +25,14 @@ template <>
 void Generator<stride::ContactType::Id::Household>::Apply(GeoGrid& geoGrid, const GeoGridConfig& ggConfig)
 {
         for (const auto& it : ggConfig.regionsInfo) {
+                if (it.first == -1) {
+                        continue;
+                }
                 vector<double> weights;
                 vector<double> majorWeights;
                 auto           majorPop = 0u;
                 for (const auto& loc : geoGrid) {
-                        if (loc->GetProvince() == it.first) {
+                        if (loc->GetProvince() == (unsigned)it.first) {
                                 if (loc->IsMajor()) {
                                         majorWeights.push_back(loc->GetPopFraction());
                                         weights.push_back(0.0);
