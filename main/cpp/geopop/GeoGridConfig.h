@@ -123,7 +123,11 @@ public:
                 unsigned int average_workplace_size = 0U;
 
                 /// Ratio per workplace type
-                std::vector<double> ratios;
+                std::vector<double> ratios{};
+
+                std::vector<unsigned int> max;
+
+                std::vector<unsigned int> min;
         } refWP;
 
         // -----------------------------------------------------------------------------------------

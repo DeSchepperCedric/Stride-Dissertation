@@ -38,7 +38,17 @@ GeoGridConfig::GeoGridConfig() : params{}, refHouseHolds{}, refWP{}, regionsInfo
 
 GeoGridConfig::GeoGridConfig(const ptree& configPt) : GeoGridConfig()
 {
-        //        const auto pt                      = configPt.get_child("run.geopop_gen");
+        people[Id::Daycare]            = configPt.get<unsigned int>("people_per_Daycare", 18U);
+        people[Id::PreSchool]          = configPt.get<unsigned int>("people_per_PreSchool", 120U);
+        people[Id::K12School]          = configPt.get<unsigned int>("people_per_K12School", 500U);
+        people[Id::College]            = configPt.get<unsigned int>("people_per_College", 3000U);
+        people[Id::Workplace]          = configPt.get<unsigned int>("people_per_Workplace", 20U);
+        people[Id::PrimaryCommunity]   = configPt.get<unsigned int>("people_per_PrimaryCommunity", 2000U);
+        people[Id::SecondaryCommunity] = configPt.get<unsigned int>("people_per_SecondaryCommunity", 2000U);
+
+        // TODO why no pools per preschool/ alternative: for all, but setters with default 1?
+        pools[Id::K12School] = configPt.get<unsigned int>("pools_per_K12School", 25U);
+        pools[Id::College]   = configPt.get<unsigned int>("pools_per_College", 20U);
 }
 
 void GeoGridConfig::SetData(const ptree& configPt)
@@ -46,22 +56,14 @@ void GeoGridConfig::SetData(const ptree& configPt)
         //        configPt contains the run.geopop_gen child of the configPt
         //        make SetData be able to handle a variable number of regions
 
-        //        arrays in boost ptrees:
-        //        auto array = configPt.get_child("array");
-        //        for (auto it = array.begin(); it != array.end(); it++) {
-        //                // it->second.get_child("") is now a ptree from the array
-        //        }
         std::string workplacesFileName = configPt.get<string>("workplace_file", "");
 
         //----------------------------------------------------------------
         // Set workplace size distribution values when file present.
         //----------------------------------------------------------------
         if (!workplacesFileName.empty()) {
-                //                std::cout << "READING" <<std::endl;
                 auto workplaceReader = ReaderFactory::CreateWorkplaceReader(workplacesFileName);
-                workplaceReader->SetReferenceWorkplaces(refWP.average_workplace_size, refWP.ratios);
-        } else {
-                //                std::cout << "NOT READING" <<std::endl;
+                workplaceReader->SetWorkplaceSizeDistributions(refWP.ratios, refWP.min, refWP.max);
         }
 
         people[Id::Daycare]            = configPt.get<unsigned int>("people_per_Daycare", 18U);
@@ -78,7 +80,7 @@ void GeoGridConfig::SetData(const ptree& configPt)
 
         auto regionArray = configPt.get_child("regions");
         for (auto it = regionArray.begin(); it != regionArray.end(); ++it) {
-                Param      param;
+                Param      param{};
                 const auto regionPt = it->second.get_child("");
                 const auto regionId = regionPt.get<unsigned int>("id", 0);
 
@@ -91,8 +93,8 @@ void GeoGridConfig::SetData(const ptree& configPt)
                 param.participation_daycare        = regionPt.get<double>("participation_daycare");
                 params[regionId]                   = param;
 
-                RefHH refHH;
-                Info  info;
+                RefHH refHH{};
+                Info  info{};
 
                 const auto householdsReader =
                     ReaderFactory::CreateHouseholdReader(regionPt.get<string>("household_file"));

@@ -64,7 +64,7 @@ TEST_F(CollegeGeneratorTest, OneLocationTest)
         GeoGridConfig::Info info;
         m_gg_config.regionsInfo[4]                     = info;
         m_gg_config.params.at(4).pop_size              = 45000;
-        m_gg_config.regionsInfo.at(4).fraction_college = 9000.0/m_gg_config.params.at(4).pop_size;
+        m_gg_config.regionsInfo.at(4).fraction_college = 9000.0 / m_gg_config.params.at(4).pop_size;
 
         auto loc1 = make_shared<Location>(1, 4, Coordinate(0, 0), "Antwerpen", m_gg_config.params.at(4).pop_size);
         m_geo_grid.AddLocation(loc1);
@@ -83,7 +83,7 @@ TEST_F(CollegeGeneratorTest, ZeroLocationTest)
         GeoGridConfig::Info info;
         m_gg_config.regionsInfo[0]                     = info;
         m_gg_config.params.at(0).pop_size              = 10000;
-        m_gg_config.regionsInfo.at(0).fraction_college = 2000.0/m_gg_config.params.at(0).pop_size;
+        m_gg_config.regionsInfo.at(0).fraction_college = 2000.0 / m_gg_config.params.at(0).pop_size;
 
         m_college_generator.Apply(m_geo_grid, m_gg_config);
 

@@ -94,10 +94,6 @@ shared_ptr<WorkplaceReader> ReaderFactory::CreateWorkplaceReader(const filesys::
         }
         if (path.extension().string() == ".csv") {
                 return make_shared<WorkplaceCSVReader>(make_unique<ifstream>(path.string()));
-                /*
-                } else if (path.extension().string() == ".json") {
-                    return make_shared<WorkplaceReader>(make_unique<ifstream>(path.string()));
-                */
         } else {
                 throw runtime_error("Unsupported file extension: " + path.extension().string());
         }

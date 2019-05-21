@@ -59,6 +59,7 @@ TEST_F(WorkplacePopulatorTest, NoPopulation)
 {
         m_geo_grid.AddLocation(make_shared<Location>(0, 0, Coordinate(0.0, 0.0), "", 0));
         m_geo_grid.Finalize();
+        m_workplace_populator.Apply(m_geo_grid, m_gg_config);
 
         EXPECT_NO_THROW(m_workplace_populator.Apply(m_geo_grid, m_gg_config));
 }
@@ -66,8 +67,7 @@ TEST_F(WorkplacePopulatorTest, NoPopulation)
 TEST_F(WorkplacePopulatorTest, NoActive)
 {
         MakeGeoGrid(m_gg_config, 3, 100, 12, 2, 3, 33, 3, m_pop.get());
-        GeoGridConfig::Info info;
-        m_gg_config.regionsInfo[1]                       = info;
+        m_gg_config.regionsInfo[1]                       = GeoGridConfig::Info{};
         m_gg_config.params.at(1).participation_workplace = 0;
         m_gg_config.params.at(1).participation_college   = 1;
 
@@ -94,8 +94,7 @@ TEST_F(WorkplacePopulatorTest, NoActive)
 TEST_F(WorkplacePopulatorTest, NoCommuting)
 {
         MakeGeoGrid(m_gg_config, 3, 100, 12, 2, 3, 33, 3, m_pop.get());
-        GeoGridConfig::Info info;
-        m_gg_config.regionsInfo[1] = info;
+        m_gg_config.regionsInfo[1] = GeoGridConfig::Info{};
 
         m_gg_config.params.at(1).fraction_workplace_commuters = 0;
         m_gg_config.params.at(1).participation_workplace      = 1;
@@ -169,8 +168,7 @@ TEST_F(WorkplacePopulatorTest, NoCommuting)
 TEST_F(WorkplacePopulatorTest, OnlyCommuting)
 {
         MakeGeoGrid(m_gg_config, 3, 100, 12, 90, 3, 33, 3, m_pop.get());
-        GeoGridConfig::Info info;
-        m_gg_config.regionsInfo[1]                            = info;
+        m_gg_config.regionsInfo[1]                            = GeoGridConfig::Info{};
         m_gg_config.params.at(1).fraction_workplace_commuters = 0;
         m_gg_config.params.at(1).fraction_workplace_commuters = 1;
         m_gg_config.params.at(1).fraction_college_commuters   = 0;
@@ -230,8 +228,7 @@ TEST_F(WorkplacePopulatorTest, OnlyCommuting)
 TEST_F(WorkplacePopulatorTest, NoCommutingAvailable)
 {
         MakeGeoGrid(m_gg_config, 3, 100, 12, 2, 3, 33, 3, m_pop.get());
-        GeoGridConfig::Info info;
-        m_gg_config.regionsInfo[1]                            = info;
+        m_gg_config.regionsInfo[1]                            = GeoGridConfig::Info{};
         m_gg_config.params.at(1).fraction_workplace_commuters = 0;
         m_gg_config.params.at(1).fraction_workplace_commuters = 1;
         m_gg_config.params.at(1).fraction_college_commuters   = 0;

@@ -21,8 +21,7 @@
 
 namespace geopop {
 
-class GeoGridFileWriter;
-class GeoGridStreamWriter;
+class GeoGridWriter;
 
 /**
  * Factory creates the correct implementation of a GeoGridWriter based on the filename extension.
@@ -31,11 +30,8 @@ class GeoGridWriterFactory
 {
 public:
         /// Create a GeoGridWriter based on the provided extension in the filename.
-        static std::shared_ptr<GeoGridStreamWriter> CreateGeoGridStreamWriter(const std::string& filename,
-                                                                              std::ofstream&     outputFileStream);
-
-        static std::shared_ptr<GeoGridFileWriter> CreateGeoGridFileWriter(const std::string& filename,
-                                                                          std::string&       outputFileName);
+        static std::shared_ptr<GeoGridWriter> CreateGeoGridWriter(const std::string& filename,
+                                                                  std::ofstream&     outputFileStream);
 };
 
 } // namespace geopop

@@ -15,54 +15,39 @@
 
 #pragma once
 
-#include <map>
-#include <memory>
-#include <tuple>
-#include <vector>
+#include "GeoGridReader.h"
 
-namespace stride {
-class Person;
-class Population;
-} // namespace stride
+#include <istream>
 
 namespace geopop {
 
 class GeoGrid;
 
 /**
- * An abstract base class for creating a GeoGrid that was read from a file, can be implemented
+ * An abstract class for creating a GeoGrid that was read from a file, can be implemented
  * using multiple file types (proto and json are currently implemented)
  */
-class GeoGridReader
+class GeoGridStreamReader : public GeoGridReader
 {
 public:
         /// Parametrized constructor.
-        GeoGridReader(stride::Population* pop);
+        explicit GeoGridStreamReader(std::unique_ptr<std::istream> inputStream, stride::Population* pop)
+            : GeoGridReader(pop), m_inputStream(std::move(inputStream)){};
 
         /// No copy constructor.
-        GeoGridReader(const GeoGridReader&) = delete;
+        GeoGridStreamReader(const GeoGridStreamReader&) = delete;
 
         /// No copy assignment.
-        GeoGridReader& operator=(const GeoGridReader&) = delete;
+        GeoGridStreamReader& operator=(const GeoGridStreamReader&) = delete;
 
         /// Default destructor.
-        virtual ~GeoGridReader() = default;
+        virtual ~GeoGridStreamReader() = default;
 
         /// Perform the actual read and return the created GeoGrid.
-        virtual void Read() = 0;
+        virtual void Read() override = 0;
 
 protected:
-        /// Add the commutes that were found to their respective Locations symmetrically.
-        void AddCommutes(GeoGrid& geoGrid);
-
-protected:
-        ///< Store the persons (id->person) that were found while loping over the ContactPools.
-        std::map<unsigned int, stride::Person*> m_people;
-
-        ///< Commutes from, to, number.
-        std::vector<std::tuple<unsigned int, unsigned int, double>> m_commutes;
-
-        stride::Population* m_population; ///< Population to use in the GeoGrid may be nullptr.
+        std::unique_ptr<std::istream> m_inputStream; ///< File to read.
 };
 
 } // namespace geopop

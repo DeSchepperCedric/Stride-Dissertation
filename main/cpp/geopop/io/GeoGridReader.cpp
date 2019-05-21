@@ -20,10 +20,8 @@
 
 namespace geopop {
 
-GeoGridReader::GeoGridReader(std::unique_ptr<std::istream> inputStream, stride::Population* pop)
-    : m_people(), m_commutes(), m_inputStream(std::move(inputStream)), m_population(pop)
-{
-}
+GeoGridReader::GeoGridReader(stride::Population* pop) : m_people(), m_commutes(), m_population(pop) {}
+
 void GeoGridReader::AddCommutes(GeoGrid& geoGrid)
 {
         for (const auto& commute_tuple : m_commutes) {

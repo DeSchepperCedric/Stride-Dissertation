@@ -34,7 +34,7 @@ public:
         /// Construct the MajorCitiesReader with an istream with the file content.
         explicit MajorCitiesReader(std::unique_ptr<std::istream> inputStream) : m_inputStream(std::move(inputStream)) {}
 
-        /// Default destructor needs to be virtual.
+        /// Default destructor.
         virtual ~MajorCitiesReader() = default;
 
         /// Add major city info to the GeoGrid.

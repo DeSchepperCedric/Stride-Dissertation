@@ -39,10 +39,6 @@ public:
             : m_rn_man(RnInfo()), m_workplace_populator(m_rn_man), m_gg_config(), m_pop(Population::Create()),
               m_geo_grid(m_pop->RefGeoGrid()), m_workplace_generator(m_rn_man)
         {
-                for (unsigned int i = 0; i < 5; ++i) {
-                        GeoGridConfig::Param param;
-                        m_gg_config.params[i] = param;
-                }
         }
 
 protected:
@@ -55,154 +51,204 @@ protected:
         const unsigned int     m_ppwp = m_gg_config.pools[Id::Workplace];
 };
 
-TEST(workplacePopulatorDistributionTest, workplacePopulatorTest) { EXPECT_TRUE(true); }
-
-TEST(workplacePopulatorDistributionTest, overPopulationTest) { EXPECT_TRUE(true); }
-
-TEST(workplacePopulatorDistributionTest, noPopulationTest) { EXPECT_TRUE(true); }
-
-TEST_F(WorkplacePopulatorDistributionTest, NoCommutingAvailable)
+TEST_F(WorkplacePopulatorDistributionTest, NoCommuting)
 {
         MakeGeoGrid(m_gg_config, 3, 100, 12, 2, 3, 33, 3, m_pop.get());
-        GeoGridConfig::Info info;
-        m_gg_config.regionsInfo[1] = info;
+
+        m_gg_config.params[1]      = GeoGridConfig::Param{};
+        m_gg_config.regionsInfo[1] = GeoGridConfig::Info{};
 
         m_gg_config.params.at(1).fraction_workplace_commuters = 0;
-        m_gg_config.params.at(1).fraction_workplace_commuters = 1;
         m_gg_config.params.at(1).fraction_college_commuters   = 0;
         m_gg_config.regionsInfo.at(1).fraction_workplace      = 0.01;
         m_gg_config.params.at(1).participation_workplace      = 1;
         m_gg_config.params.at(1).participation_college        = 0.5;
-        m_gg_config.refWP.average_workplace_size              = 10;
-        m_gg_config.refWP.ratios                              = {0.60, 0.25, 0.10, 0.05};
 
-        auto brasschaat = *m_geo_grid.begin();
-        brasschaat->SetCoordinate(Coordinate(51.29227, 4.49419));
-        m_workplace_generator.AddPools(*brasschaat, m_pop.get(), m_gg_config);
-        m_workplace_generator.AddPools(*brasschaat, m_pop.get(), m_gg_config);
+        m_gg_config.refWP.ratios = {0.760, 0.191, 0.041, 0.008};
+        m_gg_config.refWP.min    = {1, 10, 50, 200};
+        m_gg_config.refWP.max    = {9, 49, 199, 400};
 
-        auto schoten = *(m_geo_grid.begin() + 1);
+        auto schoten = *(m_geo_grid.begin());
         schoten->SetCoordinate(Coordinate(51.2497532, 4.4977063));
-        m_workplace_generator.AddPools(*schoten, m_pop.get(), m_gg_config);
-        m_workplace_generator.AddPools(*schoten, m_pop.get(), m_gg_config);
-
-        auto kortrijk = *(m_geo_grid.begin() + 2);
+        auto kortrijk = *(m_geo_grid.begin() + 1);
         kortrijk->SetCoordinate(Coordinate(50.82900246, 3.264406009));
-        m_workplace_generator.AddPools(*kortrijk, m_pop.get(), m_gg_config);
-        m_workplace_generator.AddPools(*kortrijk, m_pop.get(), m_gg_config);
+        for (int k = 0; k < 15; k++) {
+                m_workplace_generator.AddPools(*schoten, m_pop.get(), m_gg_config);
+                m_workplace_generator.AddPools(*kortrijk, m_pop.get(), m_gg_config);
+        }
 
-        // test case is only commuting but between nobody is commuting from or to Brasschaat
         schoten->AddOutgoingCommute(kortrijk, 0.5);
         kortrijk->AddIncomingCommute(schoten, 0.5);
         kortrijk->AddOutgoingCommute(schoten, 0.5);
         schoten->AddIncomingCommute(kortrijk, 0.5);
 
         m_geo_grid.Finalize();
+
+        m_workplace_generator.Apply(m_geo_grid, m_gg_config);
         m_workplace_populator.Apply(m_geo_grid, m_gg_config);
 
-        // Assert that persons of Schoten only go to Kortrijk
-        for (const auto& hPool : schoten->RefPools(Id::Household)) {
-                for (auto p : hPool[0]) {
-                        const auto workId = p->GetPoolId(Id::Workplace);
-                        if (AgeBrackets::Workplace::HasAge(p->GetAge()) && !AgeBrackets::College::HasAge(p->GetAge())) {
-                                EXPECT_TRUE(workId > 4 * m_ppwp && workId <= 6 * m_ppwp);
-                        } else if (AgeBrackets::College::HasAge(p->GetAge())) {
-                                EXPECT_TRUE((workId > 4 * m_ppwp && workId <= 6 * m_ppwp) || workId == 0);
+        vector<unsigned int>   count = {0, 0, 0, 0};
+        std::set<ContactPool*> all;
+        unsigned int           total_size = 0U;
+
+        // count how many workplaces there are of each type
+        for (const auto& loc : m_geo_grid) {
+                for (const auto& pool : loc->RefPools(Id::Workplace)) {
+                        auto size = pool->size();
+                        total_size++;
+                        all.insert(pool);
+                        if (size <= m_gg_config.refWP.max[0]) {
+                                count[0]++;
+                        } else if (size <= m_gg_config.refWP.max[1]) {
+                                count[1]++;
+                        } else if (size <= m_gg_config.refWP.max[2]) {
+                                count[2]++;
                         } else {
-                                EXPECT_EQ(0, workId);
+                                count[3]++;
                         }
                 }
         }
+        // Calculate the actual ratio and compare to expected ratio (within a range)
+        for (unsigned int i = 0; i < count.size(); i++) {
+                const auto lower_bound = m_gg_config.refWP.ratios[i] > 0.1
+                                             ? m_gg_config.refWP.ratios[i] - m_gg_config.refWP.ratios[i] * 0.20
+                                             : 0.0;
+                const auto upper_bound  = m_gg_config.refWP.ratios[i] + m_gg_config.refWP.ratios[i] * 0.20;
+                const auto actual_ratio = (float)count[i] / (float)total_size;
 
-        // Assert that persons of Brasschaat only go to Brasschaat or Schoten
-        for (const auto& hPool : brasschaat->RefPools(Id::Household)) {
-                for (auto p : hPool[0]) {
-                        const auto workId = p->GetPoolId(Id::Workplace);
-                        if (AgeBrackets::Workplace::HasAge(p->GetAge()) && !AgeBrackets::College::HasAge(p->GetAge())) {
-                                EXPECT_TRUE(workId >= 1 && workId <= 4 * m_ppwp);
-                        } else if (AgeBrackets::College::HasAge(p->GetAge())) {
-                                EXPECT_TRUE((workId >= 1 && workId <= 4 * m_ppwp) || workId == 0);
+                EXPECT_TRUE((actual_ratio >= lower_bound) && (actual_ratio <= upper_bound));
+        }
+}
+
+TEST_F(WorkplacePopulatorDistributionTest, HalfCommuting)
+{
+        MakeGeoGrid(m_gg_config, 3, 100, 12, 2, 3, 33, 3, m_pop.get());
+
+        m_gg_config.params[1] = GeoGridConfig::Param{};
+
+        m_gg_config.params.at(1).fraction_workplace_commuters = 0.5;
+        m_gg_config.params.at(1).fraction_college_commuters   = 0.5;
+        m_gg_config.params.at(1).participation_workplace      = 1;
+        m_gg_config.params.at(1).participation_college        = 0.5;
+
+        m_gg_config.regionsInfo[1]                       = GeoGridConfig::Info{};
+        m_gg_config.regionsInfo.at(1).fraction_workplace = 0.01;
+
+        m_gg_config.refWP.ratios = {0.760, 0.191, 0.041, 0.008};
+        m_gg_config.refWP.min    = {1, 10, 50, 200};
+        m_gg_config.refWP.max    = {9, 49, 199, 400};
+
+        auto schoten = *(m_geo_grid.begin());
+        schoten->SetCoordinate(Coordinate(51.2497532, 4.4977063));
+        auto kortrijk = *(m_geo_grid.begin() + 1);
+        kortrijk->SetCoordinate(Coordinate(50.82900246, 3.264406009));
+        for (int k = 0; k < 15; k++) {
+                m_workplace_generator.AddPools(*schoten, m_pop.get(), m_gg_config);
+                m_workplace_generator.AddPools(*kortrijk, m_pop.get(), m_gg_config);
+        }
+
+        schoten->AddOutgoingCommute(kortrijk, 0.5);
+        kortrijk->AddIncomingCommute(schoten, 0.5);
+        kortrijk->AddOutgoingCommute(schoten, 0.5);
+        schoten->AddIncomingCommute(kortrijk, 0.5);
+
+        m_geo_grid.Finalize();
+
+        m_workplace_generator.Apply(m_geo_grid, m_gg_config);
+        m_workplace_populator.Apply(m_geo_grid, m_gg_config);
+
+        vector<unsigned int>   count = {0, 0, 0, 0};
+        std::set<ContactPool*> all;
+        unsigned int           total_size = 0U;
+
+        // count how many workplaces there are of each type
+        for (const auto& loc : m_geo_grid) {
+                for (const auto& pool : loc->RefPools(Id::Workplace)) {
+                        auto size = pool->size();
+                        total_size++;
+                        all.insert(pool);
+                        if (size <= m_gg_config.refWP.max[0]) {
+                                count[0]++;
+                        } else if (size <= m_gg_config.refWP.max[1]) {
+                                count[1]++;
+                        } else if (size <= m_gg_config.refWP.max[2]) {
+                                count[2]++;
                         } else {
-                                EXPECT_EQ(0, workId);
+                                count[3]++;
                         }
                 }
         }
+        // Calculate the actual ratio and compare to expected ratio (within a range)
+        for (unsigned int i = 0; i < count.size(); i++) {
+                const auto lower_bound = m_gg_config.refWP.ratios[i] > 0.1
+                                             ? m_gg_config.refWP.ratios[i] - m_gg_config.refWP.ratios[i] * 0.20
+                                             : 0.0;
+                const auto upper_bound  = m_gg_config.refWP.ratios[i] + m_gg_config.refWP.ratios[i] * 0.20;
+                const auto actual_ratio = (float)count[i] / (float)total_size;
 
-        // Assert that persons of Kortrijk only go to Schoten
-        for (const auto& hPool : kortrijk->RefPools(Id::Household)) {
-                for (auto p : hPool[0]) {
-                        const auto workId = p->GetPoolId(Id::Workplace);
-                        if (AgeBrackets::Workplace::HasAge(p->GetAge()) && !AgeBrackets::College::HasAge(p->GetAge())) {
-                                EXPECT_TRUE(workId > 2 * m_ppwp && workId <= 4 * m_ppwp);
-                        } else if (AgeBrackets::College::HasAge(p->GetAge())) {
-                                EXPECT_TRUE((workId > 2 * m_ppwp && workId <= 4 * m_ppwp) || workId == 0);
-                        } else {
-                                EXPECT_EQ(0, workId);
-                        }
-                }
+                EXPECT_TRUE((actual_ratio >= lower_bound) && (actual_ratio <= upper_bound));
         }
 }
 
 TEST_F(WorkplacePopulatorDistributionTest, OnlyCommuting)
 {
         MakeGeoGrid(m_gg_config, 3, 100, 12, 90, 3, 33, 3, m_pop.get());
-        GeoGridConfig::Info info;
-        m_gg_config.regionsInfo[1] = info;
 
-        m_gg_config.params.at(1).fraction_workplace_commuters = 0;
+        m_gg_config.params[1]                                 = GeoGridConfig::Param{};
         m_gg_config.params.at(1).fraction_workplace_commuters = 1;
-        m_gg_config.params.at(1).fraction_college_commuters   = 0;
-        m_gg_config.regionsInfo.at(1).fraction_workplace      = 0.01;
+        m_gg_config.params.at(1).fraction_college_commuters   = 1;
         m_gg_config.params.at(1).participation_workplace      = 1;
         m_gg_config.params.at(1).participation_college        = 0.5;
-        m_gg_config.refWP.average_workplace_size              = 50;
-        m_gg_config.refWP.ratios                              = {0.60, 0.25, 0.10, 0.05};
+
+        m_gg_config.regionsInfo[1]                       = GeoGridConfig::Info{};
+        m_gg_config.regionsInfo.at(1).fraction_workplace = 0.01;
+
+        m_gg_config.refWP.ratios = {0.760, 0.191, 0.041, 0.008};
+        m_gg_config.refWP.min    = {1, 10, 50, 200};
+        m_gg_config.refWP.max    = {9, 49, 199, 400};
         // only commuting
 
-        auto schoten = *(m_geo_grid.begin());
-        schoten->SetCoordinate(Coordinate(51.2497532, 4.4977063));
-        m_workplace_generator.AddPools(*schoten, m_pop.get(), m_gg_config);
-        m_workplace_generator.AddPools(*schoten, m_pop.get(), m_gg_config);
-
-        auto kortrijk = *(m_geo_grid.begin() + 1);
-        kortrijk->SetCoordinate(Coordinate(50.82900246, 3.264406009));
-        m_workplace_generator.AddPools(*kortrijk, m_pop.get(), m_gg_config);
-        m_workplace_generator.AddPools(*kortrijk, m_pop.get(), m_gg_config);
-
-        schoten->AddOutgoingCommute(kortrijk, 0.5);
-        kortrijk->AddIncomingCommute(schoten, 0.5);
-        kortrijk->AddOutgoingCommute(schoten, 0.5);
-        schoten->AddIncomingCommute(kortrijk, 0.5);
+        for (int k = 0; k < 3; k++) {
+                auto t = *(m_geo_grid.begin() + k);
+                for (int i = 0; i < 15; i++) {
+                        m_workplace_generator.AddPools(*t, m_pop.get(), m_gg_config);
+                }
+        }
 
         m_geo_grid.Finalize();
+        m_workplace_generator.Apply(m_geo_grid, m_gg_config);
         m_workplace_populator.Apply(m_geo_grid, m_gg_config);
 
-        // Assert that persons of Schoten only go to Kortrijk
-        for (const auto& hPool : schoten->RefPools(Id::Household)) {
-                for (auto p : hPool[0]) {
-                        const auto workId = p->GetPoolId(Id::Workplace);
-                        if (AgeBrackets::Workplace::HasAge(p->GetAge()) && !AgeBrackets::College::HasAge(p->GetAge())) {
-                                EXPECT_TRUE(workId > 2 * m_ppwp && workId <= 4 * m_ppwp);
-                        } else if (AgeBrackets::College::HasAge(p->GetAge())) {
-                                EXPECT_TRUE((workId > 2 * m_ppwp && workId <= 4 * m_ppwp) || workId == 0);
+        // count how many workplaces there are of each type
+        vector<unsigned int>   count = {0, 0, 0, 0};
+        std::set<ContactPool*> all;
+        unsigned int           total_size = 0U;
+        for (const auto& loc : m_geo_grid) {
+                for (const auto& pool : loc->RefPools(Id::Workplace)) {
+                        auto size = pool->size();
+                        total_size++;
+                        all.insert(pool);
+                        if (size <= m_gg_config.refWP.max[0]) {
+                                count[0]++;
+                        } else if (size <= m_gg_config.refWP.max[1]) {
+                                count[1]++;
+                        } else if (size <= m_gg_config.refWP.max[2]) {
+                                count[2]++;
                         } else {
-                                EXPECT_EQ(0, workId);
+                                count[3]++;
                         }
                 }
         }
+        // Calculate the actual ratio and compare to expected ratio (within a range)
+        for (unsigned int i = 0; i < count.size(); i++) {
+                const auto lower_bound = m_gg_config.refWP.ratios[i] > 0.1
+                                             ? m_gg_config.refWP.ratios[i] - m_gg_config.refWP.ratios[i] * 0.10
+                                             : 0.0;
+                const auto upper_bound  = m_gg_config.refWP.ratios[i] + m_gg_config.refWP.ratios[i] * 0.10;
+                const auto actual_ratio = (float)count[i] / (float)total_size;
 
-        // Assert that persons of Kortrijk only go to Schoten
-        for (const auto& hPool : kortrijk->RefPools(Id::Household)) {
-                for (auto p : hPool[0]) {
-                        const auto workId = p->GetPoolId(Id::Workplace);
-                        if (AgeBrackets::Workplace::HasAge(p->GetAge()) && !AgeBrackets::College::HasAge(p->GetAge())) {
-                                EXPECT_TRUE(workId >= 1 && workId <= 2 * m_ppwp);
-                        } else if (AgeBrackets::College::HasAge(p->GetAge())) {
-                                EXPECT_TRUE((workId >= 1 && workId <= 2 * m_ppwp) || workId == 0);
-                        } else {
-                                EXPECT_EQ(0, workId);
-                        }
-                }
+                EXPECT_TRUE((actual_ratio >= lower_bound) && (actual_ratio <= upper_bound));
         }
 }
+
 } // namespace
