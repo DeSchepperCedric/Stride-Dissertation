@@ -15,7 +15,8 @@
 
 #include "EpiJSONWriter.h"
 #include "util/Exception.h"
-#include <iostream>
+#include <ostream>
+#include <fstream>
 
 #ifdef BOOST_FOUND
 
