@@ -56,6 +56,7 @@ TEST_F(WorkplacePopulatorDistributionTest, NoCommuting)
         MakeGeoGrid(m_gg_config, 3, 100, 12, 2, 3, 33, 3, m_pop.get());
 
         m_gg_config.params[1] = GeoGridConfig::Param{};
+        m_gg_config.regionsInfo[1]                       = GeoGridConfig::Info{};
 
         m_gg_config.params.at(1).fraction_workplace_commuters = 0;
         m_gg_config.params.at(1).fraction_college_commuters   = 0;
@@ -63,8 +64,6 @@ TEST_F(WorkplacePopulatorDistributionTest, NoCommuting)
         m_gg_config.params.at(1).participation_workplace      = 1;
         m_gg_config.params.at(1).participation_college        = 0.5;
 
-        m_gg_config.regionsInfo[1]                       = GeoGridConfig::Info{};
-        m_gg_config.regionsInfo.at(1).popcount_workplace = 1;
 
         m_gg_config.refWP.ratios = {0.760, 0.191, 0.041, 0.008};
         m_gg_config.refWP.min    = {1, 10, 50, 200};
@@ -134,7 +133,7 @@ TEST_F(WorkplacePopulatorDistributionTest, HalfCommuting)
         m_gg_config.params.at(1).participation_college        = 0.5;
 
         m_gg_config.regionsInfo[1]                       = GeoGridConfig::Info{};
-        m_gg_config.regionsInfo.at(1).popcount_workplace = 1;
+        m_gg_config.regionsInfo.at(1).fraction_workplace = 0.01;
 
         m_gg_config.refWP.ratios = {0.760, 0.191, 0.041, 0.008};
         m_gg_config.refWP.min    = {1, 10, 50, 200};
@@ -203,7 +202,7 @@ TEST_F(WorkplacePopulatorDistributionTest, OnlyCommuting)
         m_gg_config.params.at(1).participation_college        = 0.5;
 
         m_gg_config.regionsInfo[1]                       = GeoGridConfig::Info{};
-        m_gg_config.regionsInfo.at(1).popcount_workplace = 1;
+        m_gg_config.regionsInfo.at(1).fraction_workplace = 0.01;
 
         m_gg_config.refWP.ratios = {0.760, 0.191, 0.041, 0.008};
         m_gg_config.refWP.min    = {1, 10, 50, 200};
