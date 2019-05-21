@@ -144,13 +144,19 @@ void Populator<stride::ContactType::Id::Workplace>::Apply(GeoGrid& geoGrid, cons
                 for (auto& hhPool : loc->RefPools(Id::Household)) {
 
                         for (auto person : *hhPool) {
-                                if (!Workplace::HasAge(person->GetAge())) {
+
+                                // NOTICE: logic below requires that CollegePopulator has already executed
+                                // such that we can identify the college students.
+                                // If this person is not in the age bracket for college/work/unemployed
+                                // or if the perosn is in the age bracket but is a student we are done here.
+                                if (!Workplace::HasAge(person->GetAge()) || (person->GetPoolId(Id::College) != 0)) {
                                         continue;
                                 }
-                                bool isStudent      = m_rn_man.MakeWeightedCoinFlip(participCollege);
-                                bool isActiveWorker = m_rn_man.MakeWeightedCoinFlip(participWorkplace);
 
-                                if ((College::HasAge(person->GetAge()) && !isStudent) || isActiveWorker) {
+                                // We are dealing with a non-student person of the age bracket for work,
+                                // flip coin to decide whether they are actually employed.
+                                bool isActiveWorker = m_rn_man.MakeWeightedCoinFlip(participWorkplace);
+                                if (isActiveWorker) {
                                         // ---------------------------------------------
                                         // this person is employed
                                         // ---------------------------------------------
@@ -232,11 +238,6 @@ void Populator<stride::ContactType::Id::Workplace>::Apply(GeoGrid& geoGrid, cons
                                                         poolTypes[pool->GetId()] += 1;
                                                 }
                                         }
-                                } else {
-                                        // -----------------------------
-                                        // this person has no employment
-                                        // -----------------------------
-                                        person->SetPoolId(Id::Workplace, 0);
                                 }
                         }
                 }
