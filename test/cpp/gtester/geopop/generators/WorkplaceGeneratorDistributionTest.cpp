@@ -63,7 +63,7 @@ TEST_F(WorkplaceGeneratorDistributionTest, ZeroLocationTest)
         m_gg_config.refWP.max    = {9, 49, 199, 400};
 
         m_gg_config.params.at(4).pop_size              = 10000;
-        m_gg_config.regionsInfo.at(4).fraction_college = 20000.0/m_gg_config.params.at(4).pop_size;
+        m_gg_config.regionsInfo.at(4).fraction_college = 20000.0 / m_gg_config.params.at(4).pop_size;
         m_workplace_generator.Apply(m_geo_grid, m_gg_config);
 
         EXPECT_EQ(m_geo_grid.size(), 0);

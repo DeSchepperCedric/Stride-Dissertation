@@ -33,12 +33,6 @@ void Generator<stride::ContactType::Id::Workplace>::Apply(GeoGrid& geoGrid, cons
         // 4. use that information for the distribution
         // 5. assign each workplaces to a location
 
-//<<<<<<< HEAD
-//        auto EmployeeCount = 0U;
-//        for (const auto& it : ggConfig.regionsInfo) {
-//                EmployeeCount += it.second.popcount_workplace;
-//        }
-
         auto averageWorkplaceSize = 0.0;
 
         // When dealing with workplace size distribution, calculate average workplace size
@@ -49,23 +43,6 @@ void Generator<stride::ContactType::Id::Workplace>::Apply(GeoGrid& geoGrid, cons
                 }
         }
 
-//        const auto WorkplacesCount =
-//            static_cast<unsigned int>(ceil(EmployeeCount / static_cast<double>(WorkplaceSize)));
-//
-//        // = for each location #residents + #incoming commuting people - #outgoing commuting people
-//        vector<double> weights;
-//        for (const auto& loc : geoGrid) {
-//                const double ActivePeopleCount =
-//                    (loc->GetPopCount() +
-//                     loc->GetIncomingCommuteCount(ggConfig.params.at(loc->GetProvince()).fraction_workplace_commuters) -
-//                     loc->GetOutgoingCommuteCount(ggConfig.params.at(loc->GetProvince()).fraction_workplace_commuters) *
-//                         ggConfig.params.at(loc->GetProvince()).participation_workplace);
-//                const double weight = ActivePeopleCount / EmployeeCount;
-//                AssertThrow(weight >= 0 && weight <= 1 && !std::isnan(weight), "Invalid weight: " + to_string(weight),
-//                            m_logger);
-//                weights.push_back(weight);
-//        }
-//=======
         for (const auto& it : ggConfig.regionsInfo) {
                 // = for each location #residents + #incoming commuting people - #outgoing commuting people
                 vector<double> weights;
@@ -81,7 +58,6 @@ void Generator<stride::ContactType::Id::Workplace>::Apply(GeoGrid& geoGrid, cons
                                      loc->GetOutgoingCommuteCount(
                                          ggConfig.params.at(loc->GetProvince()).fraction_workplace_commuters) *
                                          ggConfig.params.at(loc->GetProvince()).participation_workplace);
-//>>>>>>> centrumStedenExacter
 
                                 const double weight = ActivePeopleCount; // / EmployeeCount;
                                 if (loc->IsMajor()) {
@@ -102,12 +78,9 @@ void Generator<stride::ContactType::Id::Workplace>::Apply(GeoGrid& geoGrid, cons
 
                 const auto EmployeeCount = static_cast<unsigned int>(it.second.fraction_workplace * popCount);
 
-                const auto WorkplaceSize =
-                    averageWorkplaceSize == 0.0 ? ggConfig.people[Id::Workplace] : (unsigned int)round(averageWorkplaceSize);
+                const auto WorkplaceSize = averageWorkplaceSize == 0.0 ? ggConfig.people[Id::Workplace]
+                                                                       : (unsigned int)round(averageWorkplaceSize);
 
-//                const auto WorkplaceSize = ggConfig.refWP.average_workplace_size == 0U
-//                                               ? ggConfig.people[Id::Workplace]
-//                                               : ggConfig.refWP.average_workplace_size;
                 const auto WorkplacesCount =
                     static_cast<unsigned int>(ceil(EmployeeCount / static_cast<double>(WorkplaceSize)));
 
@@ -124,13 +97,13 @@ void Generator<stride::ContactType::Id::Workplace>::Apply(GeoGrid& geoGrid, cons
 
                 for (auto& w : weights) {
                         w /= EmployeeCount;
-                    AssertThrow(weight >= 0 && w <= 1 && !std::isnan(w),
-                                "Invalid weight: " + to_string(w), m_logger);
+                        AssertThrow(weight >= 0 && w <= 1 && !std::isnan(w), "Invalid weight: " + to_string(w),
+                                    m_logger);
                 }
                 for (auto& w : majorWeights) {
                         w /= majorEmployeeCount;
-                    AssertThrow(weight >= 0 && w <= 1 && !std::isnan(w),
-                                "Invalid weight: " + to_string(w), m_logger);
+                        AssertThrow(weight >= 0 && w <= 1 && !std::isnan(w), "Invalid weight: " + to_string(w),
+                                    m_logger);
                 }
 
                 const auto dist      = m_rn_man.GetDiscreteGenerator(weights, 0U);
