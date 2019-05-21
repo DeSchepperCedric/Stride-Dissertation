@@ -69,8 +69,8 @@ public:
         /// Gets the number of people infected in the contactpools at this location.
         unsigned int GetInfectedCount() const;
 
-        /// Gets the number of people infected for every age bracket in the contactpools at this location.
-        std::unordered_map<stride::ContactType::Id, unsigned int> GetInfectedCountAgeGroups() const;
+        /// Get the health status counts for all ContactPool Types
+        std::unordered_map<std::string, std::unordered_map<std::string, unsigned int>> GetStatusCounts() const;
 
         /// Gets the name.
         std::string GetName() const { return m_name; }
