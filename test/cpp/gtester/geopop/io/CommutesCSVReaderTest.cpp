@@ -84,7 +84,8 @@ TEST(CommutesCSVReaderTest, test1)
                            "487,700,462,0\n"   // to 23
                            "0,611,0,0\n";      // to 24
 
-        auto&      expectedGeoGrid = getExpectedGeoGrid()->RefGeoGrid();
+        auto       expectedPop     = getExpectedGeoGrid();
+        auto&      expectedGeoGrid = expectedPop->RefGeoGrid();
         const auto pop             = Population::Create();
         auto& grid = pop->RefGeoGrid();
 
@@ -106,7 +107,7 @@ TEST(CommutesCSVReaderTest, test1)
         reader.FillGeoGrid(grid);
 
         for (const auto& loc : grid) {
-                cout << loc->GetName() << endl;
+                cout << loc->GetID() << endl;
                 int         i                = 0;
                 const auto& expectedLoc      = expectedGeoGrid.GetById(loc->GetID());
                 const auto& outGoingExpected = expectedLoc->CRefOutgoingCommutes();
