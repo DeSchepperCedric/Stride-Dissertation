@@ -86,9 +86,8 @@ TEST(CommutesCSVReaderTest, test1)
 
         auto&      expectedGeoGrid = getExpectedGeoGrid()->RefGeoGrid();
         const auto pop             = Population::Create();
-        auto&      geoGrid         = pop->RefGeoGrid();
-
         auto& grid = pop->RefGeoGrid();
+
         auto loc1 = make_shared<Location>(21, 0, "", 1000);
         auto coor1 = make_shared<EnhancedCoordinate>(loc1.get(), Coordinate(0.0,0.0));
         grid.addLocation(loc1, coor1);
@@ -107,6 +106,7 @@ TEST(CommutesCSVReaderTest, test1)
         reader.FillGeoGrid(grid);
 
         for (const auto& loc : grid) {
+                cout << loc->GetName() << endl;
                 int         i                = 0;
                 const auto& expectedLoc      = expectedGeoGrid.GetById(loc->GetID());
                 const auto& outGoingExpected = expectedLoc->CRefOutgoingCommutes();
