@@ -25,7 +25,7 @@ using namespace stride::ContactType;
 
 namespace geopop {
 
-template<>
+template <>
 void Populator<stride::ContactType::Id::PrimaryCommunity>::Apply(GeoGrid& geoGrid, const GeoGridConfig&)
 {
         m_logger->trace("Starting to populate Primary Communities");

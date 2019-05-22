@@ -32,15 +32,15 @@ using namespace stride::ContactType;
 using namespace stride::AgeBrackets;
 using namespace util;
 
-template<>
+template <>
 void Populator<stride::ContactType::Id::Workplace>::Apply(GeoGrid& geoGrid, const GeoGridConfig& geoGridConfig)
 {
         m_logger->trace("Starting to populate Workplaces");
 
-        auto genCommute{function<int()>()};
-        auto genNonCommute{function<int()>()};
+        auto                 genCommute{function<int()>()};
+        auto                 genNonCommute{function<int()>()};
         vector<ContactPool*> nearbyWp{};
-        vector<Location*> commuteLocations{};
+        vector<Location*>    commuteLocations{};
 
         const auto participWorkplace    = geoGridConfig.param.particpation_workplace;
         const auto popCollege           = geoGridConfig.info.popcount_college;
@@ -52,7 +52,7 @@ void Populator<stride::ContactType::Id::Workplace>::Apply(GeoGrid& geoGrid, cons
         // workplace population from commute data.
         double fracCommuteStudents = 0.0;
         if (static_cast<bool>(fracWorkplaceCommute) && popWorkplace) {
-                fracCommuteStudents = (popCollege * fracCollegeCommute) /(popWorkplace * fracWorkplaceCommute);
+                fracCommuteStudents = (popCollege * fracCollegeCommute) / (popWorkplace * fracWorkplaceCommute);
         }
 
         // --------------------------------------------------------------------------------
@@ -118,7 +118,7 @@ void Populator<stride::ContactType::Id::Workplace>::Apply(GeoGrid& geoGrid, cons
                                                 // this person commutes to the Location and in particular to Pool
                                                 // --------------------------------------------------------------
                                                 auto& pools = commuteLocations[genCommute()]->RefPools(Id::Workplace);
-                                                auto s = static_cast<int>(pools.size());
+                                                auto  s     = static_cast<int>(pools.size());
                                                 auto  gen   = m_rn_man.GetUniformIntGenerator(0, s);
                                                 auto  pool  = pools[gen()];
                                                 // so that's it
