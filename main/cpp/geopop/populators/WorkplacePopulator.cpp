@@ -57,8 +57,8 @@ void Populator<stride::ContactType::Id::Workplace>::Apply(GeoGrid& geoGrid, cons
         // --------------------------------------------------------------------------------
         // For every location, if populated ...
         // --------------------------------------------------------------------------------
-        for (const auto& loc : geoGrid) {
-                if (loc->GetPopCount() == 0) {
+        for (const auto& loc : *geoGrid.m_locationGrid) {
+                if (loc->getData<Location>()->GetPopCount() == 0) {
                         continue;
                 }
 
@@ -69,7 +69,7 @@ void Populator<stride::ContactType::Id::Workplace>::Apply(GeoGrid& geoGrid, cons
                 genCommute = function<int()>();
 
                 vector<double> commutingWeights;
-                for (const pair<Location*, double>& commute : loc->CRefOutgoingCommutes()) {
+                for (const pair<Location*, double>& commute : loc->getData<Location>()->CRefOutgoingCommutes()) {
                         const auto& workplaces = commute.first->RefPools(Id::Workplace);
                         if (!workplaces.empty()) {
                                 commuteLocations.push_back(commute.first);
@@ -93,7 +93,7 @@ void Populator<stride::ContactType::Id::Workplace>::Apply(GeoGrid& geoGrid, cons
                 // --------------------------------------------------------------------------------
                 // For everyone of working age: decide between work or college (iff of College age)
                 // --------------------------------------------------------------------------------
-                for (auto& hhPool : loc->RefPools(Id::Household)) {
+                for (auto& hhPool : loc->getData<Location>()->RefPools(Id::Household)) {
                         for (auto person : *hhPool) {
                                 if (!Workplace::HasAge(person->GetAge())) {
                                         continue;

@@ -74,7 +74,9 @@ TEST_F(WorkplaceGeneratorTest, NoCommuting)
                                       49823,  181594, 119075, 27700,  116959, 146583, 102531, 58864, 76946,  91951,
                                       134464, 59248,  10003,  125423, 15004,  8656,   13658,  50784, 61749,  165243};
         for (const auto size : sizes) {
-                m_geo_grid.AddLocation(make_shared<Location>(1, 4, Coordinate(0, 0), "Size: " + to_string(size), size));
+                auto loc = make_shared<Location>(1, 4, "Size: " + to_string(size), size);
+                auto coor = make_shared<EnhancedCoordinate>(loc.get(), Coordinate(0, 0));
+                m_geo_grid.addLocation(loc, coor);
         }
         m_workplace_generator.Apply(m_geo_grid, m_gg_config);
 
@@ -102,16 +104,18 @@ TEST_F(WorkplaceGeneratorTest, NullCommuting)
                                       49823,  181594, 119075, 27700,  116959, 146583, 102531, 58864, 76946,  91951,
                                       134464, 59248,  10003,  125423, 15004,  8656,   13658,  50784, 61749,  165243};
         for (const auto size : sizes) {
-                m_geo_grid.AddLocation(make_shared<Location>(1, 4, Coordinate(0, 0), "Size: " + to_string(size), size));
+                auto loc = make_shared<Location>(1, 4, "Size: " + to_string(size), size);
+                auto coor = make_shared<EnhancedCoordinate>(loc.get(), Coordinate(0, 0));
+                m_geo_grid.addLocation(loc, coor);
         }
 
         // 10% of the pop of loc0 is commuting to loc1 = 12.833 people
-        m_geo_grid[0]->AddOutgoingCommute(m_geo_grid[1], 0.10); // 0.10 is relative to loc0
-        m_geo_grid[1]->AddIncomingCommute(m_geo_grid[0], 0.10); // 0.10 is relative to loc0
+        m_geo_grid[0]->AddOutgoingCommute(m_geo_grid[1].get(), 0.10); // 0.10 is relative to loc0
+        m_geo_grid[1]->AddIncomingCommute(m_geo_grid[0].get(), 0.10); // 0.10 is relative to loc0
 
         // 25,26% of the pop of loc1 is commuting to loc0 = 12.833 people
-        m_geo_grid[1]->AddOutgoingCommute(m_geo_grid[0], 0.252697700063012); // 0.25 is relative to loc1
-        m_geo_grid[0]->AddIncomingCommute(m_geo_grid[1], 0.252697700063012); // 0.25 is relative to loc1
+        m_geo_grid[1]->AddOutgoingCommute(m_geo_grid[0].get(), 0.252697700063012); // 0.25 is relative to loc1
+        m_geo_grid[0]->AddIncomingCommute(m_geo_grid[1].get(), 0.252697700063012); // 0.25 is relative to loc1
 
         EXPECT_EQ(1283, m_geo_grid[0]->GetIncomingCommuteCount(m_gg_config.param.fraction_workplace_commuters));
         EXPECT_EQ(1283, m_geo_grid[0]->GetOutgoingCommuteCount(m_gg_config.param.fraction_workplace_commuters));
@@ -142,7 +146,9 @@ TEST_F(WorkplaceGeneratorTest, TenCommuting)
                                       49823,  181594, 119075, 27700,  116959, 146583, 102531, 58864, 76946,  91951,
                                       134464, 59248,  10003,  125423, 15004,  8656,   13658,  50784, 61749,  165243};
         for (const auto size : sizes) {
-                m_geo_grid.AddLocation(make_shared<Location>(1, 4, Coordinate(0, 0), "Size: " + to_string(size), size));
+                auto loc = make_shared<Location>(1, 4, "Size: " + to_string(size), size);
+                auto coor = make_shared<EnhancedCoordinate>(loc.get(),Coordinate(0, 0));
+                m_geo_grid.addLocation(loc, coor);
         }
 
         array<tuple<size_t, size_t, double>, 6> commuting{make_tuple(0, 10, 0.23),  make_tuple(25, 3, 0.43),
@@ -150,8 +156,8 @@ TEST_F(WorkplaceGeneratorTest, TenCommuting)
                                                           make_tuple(15, 17, 0.22), make_tuple(27, 17, 0.47)};
 
         for (const auto& info : commuting) {
-                m_geo_grid[get<0>(info)]->AddOutgoingCommute(m_geo_grid[get<1>(info)], get<2>(info));
-                m_geo_grid[get<1>(info)]->AddIncomingCommute(m_geo_grid[get<0>(info)], get<2>(info));
+                m_geo_grid[get<0>(info)]->AddOutgoingCommute(m_geo_grid[get<1>(info)].get(), get<2>(info));
+                m_geo_grid[get<1>(info)]->AddIncomingCommute(m_geo_grid[get<0>(info)].get(), get<2>(info));
         }
 
         // = 0,23 * 128331 * 0,10 = 2951,613

@@ -47,6 +47,7 @@ using namespace geopop;
 GeoPopBuilder::GeoPopBuilder(const ptree& config, RnMan& rnMan, shared_ptr<spdlog::logger> strideLogger)
     : AbstractPopBuilder(config, rnMan, move(strideLogger))
 {
+
 }
 
 shared_ptr<Population> GeoPopBuilder::Build(shared_ptr<Population> pop)
@@ -113,7 +114,7 @@ void GeoPopBuilder::MakeLocations(GeoGrid& geoGrid, const GeoGridConfig& geoGrid
         for (const shared_ptr<Location>& loc : geoGrid) {
                 loc->SetPopCount(geoGridConfig.param.pop_size);
         }
-        geoGrid.Finalize();
+        geoGrid.m_locationGrid->Finalize();
 }
 
 void GeoPopBuilder::MakePools(GeoGrid& geoGrid, const GeoGridConfig& geoGridConfig)

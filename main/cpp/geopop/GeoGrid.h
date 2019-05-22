@@ -18,130 +18,120 @@
 #include "contact/ContactType.h"
 #include "geopop/geo/GeoGridKdTree.h"
 
+#include "geopop/Location.h"
+
+#include "LocationGrid.h"
+
 #include <set>
 #include <unordered_map>
 #include <vector>
+#include <memory>
 
 namespace stride {
-class ContactPool;
-class Population;
+    class ContactPool;
+
+    class Population;
 } // namespace stride
 
 namespace geopop {
 
-class Location;
+    class Location;
 
-template <typename Policy, typename... F>
-class GeoAggregator;
+    template<typename Policy, typename... F>
+    class GeoAggregator;
 
 /**
  * A Geographic grid of simulation region contains Locations that in turn contain
  * an index to the ContactPools situated at that Location.
  */
-class GeoGrid
-{
-public:
+    class GeoGrid {//: public LocationGrid<Location> {
+    public:
         /// GeoGrid and associated Population.
-        explicit GeoGrid(stride::Population* population);
+        explicit GeoGrid(stride::Population *population);
 
         /// No copy constructor.
-        GeoGrid(const GeoGrid&) = delete;
+        GeoGrid(const GeoGrid &) = delete;
 
         /// No copy assignment.
-        GeoGrid operator=(const GeoGrid&) = delete;
+        GeoGrid operator=(const GeoGrid &) = delete;
 
-        /// Adds a location to this GeoGrid.
-        void AddLocation(std::shared_ptr<Location> location);
+        /// Gets current size of Location storage.
+        size_t size() const { return m_locations.size(); }
 
-        /// Disables the addLocation method and builds the kdtree.
-        void Finalize();
+        using iterator       = typename std::vector<std::shared_ptr<Location>>::iterator;
+        using const_iterator = typename std::vector<std::shared_ptr<Location>>::const_iterator;
 
-        /// Gets a Location by Id and check if the Id exists.
-        std::shared_ptr<Location> GetById(unsigned int id) const { return m_locations[m_id_to_index.at(id)]; }
-
-        /// Get the Population associated with this GeoGrid
-        stride::Population* GetPopulation() const { return m_population; }
-
-        /// Search for locations in \p radius (in km) around \p start.
-        std::vector<const Location*> LocationsInRadius(const Location& start, double radius) const;
-
-        /// Find contactpools in startRadius (in km) around start and, if none are found, double
-        /// the radius and search again until the radius gets infinite. May return an empty vector
-        /// when there are really no pools to be found (empty grid).
-        std::vector<stride::ContactPool*> GetNearbyPools(stride::ContactType::Id id, const Location& start,
-                                                         double startRadius = 10.0) const;
-
-        /**
-         * Gets the locations in a rectangle determined by the two coordinates (long1, lat1) and (long2, lat2).
-         * The coordinates must be positioned on the diagonal, i.e:
-         *
-         *  p1 -----+     +-------p1
-         *  |       |     |       |
-         *  |       |  or |       |
-         *  |       |     |       |
-         *  +-------p2    p2------+
-         */
-        std::set<const Location*> LocationsInBox(double long1, double lat1, double long2, double lat2) const;
-
-        /// Gets the location in a rectangle defined by the two Locations.
-        std::set<const Location*> LocationsInBox(Location* loc1, Location* loc2) const;
-
-        /// Gets the K biggest (in population count) locations of this GeoGrid
-        std::vector<Location*> TopK(size_t k) const;
-
-public:
-        /// Build a GeoAggregator with a predefined functor and given args for the Policy.
-        template <typename Policy, typename F>
-        GeoAggregator<Policy, F> BuildAggregator(F functor, typename Policy::Args&& args) const;
-
-        /// Build a GeoAggregator that gets its functor when calling, with given args for the Policy.
-        template <typename Policy>
-        GeoAggregator<Policy> BuildAggregator(typename Policy::Args&& args) const;
-
-public:
-        using iterator       = std::vector<std::shared_ptr<Location>>::iterator;
-        using const_iterator = std::vector<std::shared_ptr<Location>>::const_iterator;
-
-        /// Iterator to first Location.
+        /// Iterator to first EnhancedCoordinate.
         iterator begin() { return m_locations.begin(); }
 
-        /// Iterator to the end of the Location storage.
+        /// Iterator to the end of the EnhancedCoordinate storage.
         iterator end() { return m_locations.end(); }
 
-        /// Const Iterator to first Location.
+        /// Const Iterator to first EnhancedCoordinate.
         const_iterator cbegin() const { return m_locations.cbegin(); }
 
-        /// Const iterator to the end of the Location storage.
+        /// Const iterator to the end of the EnhancedCoordinate storage.
         const_iterator cend() const { return m_locations.cend(); }
 
         /// Gets a Location by index, doesn't performs a range check.
         std::shared_ptr<Location>& operator[](size_t index) { return m_locations[index]; }
 
-        /// Gets a Location by index, doesn't performs a range check.
-        const std::shared_ptr<Location>& operator[](size_t index) const { return m_locations[index]; }
+        /// Get the Population associated with this GeoGrid
+        stride::Population *GetPopulation() const { return m_population; }
 
-        /// Gets current size of Location storage.
-        size_t size() const { return m_locations.size(); }
+        /// Find contactpools in startRadius (in km) around start and, if none are found, double
+        /// the radius and search again until the radius gets infinite. May return an empty vector
+        /// when there are really no pools to be found (empty grid).
+        std::vector<stride::ContactPool *> GetNearbyPools(stride::ContactType::Id id,
+                                                          const EnhancedCoordinate &start,
+                                                          double startRadius = 10.0) const;
 
-private:
-        ///< Checks whether the GeoGrid is finalized i.e. certain operations can(not) be used.
-        void CheckFinalized(const std::string& functionName) const;
+        /// Gets the K biggest (in population count) EnhancedCoordinates of this GeoGrid
+        std::vector<Location *> TopK(size_t k) const {
 
-private:
-        ///< Container for Locations in GeoGrid.
+            auto cmp = [](Location *rhs, Location *lhs) {
+                return rhs->GetPopCount() > lhs->GetPopCount();
+            };
+
+            std::priority_queue<Location *, std::vector<Location *>, decltype(cmp)> queue(
+                    cmp);
+            for (const auto &loc : m_locations) {
+                    queue.push(loc.get());
+                    if (queue.size() > k) {
+                    queue.pop();
+                }
+            }
+
+            std::vector<Location *> topLocations;
+            while (!queue.empty()) {
+                auto loc = queue.top();
+                topLocations.push_back(loc);
+                queue.pop();
+            }
+
+            return topLocations;
+        };
+
+        void addLocation(std::shared_ptr<Location> loc, std::shared_ptr<EnhancedCoordinate> coor);
+
+        /// Gets a Location by Id and check if the Id exists.
+        std::shared_ptr<Location> GetById(unsigned int id) const {
+            return m_locations[m_id_to_index.at(id)];
+        }
+
+        std::shared_ptr<LocationGrid<Location>> m_locationGrid;
+
+    private:
+
+        ///< Container for LocationData in GeoGrid.
         std::vector<std::shared_ptr<Location>> m_locations;
+
+        ///< Stores pointer to Popluation, but does not take ownership.
+        stride::Population *m_population;
+
 
         ///< Associative container maps Location Id to index in m_locations.
         std::unordered_map<unsigned int, unsigned int> m_id_to_index;
-
-        ///< Stores pointer to Popluation, but does not take ownership.
-        stride::Population* m_population;
-
-        ///< Is the GeoGrid finalized (ready for use) yet?
-        bool m_finalized;
-
-        ///< Internal KdTree for quick spatial lookup.
-        GeoGridKdTree m_tree;
-};
+    };
 
 } // namespace geopop

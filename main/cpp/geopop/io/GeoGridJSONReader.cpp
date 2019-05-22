@@ -55,8 +55,8 @@ void GeoGridJSONReader::Read()
         auto locations = ParseArray(root.at("locations"));
         for (auto it = locations.begin(); it != locations.end(); it++) {
                 shared_ptr<Location> loc;
-                loc = ParseLocation(*it);
-                geoGrid.AddLocation(move(loc));
+                auto result = ParseLocation(*it);
+                geoGrid.addLocation(result.first, result.second);
         }
 
         AddCommutes(geoGrid);
@@ -64,7 +64,7 @@ void GeoGridJSONReader::Read()
         m_people.clear();
 }
 
-shared_ptr<Location> GeoGridJSONReader::ParseLocation(nlohmann::json& location)
+std::pair<shared_ptr<Location>, shared_ptr<geopop::EnhancedCoordinate>> GeoGridJSONReader::ParseLocation(nlohmann::json& location)
 {
         const auto id         = ParseNumerical<unsigned int>(location.at("id"));
         const auto name       = location.at("name").get<std::string>();
@@ -72,7 +72,7 @@ shared_ptr<Location> GeoGridJSONReader::ParseLocation(nlohmann::json& location)
         const auto population = ParseNumerical<unsigned int>(location.at("population"));
         const auto coordinate = ParseCoordinate(location.at("coordinate"));
 
-        auto result              = make_shared<Location>(id, province, coordinate, name, population);
+        auto result              = make_shared<Location>(id, province, name, population);
         auto contactPoolsClasses = ParseArray(location.at("contactPools"));
 
         for (auto it = contactPoolsClasses.begin(); it != contactPoolsClasses.end(); it++) {
@@ -89,7 +89,9 @@ shared_ptr<Location> GeoGridJSONReader::ParseLocation(nlohmann::json& location)
                 }
         }
 
-        return result;
+        auto coord = make_shared<EnhancedCoordinate>(result.get(), coordinate);
+
+        return std::make_pair(result, coord);
 }
 
 Coordinate GeoGridJSONReader::ParseCoordinate(nlohmann::json& coordinate)

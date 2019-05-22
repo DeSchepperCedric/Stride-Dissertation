@@ -35,8 +35,8 @@ void Populator<stride::ContactType::Id::Daycare>::Apply(GeoGrid& geoGrid, const 
         m_logger->info("Starting to populate Daycares");
 
         // for every location
-        for (const auto& loc : geoGrid) {
-                if (loc->GetPopCount() == 0) {
+        for (const auto& loc : *geoGrid.m_locationGrid) {
+                if (loc->getData<Location>()->GetPopCount() == 0) {
                         continue;
                 }
                 // 1. find all daycares in an area of 10-k*10 km
@@ -47,7 +47,7 @@ void Populator<stride::ContactType::Id::Daycare>::Apply(GeoGrid& geoGrid, const 
                 const auto dist = m_rn_man.GetUniformIntGenerator(0, static_cast<int>(nearByDaycaresPools.size()), 0U);
 
                 // 2. for every baby assign a class
-                for (const auto& hhPool : loc->RefPools(Id::Household)) {
+                for (const auto& hhPool : loc->getData<Location>()->RefPools(Id::Household)) {
                         for (Person* p : *hhPool) {
                                 if (AgeBrackets::Daycare::HasAge(p->GetAge()) &&
                                     m_rn_man.MakeWeightedCoinFlip(geoGridConfig.param.participation_daycare)) {

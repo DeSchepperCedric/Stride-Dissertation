@@ -28,6 +28,7 @@
 #include "../geopop/io/EpiWriterFactory.h"
 
 #include <memory>
+#include <geopop/Location.h>
 
 using namespace std;
 using namespace stride::sim_event;
@@ -40,15 +41,17 @@ void EpiViewer::Update(stride::sim_event::Id id)
         case Id::AtStart: {
                 auto& geo = m_runner->GetSim()->GetPopulation()->RefGeoGrid();
 
-                    for(shared_ptr<geopop::Location>& loc : geo){
+                for (auto& loc : *geo.m_locationGrid) {
                         visualization::Location location;
-                        location.id               = loc->GetID();
-                        location.name             = loc->GetName();
+                        location.id               = loc->getData<geopop::Location>()->GetID();
+                        location.name             = loc->getData<geopop::Location>()->GetName();
                         location.longitude        = loc->GetCoordinate().get<0>();
                         location.latitude         = loc->GetCoordinate().get<1>();
-                        location.size             = loc->GetPopCount();
-                        m_Locations[loc->GetID()] = location;
+                        location.size             = loc->getData<geopop::Location>()->GetPopCount();
+                        m_Locations[loc->getData<geopop::Location>()->GetID()] = location;
+                        m_Locations[loc->getData<geopop::Location>()->GetID()].infected.push_back(loc->getData<geopop::Location>()->GetInfectedCount());
                 }
+                break;
         }
         case Id::Stepped: {
                 auto& geo = m_runner->GetSim()->GetPopulation()->RefGeoGrid();

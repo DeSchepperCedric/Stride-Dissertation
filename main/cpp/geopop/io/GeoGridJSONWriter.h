@@ -21,6 +21,7 @@
 
 #include <nlohmann/json.hpp>
 #include <set>
+#include "geopop/EnhancedCoordinate.h"
 
 namespace stride {
 class ContactPool;
@@ -51,7 +52,7 @@ private:
         nlohmann::json WriteCoordinate(const Coordinate& coordinate);
 
         /// Create a JSON Structure containing all info needed to reconstruct a Location.
-        nlohmann::json WriteLocation(const Location& location);
+        nlohmann::json WriteLocation(const geopop::EnhancedCoordinate &location);
 
         /// Create a JSON Structure containing all info needed to reconstruct a Person.
         nlohmann::json WritePerson(stride::Person* person);

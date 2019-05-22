@@ -27,13 +27,20 @@ namespace {
 shared_ptr<GeoGrid> getExpectedGeoGrid()
 {
         auto geoGrid = make_shared<GeoGrid>(Population::Create().get());
-        auto loc1    = make_shared<Location>(11002, 1, Coordinate(4.413545489, 51.2165845), "ANTWERPEN");
-        auto loc2    = make_shared<Location>(11007, 1, Coordinate(4.4856299, 51.1966684), "BORSBEEK");
-        auto loc3    = make_shared<Location>(11008, 1, Coordinate(4.49419, 51.29227), "BRASSCHAAT");
-        auto loc4    = make_shared<Location>(11009, 1, Coordinate(4.6376322, 51.3495775), "BRECHT");
-        auto loc5    = make_shared<Location>(11016, 1, Coordinate(4.47518, 51.38298), "ESSEN");
-        auto loc6    = make_shared<Location>(73107, 7, Coordinate(5.70979219, 50.96991794), "MAASMECHELEN");
-        auto loc7    = make_shared<Location>(73109, 7, Coordinate(5.806343076, 50.74921941), "VOEREN-'S GRAVENVOEREN");
+        auto loc1    = make_shared<Location>(11002, 1, "ANTWERPEN");
+        auto coor1   = make_shared<EnhancedCoordinate>(loc1.get(), Coordinate(4.413545489, 51.2165845));
+        auto loc2    = make_shared<Location>(11007, 1, "BORSBEEK");
+        auto coor2   = make_shared<EnhancedCoordinate>(loc2.get(), Coordinate(4.4856299, 51.1966684));
+        auto loc3    = make_shared<Location>(11008, 1, "BRASSCHAAT");
+        auto coor3   = make_shared<EnhancedCoordinate>(loc3.get(), Coordinate(4.49419, 51.29227));
+        auto loc4    = make_shared<Location>(11009, 1, "BRECHT");
+        auto coor4   = make_shared<EnhancedCoordinate>(loc4.get(), Coordinate(4.6376322, 51.3495775));
+        auto loc5    = make_shared<Location>(11016, 1, "ESSEN");
+        auto coor5   = make_shared<EnhancedCoordinate>(loc5.get(), Coordinate(4.47518, 51.38298));
+        auto loc6    = make_shared<Location>(73107, 7, "MAASMECHELEN");
+        auto coor6   = make_shared<EnhancedCoordinate>(loc6.get(), Coordinate(5.70979219, 50.96991794));
+        auto loc7    = make_shared<Location>(73109, 7, "VOEREN-'S GRAVENVOEREN");
+        auto coor7   = make_shared<EnhancedCoordinate>(loc7.get(), Coordinate(5.806343076, 50.74921941));
 
         loc1->SetPopFraction(0.76599210042448873);
         loc2->SetPopFraction(0.018849454066692393);
@@ -43,13 +50,13 @@ shared_ptr<GeoGrid> getExpectedGeoGrid()
         loc6->SetPopFraction(0.06618731981930856);
         loc7->SetPopFraction(0.0073292397793566838);
 
-        geoGrid->AddLocation(loc1);
-        geoGrid->AddLocation(loc2);
-        geoGrid->AddLocation(loc3);
-        geoGrid->AddLocation(loc4);
-        geoGrid->AddLocation(loc5);
-        geoGrid->AddLocation(loc6);
-        geoGrid->AddLocation(loc7);
+        geoGrid->addLocation(loc1, coor1);
+        geoGrid->addLocation(loc2, coor2);
+        geoGrid->addLocation(loc3, coor3);
+        geoGrid->addLocation(loc4, coor4);
+        geoGrid->addLocation(loc5, coor5);
+        geoGrid->addLocation(loc6, coor6);
+        geoGrid->addLocation(loc7, coor7);
 
         return geoGrid;
 }

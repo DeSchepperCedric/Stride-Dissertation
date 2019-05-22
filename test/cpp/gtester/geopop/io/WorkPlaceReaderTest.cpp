@@ -8,11 +8,7 @@ using namespace std;
 
 namespace {
 
-    TEST(workplaceReaderTest, workplaceReaderTest) {
-        EXPECT_TRUE(true);
-    }
+TEST(workplaceReaderTest, workplaceReaderTest) { EXPECT_TRUE(true); }
 
-    TEST(workplaceReaderTest, emptyStreamTest) {
-        EXPECT_TRUE(true);
-    }
-}
+TEST(workplaceReaderTest, emptyStreamTest) { EXPECT_TRUE(true); }
+} // namespace

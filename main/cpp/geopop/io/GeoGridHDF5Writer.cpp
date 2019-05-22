@@ -61,7 +61,7 @@ void GeoGridHDF5Writer::Write(GeoGrid& geoGrid)
         Group        locations = file.createGroup("/locations");
         unsigned int count     = 0;
         const string name      = "location";
-        for (const auto& location : geoGrid) {
+        for (const auto& location : *geoGrid.m_locationGrid) {
                 count++;
                 string location_name = name + to_string(count);
                 WriteLocation(*location, locations, location_name);
@@ -116,16 +116,16 @@ void GeoGridHDF5Writer::WriteContactPool(stride::ContactPool* contactPool, Group
 
 void GeoGridHDF5Writer::WriteCoordinate(const Coordinate& coordinate) {}
 
-void GeoGridHDF5Writer::WriteLocation(const Location& location, Group& locations, const string& location_name)
+void GeoGridHDF5Writer::WriteLocation(const EnhancedCoordinate& location, Group& locations, const string& location_name)
 {
         Group loc(locations.createGroup(location_name));
 
         hsize_t      attr_dims[1]          = {1};
         hsize_t      attr_coord_dims[2]    = {1, 2};
-        unsigned int attr_id_data[1]       = {location.GetID()};
-        string       attr_name_data[1]     = {location.GetName()};
-        unsigned int attr_province_data[1] = {location.GetProvince()};
-        unsigned int attr_popcount_data[1] = {location.GetPopCount()};
+        unsigned int attr_id_data[1]       = {location.getData<Location>()->GetID()};
+        string       attr_name_data[1]     = {location.getData<Location>()->GetName()};
+        unsigned int attr_province_data[1] = {location.getData<Location>()->GetProvince()};
+        unsigned int attr_popcount_data[1] = {location.getData<Location>()->GetPopCount()};
         double       attr_coord_data[1][2] = {
             {boost::geometry::get<0>(location.GetCoordinate()), boost::geometry::get<1>(location.GetCoordinate())}};
         DataSpace attr_dataspace(RANK, attr_dims);
@@ -141,7 +141,7 @@ void GeoGridHDF5Writer::WriteLocation(const Location& location, Group& locations
         attr_popcount.write(PredType::NATIVE_UINT, attr_popcount_data);
         attr_coord.write(PredType::NATIVE_FLOAT, attr_coord_data);
 
-        auto commutes = location.CRefOutgoingCommutes();
+        auto commutes = location.getData<Location>()->CRefOutgoingCommutes();
         if (!commutes.empty()) {
                 hsize_t dimsf[1]    = {0};
                 hsize_t maxdimsf[1] = {H5S_UNLIMITED};
@@ -160,7 +160,7 @@ void GeoGridHDF5Writer::WriteLocation(const Location& location, Group& locations
         unsigned int count = 0;
         const string name  = "pool";
         for (Id typ : IdList) {
-                for (const auto& c : location.CRefPools(typ)) {
+                for (const auto& c : location.getData<Location>()->CRefPools(typ)) {
                         count++;
                         string pool_name = name + to_string(count);
                         WriteContactPool(c, contactPools, name);

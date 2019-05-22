@@ -67,7 +67,7 @@ void MakeGeoGrid(const GeoGridConfig&, int locCount, int locPop, int dayCount, i
         size_t sampleId = 0;
         auto   personId = 0U;
         for (int locI = 0; locI < locCount; locI++) {
-                auto loc = make_shared<Location>(locI, 1, Coordinate(0.0, 0.0), "", locPop);
+                auto loc = make_shared<Location>(locI, 1, "", locPop);
 
                 for (int schI = 0; schI < schoolCount; schI++) {
                         k12Gen.AddPools(*loc, pop, config);
@@ -93,6 +93,8 @@ void MakeGeoGrid(const GeoGridConfig&, int locCount, int locPop, int dayCount, i
                                 personId++;
                         }
                 }
-                geoGrid.AddLocation(loc);
+
+                auto coor = make_shared<EnhancedCoordinate>(loc.get(), Coordinate(0,0));
+                geoGrid.addLocation(loc, coor);
         }
 }

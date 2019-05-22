@@ -18,6 +18,9 @@
 #include <ostream>
 #include <fstream>
 
+#include <ostream>
+#include <fstream>
+
 #ifdef BOOST_FOUND
 
 #include <boost/filesystem.hpp>

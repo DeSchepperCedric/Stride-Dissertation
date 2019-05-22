@@ -27,9 +27,9 @@ namespace geopop {
 using namespace std;
 using namespace stride::ContactType;
 
-Location::Location(unsigned int id, unsigned int province, Coordinate coordinate, string name, unsigned int popCount)
-    : m_coordinate(coordinate), m_id(id), m_name(move(name)), m_pop_count(popCount), m_pop_fraction(0.0),
-      m_province(province), m_inCommutes(), m_outCommutes(), /* m_cc(),*/ m_pool_index()
+Location::Location(unsigned int id, unsigned int province, string name, unsigned int popCount)
+    : m_id(id), m_name(move(name)), m_pop_count(popCount), m_pop_fraction(0.0), m_province(province), m_inCommutes(),
+      m_outCommutes(), /* m_cc(),*/ m_pool_index()
 {
 }
 
@@ -41,21 +41,20 @@ bool Location::operator==(const Location& other) const
         for (Id typ : IdList) {
                 temp = temp && (CRefPools(typ) == other.CRefPools(typ));
         }
-        return temp && GetID() == other.GetID() && get<0>(GetCoordinate()) == get<0>(other.GetCoordinate()) &&
-               get<1>(GetCoordinate()) == get<1>(other.GetCoordinate()) && GetName() == other.GetName() &&
+        return temp && GetID() == other.GetID() && GetName() == other.GetName() &&
                GetProvince() == other.GetProvince() && GetPopCount() == other.GetPopCount() &&
                CRefIncomingCommutes() == other.CRefIncomingCommutes() &&
                CRefOutgoingCommutes() == other.CRefOutgoingCommutes();
 }
 
-void Location::AddIncomingCommute(shared_ptr<Location> otherLocation, double fraction)
+void Location::AddIncomingCommute(Location* otherLocation, double fraction)
 {
-        m_inCommutes.emplace_back(otherLocation.get(), fraction);
+        m_inCommutes.emplace_back(otherLocation, fraction);
 }
 
-void Location::AddOutgoingCommute(shared_ptr<Location> otherLocation, double fraction)
+void Location::AddOutgoingCommute(Location* otherLocation, double fraction)
 {
-        m_outCommutes.emplace_back(otherLocation.get(), fraction);
+        m_outCommutes.emplace_back(otherLocation, fraction);
 }
 
 int Location::GetIncomingCommuteCount(double fractionCommuters) const

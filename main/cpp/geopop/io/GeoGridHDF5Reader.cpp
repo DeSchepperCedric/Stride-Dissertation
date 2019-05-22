@@ -78,11 +78,10 @@ void GeoGridHDF5Reader::Read()
         locations_size.read(locations_size.getDataType(), &size);
         const string name = "location";
         for (unsigned int i = 1; i <= size; i++) {
-                string               location_name = name + to_string(i);
-                shared_ptr<Location> loc;
-                auto                 location = locations.openGroup(location_name);
-                loc                           = ParseLocation(location);
-                geoGrid.AddLocation(move(loc));
+                string location_name    = name + to_string(i);
+                auto location           = locations.openGroup(location_name);
+                auto loc                = ParseLocation(location);
+                geoGrid.addLocation(move(loc.first),loc.second );
         }
 
         AddCommutes(geoGrid);
@@ -142,7 +141,7 @@ void GeoGridHDF5Reader::ParseContactPool(H5::DataSet& contactPool, shared_ptr<Lo
         result->RegisterPool(cp, typeId);
 }
 
-shared_ptr<Location> GeoGridHDF5Reader::ParseLocation(Group& location)
+std::pair<std::shared_ptr<Location>, std::shared_ptr<EnhancedCoordinate>> GeoGridHDF5Reader::ParseLocation(H5::Group& location)
 {
         Attribute    attr_id    = location.openAttribute("id");
         Attribute    attr_name  = location.openAttribute("name");
@@ -160,7 +159,7 @@ shared_ptr<Location> GeoGridHDF5Reader::ParseLocation(Group& location)
         attr_pop.read(attr_id.getDataType(), &pop);
         attr_coord.read(attr_id.getDataType(), &coord);
         Coordinate c      = {boost::lexical_cast<double>(coord[0]), boost::lexical_cast<double>(coord[1])};
-        auto       result = make_shared<Location>(id, prov, c, name, pop);
+        auto       result = make_shared<Location>(id, prov, name, pop);
 
         auto         contactPools = location.openGroup("contactPools");
         Attribute    pool_size    = contactPools.openAttribute("size");
@@ -181,7 +180,7 @@ shared_ptr<Location> GeoGridHDF5Reader::ParseLocation(Group& location)
                 m_commutes.emplace_back(id, cmmt.to, cmmt.proportion);
         }
 
-        return result;
+        return make_pair(result, make_shared<EnhancedCoordinate>(result.get(), c));
 }
 
 Person* GeoGridHDF5Reader::ParsePerson(PERSON& person)

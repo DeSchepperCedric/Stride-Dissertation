@@ -57,8 +57,12 @@ protected:
 
 TEST_F(K12SchoolPopulatorTest, NoPopulation)
 {
-        m_geo_grid.AddLocation(make_shared<Location>(0, 0, Coordinate(0.0, 0.0), "", 0));
-        m_geo_grid.Finalize();
+
+        auto loc = make_shared<Location>(0,0, "", 0);
+        auto coor = make_shared<EnhancedCoordinate>(loc.get(), Coordinate(0.0, 0.0));
+        m_geo_grid.addLocation(loc, coor);
+
+        m_geo_grid.m_locationGrid->Finalize();
 
         EXPECT_NO_THROW(m_k12school_populator.Apply(m_geo_grid, m_gg_config));
 }
@@ -66,7 +70,7 @@ TEST_F(K12SchoolPopulatorTest, NoPopulation)
 TEST_F(K12SchoolPopulatorTest, OneLocationTest)
 {
         MakeGeoGrid(m_gg_config, 1, 300, 20, 3, 5, 100, 3, m_pop.get());
-        m_geo_grid.Finalize();
+        m_geo_grid.m_locationGrid->Finalize();
         m_k12school_populator.Apply(m_geo_grid, m_gg_config);
 
         map<int, int> usedCapacity{
@@ -144,20 +148,20 @@ TEST_F(K12SchoolPopulatorTest, TwoLocationTest)
         // Brasschaat and Schoten are close to each oter and will both have students from both.
         // Kortrijk will only have students going to Kortrijk.
 
-        auto brasschaat = *m_geo_grid.begin();
+        auto brasschaat = *m_geo_grid.m_locationGrid->begin();
         brasschaat->SetCoordinate(Coordinate(51.29227, 4.49419));
-        auto schoten = *(m_geo_grid.begin() + 1);
+        auto schoten = *(m_geo_grid.m_locationGrid->begin() + 1);
 
         schoten->SetCoordinate(Coordinate(51.2497532, 4.4977063));
-        auto kortrijk = *(m_geo_grid.begin() + 2);
+        auto kortrijk = *(m_geo_grid.m_locationGrid->begin() + 2);
         kortrijk->SetCoordinate(Coordinate(50.82900246, 3.264406009));
 
-        m_geo_grid.Finalize();
+        m_geo_grid.m_locationGrid->Finalize();
         m_k12school_populator.Apply(m_geo_grid, m_gg_config);
 
-        auto& k12Pools1 = brasschaat->RefPools(Id::K12School);
-        auto& k12Pools2 = schoten->RefPools(Id::K12School);
-        auto& k12Pools3 = kortrijk->RefPools(Id::K12School);
+        auto& k12Pools1 = brasschaat->getData<Location>()->RefPools(Id::K12School);
+        auto& k12Pools2 = schoten->getData<Location>()->RefPools(Id::K12School);
+        auto& k12Pools3 = kortrijk->getData<Location>()->RefPools(Id::K12School);
 
         // Check number of pools corresponding to 3 K12Schools per location.
         EXPECT_EQ(k12Pools1.size(), 3 * m_ppk12);

@@ -104,9 +104,7 @@ void StanController::Control()
                 // ---------------------------------------------------------------------------------
                 auto runner  = make_shared<SimRunner>(configPt, sim);
                 auto iViewer = make_shared<viewers::InfectedViewer>(runner);
-                auto EViewer = make_shared<viewers::EpiViewer>(runner, "/home/wannes/temp.json");
                 runner->Register(iViewer, bind(&viewers::InfectedViewer::Update, iViewer, std::placeholders::_1));
-                runner->Register(EViewer, bind(&viewers::EpiViewer::Update, EViewer, std::placeholders::_1));
                 runner->Run();
                 results[i] = iViewer->GetInfectionCounts();
         }

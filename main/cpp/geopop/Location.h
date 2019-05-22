@@ -42,22 +42,18 @@ class Location
 {
 public:
         /// Parametrized constructor with population count.
-        Location(unsigned int id, unsigned int province, Coordinate coordinate = Coordinate(0.0, 0.0),
-                 std::string name = "", unsigned int popCount = 0U);
+        Location(unsigned int id, unsigned int province, std::string name = "", unsigned int popCount = 0U);
 
         /// Perform a full comparison with the other location.
         bool operator==(const Location& other) const;
 
         /// Adds a Location and a proportion to the incoming commute vector.
         /// I.e. fraction of commuting population at otherLocation commuting to this Location.
-        void AddIncomingCommute(std::shared_ptr<Location> otherLocation, double fraction);
+        void AddIncomingCommute(Location* otherLocation, double fraction);
 
         /// Adds a Location and a fraction to the outgoing commute vector.
         /// I.e. fraction of commuting population at this Location commuting to otherLocation.
-        void AddOutgoingCommute(std::shared_ptr<Location> otherLocation, double fraction);
-
-        /// Gets the Coordinate of this Location.
-        const Coordinate GetCoordinate() const { return m_coordinate; }
+        void AddOutgoingCommute(Location* otherLocation, double fraction);
 
         /// Gets ID of this Location.
         unsigned int GetID() const { return m_id; }
@@ -82,9 +78,6 @@ public:
 
         /// Get Location's population fraction (of the total populaion count).
         double GetPopFraction() const;
-
-        /// Sets the Coordinate of this Location.
-        void SetCoordinate(const Coordinate& coordinate) { m_coordinate = coordinate; }
 
         /// Set Location's population count using its population fraction and the total population count.
         void SetPopCount(unsigned int totalPopCount);
@@ -149,7 +142,6 @@ public:
         const std::vector<std::pair<Location*, double>>& CRefOutgoingCommutes() const { return m_outCommutes; }
 
 private:
-        Coordinate   m_coordinate;   ///< Coordinate of the Location.
         unsigned int m_id = 0U;      ///< Id.
         std::string  m_name;         ///< Name.
         unsigned int m_pop_count;    ///< Population count (number of individuals) at this Location.

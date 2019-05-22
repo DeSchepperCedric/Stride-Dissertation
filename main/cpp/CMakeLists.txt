@@ -70,8 +70,7 @@ set(STRIDE_SRC
     geopop/Location.cpp
     #---
     geopop/geo/GeoGridKdTree.cpp
-    geopop/geo/KdTree2DPoint.cpp
-    #---
+        #---
     geopop/generators/CollegeGenerator.cpp
     geopop/generators/HouseholdGenerator.cpp
     geopop/generators/K12SchoolGenerator.cpp
@@ -153,6 +152,9 @@ set(STRIDE_SRC
     viewers/PersonsFileViewer.cpp
     viewers/SummaryFileViewer.cpp
     viewers/EpiViewer.cpp
+
+    geopop/EnhancedCoordinate.h
+
         )
 
 

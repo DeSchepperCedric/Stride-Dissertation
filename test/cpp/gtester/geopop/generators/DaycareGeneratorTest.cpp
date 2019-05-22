@@ -56,8 +56,9 @@ TEST_F(DaycareGeneratorTest, OneLocationTest)
         m_gg_config.param.pop_size        = 10000;
         m_gg_config.info.popcount_daycare = 300;
 
-        auto loc1 = make_shared<Location>(1, 4, Coordinate(0, 0), "Antwerpen", m_gg_config.param.pop_size);
-        m_geo_grid.AddLocation(loc1);
+        auto loc1 = make_shared<Location>(1, 4, "Antwerpen", m_gg_config.param.pop_size);
+        auto coor1 = make_shared<EnhancedCoordinate>(loc1.get(), Coordinate(0,0));
+        m_geo_grid.addLocation(loc1, coor1);
 
         m_daycare_generator.Apply(m_geo_grid, m_gg_config);
 
@@ -81,17 +82,22 @@ TEST_F(DaycareGeneratorTest, FiveLocationsTest)
         m_gg_config.param.pop_size        = 37542 * 100;
         m_gg_config.info.popcount_daycare = 125140;
 
-        auto loc1 = make_shared<Location>(1, 4, Coordinate(0, 0), "Antwerpen", 10150 * 100);
-        auto loc2 = make_shared<Location>(1, 4, Coordinate(0, 0), "Vlaams-Brabant", 10040 * 100);
-        auto loc3 = make_shared<Location>(1, 4, Coordinate(0, 0), "Henegouwen", 7460 * 100);
-        auto loc4 = make_shared<Location>(1, 4, Coordinate(0, 0), "Limburg", 3269 * 100);
-        auto loc5 = make_shared<Location>(1, 4, Coordinate(0, 0), "Luxemburg", 4123 * 100);
+        auto loc1 = make_shared<Location>(1, 4, "Antwerpen", 10150 * 100);
+        auto coor1 = make_shared<EnhancedCoordinate>(loc1.get(), Coordinate(0,0));
+        auto loc2 = make_shared<Location>(2, 4, "Vlaams-Brabant", 10040 * 100);
+        auto coor2 = make_shared<EnhancedCoordinate>(loc2.get(), Coordinate(0,0));
+        auto loc3 = make_shared<Location>(3, 4, "Henegouwen", 7460 * 100);
+        auto coor3 = make_shared<EnhancedCoordinate>(loc3.get(), Coordinate(0,0));
+        auto loc4 = make_shared<Location>(4, 4, "Limburg", 3269 * 100);
+        auto coor4 = make_shared<EnhancedCoordinate>(loc4.get(), Coordinate(0,0));
+        auto loc5 = make_shared<Location>(5, 4, "Luxemburg", 4123 * 100);
+        auto coor5 = make_shared<EnhancedCoordinate>(loc5.get(), Coordinate(0,0));
 
-        m_geo_grid.AddLocation(loc1);
-        m_geo_grid.AddLocation(loc2);
-        m_geo_grid.AddLocation(loc3);
-        m_geo_grid.AddLocation(loc4);
-        m_geo_grid.AddLocation(loc5);
+        m_geo_grid.addLocation(loc1, coor1);
+        m_geo_grid.addLocation(loc2, coor2);
+        m_geo_grid.addLocation(loc3, coor3);
+        m_geo_grid.addLocation(loc4, coor4);
+        m_geo_grid.addLocation(loc5, coor5);
 
         for (const auto& loc : m_geo_grid) {
                 loc->SetPopFraction(static_cast<double>(loc->GetPopCount()) /

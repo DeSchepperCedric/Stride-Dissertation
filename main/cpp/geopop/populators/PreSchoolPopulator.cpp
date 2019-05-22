@@ -35,8 +35,8 @@ void Populator<stride::ContactType::Id::PreSchool>::Apply(GeoGrid& geoGrid, cons
         m_logger->info("Starting to populate PreSchools");
 
         // for every location
-        for (const auto& loc : geoGrid) {
-                if (loc->GetPopCount() == 0) {
+        for (const auto& loc : *geoGrid.m_locationGrid) {
+                if (loc->getData<Location>()->GetPopCount() == 0) {
                         continue;
                 }
 
@@ -49,7 +49,7 @@ void Populator<stride::ContactType::Id::PreSchool>::Apply(GeoGrid& geoGrid, cons
                     m_rn_man.GetUniformIntGenerator(0, static_cast<int>(nearByPreSchoolsPools.size()), 0U);
 
                 // 2. for every todler assign a class
-                for (const auto& hhPool : loc->RefPools(Id::Household)) {
+                for (const auto& hhPool : loc->getData<Location>()->RefPools(Id::Household)) {
                         for (Person* p : *hhPool) {
                                 if (AgeBrackets::PreSchool::HasAge(p->GetAge()) &&
                                     m_rn_man.MakeWeightedCoinFlip(geoGridConfig.param.participation_preschool)) {

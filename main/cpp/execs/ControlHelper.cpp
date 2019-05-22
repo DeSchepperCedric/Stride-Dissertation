@@ -166,6 +166,7 @@ void ControlHelper::RegisterViewers(shared_ptr<SimRunner> runner)
                 const auto v = make_shared<viewers::EpiViewer>(runner, m_output_prefix);
                 runner->Register(v, bind(&viewers::EpiViewer::Update, v, placeholders::_1));
         }
+
 }
 
 } // namespace stride

@@ -19,9 +19,12 @@
 #include "contact/ContactPool.h"
 #include "contact/ContactType.h"
 #include "geopop/Location.h"
+#include "geopop/EnhancedCoordinate.h"
 
 #include <memory>
 #include <set>
+#include <bits/shared_ptr.h>
+#include <boost/shared_ptr.hpp>
 
 namespace proto {
 class GeoGrid_Location;
@@ -32,6 +35,8 @@ class GeoGrid_Person;
 } // namespace proto
 
 namespace geopop {
+
+    using namespace std;
 
 /**
  * An implementation of the GeoGridReader using Protocol Buffers.
@@ -66,7 +71,7 @@ private:
         Coordinate ParseCoordinate(const proto::GeoGrid_Location_Coordinate& protoCoordinate);
 
         /// Create a Location based on  protobuf Location info.
-        std::shared_ptr<Location> ParseLocation(const proto::GeoGrid_Location& protoLocation);
+        std::pair<shared_ptr <geopop::Location>, shared_ptr<geopop::EnhancedCoordinate>> ParseLocation(const proto::GeoGrid_Location &protoLocation);
 
         /// Create a Person based on protobuf Person info.
         stride::Person* ParsePerson(const proto::GeoGrid_Person& person);
