@@ -19,6 +19,7 @@
 #include "contact/IdSubscriptArray.h"
 #include "geopop/Coordinate.h"
 #include "util/SegmentedVector.h"
+#include "contact/ContactType.h"
 
 #include <iostream>
 #include <memory>
@@ -63,6 +64,9 @@ public:
 
         /// Gets the number of people infected in the contactpools at this location.
         unsigned int GetInfectedCount() const;
+
+        /// Get the health status counts for all ContactPool Types
+        std::unordered_map<std::string, std::unordered_map<std::string, unsigned int>> GetStatusCounts() const;
 
         /// Gets the name.
         std::string GetName() const { return m_name; }
