@@ -106,3 +106,11 @@ H5Eterm.h
 
 venv
 main/resources/commuting/
+
+main/resources/immunityTests/
+
+main/resources/R0estimation/
+
+main/resources/Simulations/
+
+*.png

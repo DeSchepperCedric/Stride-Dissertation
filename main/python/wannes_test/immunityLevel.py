@@ -68,7 +68,7 @@ def runSimulation(outputPrefix, immune, seed):
     control.loadRunConfig(os.path.join("config", "outbreak_2019_estimates.xml"))
     # Set some parameters
     control.runConfig.setParameter("output_prefix", outputPrefix + "_" + str(immune) + "/" + str(seed))
-    control.runConfig.setParameter('immunity_rate', immune / 100)
+    control.runConfig.setParameter('immunity_rate', immune)
     control.runConfig.setParameter('rng_seed', seed)
     control.registerCallback(trackCases, EventType.Stepped)
     control.runConfig.setParameter("vaccine_rate", 0)
@@ -77,12 +77,12 @@ def runSimulation(outputPrefix, immune, seed):
 
 
 def main():
-    run_tests = False
+    run_tests = True
     outputPrefix = "immunityTests/Demo"
     if run_tests:
         shutil.rmtree('immunityTests', ignore_errors=True)
     immunelevels = range(69, 75)
-    seeds = range(1, 20)
+    seeds = range(1, 2)
     # Run simulations
     if run_tests:
         for v in immunelevels:
