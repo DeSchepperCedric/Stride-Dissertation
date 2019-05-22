@@ -39,12 +39,6 @@ public:
             : m_rn_man(RnInfo()), m_college_generator(m_rn_man), m_gg_config(), m_pop(Population::Create()),
               m_geo_grid(m_pop.get())
         {
-                //                for (unsigned int i = 0; i < 5; ++i){
-                //                        GeoGridConfig::Param param;
-                //                        m_gg_config.params[i] = param;
-                //                        GeoGridConfig::Info info;
-                //                        m_gg_config.regionsInfo[i] = info;
-                //                }
         }
 
 protected:

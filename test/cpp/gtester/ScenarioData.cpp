@@ -53,19 +53,17 @@ tuple<ptree, unsigned int, double> ScenarioData::Get(string tag)
             {"measles_26", 1.0e-03},  {"r0_0", 5.0e-02},    {"r0_4", 1.0e-01},        {"r0_8", 8.0e-02},
             {"r0_12", 1.0e-01},       {"r0_16", 8.0e-02}};
 
-        // TODO properly calc targets by doing multiple runs and calculating the mean
-        // Met de natte vinger aanpassen als het logisch is ~J. Broeckhove, 2019
         const map<string, unsigned int> targets_geopop = {
-            {"influenza_a_geopop", 558000U}, {"influenza_b_geopop", 0U},     {"influenza_c_geopop", 5U},
-            {"measles_16_geopop", 290000U},  {"measles_26_geopop", 600000U}, {"r0_0_geopop", 1200U},
-            {"r0_12_geopop", 41000U},        {"r0_16_geopop", 72500U},       {"r0_4_geopop", 4600U},
-            {"r0_8_geopop", 15900U}};
+            {"influenza_a_geopop", 554000U}, {"influenza_b_geopop", 0U},     {"influenza_c_geopop", 5U},
+            {"measles_16_geopop", 270000U},  {"measles_26_geopop", 600000U}, {"r0_0_geopop", 1200U},
+            {"r0_12_geopop", 36600U},        {"r0_16_geopop", 66000U},       {"r0_4_geopop", 4300U},
+            {"r0_8_geopop", 15000U}};
 
         const map<string, double> margins_geopop = {{"influenza_a_geopop", 3.0e-03}, {"influenza_b_geopop", 0.0},
-                                                    {"influenza_c_geopop", 1.0e-1},  {"measles_16_geopop", 8.0e-02},
+                                                    {"influenza_c_geopop", 2.0e-1},  {"measles_16_geopop", 8.0e-02},
                                                     {"measles_26_geopop", 2.0e-03},  {"r0_0_geopop", 1.0e-03},
                                                     {"r0_12_geopop", 5.0e-02},       {"r0_16_geopop", 5.0e-02},
-                                                    {"r0_4_geopop", 8.0e-02},        {"r0_8_geopop", 1.0e-01}};
+                                                    {"r0_4_geopop", 8.0e-02},        {"r0_8_geopop", 2.0e-01}};
 
         unsigned int target;
         double       margin;
