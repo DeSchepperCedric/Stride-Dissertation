@@ -32,7 +32,7 @@ public:
     double latitude = 0;
     double longitude = 0;
 
-    std::vector<int> infected;
+    std::vector<int> infected = {};
 
     Location() = default;
 };

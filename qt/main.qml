@@ -28,26 +28,44 @@ Window {
 
         plugin: mapPlugin
         zoomLevel: 10
+    }
+
+    Rectangle {
+        id: rectangle1
+        y: 410
+        height: 70
+        color: "#ffffff"
+        anchors.bottom: parent.bottom
+        anchors.bottomMargin: 0
+        anchors.right: rectangle.left
+        anchors.rightMargin: 0
+        anchors.left: parent.left
+        anchors.leftMargin: 0
+
+        Button {
+            id: button2
+            x: 16
+            y: 22
+            text: qsTr("select Rectangle")
+            anchors.verticalCenter: parent.verticalCenter
         }
+
+        Button {
+            id: button3
+            x: 167
+            y: 22
+            text: qsTr("select Circle")
+            anchors.verticalCenter: parent.verticalCenter
+        }
+    }
 
     Rectangle {
         id: rectangle
         x: 507
         y: 0
         width: 133
-        color: "#c81212"
+        color: "#ffffff"
         z: 1
-        gradient: Gradient {
-            GradientStop {
-                position: 0
-                color: "#c81212"
-            }
-
-            GradientStop {
-                position: 1
-                color: "#000000"
-            }
-        }
         anchors.top: parent.top
         anchors.topMargin: 0
         anchors.bottom: parent.bottom
@@ -92,12 +110,21 @@ Window {
             id: element
             x: 44
             y: 93
-            color: "#ffffff"
+            color: "#000000"
             text: qsTr("0")
             anchors.horizontalCenterOffset: 0
             anchors.horizontalCenter: parent.horizontalCenter
             elide: Text.ElideRight
             font.pixelSize: 19
+        }
+
+        Button {
+            id: button1
+            x: 22
+            y: 29
+            width: 90
+            height: 28
+            text: qsTr("Select file")
         }
     }
 
@@ -125,3 +152,18 @@ Window {
 
 
 }
+
+
+
+
+
+
+
+
+
+
+
+/*##^## Designer {
+    D{i:3;anchors_width:200;anchors_x:8}
+}
+ ##^##*/

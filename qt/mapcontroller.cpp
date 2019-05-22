@@ -101,4 +101,8 @@ namespace visualization {
     void MapController::setID(const QString &id) {
         m_id = id.toInt();
     }
+
+    QString MapController::getID(){
+        return QString::number(m_id);
+    }
 }

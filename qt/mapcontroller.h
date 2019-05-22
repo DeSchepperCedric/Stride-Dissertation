@@ -31,7 +31,7 @@ namespace visualization {
         Q_PROPERTY(QString day READ getDay WRITE setDay)
         Q_PROPERTY(QString naam READ getNaam)
         Q_PROPERTY(QString info READ getInfo)
-        Q_PROPERTY(QString ID WRITE setID)
+        Q_PROPERTY(QString ID READ getID WRITE setID)
 
     public:
         MapController() = default;
@@ -53,6 +53,8 @@ namespace visualization {
         QString getNaam();
 
         void setID(const QString &id);
+
+        QString getID();
 
     private:
         int m_day = 0;
