@@ -68,21 +68,21 @@ TEST_F(WorkplacePopulatorDistributionTest, NoCommuting)
         m_gg_config.refWP.min    = {1, 10, 50, 200};
         m_gg_config.refWP.max    = {9, 49, 199, 400};
 
-        auto schoten = *(m_geo_grid.begin());
+        auto schoten = *(m_geo_grid.m_locationGrid->begin());
         schoten->SetCoordinate(Coordinate(51.2497532, 4.4977063));
-        auto kortrijk = *(m_geo_grid.begin() + 1);
+        auto kortrijk = *(m_geo_grid.m_locationGrid->begin() + 1);
         kortrijk->SetCoordinate(Coordinate(50.82900246, 3.264406009));
         for (int k = 0; k < 15; k++) {
-                m_workplace_generator.AddPools(*schoten, m_pop.get(), m_gg_config);
-                m_workplace_generator.AddPools(*kortrijk, m_pop.get(), m_gg_config);
+                m_workplace_generator.AddPools(*schoten->getData<Location>(), m_pop.get(), m_gg_config);
+                m_workplace_generator.AddPools(*kortrijk->getData<Location>(), m_pop.get(), m_gg_config);
         }
 
-        schoten->AddOutgoingCommute(kortrijk, 0.5);
-        kortrijk->AddIncomingCommute(schoten, 0.5);
-        kortrijk->AddOutgoingCommute(schoten, 0.5);
-        schoten->AddIncomingCommute(kortrijk, 0.5);
+        schoten->getData<Location>()->AddOutgoingCommute(kortrijk->getData<Location>(), 0.5);
+        kortrijk->getData<Location>()->AddIncomingCommute(schoten->getData<Location>(), 0.5);
+        kortrijk->getData<Location>()->AddOutgoingCommute(schoten->getData<Location>(), 0.5);
+        schoten->getData<Location>()->AddIncomingCommute(kortrijk->getData<Location>(), 0.5);
 
-        m_geo_grid.Finalize();
+        m_geo_grid.m_locationGrid->Finalize();
 
         m_workplace_generator.Apply(m_geo_grid, m_gg_config);
         m_workplace_populator.Apply(m_geo_grid, m_gg_config);
@@ -138,21 +138,21 @@ TEST_F(WorkplacePopulatorDistributionTest, HalfCommuting)
         m_gg_config.refWP.min    = {1, 10, 50, 200};
         m_gg_config.refWP.max    = {9, 49, 199, 400};
 
-        auto schoten = *(m_geo_grid.begin());
+        auto schoten = *(m_geo_grid.m_locationGrid->begin());
         schoten->SetCoordinate(Coordinate(51.2497532, 4.4977063));
-        auto kortrijk = *(m_geo_grid.begin() + 1);
+        auto kortrijk = *(m_geo_grid.m_locationGrid->begin() + 1);
         kortrijk->SetCoordinate(Coordinate(50.82900246, 3.264406009));
         for (int k = 0; k < 15; k++) {
-                m_workplace_generator.AddPools(*schoten, m_pop.get(), m_gg_config);
-                m_workplace_generator.AddPools(*kortrijk, m_pop.get(), m_gg_config);
+                m_workplace_generator.AddPools(*schoten->getData<Location>(), m_pop.get(), m_gg_config);
+                m_workplace_generator.AddPools(*kortrijk->getData<Location>(), m_pop.get(), m_gg_config);
         }
 
-        schoten->AddOutgoingCommute(kortrijk, 0.5);
-        kortrijk->AddIncomingCommute(schoten, 0.5);
-        kortrijk->AddOutgoingCommute(schoten, 0.5);
-        schoten->AddIncomingCommute(kortrijk, 0.5);
+        schoten->getData<Location>()->AddOutgoingCommute(kortrijk->getData<Location>(), 0.5);
+        kortrijk->getData<Location>()->AddIncomingCommute(schoten->getData<Location>(), 0.5);
+        kortrijk->getData<Location>()->AddOutgoingCommute(schoten->getData<Location>(), 0.5);
+        schoten->getData<Location>()->AddIncomingCommute(kortrijk->getData<Location>(), 0.5);
 
-        m_geo_grid.Finalize();
+        m_geo_grid.m_locationGrid->Finalize();
 
         m_workplace_generator.Apply(m_geo_grid, m_gg_config);
         m_workplace_populator.Apply(m_geo_grid, m_gg_config);
@@ -215,7 +215,7 @@ TEST_F(WorkplacePopulatorDistributionTest, OnlyCommuting)
                 }
         }
 
-        m_geo_grid.Finalize();
+        m_geo_grid.m_locationGrid->Finalize();
         m_workplace_generator.Apply(m_geo_grid, m_gg_config);
         m_workplace_populator.Apply(m_geo_grid, m_gg_config);
 

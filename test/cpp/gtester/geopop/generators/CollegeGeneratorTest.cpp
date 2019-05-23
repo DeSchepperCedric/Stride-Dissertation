@@ -60,7 +60,7 @@ TEST_F(CollegeGeneratorTest, OneLocationTest)
         m_gg_config.params.at(4).pop_size              = 45000;
         m_gg_config.regionsInfo.at(4).fraction_college = 9000.0 / m_gg_config.params.at(4).pop_size;
 
-        auto loc1 = make_shared<Location>(1, 4, "Antwerpen", m_gg_config.param.pop_size);
+        auto loc1 = make_shared<Location>(1, 4, "Antwerpen", m_gg_config.params.at(4).pop_size);
         auto coor = make_shared<EnhancedCoordinate>(loc1.get(), Coordinate(0, 0) );
         m_geo_grid.addLocation(loc1, coor);
 

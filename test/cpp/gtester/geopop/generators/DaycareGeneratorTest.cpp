@@ -66,7 +66,7 @@ TEST_F(DaycareGeneratorTest, OneLocationTest)
         m_gg_config.params.at(4).pop_size              = 10000;
         m_gg_config.regionsInfo.at(4).fraction_daycare = 300.0 / m_gg_config.params.at(4).pop_size;
 
-        auto loc1 = make_shared<Location>(1, 4, "Antwerpen", m_gg_config.param.pop_size);
+        auto loc1 = make_shared<Location>(1, 4, "Antwerpen", m_gg_config.params.at(4).pop_size);
         auto coor1 = make_shared<EnhancedCoordinate>(loc1.get(), Coordinate(0,0));
         m_geo_grid.addLocation(loc1, coor1);
 

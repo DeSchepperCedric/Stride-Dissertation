@@ -96,7 +96,7 @@ void Populator<stride::ContactType::Id::Workplace>::Apply(GeoGrid& geoGrid, cons
                 if (loc->getData<Location>()->GetPopCount() == 0) {
                         continue;
                 }
-                const auto prov              = loc->GetProvince();
+                const auto prov              = loc->getData<Location>()->GetProvince();
                 const auto participWorkplace = geoGridConfig.params.at(prov).participation_workplace;
                 const auto popCollege = static_cast<unsigned int>(geoGridConfig.regionsInfo.at(prov).fraction_college *
                                                                   geoGridConfig.params.at(prov).pop_size);
