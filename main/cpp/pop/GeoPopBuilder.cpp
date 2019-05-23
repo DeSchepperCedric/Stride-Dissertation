@@ -107,7 +107,7 @@ shared_ptr<Population> GeoPopBuilder::Build(shared_ptr<Population> pop)
         return pop;
 }
 
-void GeoPopBuilder::MakeLocations(GeoGrid& geoGrid, const GeoGridConfig& geoGridConfig, const string& citiesFileName,
+void GeoPopBuilder::MakeLocations(GeoGrid& geoGrid, GeoGridConfig& geoGridConfig, const string& citiesFileName,
                                   const string& commutingFileName, const string& majorCitiesFileName)
 {
         const auto locationsReader = ReaderFactory::CreateLocationsReader(citiesFileName);
@@ -125,10 +125,21 @@ void GeoPopBuilder::MakeLocations(GeoGrid& geoGrid, const GeoGridConfig& geoGrid
 
         auto total_pop = 0U;
         for (const auto& param : geoGridConfig.params) {
+                if (param.first == -1) {
+                        continue;
+                }
                 total_pop += param.second.pop_size;
+        }
+        if (total_pop == 0) {
+                total_pop = geoGridConfig.params.at(-1).pop_size;
         }
 
         for (const shared_ptr<Location>& loc : geoGrid) {
+                if (geoGridConfig.params.find(loc->GetProvince()) == geoGridConfig.params.end()) {
+                        geoGridConfig.params[loc->GetProvince()]        = geoGridConfig.params.at(-1);
+                        geoGridConfig.regionsInfo[loc->GetProvince()]   = geoGridConfig.regionsInfo.at(-1);
+                        geoGridConfig.refHouseHolds[loc->GetProvince()] = geoGridConfig.refHouseHolds.at(-1);
+                }
                 loc->SetPopCount(total_pop);
         }
         geoGrid.m_locationGrid->Finalize();

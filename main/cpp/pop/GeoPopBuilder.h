@@ -56,7 +56,7 @@ public:
 
 private:
         /// Read files with location data and constructs GeoGrid config.
-        void MakeLocations(geopop::GeoGrid& geoGrid, const geopop::GeoGridConfig& geoGridConfig,
+        void MakeLocations(geopop::GeoGrid& geoGrid, geopop::GeoGridConfig& geoGridConfig,
                            const std::string& citiesFileName, const std::string& commutingFileName,
                            const std::string& majorCitiesFileName);
 
