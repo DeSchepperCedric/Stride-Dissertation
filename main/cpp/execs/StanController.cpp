@@ -28,6 +28,7 @@
 #include "util/ConfigInfo.h"
 #include "util/FileSys.h"
 #include "util/StringUtils.h"
+#include "viewers/EpiViewer.h"
 #include "viewers/InfectedViewer.h"
 
 #include <boost/property_tree/ptree.hpp>

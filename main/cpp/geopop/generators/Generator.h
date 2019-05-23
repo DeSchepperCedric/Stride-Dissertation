@@ -60,6 +60,16 @@ public:
                 }
         }
 
+        /// Create a given number ContactPools in the GeoGrid.
+        void AddPools(Location* loc, stride::Population* pop, const GeoGridConfig& ggConfig)
+        {
+                auto& poolSys = pop->RefPoolSys();
+                for (auto i = 0U; i < ggConfig.pools[ID]; ++i) {
+                        const auto p = poolSys.CreateContactPool(ID);
+                        loc->RegisterPool<ID>(p);
+                }
+        }
+
 protected:
         stride::util::RnMan             m_rn_man; ///< RnManager used by generators.
         std::shared_ptr<spdlog::logger> m_logger; ///< Logger used by generators.

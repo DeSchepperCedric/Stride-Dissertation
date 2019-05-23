@@ -21,6 +21,7 @@
 
 #include <nlohmann/json.hpp>
 #include <set>
+#include "geopop/EnhancedCoordinate.h"
 
 namespace stride {
 class ContactPool;
@@ -38,7 +39,7 @@ class GeoGridJSONWriter : public GeoGridStreamWriter
 {
 public:
         /// Construct the GeoGridJSONWriter.
-        GeoGridJSONWriter(std::ostream& stream);
+        explicit GeoGridJSONWriter(std::ostream& stream);
 
         /// Write the provided GeoGrid to the proved ostream in JSON format.
         void Write(GeoGrid& geoGrid) override;
@@ -51,7 +52,7 @@ private:
         nlohmann::json WriteCoordinate(const Coordinate& coordinate);
 
         /// Create a JSON Structure containing all info needed to reconstruct a Location.
-        nlohmann::json WriteLocation(const Location& location);
+        nlohmann::json WriteLocation(const geopop::EnhancedCoordinate &location);
 
         /// Create a JSON Structure containing all info needed to reconstruct a Person.
         nlohmann::json WritePerson(stride::Person* person);

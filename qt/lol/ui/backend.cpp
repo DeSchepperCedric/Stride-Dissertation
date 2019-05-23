@@ -1,3 +1,4 @@
+#include <QtCore/QVector>
 #include "backend.h"
 
 BackEnd::BackEnd(QObject *parent) :
@@ -17,4 +18,10 @@ void BackEnd::setUserName(const QString &userName)
 
     m_userName = userName;
     emit userNameChanged();
+}
+
+QVector<double> BackEnd::getNextLocation() {
+    QVector<double> location;
+    currentIndex++;
+    return location;
 }

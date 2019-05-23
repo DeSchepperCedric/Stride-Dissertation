@@ -84,13 +84,13 @@ def runSimulation(outputPrefix, immune, seed, R0):
 
 
 def main():
-    run_tests = False
+    run_tests = True
     outputPrefix = "R0estimation/Demo"
     if run_tests:
         shutil.rmtree('R0estimation', ignore_errors=True)
     immunelevels = range(69, 75)
-    seeds = range(1, 5)
-    R0List = range(12, 19)
+    seeds = range(1,3)
+    R0List = [12]#, 15, 18]
     # Run simulations
     if run_tests:
         for v in immunelevels:

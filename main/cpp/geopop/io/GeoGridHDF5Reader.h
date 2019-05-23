@@ -19,6 +19,7 @@
 #include "contact/ContactPool.h"
 #include "contact/ContactType.h"
 #include "geopop/Location.h"
+#include "geopop/EnhancedCoordinate.h"
 
 #include "H5Cpp.h"
 #include "util/HDF5.h"
@@ -58,7 +59,7 @@ private:
         // Coordinate ParseCoordinate(H5::Attribute& coordinate);
 
         /// Create a Location based on the information stored in the provided ...
-        std::shared_ptr<Location> ParseLocation(H5::Group& location);
+        std::pair<std::shared_ptr<Location>, std::shared_ptr<EnhancedCoordinate>> ParseLocation(H5::Group& location);
 
         /// Create a Person based on the information stored in the provided ...
         stride::Person* ParsePerson(stride::util::PersonType& person);

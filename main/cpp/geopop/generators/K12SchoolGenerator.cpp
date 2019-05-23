@@ -30,13 +30,16 @@ void Generator<stride::ContactType::Id::K12School>::Apply(GeoGrid& geoGrid, cons
         //    to the relative population w.r.t the total population.
 
         for (const auto& it : ggConfig.regionsInfo) {
+                if (it.first == -1) {
+                        continue;
+                }
                 // Generate schools per region, this way regions with a younger population have more schools
                 vector<double> weights;
                 vector<double> majorWeights;
                 auto           popCount      = 0U;
                 auto           majorPopCount = 0U;
                 for (const auto& loc : geoGrid) {
-                        if (loc->GetProvince() == it.first) {
+                        if (loc->GetProvince() == (unsigned)it.first) {
                                 if (loc->IsMajor()) {
                                         majorPopCount += loc->GetPopCount();
                                         majorWeights.push_back(loc->GetPopFraction());

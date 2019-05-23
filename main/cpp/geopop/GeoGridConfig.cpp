@@ -46,9 +46,13 @@ GeoGridConfig::GeoGridConfig(const ptree& configPt) : GeoGridConfig()
         people[Id::PrimaryCommunity]   = configPt.get<unsigned int>("people_per_PrimaryCommunity", 2000U);
         people[Id::SecondaryCommunity] = configPt.get<unsigned int>("people_per_SecondaryCommunity", 2000U);
 
-        // TODO why no pools per preschool/ alternative: for all, but setters with default 1?
-        pools[Id::K12School] = configPt.get<unsigned int>("pools_per_K12School", 25U);
-        pools[Id::College]   = configPt.get<unsigned int>("pools_per_College", 20U);
+        pools[Id::Daycare]            = configPt.get<unsigned int>("pools_per_Daycare", 1U);
+        pools[Id::PreSchool]          = configPt.get<unsigned int>("pools_per_PreSchool", 6U);
+        pools[Id::K12School]          = configPt.get<unsigned int>("pools_per_K12School", 25U);
+        pools[Id::College]            = configPt.get<unsigned int>("pools_per_College", 20U);
+        pools[Id::Workplace]          = configPt.get<unsigned int>("pools_per_Workplace", 1U);
+        pools[Id::PrimaryCommunity]   = configPt.get<unsigned int>("pools_per_PrimaryCommunity", 1U);
+        pools[Id::SecondaryCommunity] = configPt.get<unsigned int>("pools_per_SecondaryCommunity", 1U);
 }
 
 void GeoGridConfig::SetData(const ptree& configPt)
@@ -66,68 +70,114 @@ void GeoGridConfig::SetData(const ptree& configPt)
                 workplaceReader->SetWorkplaceSizeDistributions(refWP.ratios, refWP.min, refWP.max);
         }
 
-        people[Id::Daycare]            = configPt.get<unsigned int>("people_per_Daycare", 18U);
-        people[Id::PreSchool]          = configPt.get<unsigned int>("people_per_PreSchool", 120U);
-        people[Id::K12School]          = configPt.get<unsigned int>("people_per_K12School", 500U);
-        people[Id::College]            = configPt.get<unsigned int>("people_per_College", 3000U);
-        people[Id::Workplace]          = configPt.get<unsigned int>("people_per_Workplace", 20U);
-        people[Id::PrimaryCommunity]   = configPt.get<unsigned int>("people_per_PrimaryCommunity", 2000U);
-        people[Id::SecondaryCommunity] = configPt.get<unsigned int>("people_per_SecondaryCommunity", 2000U);
+        //------------------------------------------------------------------------------------------
+        // Set region parameters and info, plus provide a default. region ID of default shall be -1
+        //------------------------------------------------------------------------------------------
+        // Default
+        Param param{};
 
-        // TODO why no pools per preschool/ alternative: for all, but setters with default 1?
-        pools[Id::K12School] = configPt.get<unsigned int>("pools_per_K12School", 25U);
-        pools[Id::College]   = configPt.get<unsigned int>("pools_per_College", 20U);
-
-        auto regionArray = configPt.get_child("regions");
-        for (auto it = regionArray.begin(); it != regionArray.end(); ++it) {
-                Param      param{};
-                const auto regionPt = it->second.get_child("");
-                const auto regionId = regionPt.get<unsigned int>("id", 0);
-
-                param.pop_size                     = regionPt.get<unsigned int>("population_size");
-                param.participation_college        = regionPt.get<double>("participation_college");
-                param.fraction_workplace_commuters = regionPt.get<double>("fraction_workplace_commuters");
-                param.fraction_college_commuters   = regionPt.get<double>("fraction_college_commuters");
-                param.participation_workplace      = regionPt.get<double>("participation_workplace");
-                param.participation_preschool      = regionPt.get<double>("participation_preschool");
-                param.participation_daycare        = regionPt.get<double>("participation_daycare");
-                params[regionId]                   = param;
-
-                RefHH refHH{};
-                Info  info{};
-
-                const auto householdsReader =
-                    ReaderFactory::CreateHouseholdReader(regionPt.get<string>("household_file"));
+        param.pop_size                     = configPt.get<unsigned int>("population_size", 600000);
+        param.fraction_workplace_commuters = configPt.get<double>("fraction_workplace_commuters", 0.5);
+        param.fraction_college_commuters   = configPt.get<double>("fraction_college_commuters", 0.5);
+        param.participation_workplace      = configPt.get<double>("participation_workplace", 0.75);
+        param.participation_college        = configPt.get<double>("participation_college", 0.5);
+        param.participation_preschool      = configPt.get<double>("participation_preschool", 0.99);
+        param.participation_daycare        = configPt.get<double>("participation_daycare", 0.45);
+        params[-1]                         = param;
+        RefHH      refHH{};
+        Info       info{};
+        const auto household_file = configPt.get<string>("household_file", "");
+        if (!household_file.empty()) {
+                const auto householdsReader = ReaderFactory::CreateHouseholdReader(household_file);
                 householdsReader->SetReferenceHouseholds(refHH.person_count, refHH.ages);
                 info = ParseHouseholdInfo(refHH.person_count, refHH.ages, param);
+        }
 
-                const auto major_household_file = regionPt.get<string>("major_household_file", "");
-                if (!major_household_file.empty()) {
-                        const auto majorHouseholdsReader = ReaderFactory::CreateHouseholdReader(major_household_file);
-                        majorHouseholdsReader->SetReferenceHouseholds(refHH.major_person_count, refHH.major_ages);
+        const auto major_household_file = configPt.get<string>("major_household_file", "");
+        if (!major_household_file.empty()) {
+                const auto majorHouseholdsReader = ReaderFactory::CreateHouseholdReader(major_household_file);
+                majorHouseholdsReader->SetReferenceHouseholds(refHH.major_person_count, refHH.major_ages);
 
-                        // Add the major info to the info struct
-                        Info major_info = ParseHouseholdInfo(refHH.major_person_count, refHH.major_ages, param);
+                // Add the major info to the info struct
+                Info major_info = ParseHouseholdInfo(refHH.major_person_count, refHH.major_ages, param);
 
-                        info.major_fraction_daycare   = major_info.fraction_daycare;
-                        info.major_fraction_preschool = major_info.fraction_preschool;
-                        info.major_fraction_k12school = major_info.fraction_k12school;
-                        info.major_fraction_college   = major_info.fraction_college;
-                        info.major_fraction_workplace = major_info.fraction_workplace;
-                        info.major_count_households   = major_info.count_households;
+                info.major_fraction_daycare   = major_info.fraction_daycare;
+                info.major_fraction_preschool = major_info.fraction_preschool;
+                info.major_fraction_k12school = major_info.fraction_k12school;
+                info.major_fraction_college   = major_info.fraction_college;
+                info.major_fraction_workplace = major_info.fraction_workplace;
+                info.major_count_households   = major_info.count_households;
 
-                } else {
-                        info.major_fraction_daycare   = 0;
-                        info.major_fraction_preschool = 0;
-                        info.major_fraction_k12school = 0;
-                        info.major_fraction_college   = 0;
-                        info.major_fraction_workplace = 0;
-                        info.major_count_households   = 0;
-                        refHH.major_person_count      = 0;
+        } else {
+                info.major_fraction_daycare   = 0;
+                info.major_fraction_preschool = 0;
+                info.major_fraction_k12school = 0;
+                info.major_fraction_college   = 0;
+                info.major_fraction_workplace = 0;
+                info.major_count_households   = 0;
+                refHH.major_person_count      = 0;
+        }
+
+        refHouseHolds[-1] = refHH;
+        regionsInfo[-1]   = info;
+
+        // Regions
+        if (configPt.count("regions")) {
+                auto regionArray = configPt.get_child("regions");
+                for (auto it = regionArray.begin(); it != regionArray.end(); ++it) {
+                        Param      param{};
+                        const auto regionPt = it->second.get_child("");
+                        const auto regionId = regionPt.get<unsigned int>("id", 0);
+
+                        param.pop_size = regionPt.get<unsigned int>("population_size", params[-1].pop_size);
+                        param.participation_college =
+                            regionPt.get<double>("participation_college", params[-1].participation_college);
+                        param.fraction_workplace_commuters = regionPt.get<double>(
+                            "fraction_workplace_commuters", params[-1].fraction_workplace_commuters);
+                        param.fraction_college_commuters =
+                            regionPt.get<double>("fraction_college_commuters", params[-1].fraction_college_commuters);
+                        param.participation_workplace =
+                            regionPt.get<double>("participation_workplace", params[-1].participation_workplace);
+                        param.participation_preschool =
+                            regionPt.get<double>("participation_preschool", params[-1].participation_preschool);
+                        param.participation_daycare =
+                            regionPt.get<double>("participation_daycare", params[-1].participation_daycare);
+                        params[regionId] = param;
+
+                        RefHH refHH{};
+                        Info  info{};
+
+                        const auto household_file = regionPt.get<string>("household_file", "");
+                        if (!household_file.empty()) {
+                                const auto householdsReader = ReaderFactory::CreateHouseholdReader(household_file);
+                                householdsReader->SetReferenceHouseholds(refHH.person_count, refHH.ages);
+                                info = ParseHouseholdInfo(refHH.person_count, refHH.ages, param);
+                        } else {
+                                info  = regionsInfo[-1];
+                                refHH = refHouseHolds[-1];
+                        }
+
+                        const auto major_household_file = regionPt.get<string>("major_household_file", "");
+                        if (!major_household_file.empty()) {
+                                const auto majorHouseholdsReader =
+                                    ReaderFactory::CreateHouseholdReader(major_household_file);
+                                majorHouseholdsReader->SetReferenceHouseholds(refHH.major_person_count,
+                                                                              refHH.major_ages);
+
+                                // Add the major info to the info struct
+                                Info major_info = ParseHouseholdInfo(refHH.major_person_count, refHH.major_ages, param);
+
+                                info.major_fraction_daycare   = major_info.fraction_daycare;
+                                info.major_fraction_preschool = major_info.fraction_preschool;
+                                info.major_fraction_k12school = major_info.fraction_k12school;
+                                info.major_fraction_college   = major_info.fraction_college;
+                                info.major_fraction_workplace = major_info.fraction_workplace;
+                                info.major_count_households   = major_info.count_households;
+                        }
+
+                        refHouseHolds[regionId] = refHH;
+                        regionsInfo[regionId]   = info;
                 }
-
-                refHouseHolds[regionId] = refHH;
-                regionsInfo[regionId]   = info;
         }
 }
 

@@ -4,23 +4,41 @@
 #include <QObject>
 #include <QString>
 
-class BackEnd : public QObject
+class 1BackEnd : public QObject
 {
     Q_OBJECT
     Q_PROPERTY(QString userName READ userName WRITE setUserName NOTIFY userNameChanged)
+    Q_PROPERTY( location READ getNextLocation)
 
 public:
     explicit BackEnd(QObject *parent = nullptr);
 
     QString userName();
     void setUserName(const QString &userName);
+    QVector<double> getNextLocation();
 
 
-    signals:
-            void userNameChanged();
 
 private:
     QString m_userName;
+    int currentIndex=0;
+
+
+};
+
+
+
+class BackEnd: public QObject{
+
+    Q_OBJECT
+    Q_PROPERTY()
+
+
+public:
+    explicit  BackEnd(QObject *parent = nullptr);
+
+    
+
 
 };
 

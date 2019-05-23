@@ -15,7 +15,6 @@
 
 #include "Location.h"
 #include "contact/ContactPool.h"
-#include "contact/ContactType.h"
 #include "disease/Health.h"
 #include "pop/Person.h"
 #include "util/Exception.h"
@@ -27,10 +26,9 @@ namespace geopop {
 using namespace std;
 using namespace stride::ContactType;
 
-Location::Location(unsigned int id, unsigned int province, Coordinate coordinate, string name, unsigned int popCount,
-                   bool major)
-    : m_coordinate(coordinate), m_id(id), m_name(move(name)), m_pop_count(popCount), m_pop_fraction(0.0),
-      m_province(province), m_major_city(major), m_inCommutes(), m_outCommutes(), /* m_cc(),*/ m_pool_index()
+Location::Location(unsigned int id, unsigned int province, string name, unsigned int popCount, bool major)
+    : m_id(id), m_name(move(name)), m_pop_count(popCount), m_pop_fraction(0.0),
+      m_province(province), m_inCommutes(), m_outCommutes(), /* m_cc(),*/ m_pool_index(), m_major_city(major)
 {
 }
 
@@ -42,21 +40,20 @@ bool Location::operator==(const Location& other) const
         for (Id typ : IdList) {
                 temp = temp && (CRefPools(typ) == other.CRefPools(typ));
         }
-        return temp && GetID() == other.GetID() && get<0>(GetCoordinate()) == get<0>(other.GetCoordinate()) &&
-               get<1>(GetCoordinate()) == get<1>(other.GetCoordinate()) && GetName() == other.GetName() &&
+        return temp && GetID() == other.GetID() && GetName() == other.GetName() &&
                GetProvince() == other.GetProvince() && GetPopCount() == other.GetPopCount() &&
                CRefIncomingCommutes() == other.CRefIncomingCommutes() &&
                CRefOutgoingCommutes() == other.CRefOutgoingCommutes();
 }
 
-void Location::AddIncomingCommute(shared_ptr<Location> otherLocation, double fraction)
+void Location::AddIncomingCommute(Location* otherLocation, double fraction)
 {
-        m_inCommutes.emplace_back(otherLocation.get(), fraction);
+        m_inCommutes.emplace_back(otherLocation, fraction);
 }
 
-void Location::AddOutgoingCommute(shared_ptr<Location> otherLocation, double fraction)
+void Location::AddOutgoingCommute(Location* otherLocation, double fraction)
 {
-        m_outCommutes.emplace_back(otherLocation.get(), fraction);
+        m_outCommutes.emplace_back(otherLocation, fraction);
 }
 
 int Location::GetIncomingCommuteCount(double fractionCommuters) const
@@ -79,6 +76,64 @@ unsigned int Location::GetInfectedCount() const
                 }
         }
         return total;
+}
+std::unordered_map<std::string, std::unordered_map<std::string, unsigned int>> Location::GetStatusCounts() const
+{
+    std::unordered_map<std::string, std::unordered_map<std::string, unsigned int>> map;
+    // loop over every ContactType ID
+    for(const auto& id : stride::ContactType::IdList){
+        unsigned int total = 0U;
+        unsigned int immune = 0U;
+        unsigned int infected = 0U;
+        unsigned int infectious = 0U;
+        unsigned int recovered = 0U;
+        unsigned int susceptible = 0U;
+        unsigned int symptomatic = 0U;
+
+
+
+        // loop over contactpools of that type
+        for(const auto& pool : CRefPools(id)){
+            // loop over persons in that pool
+            for(const auto& person : *pool){
+
+                const stride::Health& h = person->GetHealth();
+                total++;
+
+                if(h.IsImmune()){
+                    immune++;
+                }
+                if(h.IsInfected()){
+                    infected++;
+                }
+                if(h.IsInfectious()){
+                    infectious++;
+                }
+                if(h.IsRecovered()){
+                    recovered++;
+                }
+                if(h.IsSusceptible()){
+                    susceptible++;
+                }
+                if(h.IsSymptomatic()){
+                    symptomatic++;
+                }
+
+
+            }
+        }
+        const std::string pop_type = stride::ContactType::ToString(id);
+        map[pop_type]["total"] = total;
+        map[pop_type]["immune"] = immune;
+        map[pop_type]["infected"] = infected;
+        map[pop_type]["infectious"] = infectious;
+        map[pop_type]["recovered"] = recovered;
+        map[pop_type]["susceptible"] = susceptible;
+        map[pop_type]["symptomatic"] = symptomatic;
+
+    }
+    return map;
+
 }
 
 unsigned int Location::GetOutgoingCommuteCount(double fractionCommuters) const

@@ -29,7 +29,6 @@ void Generator<stride::ContactType::Id::College>::Apply(GeoGrid& geoGrid, const 
 
         auto studentCount = 0U;
         // can't generate colleges per region, because of the TopK() parameter
-        // TODO we have the fraction parameter per region though, so we need to fix that
         for (const auto& loc : geoGrid) {
                 if (loc->IsMajor()) {
                         studentCount += static_cast<unsigned int>(

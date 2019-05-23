@@ -72,10 +72,10 @@ TEST_F(DemographicTest, provincesTest)
 
         for (unsigned int i = 0; i < 5; ++i) {
                 for (unsigned int nrOfLocations = 0; nrOfLocations < 10; ++nrOfLocations) {
-                        const auto loc = make_shared<Location>(10 * i + nrOfLocations, i, Coordinate(0, 0),
+                        const auto loc = make_shared<Location>(10 * i + nrOfLocations, i,
                                                                "loc" + to_string(nrOfLocations),
                                                                m_gg_config.params.at(i).pop_size / 10);
-                        m_geo_grid.AddLocation(loc);
+                        m_geo_grid.addLocation(loc, make_shared<EnhancedCoordinate>(loc.get(), Coordinate(0.0,0.0)));
                 }
         }
         for (const auto& loc : m_geo_grid) {
@@ -126,10 +126,10 @@ TEST_F(DemographicTest, centralCitiesTest)
 
         for (unsigned int i = 0; i < 2; ++i) {
                 for (unsigned int nrOfLocations = 0; nrOfLocations < 5; ++nrOfLocations) {
-                        const auto loc = make_shared<Location>(2 * i + nrOfLocations, 0, Coordinate(0, 0),
+                        const auto loc = make_shared<Location>(2 * i + nrOfLocations, 0,
                                                                "loc" + to_string(nrOfLocations),
                                                                m_gg_config.params.at(0).pop_size / 10, bool(i));
-                        m_geo_grid.AddLocation(loc);
+                        m_geo_grid.addLocation(loc, make_shared<EnhancedCoordinate>(loc.get(), Coordinate(0.0,0.0)));
                 }
         }
         for (const auto& loc : m_geo_grid) {

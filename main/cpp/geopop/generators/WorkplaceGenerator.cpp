@@ -44,13 +44,16 @@ void Generator<stride::ContactType::Id::Workplace>::Apply(GeoGrid& geoGrid, cons
         }
 
         for (const auto& it : ggConfig.regionsInfo) {
+                if (it.first == -1) {
+                        continue;
+                }
                 // = for each location #residents + #incoming commuting people - #outgoing commuting people
                 vector<double> weights;
                 vector<double> majorWeights;
                 auto           popCount      = 0U;
                 auto           majorPopCount = 0U;
                 for (const auto& loc : geoGrid) {
-                        if (loc->GetProvince() == it.first) {
+                        if (loc->GetProvince() == (unsigned)it.first) {
                                 const double ActivePeopleCount =
                                     (loc->GetPopCount() +
                                      loc->GetIncomingCommuteCount(

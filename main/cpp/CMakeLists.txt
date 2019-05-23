@@ -70,8 +70,7 @@ set(STRIDE_SRC
     geopop/Location.cpp
     #---
     geopop/geo/GeoGridKdTree.cpp
-    geopop/geo/KdTree2DPoint.cpp
-    #---
+        #---
     geopop/generators/CollegeGenerator.cpp
     geopop/generators/HouseholdGenerator.cpp
     geopop/generators/K12SchoolGenerator.cpp
@@ -110,6 +109,12 @@ set(STRIDE_SRC
     geopop/populators/WorkplacePopulator.cpp
     geopop/populators/DaycarePopulator.cpp
     geopop/populators/PreSchoolPopulator.cpp
+
+    geopop/io/EpiJSONWriter.cpp
+    geopop/io/EpiWriter.h
+    geopop/io/EpiWriterFactory.cpp
+    geopop/io/EpiJSONReader.cpp
+
     #---
     ${PROTO_HEADER}
     ${PROTO_SRC}
@@ -149,7 +154,12 @@ set(STRIDE_SRC
     viewers/InfectedViewer.cpp
     viewers/PersonsFileViewer.cpp
     viewers/SummaryFileViewer.cpp
-)
+    viewers/EpiViewer.cpp
+
+    geopop/EnhancedCoordinate.h
+
+        )
+
 
 #============================================================================
 # Build the Stride library.

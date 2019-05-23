@@ -60,8 +60,9 @@ TEST_F(CollegeGeneratorTest, OneLocationTest)
         m_gg_config.params.at(4).pop_size              = 45000;
         m_gg_config.regionsInfo.at(4).fraction_college = 9000.0 / m_gg_config.params.at(4).pop_size;
 
-        auto loc1 = make_shared<Location>(1, 4, Coordinate(0, 0), "Antwerpen", m_gg_config.params.at(4).pop_size);
-        m_geo_grid.AddLocation(loc1);
+        auto loc1 = make_shared<Location>(1, 4, "Antwerpen", m_gg_config.params.at(4).pop_size);
+        auto coor = make_shared<EnhancedCoordinate>(loc1.get(), Coordinate(0, 0) );
+        m_geo_grid.addLocation(loc1, coor);
 
         m_college_generator.Apply(m_geo_grid, m_gg_config);
 
@@ -97,8 +98,9 @@ TEST_F(CollegeGeneratorTest, MultipleLocationsTest)
         array<unsigned int, 15> sizes{28559, 33319, 39323, 37755, 35050, 10060, 13468, 8384,
                                       9033,  31426, 33860, 4110,  50412, 25098, 40135};
         for (const auto size : sizes) {
-                const auto loc = make_shared<Location>(1, 4, Coordinate(0, 0), "Size: " + to_string(size), size);
-                m_geo_grid.AddLocation(loc);
+                const auto loc = make_shared<Location>(1, 4, "Size: " + to_string(size), size);
+                auto coor = make_shared<EnhancedCoordinate>(loc.get(), Coordinate(0, 0) );
+                m_geo_grid.addLocation(loc, coor);
         }
         m_college_generator.Apply(m_geo_grid, m_gg_config);
 

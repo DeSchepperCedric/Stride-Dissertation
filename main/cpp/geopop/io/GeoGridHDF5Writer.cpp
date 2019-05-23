@@ -49,7 +49,7 @@ void GeoGridHDF5Writer::Write(GeoGrid& geoGrid)
         Group        locations = file.createGroup("/locations");
         unsigned int count     = 0;
         const string name      = "location";
-        for (const auto& location : geoGrid) {
+        for (const auto& location : *geoGrid.m_locationGrid) {
                 ++count;
                 string location_name = name + to_string(count);
                 WriteLocation(*location, locations, location_name);
@@ -95,16 +95,16 @@ void GeoGridHDF5Writer::WriteCoordinate(const Coordinate& coordinate, Group& loc
         attribute.write(GetPredType<double>(), data);
 }
 
-void GeoGridHDF5Writer::WriteLocation(const Location& location, Group& locations, const string& location_name)
+void GeoGridHDF5Writer::WriteLocation(const EnhancedCoordinate& location, Group& locations, const string& location_name)
 {
         Group loc(locations.createGroup(location_name));
-        WriteAttribute(location.GetID(), "id", loc);
-        WriteAttribute(location.GetName(), "name", loc);
-        WriteAttribute(location.GetProvince(), "province", loc);
-        WriteAttribute(location.GetPopCount(), "population", loc);
+        WriteAttribute(location.getData<Location>()->GetID(), "id", loc);
+        WriteAttribute(location.getData<Location>()->GetName(), "name", loc);
+        WriteAttribute(location.getData<Location>()->GetProvince(), "province", loc);
+        WriteAttribute(location.getData<Location>()->GetPopCount(), "population", loc);
         WriteCoordinate(location.GetCoordinate(), loc);
 
-        auto      commutes = location.CRefOutgoingCommutes();
+        auto      commutes = location.getData<Location>()->CRefOutgoingCommutes();
         hsize_t   dimsf[1] = {commutes.size()};
         DataSpace dataspace(RANK, dimsf);
         DataSet   commutes_dataset = loc.createDataSet("commutes", GetCommuteType(), dataspace);
@@ -121,7 +121,7 @@ void GeoGridHDF5Writer::WriteLocation(const Location& location, Group& locations
         unsigned int count = 0;
         const string name  = "pool";
         for (Id typ : IdList) {
-                for (const auto& c : location.CRefPools(typ)) {
+                for (const auto& c : location.getData<Location>()->CRefPools(typ)) {
                         ++count;
                         string pool_name = name + to_string(count);
                         WriteContactPool(c, contactPools, pool_name);
