@@ -53,7 +53,7 @@ private:
         /// std::shared_ptr<ContactCenter> ParseContactCenter(H5::& contactCenter);
 
         /// Create a ContactCenter based on the information stored in the provided ...
-        void ParseContactPool(H5::DataSet& contactPool, std::shared_ptr<Location> result);
+        void ParseContactPool(H5::DataSet& contactPool, const std::shared_ptr<Location>& result);
 
         /// Create a Coordinate based on the information stored in the provided ...
         // Coordinate ParseCoordinate(H5::Attribute& coordinate);
@@ -62,12 +62,13 @@ private:
         std::pair<std::shared_ptr<Location>, std::shared_ptr<EnhancedCoordinate>> ParseLocation(H5::Group& location);
 
         /// Create a Person based on the information stored in the provided ...
-        stride::Person* ParsePerson(stride::util::PERSON& person);
+        stride::Person* ParsePerson(stride::util::PersonType& person);
 
-        const H5::StrType strdatatype;
-        H5::CompType      person_type;
-        H5::CompType      commute_type;
-        H5::CompType      pool_type;
+        template <typename T>
+        T ReadAttribute(const std::string& name, H5::H5Object& object);
 };
+
+template <>
+std::string GeoGridHDF5Reader::ReadAttribute(const std::string& name, H5::H5Object& object);
 
 } // namespace geopop

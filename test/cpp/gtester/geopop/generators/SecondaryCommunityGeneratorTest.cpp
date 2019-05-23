@@ -39,6 +39,12 @@ public:
             : m_rn_man(RnInfo()), m_community_generator(m_rn_man), m_gg_config(), m_pop(Population::Create()),
               m_geo_grid(m_pop.get())
         {
+                //                for (unsigned int i = 0; i < 5; ++i){
+                //                        GeoGridConfig::Param param;
+                //                        m_gg_config.params[i] = param;
+                //                        GeoGridConfig::Info info;
+                //                        m_gg_config.regionsInfo[i] = info;
+                //                }
         }
 
 protected:
@@ -52,7 +58,12 @@ protected:
 
 TEST_F(SecondaryCommunityGeneratorTest, OneLocationTest)
 {
-        m_gg_config.param.pop_size = 10000;
+        GeoGridConfig::Param param;
+        m_gg_config.params[4] = param;
+        GeoGridConfig::Info info;
+        m_gg_config.regionsInfo[4] = info;
+
+        m_gg_config.params.at(4).pop_size = 10000;
 
         auto loc1 = make_shared<Location>(1, 4, "Antwerpen", 10150 * 100);
         auto coor1 = make_shared<EnhancedCoordinate>(loc1.get(), Coordinate(0,0));
@@ -68,7 +79,12 @@ TEST_F(SecondaryCommunityGeneratorTest, OneLocationTest)
 
 TEST_F(SecondaryCommunityGeneratorTest, EqualLocationTest)
 {
-        m_gg_config.param.pop_size = 100 * 100 * 1000;
+        GeoGridConfig::Param param;
+        m_gg_config.params[4] = param;
+        GeoGridConfig::Info info;
+        m_gg_config.regionsInfo[4] = info;
+
+        m_gg_config.params.at(4).pop_size = 100 * 100 * 1000;
 
         for (int i = 0; i < 10; i++) {
                 auto loc1 = make_shared<Location>(1, 4, "Location " + to_string(i), 10 * 1000 * 1000);
@@ -87,7 +103,12 @@ TEST_F(SecondaryCommunityGeneratorTest, EqualLocationTest)
 
 TEST_F(SecondaryCommunityGeneratorTest, ZeroLocationTest)
 {
-        m_gg_config.param.pop_size = 10000;
+        GeoGridConfig::Param param;
+        m_gg_config.params[4] = param;
+        GeoGridConfig::Info info;
+        m_gg_config.regionsInfo[4] = info;
+
+        m_gg_config.params.at(4).pop_size = 10000;
         m_community_generator.Apply(m_geo_grid, m_gg_config);
 
         EXPECT_EQ(m_geo_grid.size(), 0);
@@ -95,8 +116,13 @@ TEST_F(SecondaryCommunityGeneratorTest, ZeroLocationTest)
 
 TEST_F(SecondaryCommunityGeneratorTest, FiveLocationsTest)
 {
-        m_gg_config.param.pop_size          = 37542 * 100;
-        m_gg_config.info.popcount_k12school = 750840;
+        GeoGridConfig::Param param;
+        m_gg_config.params[4] = param;
+        GeoGridConfig::Info info;
+        m_gg_config.regionsInfo[4] = info;
+
+        m_gg_config.params.at(4).pop_size                = 37542 * 100;
+        m_gg_config.regionsInfo.at(4).fraction_k12school = 750840.0 / m_gg_config.params.at(4).pop_size;
 
         auto loc1 = make_shared<Location>(1, 4, "Antwerpen", 10150 * 100);
         auto coor1 = make_shared<EnhancedCoordinate>(loc1.get(), Coordinate(0,0));

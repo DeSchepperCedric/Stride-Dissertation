@@ -39,6 +39,12 @@ public:
             : m_rn_man(RnInfo()), m_household_generator(m_rn_man), m_gg_config(), m_pop(Population::Create()),
               m_geo_grid(m_pop.get())
         {
+                //                for (unsigned int i = 0; i < 5; ++i){
+                //                        GeoGridConfig::Param param;
+                //                        m_gg_config.params[i] = param;
+                //                        GeoGridConfig::Info info;
+                //                        m_gg_config.regionsInfo[i] = info;
+                //                }
         }
 
 protected:
@@ -53,7 +59,12 @@ protected:
 // Check that generator can handle situation with a single Location.
 TEST_F(HouseholdGeneratorTest, OneLocationTest)
 {
-        m_gg_config.info.count_households = 4;
+        GeoGridConfig::Param param;
+        param.pop_size        = 2500;
+        m_gg_config.params[4] = param;
+        GeoGridConfig::Info info;
+        m_gg_config.regionsInfo[4]                     = info;
+        m_gg_config.regionsInfo.at(4).count_households = 4;
 
         auto loc1 = make_shared<Location>(1, 4, "Antwerpen", 2500);
         auto coor1 = make_shared<EnhancedCoordinate>(loc1.get(), Coordinate(0,0));
@@ -68,7 +79,13 @@ TEST_F(HouseholdGeneratorTest, OneLocationTest)
 // Check that generator can handle "no Locations" situation.
 TEST_F(HouseholdGeneratorTest, ZeroLocationTest)
 {
-        m_gg_config.info.count_households = 4;
+        GeoGridConfig::Param param;
+        param.pop_size        = 2500;
+        m_gg_config.params[4] = param;
+        GeoGridConfig::Info info;
+        m_gg_config.regionsInfo[4] = info;
+
+        m_gg_config.regionsInfo.at(4).count_households = 4;
         m_household_generator.Apply(m_geo_grid, m_gg_config);
 
         EXPECT_EQ(m_geo_grid.size(), 0);
@@ -77,8 +94,13 @@ TEST_F(HouseholdGeneratorTest, ZeroLocationTest)
 // check that generator can handle five Locations.
 TEST_F(HouseholdGeneratorTest, FiveLocationsTest)
 {
-        m_gg_config.info.count_households = 4000;
-        m_gg_config.param.pop_size        = 37542 * 100;
+        GeoGridConfig::Param param;
+        m_gg_config.params[4] = param;
+        GeoGridConfig::Info info;
+        m_gg_config.regionsInfo[4]                           = info;
+        m_gg_config.regionsInfo.at(4).count_households       = 4000;
+        m_gg_config.regionsInfo.at(4).major_count_households = 4000;
+        m_gg_config.params.at(4).pop_size                    = 35042 * 100;
 
         auto loc1 = make_shared<Location>(1, 4, "Antwerpen", 10150 * 100);
         auto coor1 = make_shared<EnhancedCoordinate>(loc1.get(), Coordinate(0,0));
@@ -99,12 +121,12 @@ TEST_F(HouseholdGeneratorTest, FiveLocationsTest)
 
         for (const auto& loc : m_geo_grid) {
                 loc->SetPopFraction(static_cast<double>(loc->GetPopCount()) /
-                                    static_cast<double>(m_gg_config.param.pop_size));
+                                    static_cast<double>(m_gg_config.params.at(4).pop_size));
         }
 
         m_household_generator.Apply(m_geo_grid, m_gg_config);
 
-        array<unsigned int, 5> sizes{1179, 1137, 868, 358, 458};
+        array<unsigned int, 5> sizes{1159, 1159, 816, 395, 471};
         for (auto i = 0U; i < sizes.size(); i++) {
                 EXPECT_EQ(sizes[i] * m_pph, m_geo_grid[i]->CRefPools(Id::Household).size());
         }

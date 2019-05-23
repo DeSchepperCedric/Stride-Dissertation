@@ -32,7 +32,7 @@ using namespace stride::ContactType;
 template <>
 void Populator<stride::ContactType::Id::PreSchool>::Apply(GeoGrid& geoGrid, const GeoGridConfig& geoGridConfig)
 {
-        m_logger->info("Starting to populate PreSchools");
+        m_logger->trace("Starting to populate PreSchools");
 
         // for every location
         for (const auto& loc : *geoGrid.m_locationGrid) {
@@ -52,7 +52,8 @@ void Populator<stride::ContactType::Id::PreSchool>::Apply(GeoGrid& geoGrid, cons
                 for (const auto& hhPool : loc->getData<Location>()->RefPools(Id::Household)) {
                         for (Person* p : *hhPool) {
                                 if (AgeBrackets::PreSchool::HasAge(p->GetAge()) &&
-                                    m_rn_man.MakeWeightedCoinFlip(geoGridConfig.param.participation_preschool)) {
+                                    m_rn_man.MakeWeightedCoinFlip(
+                                        geoGridConfig.params.at(loc->GetProvince()).participation_preschool)) {
                                         // this person is a todler
                                         auto& c = nearByPreSchoolsPools[dist()];
                                         c->AddMember(p);

@@ -38,7 +38,7 @@ void GeoGridJSONWriter::Write(GeoGrid& geoGrid)
         for (const auto& location : *geoGrid.m_locationGrid) {
                 nlohmann::json child;
                 child = WriteLocation(*location);
-                locations.push_back(move(child));
+                locations.push_back(child);
         }
 
         root["locations"] = locations;
@@ -48,7 +48,7 @@ void GeoGridJSONWriter::Write(GeoGrid& geoGrid)
         for (const auto& person : m_persons_found) {
                 nlohmann::json child;
                 child = WritePerson(person);
-                persons.push_back(move(child));
+                persons.push_back(child);
         }
         root["persons"] = persons;
 

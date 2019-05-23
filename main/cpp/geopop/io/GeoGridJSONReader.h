@@ -48,12 +48,13 @@ public:
         void Read() override;
 
 private:
+        /// Parse all the contactpools of a certain class (type)
         void ParseContactPoolsClass(nlohmann::json& contactCenter, std::shared_ptr<Location> loc);
 
         /// Create a ContactCenter based on the information stored in the provided json structure
         std::pair<std::shared_ptr<geopop::Location>, std::shared_ptr<geopop::EnhancedCoordinate>> ParseLocation(nlohmann::json& location);
 
-        /// Create a ContactCenter based on the information stored in the provided json structure.
+        /// Create a ContactPool based on the information stored in the provided json structure.
         void ParseContactPool(std::shared_ptr<Location> loc, nlohmann::json& contactPool,
                               stride::ContactType::Id typeId);
 
@@ -68,6 +69,7 @@ private:
         T ParseNumerical(nlohmann::json& node)
         {
                 if (node.type() == nlohmann::json::value_t::string) {
+                        //                        OPTIONAL: log a warning, then we need to get hold of the logger though
                         return boost::lexical_cast<T>(node.get<std::string>());
                 } else {
                         return node.get<T>();

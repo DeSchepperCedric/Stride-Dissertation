@@ -15,7 +15,8 @@
 
 /**
  * @file
- * Initialize populations: implementation.
+ * Initialize populations: implementation. NOTICE: WorkplacePopulator logic
+ * requires that CollegePopulator is executed prior to WorkplacePopulator.
  */
 
 #include "GeoPopBuilder.h"
@@ -58,7 +59,8 @@ shared_ptr<Population> GeoPopBuilder::Build(shared_ptr<Population> pop)
         // Set the GeoGridConfig.
         // ------------------------------------------------------------
         GeoGridConfig ggConfig(m_config);
-        ggConfig.SetData(m_config.get<string>("run.geopop_gen.household_file"));
+        auto          geopop_gen = m_config.get_child("run.geopop_gen");
+        ggConfig.SetData(geopop_gen);
 
         // ------------------------------------------------------------
         // Get GeoGrid associated with 'pop'.
@@ -69,13 +71,18 @@ shared_ptr<Population> GeoPopBuilder::Build(shared_ptr<Population> pop)
         // Read locations file (commute file only if present).
         // ------------------------------------------------------------
         string commutesFile;
-        auto   geopop_gen = m_config.get_child("run.geopop_gen");
         if (geopop_gen.count("commuting_file")) {
-                commutesFile = m_config.get<string>("run.geopop_gen.commuting_file");
+                commutesFile = geopop_gen.get<string>("commuting_file");
+        }
+        string majorCitiesFile;
+        if (geopop_gen.count("major_cities_file")) {
+                majorCitiesFile = geopop_gen.get<string>("major_cities_file");
         }
 
+        string citiesFile = geopop_gen.get<string>("cities_file");
+
         m_stride_logger->trace("Starting MakeLocations");
-        MakeLocations(geoGrid, ggConfig, m_config.get<string>("run.geopop_gen.cities_file"), commutesFile);
+        MakeLocations(geoGrid, ggConfig, citiesFile, commutesFile, majorCitiesFile);
         m_stride_logger->trace("Finished MakeLocations");
 
         // ------------------------------------------------------------
@@ -101,18 +108,28 @@ shared_ptr<Population> GeoPopBuilder::Build(shared_ptr<Population> pop)
 }
 
 void GeoPopBuilder::MakeLocations(GeoGrid& geoGrid, const GeoGridConfig& geoGridConfig, const string& citiesFileName,
-                                  const string& commutingFileName)
+                                  const string& commutingFileName, const string& majorCitiesFileName)
 {
         const auto locationsReader = ReaderFactory::CreateLocationsReader(citiesFileName);
         locationsReader->FillGeoGrid(geoGrid);
 
+        // Check if there's a major cities file, if so, parse it and set a boolean in the proper locations
+        if (!majorCitiesFileName.empty()) {
+                const auto majorCitiesReader = ReaderFactory::CreateMajorCitiesReader(majorCitiesFileName);
+                majorCitiesReader->FillGeoGrid(geoGrid);
+        }
         if (!commutingFileName.empty()) {
                 const auto commutesReader = ReaderFactory::CreateCommutesReader(commutingFileName);
                 commutesReader->FillGeoGrid(geoGrid);
         }
 
+        auto total_pop = 0U;
+        for (const auto& param : geoGridConfig.params) {
+                total_pop += param.second.pop_size;
+        }
+
         for (const shared_ptr<Location>& loc : geoGrid) {
-                loc->SetPopCount(geoGridConfig.param.pop_size);
+                loc->SetPopCount(total_pop);
         }
         geoGrid.m_locationGrid->Finalize();
 }
@@ -138,6 +155,9 @@ void GeoPopBuilder::MakePools(GeoGrid& geoGrid, const GeoGridConfig& geoGridConf
 
 void GeoPopBuilder::MakePersons(GeoGrid& geoGrid, const GeoGridConfig& geoGridConfig)
 {
+        // NOTICE: WorkplacePopulator logic requires that CollegePopulator
+        // has been executed prior to WorkplacePopulator.
+
         HouseholdPopulator(m_rn_man, m_stride_logger).Apply(geoGrid, geoGridConfig);
 
         K12SchoolPopulator(m_rn_man, m_stride_logger).Apply(geoGrid, geoGridConfig);

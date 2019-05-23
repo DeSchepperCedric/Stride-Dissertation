@@ -2,6 +2,7 @@
 #include "geopop/io/HouseholdJSONReader.h"
 #include "geopop/GeoGridConfig.h"
 
+#include "util/Exception.h"
 #include <gtest/gtest.h>
 #include <memory>
 #include <nlohmann/json.hpp>
@@ -10,10 +11,11 @@
 using namespace std;
 using namespace geopop;
 using namespace stride;
+using namespace stride::util;
 
 namespace {
 
-TEST(HouseholdJSONReader, test1)
+TEST(HouseholdJSONReader, householdParsedCorrectlyTest)
 {
         string jsonString =
             R"({
@@ -34,11 +36,12 @@ TEST(HouseholdJSONReader, test1)
         auto                instream = make_unique<istringstream>(jsonString);
         HouseholdJSONReader reader(move(instream));
 
-        reader.SetReferenceHouseholds(geoConfig.refHH.person_count, geoConfig.refHH.ages);
+        geoConfig.refHouseHolds[0] = GeoGridConfig::RefHH{};
+        reader.SetReferenceHouseholds(geoConfig.refHouseHolds.at(0).person_count, geoConfig.refHouseHolds.at(0).ages);
 
-        EXPECT_EQ(geoConfig.refHH.person_count, 23U);
+        EXPECT_EQ(geoConfig.refHouseHolds.at(0).person_count, 23U);
 
-        const vector<vector<unsigned int>>& HHages = geoConfig.refHH.ages;
+        const vector<vector<unsigned int>>& HHages = geoConfig.refHouseHolds.at(0).ages;
 
         EXPECT_EQ(HHages.size(), 8U);
         EXPECT_EQ(HHages[0].size(), 3U);
@@ -66,4 +69,41 @@ TEST(HouseholdJSONReader, test1)
         EXPECT_EQ(HHages[7][1], 75U);
 }
 
+TEST(HouseholdJSONReader, invalidJSONCorrectExceptionTest)
+{
+        string jsonString =
+            R"({
+	"households_name": "test_household",
+	"households_list": [
+		[42,38,15],
+		[70,68],
+		[40,39,9,6],
+		[43,42],
+		[55,54],
+		[40,40,3,3],
+		[35,32,6,3,
+		[78,75]
+	]
+})";
+
+        GeoGridConfig       geoConfig{};
+        auto                instream = make_unique<istringstream>(jsonString);
+        HouseholdJSONReader reader(move(instream));
+        geoConfig.refHouseHolds[0] = GeoGridConfig::RefHH{};
+        EXPECT_THROW(reader.SetReferenceHouseholds(geoConfig.refHouseHolds.at(0).person_count,
+                                                   geoConfig.refHouseHolds.at(0).ages),
+                     Exception);
+}
+
+TEST(HouseholdJSONReader, emptyStreamCorrectExceptionTest)
+{
+
+        GeoGridConfig       geoConfig{};
+        auto                instream = make_unique<istringstream>("");
+        HouseholdJSONReader reader(move(instream));
+        geoConfig.refHouseHolds[0] = GeoGridConfig::RefHH{};
+        EXPECT_THROW(reader.SetReferenceHouseholds(geoConfig.refHouseHolds.at(0).person_count,
+                                                   geoConfig.refHouseHolds.at(0).ages),
+                     Exception);
+}
 } // namespace

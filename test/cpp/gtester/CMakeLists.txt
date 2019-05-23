@@ -53,10 +53,10 @@ set(SRC
         geopop/generators/K12SchoolGeneratorTest.cpp
         geopop/generators/PrimaryCommunityGeneratorTest.cpp
         geopop/generators/SecondaryCommunityGeneratorTest.cpp
-        geopop/generators/WorkplaceGeneratorTest.cpp
         geopop/generators/DaycareGeneratorTest.cpp
         geopop/generators/PreSchoolGeneratorTest.cpp
         geopop/generators/WorkplaceGeneratorTest.cpp
+        geopop/generators/WorkplaceGeneratorDistributionTest.cpp
         #---
         geopop/io/CitiesCSVReaderTest.cpp
         geopop/io/CommutesCSVReaderTest.cpp
@@ -69,9 +69,9 @@ set(SRC
         geopop/io/HouseholdJSONReaderTest.cpp
         geopop/io/ReaderFactoryTest.cpp
         geopop/io/DataVisualisationTest.cpp
-        geopop/io/GeoGridHDF5Reader.cpp
-        geopop/io/GeoGridHDF5Writer.cpp
-        geopop/io/WorkPlaceReaderTest.cpp
+        geopop/io/GeoGridHDF5ReaderTest.cpp
+        geopop/io/GeoGridHDF5WriterTest.cpp
+        geopop/io/WorkPlaceCSVReaderTest.cpp
         #---
         geopop/kdtree.cpp
         #---
@@ -84,7 +84,7 @@ set(SRC
         geopop/populators/WorkplacePopulatorTest.cpp
         geopop/populators/DaycarePopulatorTest.cpp
         geopop/populators/PreSchoolPopulatorTest.cpp
-        geopop/populators/WorkPlacePopulatorTest.cpp
+        geopop/populators/WorkPlacePopulatorDistributionTest.cpp
         #---
         myhayai/DeliveryMan.cpp
         myhayai/MyhayaiTests.cpp

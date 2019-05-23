@@ -1,5 +1,6 @@
 # Vaccinators
-Fork of stride for the vaccinators group
+Fork of stride for the vaccinators group, consisting of the following members:
+Cedric De Schepper, Thanh Danh Le, Wannes Marynen & Stijn Vissers
 
 # Stride project 
 

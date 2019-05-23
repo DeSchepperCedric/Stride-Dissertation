@@ -68,11 +68,12 @@ void Populator<stride::ContactType::Id::College>::Apply(GeoGrid& geoGrid, const 
                 for (const auto& hhPool : loc->getData<Location>()->RefPools(Id::Household)) {
                         for (Person* p : *hhPool) {
                                 if (AgeBrackets::College::HasAge(p->GetAge()) &&
-                                    m_rn_man.MakeWeightedCoinFlip(geoGridConfig.param.participation_college)) {
+                                    m_rn_man.MakeWeightedCoinFlip(
+                                        geoGridConfig.params.at(loc->GetProvince()).participation_college)) {
                                         // this person is a student
                                         if (!commutingCollege.empty() &&
-                                            m_rn_man.MakeWeightedCoinFlip(
-                                                geoGridConfig.param.fraction_college_commuters)) {
+                                            m_rn_man.MakeWeightedCoinFlip(geoGridConfig.params.at(loc->GetProvince())
+                                                                              .fraction_college_commuters)) {
                                                 // this person is commuting
 
                                                 // pools to commute to

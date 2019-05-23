@@ -14,6 +14,7 @@
  */
 
 #include "Generator.h"
+#include <geopop/GeoGridConfig.h>
 
 #include "util/Assert.h"
 
@@ -32,35 +33,91 @@ void Generator<stride::ContactType::Id::Workplace>::Apply(GeoGrid& geoGrid, cons
         // 4. use that information for the distribution
         // 5. assign each workplaces to a location
 
-        const auto EmployeeCount = ggConfig.info.popcount_workplace;
-        const auto WorkplacesCount =
-            static_cast<unsigned int>(ceil(EmployeeCount / static_cast<double>(ggConfig.people[Id::Workplace])));
+        auto averageWorkplaceSize = 0.0;
 
-        // = for each location #residents + #incoming commuting people - #outgoing commuting people
-        vector<double> weights;
-        for (const auto& loc : geoGrid) {
-                const double ActivePeopleCount =
-                    (loc->GetPopCount() + loc->GetIncomingCommuteCount(ggConfig.param.fraction_workplace_commuters) -
-                     loc->GetOutgoingCommuteCount(ggConfig.param.fraction_workplace_commuters) *
-                         ggConfig.param.particpation_workplace);
-
-                const double weight = ActivePeopleCount / EmployeeCount;
-                AssertThrow(weight >= 0 && weight <= 1 && !std::isnan(weight), "Invalid weight: " + to_string(weight),
-                            m_logger);
-                weights.push_back(weight);
+        // When dealing with workplace size distribution, calculate average workplace size
+        if (!ggConfig.refWP.ratios.empty()) {
+                for (unsigned int i = 0; i < ggConfig.refWP.ratios.size(); i++) {
+                        averageWorkplaceSize +=
+                            ggConfig.refWP.ratios[i] * (ggConfig.refWP.max[i] + ggConfig.refWP.min[i]) / 2;
+                }
         }
 
-        if (weights.empty()) {
-                // trng can't handle empty vectors
-                return;
-        }
+        for (const auto& it : ggConfig.regionsInfo) {
+                // = for each location #residents + #incoming commuting people - #outgoing commuting people
+                vector<double> weights;
+                vector<double> majorWeights;
+                auto           popCount      = 0U;
+                auto           majorPopCount = 0U;
+                for (const auto& loc : geoGrid) {
+                        if (loc->GetProvince() == it.first) {
+                                const double ActivePeopleCount =
+                                    (loc->GetPopCount() +
+                                     loc->GetIncomingCommuteCount(
+                                         ggConfig.params.at(loc->GetProvince()).fraction_workplace_commuters) -
+                                     loc->GetOutgoingCommuteCount(
+                                         ggConfig.params.at(loc->GetProvince()).fraction_workplace_commuters) *
+                                         ggConfig.params.at(loc->GetProvince()).participation_workplace);
 
-        const auto dist = m_rn_man.GetDiscreteGenerator(weights, 0U);
-        auto       pop  = geoGrid.GetPopulation();
+                                const double weight = ActivePeopleCount; // / EmployeeCount;
+                                if (loc->IsMajor()) {
+                                        majorPopCount += loc->GetPopCount();
+                                        weights.push_back(0.0);
+                                        majorWeights.push_back((weight));
 
-        for (auto i = 0U; i < WorkplacesCount; i++) {
-                const auto loc = geoGrid[dist()];
-                AddPools(*loc, pop, ggConfig);
+                                } else {
+                                        popCount += loc->GetPopCount();
+                                        weights.push_back(weight);
+                                        majorWeights.push_back((0.0));
+                                }
+                        } else {
+                                weights.push_back(0.0);
+                                majorWeights.push_back((0.0));
+                        }
+                }
+
+                const auto EmployeeCount = static_cast<unsigned int>(it.second.fraction_workplace * popCount);
+
+                const auto WorkplaceSize = averageWorkplaceSize == 0.0 ? ggConfig.people[Id::Workplace]
+                                                                       : (unsigned int)round(averageWorkplaceSize);
+
+                const auto WorkplacesCount =
+                    static_cast<unsigned int>(ceil(EmployeeCount / static_cast<double>(WorkplaceSize)));
+
+                const auto majorEmployeeCount =
+                    static_cast<unsigned int>(it.second.major_fraction_workplace * majorPopCount);
+
+                const auto majorWorkplacesCount =
+                    static_cast<unsigned int>(ceil(majorEmployeeCount / static_cast<double>(WorkplaceSize)));
+
+                if (weights.empty()) {
+                        // trng can't handle empty vectors
+                        return;
+                }
+
+                for (auto& w : weights) {
+                        w /= EmployeeCount;
+                        AssertThrow(weight >= 0 && w <= 1 && !std::isnan(w), "Invalid weight: " + to_string(w),
+                                    m_logger);
+                }
+                for (auto& w : majorWeights) {
+                        w /= majorEmployeeCount;
+                        AssertThrow(weight >= 0 && w <= 1 && !std::isnan(w), "Invalid weight: " + to_string(w),
+                                    m_logger);
+                }
+
+                const auto dist      = m_rn_man.GetDiscreteGenerator(weights, 0U);
+                const auto majorDist = m_rn_man.GetDiscreteGenerator(majorWeights, 0U);
+                auto       pop       = geoGrid.GetPopulation();
+
+                for (auto i = 0U; i < WorkplacesCount; i++) {
+                        const auto loc = geoGrid[dist()];
+                        AddPools(*loc, pop, ggConfig);
+                }
+                for (auto i = 0U; i < majorWorkplacesCount; i++) {
+                        const auto loc = geoGrid[majorDist()];
+                        AddPools(*loc, pop, ggConfig);
+                }
         }
 }
 

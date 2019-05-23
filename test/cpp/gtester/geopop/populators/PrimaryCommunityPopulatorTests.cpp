@@ -41,6 +41,10 @@ public:
               m_geo_grid(m_pop->RefGeoGrid()), m_person(), m_community_generator(m_rn_man),
               m_household_generator(m_rn_man)
         {
+                for (unsigned int i = 0; i < 5; ++i) {
+                        GeoGridConfig::Param param;
+                        m_gg_config.params[i] = param;
+                }
         }
 
 protected:

@@ -26,7 +26,19 @@ using namespace stride::ContactType;
 template <>
 void Generator<stride::ContactType::Id::College>::Apply(GeoGrid& geoGrid, const GeoGridConfig& ggConfig)
 {
-        const auto studentCount = ggConfig.info.popcount_college;
+
+        auto studentCount = 0U;
+        // can't generate colleges per region, because of the TopK() parameter
+        // TODO we have the fraction parameter per region though, so we need to fix that
+        for (const auto& loc : geoGrid) {
+                if (loc->IsMajor()) {
+                        studentCount += static_cast<unsigned int>(
+                            ggConfig.regionsInfo.at(loc->GetProvince()).major_fraction_college * loc->GetPopCount());
+                } else {
+                        studentCount += static_cast<unsigned int>(
+                            ggConfig.regionsInfo.at(loc->GetProvince()).fraction_college * loc->GetPopCount());
+                }
+        }
         const auto collegeCount =
             static_cast<unsigned int>(ceil(studentCount / static_cast<double>(ggConfig.people[Id::College])));
         const auto cities = geoGrid.TopK(10);
