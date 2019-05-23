@@ -107,7 +107,6 @@ TEST(CommutesCSVReaderTest, test1)
         reader.FillGeoGrid(grid);
 
         for (const auto& loc : grid) {
-                cout << loc->GetID() << endl;
                 int         i                = 0;
                 const auto& expectedLoc      = expectedGeoGrid.GetById(loc->GetID());
                 const auto& outGoingExpected = expectedLoc->CRefOutgoingCommutes();

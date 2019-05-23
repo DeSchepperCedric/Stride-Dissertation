@@ -98,15 +98,19 @@ TEST_F(DaycareGeneratorTest, FiveLocationsTest)
         GeoGridConfig::Info info;
         m_gg_config.regionsInfo[4] = info;
 
-        auto loc1 = make_shared<Location>(1, 4, "Antwerpen", 10150 * 100);
+        m_gg_config.params.at(4).pop_size                    = 35042 * 100;
+        m_gg_config.regionsInfo.at(4).fraction_daycare       = 125140.0 / m_gg_config.params.at(4).pop_size;
+        m_gg_config.regionsInfo.at(4).major_fraction_daycare = 125140.0 / m_gg_config.params.at(4).pop_size;
+
+        auto loc1 = make_shared<Location>(1, 4, "Antwerpen", 10150 * 100,true);
         auto coor1 = make_shared<EnhancedCoordinate>(loc1.get(), Coordinate(0,0));
-        auto loc2 = make_shared<Location>(2, 4, "Vlaams-Brabant", 10040 * 100);
+        auto loc2 = make_shared<Location>(1, 4, "Vlaams-Brabant", 10040 * 100);
         auto coor2 = make_shared<EnhancedCoordinate>(loc2.get(), Coordinate(0,0));
-        auto loc3 = make_shared<Location>(3, 4, "Henegouwen", 7460 * 100);
+        auto loc3 = make_shared<Location>(1, 4, "Henegouwen", 7460 * 100);
         auto coor3 = make_shared<EnhancedCoordinate>(loc3.get(), Coordinate(0,0));
-        auto loc4 = make_shared<Location>(4, 4, "Limburg", 3269 * 100);
+        auto loc4 = make_shared<Location>(1, 4, "Limburg", 3269 * 100);
         auto coor4 = make_shared<EnhancedCoordinate>(loc4.get(), Coordinate(0,0));
-        auto loc5 = make_shared<Location>(5, 4, "Luxemburg", 4123 * 100);
+        auto loc5 = make_shared<Location>(1, 4, "Luxemburg", 4123 * 100);
         auto coor5 = make_shared<EnhancedCoordinate>(loc5.get(), Coordinate(0,0));
 
         m_geo_grid.addLocation(loc1, coor1);

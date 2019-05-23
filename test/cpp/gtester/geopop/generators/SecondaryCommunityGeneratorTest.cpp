@@ -124,7 +124,7 @@ TEST_F(SecondaryCommunityGeneratorTest, FiveLocationsTest)
         m_gg_config.params.at(4).pop_size                = 37542 * 100;
         m_gg_config.regionsInfo.at(4).fraction_k12school = 750840.0 / m_gg_config.params.at(4).pop_size;
 
-        auto loc1 = make_shared<Location>(1, 4, "Antwerpen", 10150 * 100);
+        auto loc1 = make_shared<Location>(1, 4, "Antwerpen", 10150 * 100, true);
         auto coor1 = make_shared<EnhancedCoordinate>(loc1.get(), Coordinate(0,0));
         auto loc2 = make_shared<Location>(2, 4, "Vlaams-Brabant", 10040 * 100);
         auto coor2 = make_shared<EnhancedCoordinate>(loc2.get(), Coordinate(0,0));
