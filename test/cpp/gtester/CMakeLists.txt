@@ -84,7 +84,7 @@ set(SRC
         geopop/populators/WorkplacePopulatorTest.cpp
         geopop/populators/DaycarePopulatorTest.cpp
         geopop/populators/PreSchoolPopulatorTest.cpp
-        geopop/populators/WorkPlacePopulatorDistributionTest.cpp
+#        geopop/populators/WorkPlacePopulatorDistributionTest.cpp
         #---
         myhayai/DeliveryMan.cpp
         myhayai/MyhayaiTests.cpp
