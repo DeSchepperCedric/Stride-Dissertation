@@ -1,217 +1,338 @@
 <!DOCTYPE html>
-<html lang="en"><head>
-<meta http-equiv="content-type" content="text/html; charset=UTF-8">
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <meta name="description" content="">
-    <meta name="author" content="Mark Otto, Jacob Thornton, and Bootstrap contributors">
-    <meta name="generator" content="Jekyll v3.8.5">
-    <title>The Vaccinators</title>
+<html lang="en">
+<head>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+      <meta name="description" content="">
+      <meta name="author" content="Mark Otto, Jacob Thornton, and Bootstrap contributors">
+      <meta name="generator" content="Jekyll v3.8.5">
+      <title>The Vaccinators</title>
 
-    <!-- Bootstrap core CSS -->
-<link href="files/bootstrap.css" rel="stylesheet" integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">
+  <!-- Bootstrap core CSS -->
+  <link href="files/bootstrap.css" rel="stylesheet" integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 
+  <style>
+    #menu {
+      text-align: left;
+    }
 
-    <style>
-      .bd-placeholder-img {
-        font-size: 1.125rem;
-        text-anchor: middle;
+    .bd-placeholder-img {
+      font-size: 1.125rem;
+      text-anchor: middle;
+    }
+
+    @media (min-width: 768px) {
+      .bd-placeholder-img-lg {
+        font-size: 3.5rem;
       }
 
-      @media (min-width: 768px) {
-        .bd-placeholder-img-lg {
-          font-size: 3.5rem;
-        }
-      }
-      .bd-placeholder-img {
-        font-size: 1.125rem;
-        text-anchor: middle;
+      #sidebar {
+       margin-left: -250px;
       }
 
-      @media (min-width: 768px) {
-        .bd-placeholder-img-lg {
-          font-size: 3.5rem;
-        }
+      #sidebar.active {
+         margin-left: 0;
       }
-.person {
-    margin-left:auto;
-    margin-right:auto;
-}
-    </style>
-    <!-- Custom styles for this template -->
-    <link href="files/album.css" rel="stylesheet">
-  </head>
-  <body>
-    <header>
-<!--
-  <div class="bg-dark collapse" id="navbarHeader" style="">
-    <div class="container">
-      <div class="row">
-        <div class="col-sm-8 col-md-7 py-4">
-          <h4 class="text-white">About</h4>
-          <p class="text-muted">Add some information about the album
-below, the author, or any other background context. Make it a few
-sentences long so folks can pick up some informative tidbits. Then, link
- them off to some social networking sites or contact information.</p>
+
+      #sidebarCollapse span {
+         display: none;
+      }
+    }
+
+    @media (max-width: 786px) {
+      #sidebar {
+       margin-left: -250px;
+      }
+
+      #sidebar.active {
+         margin-left: 0;
+      }
+
+      #sidebarCollapse span {
+         display: none;
+      }
+    }
+
+    .person {
+      margin-left:auto;
+      margin-right:auto;
+    }
+
+    .wrapper {
+        display: block;
+    }
+
+    #sidebar {
+        min-width: 250px;
+        max-width: 250px;
+        height: 100vh;
+        position: fixed;
+        top: 0;
+        left: 0;
+        /* top layer */
+        z-index: 9999;
+    }
+
+    .overlay {
+        display: none;
+        position: fixed;
+        /* full screen */
+        width: 100vw;
+        height: 100vh;
+        /* transparent black */
+        background: rgba(0, 0, 0, 0.7);
+        /* middle layer, i.e. appears below the sidebar */
+        z-index: 998;
+        opacity: 0;
+        /* animate the transition */
+        transition: all 0.5s ease-in-out;
+    }
+    /* display .overlay when it has the .active class */
+    .overlay.active {
+        display: block;
+        opacity: 1;
+    }
+
+    #dismiss {
+        width: 35px;
+        height: 35px;
+        position: absolute;
+        /* top right corner of the sidebar */
+        top: 20px;
+        right: 10px;
+    }
+
+    /*
+    ADDITIONAL DEMO STYLE, NOT IMPORTANT TO MAKE THINGS WORK BUT TO MAKE IT A BIT NICER :)
+    */
+    @import "https://fonts.googleapis.com/css?family=Poppins:300,400,500,600,700";
+
+
+    body {
+        font-family: 'Poppins', sans-serif;
+        background: #fafafa;
+    }
+
+    p {
+        font-family: 'Poppins', sans-serif;
+        font-size: 1.1em;
+        font-weight: 300;
+        line-height: 1.7em;
+        color: #999;
+    }
+
+    a, a:hover, a:focus {
+        color: inherit;
+        text-decoration: none;
+        transition: all 0.3s;
+    }
+
+    #sidebar {
+        /* don't forget to add all the previously mentioned styles here too */
+        background: #7386D5;
+        color: #fff;
+        transition: all 0.3s;
+    }
+
+    #sidebar .sidebar-header {
+        padding: 20px;
+        background: #6d7fcc;
+    }
+
+    #sidebar ul.components {
+        padding: 20px 0;
+        border-bottom: 1px solid #47748b;
+    }
+
+    #sidebar ul p {
+        color: #fff;
+        padding: 10px;
+    }
+
+    #sidebar ul li a {
+        padding: 10px;
+        font-size: 1.1em;
+        display: block;
+    }
+    #sidebar ul li a:hover {
+        color: #7386D5;
+        background: #fff;
+    }
+
+    #sidebar ul li.active > a, a[aria-expanded="true"] {
+        color: #fff;
+        background: #6d7fcc;
+    }
+    ul ul a {
+        font-size: 0.9em !important;
+        padding-left: 30px !important;
+        background: #6d7fcc;
+    }
+  </style>
+  <!-- Custom styles for this template -->
+  <link href="files/album.css" rel="stylesheet">
+</head>
+<body>
+<div class="wrapper">
+
+    <!-- Sidebar -->
+    <nav id="sidebar">
+
+        <div id="dismiss">
+            <i class="fa fa-arrow-left fa-lg"></i>
         </div>
-        <div class="col-sm-4 offset-md-1 py-4">
-          <h4 class="text-white">Contact</h4>
-          <ul class="list-unstyled">
-            <li><a href="#" class="text-white">Follow on Twitter</a></li>
-            <li><a href="#" class="text-white">Like on Facebook</a></li>
-            <li><a href="#" class="text-white">Email me</a></li>
-          </ul>
+
+        <div class="sidebar-header">
+            <h3>Menu</h3>
         </div>
-      </div>
-    </div>
-  </div>
-  <div class="navbar navbar-dark bg-dark shadow-sm">
-    <div class="container d-flex justify-content-between">
-      <a href="#" class="navbar-brand d-flex align-items-center">
-        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-2" focusable="false" aria-hidden="true"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path><circle cx="12" cy="13" r="4"></circle></svg>
-        <strong>Album</strong>
-      </a>
-      <button class="navbar-toggler collapsed" type="button" data-toggle="collapse" data-target="#navbarHeader" aria-controls="navbarHeader" aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
-      </button>
-    </div>
-  </div>
--->
-<!--
-<nav class="navbar navbar-expand-md navbar-dark bg-dark mb-4">
-  <a class="navbar-brand" href="#">Top navbar</a>
-  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
-    <span class="navbar-toggler-icon"></span>
-  </button>
-  <div class="collapse navbar-collapse" id="navbarCollapse">
-    <ul class="navbar-nav mr-auto">
-      <li class="nav-item active">
-        <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link" href="#">Link</a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link disabled" href="#">Disabled</a>
-      </li>
-    </ul>
--->
-<!--
-    <form class="form-inline mt-2 mt-md-0">
-      <input class="form-control mr-sm-2" type="text" placeholder="Search" aria-label="Search">
-      <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
-    </form>
--->
-  </div>
-</nav>
 
-</header>
+        <ul class="list-unstyled components">
+            <li class="active">
+                <a href="https://github.com/DeSchepperCedric/Stride-Dissertation/blob/master/docs/BAE_Simulation_Paper.pdf">Simulation Paper</a>
+            </li>
+            <li>
+                <a href="">Paper</a>
+            </li>
+            <li>
+              <a href="">User manual</a>
+            </li>
+            <li>
+                <a href="https://github.com/DeSchepperCedric/Stride-Dissertation/blob/master/docs/BAE_Document_plan.pdf">Documentation Plan</a>
+            </li>
+            <li>
+                <a href="https://github.com/DeSchepperCedric/Stride-Dissertation/blob/master/docs/BAE_Test_plan.pdf">Test Plan</a>
+            </li>
+            <li>
+                <a href="">Alpha version</a>
+            </li>
+            <li>
+                <a href="">Beta version</a>
+            </li>
+        </ul>
+    </nav>
 
-<main role="main">
+    <!-- Page Content -->
+    <div id="content">
+        <main role="main">
+        <section class="jumbotron text-center">
+            <div class="container-fluid" id="menu">
 
-  <section class="jumbotron text-center">
-    <div class="container">
-      <h1 class="jumbotron-heading">The vaccinators</h1>
-      <p class="lead text-muted">Bachelor dissertation for Cedric De Schepper, Thanh Danh Le, Wannes Marynen & Stijn Vissers</p>
-      <p>
-        <a href="https://github.com/DeSchepperCedric/Stride-Dissertation" class="btn btn-primary my-2" target="_blank">Github</a>
+              <button type="button" id="sidebarCollapse" class="btn btn-primary">
+                  <i class="fa fa-bars"></i>
+                  <span>Menu</span>
+              </button>
 
-        <a href="https://travis-ci.org/DeSchepperCedric/Stride-Dissertation" target="_blank"><img src="https://travis-ci.org/DeSchepperCedric/Stride-Dissertation.svg?branch=master"></a>
-      </p>
-    </div>
-    <br>
-    <div class="container" id="milestone links">
-      <a href="https://github.com/DeSchepperCedric/Stride-Dissertation/blob/master/docs/BAE_Simulation_Assignments.pdf" class="btn btn-info" role="button" target="_blank">Simulation Report</a>
-      <hr>
-      <a href="https://github.com/DeSchepperCedric/Stride-Dissertation/blob/master/docs/BAE_Document_plan.pdf" class="btn btn-info" role="button" target="_blank">Documentation Plan</a>
-      <a href="https://github.com/DeSchepperCedric/Stride-Dissertation/blob/master/docs/BAE_Test_plan.pdf" class="btn btn-info" role="button" target="_blank">Test Plan</a>
-      <hr>
-      <a href="https://github.com/DeSchepperCedric/Stride-Dissertation/blob/master/docs/BAE_Simulation_Paper.pdf" class="btn btn-info" role="button" target="_blank">Simulation Paper</a>
-    </div>
-  </section>
-
-  <div class="album py-5 bg-light">
-    <div class="container">
-      <div class="row">
-
-        <div class="person col-md-4">
-          <div class="card mb-4 shadow-sm">
-            <img width="100%" src="pictures/cedric.jpeg">
-            <div class="card-body">
-              <p class="card-text">Cedric De Schepper (spokesman)</p>
-              <div class="d-flex justify-content-between align-items-center">
-                <div class="btn-group">
-                  <a href="https://github.com/DeSchepperCedric" target="_blank" type="button" class="btn btn-sm btn-outline-secondary">Github</a>
-                </div>
-              </div>
             </div>
-          </div>
-        </div>
-
-
-        <div class="person col-md-4">
-          <div class="card mb-4 shadow-sm">
-            <img width="100%" src="pictures/danh.jpeg">
-            <div class="card-body">
-              <p class="card-text">Thanh Danh Le</p>
-              <div class="d-flex justify-content-between align-items-center">
-                <div class="btn-group">
-                  <a href="https://github.com/Danh95" target="_blank" type="button" class="btn btn-sm btn-outline-secondary">Github</a>
-                </div>
-              </div>
+            <div class="container">
+                <h1 class="jumbotron-heading">The vaccinators</h1>
+                <p class="lead text-muted">Bachelor dissertation for Cedric De Schepper, Thanh Danh Le, Wannes Marynen & Stijn Vissers</p>
+                <p>
+                <a href="https://github.com/DeSchepperCedric/Stride-Dissertation" class="btn btn-primary my-2" target="_blank">Github</a>
+                <a href="https://travis-ci.org/DeSchepperCedric/Stride-Dissertation" target="_blank"><img src="https://travis-ci.org/DeSchepperCedric/Stride-Dissertation.svg?branch=master"></a>
+                </p>
             </div>
-          </div>
-        </div>
-      </div>
-
-      <div class="row">
-        <div class="person col-md-4">
-          <div class="card mb-4 shadow-sm">
-            <img width="100%" src="pictures/wannes.jpeg">
-            <div class="card-body">
-              <p class="card-text">Wannes Marynen</p>
-              <div class="d-flex justify-content-between align-items-center">
-                <div class="btn-group">
-                  <a href="https://github.com/wannesmarynen" target="_blank" type="button" class="btn btn-sm btn-outline-secondary">Github</a>
+        </section>
+        <div class="album py-5 bg-light">
+            <div class="container">
+                <div class="row">
+                    <div class="person col-md-4">
+                        <div class="card mb-4 shadow-sm">
+                            <img width="100%" src="pictures/cedric.jpeg">
+                            <div class="card-body">
+                                <p class="card-text">Cedric De Schepper (spokesman)</p>
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <div class="btn-group">
+                                        <a href="https://github.com/DeSchepperCedric" target="_blank" type="button" class="btn btn-sm btn-outline-secondary">Github</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="person col-md-4">
+                        <div class="card mb-4 shadow-sm">
+                            <img width="100%" src="pictures/danh.jpeg">
+                            <div class="card-body">
+                                <p class="card-text">Thanh Danh Le</p>
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <div class="btn-group">
+                                        <a href="https://github.com/Danh95" target="_blank" type="button" class="btn btn-sm btn-outline-secondary">Github</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-
-        <div class="person col-md-4">
-          <div class="card mb-4 shadow-sm">
-            <img width="100%" src="pictures/stijn.jpeg">
-            <div class="card-body">
-              <p class="card-text">Stijn Vissers</p>
-              <div class="d-flex justify-content-between align-items-center">
-                <div class="btn-group">
-                  <a href="https://github.com/svissers" target="_blank" type="button" class="btn btn-sm btn-outline-secondary">Github</a>
+                <div class="row">
+                    <div class="person col-md-4">
+                        <div class="card mb-4 shadow-sm">
+                            <img width="100%" src="pictures/wannes.jpeg">
+                            <div class="card-body">
+                                <p class="card-text">Wannes Marynen</p>
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <div class="btn-group">
+                                        <a href="https://github.com/wannesmarynen" target="_blank" type="button" class="btn btn-sm btn-outline-secondary">Github</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="person col-md-4">
+                        <div class="card mb-4 shadow-sm">
+                            <img width="100%" src="pictures/stijn.jpeg">
+                            <div class="card-body">
+                                <p class="card-text">Stijn Vissers</p>
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <div class="btn-group">
+                                        <a href="https://github.com/svissers" target="_blank" type="button" class="btn btn-sm btn-outline-secondary">Github</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-              </div>
             </div>
-          </div>
         </div>
-
-      </div>
+        </main>
+        <footer class="text-muted">
+            <div class="container">
+                <p class="float-right">
+                <a href="#">Back to top</a>
+                </p>
+            </div>
+        </footer>
     </div>
-  </div>
+</div>
 
-</main>
-
-<footer class="text-muted">
-  <div class="container">
-    <p class="float-right">
-      <a href="#">Back to top</a>
-    </p>
-<!--
-    <p>Album example is © Bootstrap, but please download and customize it for yourself!</p>
-    <p>New to Bootstrap? <a href="https://getbootstrap.com/">Visit the homepage</a> or read our <a href="https://getbootstrap.com/docs/4.2/getting-started/introduction/">getting started guide</a>.</p>
--->
-  </div>
-</footer>
+<div class="overlay"></div>
 <script src="files/jquery-3.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
-      <script>window.jQuery || document.write('<script src="/docs/4.2/assets/js/vendor/jquery-slim.min.js"><\/script>')</script><script src="files/bootstrap.js" integrity="sha384-zDnhMsjVZfS3hiP7oCBRmfjkQC4fzxVxFhBx8Hkz2aZX8gEvA/jsP3eXRCvzTofP" crossorigin="anonymous"></script>
+<script>window.jQuery || document.write('<script src="/docs/4.2/assets/js/vendor/jquery-slim.min.js"><\/script>')</script>
+<script src="files/bootstrap.js" integrity="sha384-zDnhMsjVZfS3hiP7oCBRmfjkQC4fzxVxFhBx8Hkz2aZX8gEvA/jsP3eXRCvzTofP" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.0/umd/popper.min.js" integrity="sha384-cs/chFZiN24E4KMATLdqdvsezGxaGsi4hLGOzlXwp5UZB1LY//20VyM2taTB4QvJ" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/malihu-custom-scrollbar-plugin/3.1.5/jquery.mCustomScrollbar.concat.min.js"></script>
+<script type="text/javascript">
+    $(document).ready(function () {
+        $("#sidebar").mCustomScrollbar({
+            theme: "minimal"
+        });
 
-</body></html>
+        $('#dismiss, .overlay').on('click', function () {
+            // hide sidebar
+            $('#sidebar').removeClass('active');
+            // hide overlay
+            $('.overlay').removeClass('active');
+        });
+
+        $('#sidebarCollapse').on('click', function () {
+            // open sidebar
+            $('#sidebar').addClass('active');
+            // fade in the overlay
+            $('.overlay').addClass('active');
+            $('.collapse.in').toggleClass('in');
+            $('a[aria-expanded=true]').attr('aria-expanded', 'false');
+        });
+    });
+</script>
+</body>
+</html>

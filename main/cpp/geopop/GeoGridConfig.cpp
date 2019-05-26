@@ -236,7 +236,7 @@ GeoGridConfig::Info GeoGridConfig::ParseHouseholdInfo(unsigned int              
 
         info.fraction_daycare   = param.participation_daycare * fraction_daycare_age;
         info.fraction_preschool = param.participation_preschool * fraction_preschool_age;
-        info.fraction_k12school = fraction_k12school_age;
+        info.fraction_k12school = fraction_k12school_age; // Mandatory, so participation == 1
         info.fraction_college   = param.participation_college * fraction_college_age;
         info.fraction_workplace = param.participation_workplace * (fraction_workplace_age - info.fraction_college);
         info.count_households   = static_cast<unsigned int>(floor(static_cast<double>(popSize) / averageHhSize));
