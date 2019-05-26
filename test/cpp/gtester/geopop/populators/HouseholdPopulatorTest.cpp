@@ -39,13 +39,12 @@ public:
             : m_rn_man(RnInfo()), m_household_populator(m_rn_man), m_gg_config(), m_pop(Population::Create()),
               m_geo_grid(m_pop->RefGeoGrid()), m_household_generator(m_rn_man)
         {
-                for (unsigned int i = 0; i < 5; ++i){
+                for (unsigned int i = 0; i < 5; ++i) {
                         GeoGridConfig::Param param;
                         m_gg_config.params[i] = param;
                         GeoGridConfig::Info info;
                         m_gg_config.regionsInfo[i] = info;
                 }
-
         }
 
 protected:
@@ -60,13 +59,14 @@ protected:
 TEST_F(HouseholdPopulatorTest, OneHouseholdTest)
 {
         GeoGridConfig::RefHH reff;
-        m_gg_config.refHouseHolds[4] = reff;
+        m_gg_config.refHouseHolds[4]         = reff;
         m_gg_config.refHouseHolds.at(4).ages = vector<vector<unsigned int>>{{8U}};
 
-        auto loc1 = make_shared<Location>(1, 4, Coordinate(0, 0), "Antwerpen", 2500);
+        auto loc1  = make_shared<Location>(1, 4, "Antwerpen", 2500);
+        auto coor1 = make_shared<EnhancedCoordinate>(loc1.get(), Coordinate(0, 0));
         m_household_generator.AddPools(*loc1, m_pop.get(), m_gg_config);
 
-        m_geo_grid.AddLocation(loc1);
+        m_geo_grid.addLocation(loc1, coor1);
         m_household_populator.Apply(m_geo_grid, m_gg_config);
 
         const auto& hPools = loc1->RefPools(Id::Household);
@@ -86,12 +86,14 @@ TEST_F(HouseholdPopulatorTest, FiveHouseholdsTest)
 
         m_gg_config.refHouseHolds.at(4).ages = vector<vector<unsigned int>>{{18U}};
 
-        auto loc1 = make_shared<Location>(1, 4, Coordinate(0, 0), "Antwerpen", 2500);
+        auto loc1  = make_shared<Location>(1, 4, "Antwerpen", 2500);
+        auto coor1 = make_shared<EnhancedCoordinate>(loc1.get(), Coordinate(0, 0));
 
         for (unsigned int i = 0U; i < 5U; ++i) {
                 m_household_generator.AddPools(*loc1, m_pop.get(), m_gg_config);
         }
-        m_geo_grid.AddLocation(loc1);
+
+        m_geo_grid.addLocation(loc1, coor1);
         m_household_populator.Apply(m_geo_grid, m_gg_config);
 
         for (const auto& hPool : loc1->RefPools(Id::Household)) {
@@ -103,14 +105,15 @@ TEST_F(HouseholdPopulatorTest, FiveHouseholdsTest)
 TEST_F(HouseholdPopulatorTest, MultipleHouseholdTypesTest)
 {
         GeoGridConfig::RefHH reff;
-        m_gg_config.refHouseHolds[4] = reff;
+        m_gg_config.refHouseHolds[4]         = reff;
         m_gg_config.refHouseHolds.at(4).ages = vector<vector<unsigned int>>{{18U}, {12U, 56U}};
 
-        const auto loc1 = make_shared<Location>(1, 4, Coordinate(0, 0), "Antwerpen", 2500);
+        auto loc1  = make_shared<Location>(1, 4, "Antwerpen", 2500);
+        auto coor1 = make_shared<EnhancedCoordinate>(loc1.get(), Coordinate(0, 0));
         m_household_generator.AddPools(*loc1, m_pop.get(), m_gg_config);
         m_household_generator.AddPools(*loc1, m_pop.get(), m_gg_config);
 
-        m_geo_grid.AddLocation(loc1);
+        m_geo_grid.addLocation(loc1, coor1);
         m_household_populator.Apply(m_geo_grid, m_gg_config);
 
         const auto& hPools = loc1->RefPools(Id::Household);

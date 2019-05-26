@@ -37,15 +37,15 @@ class SecondaryCommunityPopulatorTest : public testing::Test
 public:
         SecondaryCommunityPopulatorTest()
             : m_rn_man(RnInfo{}), m_populator(m_rn_man), m_gg_config(), m_pop(Population::Create()),
-              m_location(make_shared<Location>(1, 4, Coordinate(0, 0), "Antwerpen", 2500)),
+              m_location(make_shared<Location>(1, 4, "Antwerpen", 2500)),
+              m_coordinate(make_shared<EnhancedCoordinate>(m_location.get(), Coordinate(0, 0))),
               m_geo_grid(m_pop->RefGeoGrid()), m_person(), m_community_generator(m_rn_man),
               m_household_generator(m_rn_man)
         {
-                for (unsigned int i = 0; i < 5; ++i){
+                for (unsigned int i = 0; i < 5; ++i) {
                         GeoGridConfig::Param param;
                         m_gg_config.params[i] = param;
                 }
-
         }
 
 protected:
@@ -60,25 +60,26 @@ protected:
                 m_person->SetId(42);
                 m_location->RefPools(Id::Household)[0]->AddMember(m_person.get());
 
-                m_geo_grid.AddLocation(m_location);
+                m_geo_grid.addLocation(m_location, m_coordinate);
 
                 m_community_generator.AddPools(*m_location, m_pop.get(), m_gg_config);
         }
 
-        RnMan                       m_rn_man;
-        SecondaryCommunityPopulator m_populator;
-        GeoGridConfig               m_gg_config;
-        shared_ptr<Population>      m_pop;
-        shared_ptr<Location>        m_location;
-        GeoGrid&                    m_geo_grid;
-        shared_ptr<Person>          m_person;
-        SecondaryCommunityGenerator m_community_generator;
-        HouseholdGenerator          m_household_generator;
+        RnMan                          m_rn_man;
+        SecondaryCommunityPopulator    m_populator;
+        GeoGridConfig                  m_gg_config;
+        shared_ptr<Population>         m_pop;
+        shared_ptr<Location>           m_location;
+        shared_ptr<EnhancedCoordinate> m_coordinate;
+        GeoGrid&                       m_geo_grid;
+        shared_ptr<Person>             m_person;
+        SecondaryCommunityGenerator    m_community_generator;
+        HouseholdGenerator             m_household_generator;
 };
 
 TEST_F(SecondaryCommunityPopulatorTest, OneCommunityTest)
 {
-        m_geo_grid.Finalize();
+        m_geo_grid.m_locationGrid->Finalize();
         m_populator.Apply(m_geo_grid, m_gg_config);
 
         auto& scPools = m_location->RefPools(Id::SecondaryCommunity);
@@ -89,7 +90,7 @@ TEST_F(SecondaryCommunityPopulatorTest, OneCommunityTest)
 
 TEST_F(SecondaryCommunityPopulatorTest, EmptyCommunityTest)
 {
-        m_geo_grid.Finalize();
+        m_geo_grid.m_locationGrid->Finalize();
 
         EXPECT_NO_THROW(m_populator.Apply(m_geo_grid, m_gg_config));
 }
@@ -106,7 +107,7 @@ TEST_F(SecondaryCommunityPopulatorTest, HouseholdTest)
 
         m_community_generator.AddPools(*m_location, m_pop.get(), m_gg_config);
 
-        m_geo_grid.Finalize();
+        m_geo_grid.m_locationGrid->Finalize();
         m_populator.Apply(m_geo_grid, m_gg_config);
 
         auto& scPools = m_location->RefPools(Id::SecondaryCommunity);
@@ -121,11 +122,12 @@ TEST_F(SecondaryCommunityPopulatorTest, HouseholdTest)
 // and that person gets assigned to the SecondaryCommunity at the first Location.
 TEST_F(SecondaryCommunityPopulatorTest, TwoLocationsTest)
 {
-        auto location2 = make_shared<Location>(2, 5, Coordinate(1, 1), "Brussel", 1500);
+        auto location2 = make_shared<Location>(2, 5, "Brussel", 1500);
+        auto coor2     = make_shared<EnhancedCoordinate>(location2.get(), Coordinate(1, 1));
         m_community_generator.AddPools(*location2, m_pop.get(), m_gg_config);
 
-        m_geo_grid.AddLocation(location2);
-        m_geo_grid.Finalize();
+        m_geo_grid.addLocation(location2, coor2);
+        m_geo_grid.m_locationGrid->Finalize();
         m_populator.Apply(m_geo_grid, m_gg_config);
 
         auto& scPools = m_location->RefPools(Id::SecondaryCommunity);

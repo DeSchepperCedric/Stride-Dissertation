@@ -70,8 +70,7 @@ set(STRIDE_SRC
     geopop/Location.cpp
     #---
     geopop/geo/GeoGridKdTree.cpp
-    geopop/geo/KdTree2DPoint.cpp
-    #---
+        #---
     geopop/generators/CollegeGenerator.cpp
     geopop/generators/HouseholdGenerator.cpp
     geopop/generators/K12SchoolGenerator.cpp
@@ -110,6 +109,12 @@ set(STRIDE_SRC
     geopop/populators/WorkplacePopulator.cpp
     geopop/populators/DaycarePopulator.cpp
     geopop/populators/PreSchoolPopulator.cpp
+
+    geopop/io/EpiJSONWriter.cpp
+    geopop/io/EpiWriter.h
+    geopop/io/EpiWriterFactory.cpp
+    geopop/io/EpiJSONReader.cpp
+
     #---
     ${PROTO_HEADER}
     ${PROTO_SRC}
@@ -136,6 +141,7 @@ set(STRIDE_SRC
     util/CSV.cpp
     util/CSVRow.cpp
     util/FileSys.cpp
+    util/HDF5.cpp
     util/LogUtils.cpp
     util/Rn.cpp
     util/RnMan.cpp
@@ -148,7 +154,12 @@ set(STRIDE_SRC
     viewers/InfectedViewer.cpp
     viewers/PersonsFileViewer.cpp
     viewers/SummaryFileViewer.cpp
-)
+    viewers/EpiViewer.cpp
+
+    geopop/EnhancedCoordinate.h
+
+        )
+
 
 #============================================================================
 # Build the Stride library.
@@ -186,10 +197,6 @@ include(CheckIPOSupported)
 # Build the stride binary.
 #============================================================================
 add_executable(stride execs/stride.cpp)
-add_executable(HDF5proto prototypes/h5tutr_crtgrpd.cpp)
 target_link_libraries(stride libstride)
-target_link_libraries(HDF5proto libstride)
 install(TARGETS stride DESTINATION ${BIN_INSTALL_LOCATION})
-install(TARGETS HDF5proto DESTINATION ${BIN_INSTALL_LOCATION})
-
 #############################################################################

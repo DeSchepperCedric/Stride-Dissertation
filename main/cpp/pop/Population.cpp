@@ -65,7 +65,7 @@ std::shared_ptr<Population> Population::Create(const boost::property_tree::ptree
                 pop->RefContactLogger() = LogUtils::CreateNullLogger("contact_logger");
                 strideLogger->info("No contact logging requested.");
         }
-
+        strideLogger->info("done with empty pop");
         // -----------------------------------------------------------------------------------------
         // Build population.
         // -----------------------------------------------------------------------------------------
@@ -80,7 +80,7 @@ std::shared_ptr<Population> Population::Create(const boost::property_tree::ptree
                 strideLogger->info("Invoking DefaultPopBuilder.");
                 DefaultPopBuilder(config, rnMan, strideLogger).Build(pop);
         }
-
+        strideLogger->info("done");
         // -----------------------------------------------------------------------------------------
         // Done.
         // -----------------------------------------------------------------------------------------

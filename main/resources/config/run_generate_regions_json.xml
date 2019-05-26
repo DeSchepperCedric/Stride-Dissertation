@@ -32,13 +32,14 @@
 	<cities_file>flanders_cities.csv</cities_file>
 	<major_cities_file>flanders_major_cities.csv</major_cities_file>
 	<commuting_file>flanders_commuting.csv</commuting_file>
+	<workplace_file>workplace_size_distribution.csv</workplace_file>
 	<regions>
 		<region>
 			<id>1</id>
 			<fraction_college_commuters>0.5</fraction_college_commuters>
 			<fraction_workplace_commuters>0.5</fraction_workplace_commuters>
-			<household_file>households_flanders.json</household_file>
-			<major_household_file>households_flanders.json</major_household_file>
+			<household_file>antwerp.json</household_file>
+			<major_household_file>antwerp_major.json</major_household_file>
 			<participation_preschool>0.99</participation_preschool>
 			<participation_daycare>0.45</participation_daycare>
 			<participation_college>0.5</participation_college>
@@ -49,11 +50,11 @@
 			<id>2</id>
 			<fraction_college_commuters>0.5</fraction_college_commuters>
 			<fraction_workplace_commuters>0.5</fraction_workplace_commuters>
-			<household_file>households_flanders.json</household_file>
-			<major_household_file>households_flanders.json</major_household_file>
+			<household_file>flemish_brabant.json</household_file>
+			<major_household_file>flemish_br_major.json</major_household_file>
 			<participation_preschool>0.99</participation_preschool>
 			<participation_daycare>0.45</participation_daycare>
-			<participation_college>0.5</participation_college>
+			<participation_college>0.5</participation_colleJSONHouseholdsge>
 			<participation_workplace>0.75</participation_workplace>
 			<population_size>172139</population_size>
 		</region>
@@ -61,8 +62,8 @@
 			<id>3</id>
 			<fraction_college_commuters>0.5</fraction_college_commuters>
 			<fraction_workplace_commuters>0.5</fraction_workplace_commuters>
-			<household_file>households_flanders.json</household_file>
-			<major_household_file>households_flanders.json</major_household_file>
+			<household_file>west_flanders.json</household_file>
+			<major_household_file>west_major.json</major_household_file>
 			<participation_preschool>0.99</participation_preschool>
 			<participation_daycare>0.45</participation_daycare>
 			<participation_college>0.5</participation_college>
@@ -73,8 +74,8 @@
 			<id>4</id>
 			<fraction_college_commuters>0.5</fraction_college_commuters>
 			<fraction_workplace_commuters>0.5</fraction_workplace_commuters>
-			<household_file>households_flanders.json</household_file>
-			<major_household_file>households_flanders.json</major_household_file>
+			<household_file>east_flanders.json</household_file>
+			<major_household_file>east_major.json</major_household_file>
 			<participation_preschool>0.99</participation_preschool>
 			<participation_daycare>0.45</participation_daycare>
 			<participation_college>0.5</participation_college>
@@ -85,8 +86,8 @@
 			<id>7</id>
 			<fraction_college_commuters>0.5</fraction_college_commuters>
 			<fraction_workplace_commuters>0.5</fraction_workplace_commuters>
-			<household_file>households_flanders.json</household_file>
-			<major_household_file>households_flanders.json</major_household_file>
+			<household_file>limburg.json</household_file>
+			<major_household_file>limburg_major.json</major_household_file>
 			<participation_preschool>0.99</participation_preschool>
 			<participation_daycare>0.45</participation_daycare>
 			<participation_college>0.5</participation_college>

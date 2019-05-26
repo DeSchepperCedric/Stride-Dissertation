@@ -15,11 +15,11 @@
 
 #include "ReaderFactory.h"
 
-#include "MajorCitiesCSVReader.h"
 #include "CommutesCSVReader.h"
 #include "HouseholdCSVReader.h"
 #include "HouseholdJSONReader.h"
 #include "LocationsCSVReader.h"
+#include "MajorCitiesCSVReader.h"
 #include "WorkplaceCSVReader.h"
 
 #include "util/FileSys.h"
@@ -55,12 +55,12 @@ shared_ptr<CommutesReader> ReaderFactory::CreateCommutesReader(const filesys::pa
 
 std::shared_ptr<MajorCitiesReader> ReaderFactory::CreateMajorCitiesReader(const std::string& filename)
 {
-    return CreateMajorCitiesReader(FileSys::GetDataDir() / filesys::path(filename));
+        return CreateMajorCitiesReader(FileSys::GetDataDir() / filesys::path(filename));
 }
 
 shared_ptr<MajorCitiesReader> ReaderFactory::CreateMajorCitiesReader(const filesys::path& path)
 {
-    return make_shared<MajorCitiesCSVReader>(OpenFile(path));
+        return make_shared<MajorCitiesCSVReader>(OpenFile(path));
 }
 
 std::shared_ptr<HouseholdReader> ReaderFactory::CreateHouseholdReader(const std::string& filename)
@@ -94,10 +94,6 @@ shared_ptr<WorkplaceReader> ReaderFactory::CreateWorkplaceReader(const filesys::
         }
         if (path.extension().string() == ".csv") {
                 return make_shared<WorkplaceCSVReader>(make_unique<ifstream>(path.string()));
-                /*
-                } else if (path.extension().string() == ".json") {
-                    return make_shared<WorkplaceReader>(make_unique<ifstream>(path.string()));
-                */
         } else {
                 throw runtime_error("Unsupported file extension: " + path.extension().string());
         }

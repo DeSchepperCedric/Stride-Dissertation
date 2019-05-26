@@ -35,8 +35,8 @@ void Populator<stride::ContactType::Id::College>::Apply(GeoGrid& geoGrid, const 
         m_logger->trace("Starting to populate Colleges");
 
         // for every location
-        for (const auto& loc : geoGrid) {
-                if (loc->GetPopCount() == 0) {
+        for (const auto& loc : *geoGrid.m_locationGrid) {
+                if (loc->getData<Location>()->GetPopCount() == 0) {
                         continue;
                 }
                 // 1. find all highschools in an area of 10-k*10 km
@@ -50,7 +50,7 @@ void Populator<stride::ContactType::Id::College>::Apply(GeoGrid& geoGrid, const 
                 // 2. find all colleges where students from this location commute to
                 vector<Location*> commutingCollege;
                 vector<double>    commutingWeights;
-                for (const auto& commute : loc->CRefOutgoingCommutes()) {
+                for (const auto& commute : loc->getData<Location>()->CRefOutgoingCommutes()) {
                         const auto& cpools = commute.first->CRefPools(Id::College);
                         if (!cpools.empty()) {
                                 commutingCollege.push_back(commute.first);
@@ -65,14 +65,17 @@ void Populator<stride::ContactType::Id::College>::Apply(GeoGrid& geoGrid, const 
                 }
 
                 // 2. for every student assign a class
-                for (const auto& hhPool : loc->RefPools(Id::Household)) {
+                for (const auto& hhPool : loc->getData<Location>()->RefPools(Id::Household)) {
                         for (Person* p : *hhPool) {
                                 if (AgeBrackets::College::HasAge(p->GetAge()) &&
-                                    m_rn_man.MakeWeightedCoinFlip(geoGridConfig.params.at(loc->GetProvince()).participation_college)) {
+                                    m_rn_man.MakeWeightedCoinFlip(
+                                        geoGridConfig.params.at(loc->getData<Location>()->GetProvince())
+                                            .participation_college)) {
                                         // this person is a student
                                         if (!commutingCollege.empty() &&
                                             m_rn_man.MakeWeightedCoinFlip(
-                                                geoGridConfig.params.at(loc->GetProvince()).fraction_college_commuters)) {
+                                                geoGridConfig.params.at(loc->getData<Location>()->GetProvince())
+                                                    .fraction_college_commuters)) {
                                                 // this person is commuting
 
                                                 // pools to commute to

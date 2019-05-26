@@ -1,0 +1,11 @@
+<RCC>
+    <qresource prefix="/">
+        <file>qtquickcontrols2.conf</file>
+        <file>HomeForm.ui.qml</file>
+        <file>main.qml</file>
+        <file>Map.qml</file>
+        <file>MapForm.ui.qml</file>
+        <file>Page1Form.ui.qml</file>
+        <file>Page2Form.ui.qml</file>
+    </qresource>
+</RCC>

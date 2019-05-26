@@ -39,13 +39,6 @@ public:
             : m_rn_man(RnInfo()), m_college_generator(m_rn_man), m_gg_config(), m_pop(Population::Create()),
               m_geo_grid(m_pop.get())
         {
-//                for (unsigned int i = 0; i < 5; ++i){
-//                        GeoGridConfig::Param param;
-//                        m_gg_config.params[i] = param;
-//                        GeoGridConfig::Info info;
-//                        m_gg_config.regionsInfo[i] = info;
-//                }
-
         }
 
 protected:
@@ -63,12 +56,13 @@ TEST_F(CollegeGeneratorTest, OneLocationTest)
         GeoGridConfig::Param param;
         m_gg_config.params[4] = param;
         GeoGridConfig::Info info;
-        m_gg_config.regionsInfo[4] = info;
-        m_gg_config.params.at(4).pop_size        = 45000;
-        m_gg_config.regionsInfo.at(4).popcount_college = 9000;
+        m_gg_config.regionsInfo[4]                     = info;
+        m_gg_config.params.at(4).pop_size              = 45000;
+        m_gg_config.regionsInfo.at(4).fraction_college = 9000.0 / m_gg_config.params.at(4).pop_size;
 
-        auto loc1 = make_shared<Location>(1, 4, Coordinate(0, 0), "Antwerpen", m_gg_config.params.at(4).pop_size);
-        m_geo_grid.AddLocation(loc1);
+        auto loc1 = make_shared<Location>(1, 4, "Antwerpen", m_gg_config.params.at(4).pop_size);
+        auto coor = make_shared<EnhancedCoordinate>(loc1.get(), Coordinate(0, 0));
+        m_geo_grid.addLocation(loc1, coor);
 
         m_college_generator.Apply(m_geo_grid, m_gg_config);
 
@@ -82,9 +76,9 @@ TEST_F(CollegeGeneratorTest, ZeroLocationTest)
         GeoGridConfig::Param param;
         m_gg_config.params[0] = param;
         GeoGridConfig::Info info;
-        m_gg_config.regionsInfo[0] = info;
-        m_gg_config.params.at(0).pop_size        = 10000;
-        m_gg_config.regionsInfo.at(0).popcount_college = 2000;
+        m_gg_config.regionsInfo[0]                     = info;
+        m_gg_config.params.at(0).pop_size              = 10000;
+        m_gg_config.regionsInfo.at(0).fraction_college = 2000.0 / m_gg_config.params.at(0).pop_size;
 
         m_college_generator.Apply(m_geo_grid, m_gg_config);
 
@@ -97,15 +91,16 @@ TEST_F(CollegeGeneratorTest, MultipleLocationsTest)
         GeoGridConfig::Param param;
         m_gg_config.params[4] = param;
         GeoGridConfig::Info info;
-        m_gg_config.regionsInfo[4] = info;
-        m_gg_config.params.at(4).pop_size        = 399992;
-        m_gg_config.regionsInfo.at(4).popcount_college = 79998;
+        m_gg_config.regionsInfo[4]                     = info;
+        m_gg_config.params.at(4).pop_size              = 399992;
+        m_gg_config.regionsInfo.at(4).fraction_college = 79998.0 / m_gg_config.params.at(4).pop_size;
 
         array<unsigned int, 15> sizes{28559, 33319, 39323, 37755, 35050, 10060, 13468, 8384,
                                       9033,  31426, 33860, 4110,  50412, 25098, 40135};
         for (const auto size : sizes) {
-                const auto loc = make_shared<Location>(1, 4, Coordinate(0, 0), "Size: " + to_string(size), size);
-                m_geo_grid.AddLocation(loc);
+                const auto loc  = make_shared<Location>(1, 4, "Size: " + to_string(size), size);
+                auto       coor = make_shared<EnhancedCoordinate>(loc.get(), Coordinate(0, 0));
+                m_geo_grid.addLocation(loc, coor);
         }
         m_college_generator.Apply(m_geo_grid, m_gg_config);
 

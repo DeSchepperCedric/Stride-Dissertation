@@ -66,6 +66,7 @@ def runSimulation(outputPrefix, file, seed):
     # Load configuration from file
     control.loadRunConfig(os.path.join("config", "run_generate_default.xml"))
     # Set some parameters
+    print("commuting" + str(file) + ".proto")
     control.runConfig.setParameter("population_file", "commuting" + str(file) + ".proto")
     control.runConfig.setParameter("population_type", "import")
     control.runConfig.setParameter("output_prefix", outputPrefix + "/" + str(file) + "/" + str(seed))
@@ -82,7 +83,7 @@ def main():
     if run_tests:
         shutil.rmtree('commuting', ignore_errors=True)
     files = range(10, 110, 10)
-    seeds = range(1, 2)
+    seeds = range(1, 10)
     # Run simulations
     if run_tests:
         for v in files:
