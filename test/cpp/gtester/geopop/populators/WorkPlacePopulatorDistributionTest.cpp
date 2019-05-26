@@ -53,7 +53,7 @@ protected:
 
 TEST_F(WorkplacePopulatorDistributionTest, NoCommuting)
 {
-        MakeGeoGrid(m_gg_config, 3, 100, 12, 2, 3, 33, 3, m_pop.get());
+        MakeGeoGrid(m_gg_config, 3, 1000, 12, 2, 3, 33, 3, m_pop.get());
 
         m_gg_config.params[1]      = GeoGridConfig::Param{};
         m_gg_config.regionsInfo[1] = GeoGridConfig::Info{};
@@ -64,15 +64,28 @@ TEST_F(WorkplacePopulatorDistributionTest, NoCommuting)
         m_gg_config.params.at(1).participation_workplace      = 1;
         m_gg_config.params.at(1).participation_college        = 0.5;
 
-        m_gg_config.refWP.ratios = {0.760, 0.191, 0.041, 0.008};
-        m_gg_config.refWP.min    = {1, 10, 50, 200};
-        m_gg_config.refWP.max    = {9, 49, 199, 400};
+        m_gg_config.refWP.ratios = {0.780, 0.171, 0.041, 0.008};
+        m_gg_config.refWP.min    = {1, 6, 13, 26};
+        m_gg_config.refWP.max    = {5, 12, 25, 50};
 
         auto schoten = *(m_geo_grid.m_locationGrid->begin());
         schoten->SetCoordinate(Coordinate(51.2497532, 4.4977063));
         auto kortrijk = *(m_geo_grid.m_locationGrid->begin() + 1);
         kortrijk->SetCoordinate(Coordinate(50.82900246, 3.264406009));
-        for (int k = 0; k < 15; k++) {
+
+        double averageWorkplaceSize = 0.0;
+
+        if (!m_gg_config.refWP.ratios.empty()) {
+        for (unsigned int i = 0; i < m_gg_config.refWP.ratios.size(); i++) {
+        averageWorkplaceSize +=
+        m_gg_config.refWP.ratios[i] * (m_gg_config.refWP.max[i] + m_gg_config.refWP.min[i]) / 2;
+        }
+        }
+
+        const auto WorkplacesCount =
+        static_cast<unsigned int>(ceil(200 / averageWorkplaceSize));
+
+        for (unsigned int k = 0; k < WorkplacesCount; k++) {
                 m_workplace_generator.AddPools(*schoten->getData<Location>(), m_pop.get(), m_gg_config);
                 m_workplace_generator.AddPools(*kortrijk->getData<Location>(), m_pop.get(), m_gg_config);
         }
@@ -84,19 +97,17 @@ TEST_F(WorkplacePopulatorDistributionTest, NoCommuting)
 
         m_geo_grid.m_locationGrid->Finalize();
 
-        m_workplace_generator.Apply(m_geo_grid, m_gg_config);
+
+
         m_workplace_populator.Apply(m_geo_grid, m_gg_config);
 
+
         vector<unsigned int>   count = {0, 0, 0, 0};
-        std::set<ContactPool*> all;
-        unsigned int           total_size = 0U;
 
         // count how many workplaces there are of each type
         for (const auto& loc : m_geo_grid) {
                 for (const auto& pool : loc->RefPools(Id::Workplace)) {
                         auto size = pool->size();
-                        total_size++;
-                        all.insert(pool);
                         if (size <= m_gg_config.refWP.max[0]) {
                                 count[0]++;
                         } else if (size <= m_gg_config.refWP.max[1]) {
@@ -108,23 +119,17 @@ TEST_F(WorkplacePopulatorDistributionTest, NoCommuting)
                         }
                 }
         }
-        // Calculate the actual ratio and compare to expected ratio (within a range)
-        for (unsigned int i = 0; i < count.size(); i++) {
-                const auto lower_bound = m_gg_config.refWP.ratios[i] > 0.1
-                                             ? m_gg_config.refWP.ratios[i] - m_gg_config.refWP.ratios[i] * 0.20
-                                             : 0.0;
-                const auto upper_bound  = m_gg_config.refWP.ratios[i] + m_gg_config.refWP.ratios[i] * 0.20;
-                const auto actual_ratio = (float)count[i] / (float)total_size;
 
-                //TODO:fix this test
-                //EXPECT_TRUE(actual_ratio >= lower_bound);
-                //EXPECT_TRUE(actual_ratio <= upper_bound);
+        const vector<unsigned int>   expected = {68, 13, 1, 0};
+
+        for (unsigned int i = 0; i < count.size(); i++) {
+                EXPECT_EQ(expected[i], count[i]);
         }
 }
 
 TEST_F(WorkplacePopulatorDistributionTest, HalfCommuting)
 {
-        MakeGeoGrid(m_gg_config, 3, 100, 12, 2, 3, 33, 3, m_pop.get());
+        MakeGeoGrid(m_gg_config, 3, 1000, 12, 2, 3, 33, 3, m_pop.get());
 
         m_gg_config.params[1] = GeoGridConfig::Param{};
 
@@ -144,10 +149,23 @@ TEST_F(WorkplacePopulatorDistributionTest, HalfCommuting)
         schoten->SetCoordinate(Coordinate(51.2497532, 4.4977063));
         auto kortrijk = *(m_geo_grid.m_locationGrid->begin() + 1);
         kortrijk->SetCoordinate(Coordinate(50.82900246, 3.264406009));
-        for (int k = 0; k < 15; k++) {
-                m_workplace_generator.AddPools(*schoten->getData<Location>(), m_pop.get(), m_gg_config);
-                m_workplace_generator.AddPools(*kortrijk->getData<Location>(), m_pop.get(), m_gg_config);
+
+        auto averageWorkplaceSize = 0.0;
+
+    if (!m_gg_config.refWP.ratios.empty()) {
+        for (unsigned int i = 0; i < m_gg_config.refWP.ratios.size(); i++) {
+            averageWorkplaceSize +=
+                    m_gg_config.refWP.ratios[i] * (m_gg_config.refWP.max[i] + m_gg_config.refWP.min[i]) / 2;
         }
+    }
+
+    const auto WorkplacesCount =
+            static_cast<unsigned int>(ceil(200 / static_cast<double>(averageWorkplaceSize)));
+
+    for (unsigned int k = 0; k < WorkplacesCount; k++) {
+        m_workplace_generator.AddPools(*schoten->getData<Location>(), m_pop.get(), m_gg_config);
+        m_workplace_generator.AddPools(*kortrijk->getData<Location>(), m_pop.get(), m_gg_config);
+    }
 
         schoten->getData<Location>()->AddOutgoingCommute(kortrijk->getData<Location>(), 0.5);
         kortrijk->getData<Location>()->AddIncomingCommute(schoten->getData<Location>(), 0.5);
@@ -160,15 +178,11 @@ TEST_F(WorkplacePopulatorDistributionTest, HalfCommuting)
         m_workplace_populator.Apply(m_geo_grid, m_gg_config);
 
         vector<unsigned int>   count = {0, 0, 0, 0};
-        std::set<ContactPool*> all;
-        unsigned int           total_size = 0U;
 
         // count how many workplaces there are of each type
         for (const auto& loc : m_geo_grid) {
                 for (const auto& pool : loc->RefPools(Id::Workplace)) {
                         auto size = pool->size();
-                        total_size++;
-                        all.insert(pool);
                         if (size <= m_gg_config.refWP.max[0]) {
                                 count[0]++;
                         } else if (size <= m_gg_config.refWP.max[1]) {
@@ -180,77 +194,93 @@ TEST_F(WorkplacePopulatorDistributionTest, HalfCommuting)
                         }
                 }
         }
-        // Calculate the actual ratio and compare to expected ratio (within a range)
-        for (unsigned int i = 0; i < count.size(); i++) {
-                const auto lower_bound = m_gg_config.refWP.ratios[i] > 0.1
-                                             ? m_gg_config.refWP.ratios[i] - m_gg_config.refWP.ratios[i] * 0.20
-                                             : 0.0;
-                const auto upper_bound  = m_gg_config.refWP.ratios[i] + m_gg_config.refWP.ratios[i] * 0.20;
-                const auto actual_ratio = (float)count[i] / (float)total_size;
 
-                EXPECT_TRUE((actual_ratio >= lower_bound) && (actual_ratio <= upper_bound));
-        }
+    const vector<unsigned int>   expected = {22, 3, 1, 0};
+
+    for (unsigned int i = 0; i < count.size(); i++) {
+        EXPECT_EQ(expected[i], count[i]);
+    }
 }
 
 TEST_F(WorkplacePopulatorDistributionTest, OnlyCommuting)
-{
-        MakeGeoGrid(m_gg_config, 3, 100, 12, 90, 3, 33, 3, m_pop.get());
+    {
 
-        m_gg_config.params[1]                                 = GeoGridConfig::Param{};
-        m_gg_config.params.at(1).fraction_workplace_commuters = 1;
-        m_gg_config.params.at(1).fraction_college_commuters   = 1;
+        MakeGeoGrid(m_gg_config, 3, 1000, 12, 2, 3, 33, 3, m_pop.get());
+
+        m_gg_config.params[1] = GeoGridConfig::Param{};
+
+        m_gg_config.params.at(1).fraction_workplace_commuters = 0.5;
+        m_gg_config.params.at(1).fraction_college_commuters   = 0.5;
         m_gg_config.params.at(1).participation_workplace      = 1;
         m_gg_config.params.at(1).participation_college        = 0.5;
 
         m_gg_config.regionsInfo[1]                       = GeoGridConfig::Info{};
         m_gg_config.regionsInfo.at(1).fraction_workplace = 0.01;
 
+
         m_gg_config.refWP.ratios = {0.760, 0.191, 0.041, 0.008};
         m_gg_config.refWP.min    = {1, 10, 50, 200};
         m_gg_config.refWP.max    = {9, 49, 199, 400};
+
         // only commuting
 
-        for (int k = 0; k < 3; k++) {
-                auto t = *(m_geo_grid.begin() + k);
-                for (int i = 0; i < 15; i++) {
-                        m_workplace_generator.AddPools(*t, m_pop.get(), m_gg_config);
-                }
+        auto schoten = *(m_geo_grid.m_locationGrid->begin());
+        schoten->SetCoordinate(Coordinate(51.2497532, 4.4977063));
+
+        auto kortrijk = *(m_geo_grid.m_locationGrid->begin() + 1);
+        kortrijk->SetCoordinate(Coordinate(50.82900246, 3.264406009));
+
+
+        schoten->getData<Location>()->AddOutgoingCommute(kortrijk->getData<Location>(), 0.5);
+        kortrijk->getData<Location>()->AddIncomingCommute(schoten->getData<Location>(), 0.5);
+        kortrijk->getData<Location>()->AddOutgoingCommute(schoten->getData<Location>(), 0.5);
+        schoten->getData<Location>()->AddIncomingCommute(kortrijk->getData<Location>(), 0.5);
+
+        auto averageWorkplaceSize = 0.0;
+
+        if (!m_gg_config.refWP.ratios.empty()) {
+            for (unsigned int i = 0; i < m_gg_config.refWP.ratios.size(); i++) {
+                averageWorkplaceSize +=
+                        m_gg_config.refWP.ratios[i] * (m_gg_config.refWP.max[i] + m_gg_config.refWP.min[i]) / 2;
+            }
+        }
+
+        const auto WorkplacesCount =
+                static_cast<unsigned int>(ceil(200 / static_cast<double>(averageWorkplaceSize)));
+
+        for (unsigned int k = 0; k < WorkplacesCount; k++) {
+            m_workplace_generator.AddPools(*schoten->getData<Location>(), m_pop.get(), m_gg_config);
+            m_workplace_generator.AddPools(*kortrijk->getData<Location>(), m_pop.get(), m_gg_config);
         }
 
         m_geo_grid.m_locationGrid->Finalize();
-        m_workplace_generator.Apply(m_geo_grid, m_gg_config);
         m_workplace_populator.Apply(m_geo_grid, m_gg_config);
 
-        // count how many workplaces there are of each type
         vector<unsigned int>   count = {0, 0, 0, 0};
-        std::set<ContactPool*> all;
-        unsigned int           total_size = 0U;
-        for (const auto& loc : m_geo_grid) {
-                for (const auto& pool : loc->RefPools(Id::Workplace)) {
-                        auto size = pool->size();
-                        total_size++;
-                        all.insert(pool);
-                        if (size <= m_gg_config.refWP.max[0]) {
-                                count[0]++;
-                        } else if (size <= m_gg_config.refWP.max[1]) {
-                                count[1]++;
-                        } else if (size <= m_gg_config.refWP.max[2]) {
-                                count[2]++;
-                        } else {
-                                count[3]++;
-                        }
-                }
-        }
-        // Calculate the actual ratio and compare to expected ratio (within a range)
-        for (unsigned int i = 0; i < count.size(); i++) {
-                const auto lower_bound = m_gg_config.refWP.ratios[i] > 0.1
-                                             ? m_gg_config.refWP.ratios[i] - m_gg_config.refWP.ratios[i] * 0.10
-                                             : 0.0;
-                const auto upper_bound  = m_gg_config.refWP.ratios[i] + m_gg_config.refWP.ratios[i] * 0.10;
-                const auto actual_ratio = (float)count[i] / (float)total_size;
 
-                EXPECT_TRUE((actual_ratio >= lower_bound) && (actual_ratio <= upper_bound));
+        // count how many workplaces there are of each type
+        for (const auto& loc : m_geo_grid) {
+            for (const auto& pool : loc->RefPools(Id::Workplace)) {
+                auto size = pool->size();
+                if (size <= m_gg_config.refWP.max[0]) {
+                    count[0]++;
+                } else if (size <= m_gg_config.refWP.max[1]) {
+                    count[1]++;
+                } else if (size <= m_gg_config.refWP.max[2]) {
+                    count[2]++;
+                } else {
+                    count[3]++;
+                }
+            }
         }
-}
+
+        const vector<unsigned int>   expected = {21, 2, 1, 0};
+
+        for (unsigned int i = 0; i < count.size(); i++) {
+            EXPECT_EQ(expected[i], count[i]);
+        }
+    }
+
+
 
 } // namespace
