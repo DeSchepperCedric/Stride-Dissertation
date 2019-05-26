@@ -108,7 +108,7 @@ TEST_F(DemographicTest, provincesParamsTest)
         }
 }
 
-TEST_F(DemographicTest, HouseholdsTest)
+TEST_F(DemographicTest, HouseholdsParsedCorrectlyTest)
 {
         // ParseHouseholdInfo, check if the info is set correctly
         // Param needs to be != 0
