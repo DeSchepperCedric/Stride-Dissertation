@@ -32,17 +32,17 @@ shared_ptr<Population> getExpectedGeoGrid()
 {
         auto  pop     = Population::Create();
         auto& geoGrid = pop->RefGeoGrid();
-        auto loc1 = make_shared<Location>(21, 0, "", 1000);
-        auto coor1 = make_shared<EnhancedCoordinate>(loc1.get(), Coordinate(0.0,0.0));
+        auto  loc1    = make_shared<Location>(21, 0, "", 1000);
+        auto  coor1   = make_shared<EnhancedCoordinate>(loc1.get(), Coordinate(0.0, 0.0));
         geoGrid.addLocation(loc1, coor1);
-        auto loc2 = make_shared<Location>(22, 0, "", 800);
-        auto coor2 = make_shared<EnhancedCoordinate>(loc2.get(), Coordinate(0.0,0.0));
+        auto loc2  = make_shared<Location>(22, 0, "", 800);
+        auto coor2 = make_shared<EnhancedCoordinate>(loc2.get(), Coordinate(0.0, 0.0));
         geoGrid.addLocation(loc2, coor2);
-        auto loc3 = make_shared<Location>(23, 0, "", 900);
-        auto coor3 = make_shared<EnhancedCoordinate>(loc3.get(), Coordinate(0.0,0.0));
+        auto loc3  = make_shared<Location>(23, 0, "", 900);
+        auto coor3 = make_shared<EnhancedCoordinate>(loc3.get(), Coordinate(0.0, 0.0));
         geoGrid.addLocation(loc3, coor3);
-        auto loc4 = make_shared<Location>(24, 0, "", 1300);
-        auto coor4 = make_shared<EnhancedCoordinate>(loc4.get(), Coordinate(0.0,0.0));
+        auto loc4  = make_shared<Location>(24, 0, "", 1300);
+        auto coor4 = make_shared<EnhancedCoordinate>(loc4.get(), Coordinate(0.0, 0.0));
         geoGrid.addLocation(loc4, coor4);
 
         // to 21
@@ -87,19 +87,19 @@ TEST(CommutesCSVReaderTest, test1)
         auto       expectedPop     = getExpectedGeoGrid();
         auto&      expectedGeoGrid = expectedPop->RefGeoGrid();
         const auto pop             = Population::Create();
-        auto& grid = pop->RefGeoGrid();
+        auto&      grid            = pop->RefGeoGrid();
 
-        auto loc1 = make_shared<Location>(21, 0, "", 1000);
-        auto coor1 = make_shared<EnhancedCoordinate>(loc1.get(), Coordinate(0.0,0.0));
+        auto loc1  = make_shared<Location>(21, 0, "", 1000);
+        auto coor1 = make_shared<EnhancedCoordinate>(loc1.get(), Coordinate(0.0, 0.0));
         grid.addLocation(loc1, coor1);
-        auto loc2 = make_shared<Location>(22, 0, "", 800);
-        auto coor2 = make_shared<EnhancedCoordinate>(loc2.get(), Coordinate(0.0,0.0));
+        auto loc2  = make_shared<Location>(22, 0, "", 800);
+        auto coor2 = make_shared<EnhancedCoordinate>(loc2.get(), Coordinate(0.0, 0.0));
         grid.addLocation(loc2, coor2);
-        auto loc3 = make_shared<Location>(23, 0, "", 900);
-        auto coor3 = make_shared<EnhancedCoordinate>(loc3.get(), Coordinate(0.0,0.0));
+        auto loc3  = make_shared<Location>(23, 0, "", 900);
+        auto coor3 = make_shared<EnhancedCoordinate>(loc3.get(), Coordinate(0.0, 0.0));
         grid.addLocation(loc3, coor3);
-        auto loc4 = make_shared<Location>(24, 0, "", 1300);
-        auto coor4 = make_shared<EnhancedCoordinate>(loc4.get(), Coordinate(0.0,0.0));
+        auto loc4  = make_shared<Location>(24, 0, "", 1300);
+        auto coor4 = make_shared<EnhancedCoordinate>(loc4.get(), Coordinate(0.0, 0.0));
         grid.addLocation(loc4, coor4);
 
         auto              instream = make_unique<istringstream>(csvString);

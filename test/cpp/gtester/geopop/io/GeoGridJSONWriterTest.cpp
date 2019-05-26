@@ -78,15 +78,15 @@ TEST(GeoGridJSONWriterTest, locationWrittenCorrectlyTest)
 {
         auto pop     = Population::Create();
         auto geoGrid = GeoGrid(pop.get());
-        auto loc1 = make_shared<Location>(1, 4, "Bavikhove", 2500);
-        auto coor1 = make_shared<EnhancedCoordinate>(loc1.get(), Coordinate(0,0));
-        auto loc2 = make_shared<Location>(2, 3, "Gent", 5000);
-        auto coor2 = make_shared<EnhancedCoordinate>(loc2.get(), Coordinate(0,0));
-        auto loc3 = make_shared<Location>(3, 2, "Mons", 2500);
-        auto coor3 = make_shared<EnhancedCoordinate>(loc3.get(), Coordinate(0,0));
-        geoGrid.addLocation(loc1,coor1);
-        geoGrid.addLocation(loc2,coor2);
-        geoGrid.addLocation(loc3,coor3);
+        auto loc1    = make_shared<Location>(1, 4, "Bavikhove", 2500);
+        auto coor1   = make_shared<EnhancedCoordinate>(loc1.get(), Coordinate(0, 0));
+        auto loc2    = make_shared<Location>(2, 3, "Gent", 5000);
+        auto coor2   = make_shared<EnhancedCoordinate>(loc2.get(), Coordinate(0, 0));
+        auto loc3    = make_shared<Location>(3, 2, "Mons", 2500);
+        auto coor3   = make_shared<EnhancedCoordinate>(loc3.get(), Coordinate(0, 0));
+        geoGrid.addLocation(loc1, coor1);
+        geoGrid.addLocation(loc2, coor2);
+        geoGrid.addLocation(loc3, coor3);
 
         EXPECT_TRUE(compareGeoGrid(geoGrid, "test0.json"));
 }
@@ -96,7 +96,7 @@ TEST(GeoGridJSONWriterTest, contactCentersWrittenCorrectlyTest)
         const auto pop     = Population::Create();
         auto&      geoGrid = pop->RefGeoGrid();
         const auto loc     = make_shared<Location>(1, 4, "Bavikhove", 2500);
-        auto coor          = make_shared<EnhancedCoordinate>(loc.get(), Coordinate(0,0));
+        auto       coor    = make_shared<EnhancedCoordinate>(loc.get(), Coordinate(0, 0));
 
         loc->RefPools(Id::K12School).emplace_back(pop->RefPoolSys().CreateContactPool(Id::K12School));
         loc->RefPools(Id::PrimaryCommunity).emplace_back(pop->RefPoolSys().CreateContactPool(Id::PrimaryCommunity));
@@ -106,7 +106,7 @@ TEST(GeoGridJSONWriterTest, contactCentersWrittenCorrectlyTest)
         loc->RefPools(Id::Daycare).emplace_back(pop->RefPoolSys().CreateContactPool(Id::Daycare));
         loc->RefPools(Id::PreSchool).emplace_back(pop->RefPoolSys().CreateContactPool(Id::PreSchool));
 
-        geoGrid.addLocation(loc,coor);
+        geoGrid.addLocation(loc, coor);
 
         EXPECT_TRUE(compareGeoGrid(geoGrid, "test1.json"));
 }

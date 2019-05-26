@@ -17,8 +17,8 @@
 
 #include "EpiWriter.h"
 
-#include <ostream>
 #include <fstream>
+#include <ostream>
 // namespace stride
 
 namespace geopop {

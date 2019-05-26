@@ -51,7 +51,8 @@ void Populator<stride::ContactType::Id::Daycare>::Apply(GeoGrid& geoGrid, const 
                         for (Person* p : *hhPool) {
                                 if (AgeBrackets::Daycare::HasAge(p->GetAge()) &&
                                     m_rn_man.MakeWeightedCoinFlip(
-                                        geoGridConfig.params.at(loc->getData<Location>()->GetProvince()).participation_daycare)) {
+                                        geoGridConfig.params.at(loc->getData<Location>()->GetProvince())
+                                            .participation_daycare)) {
                                         // this person is a baby
                                         auto& c = nearByDaycaresPools[dist()];
                                         c->AddMember(p);

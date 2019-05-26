@@ -44,16 +44,16 @@ void EpiViewer::Update(stride::sim_event::Id id)
                 cout << "data:      " << geo.size() << endl;
                 for (auto& loc : *geo.m_locationGrid) {
                         visualization::Location location;
-                        location.id               = loc->getData<geopop::Location>()->GetID();
-                        location.name             = loc->getData<geopop::Location>()->GetName();
-                        location.longitude        = loc->GetCoordinate().get<0>();
-                        location.latitude         = loc->GetCoordinate().get<1>();
-                        location.size             = loc->getData<geopop::Location>()->GetPopCount();
-                        const auto& epi = loc->getData<geopop::Location>()->GetStatusCounts();
-                        for(const auto& age: epi){
-                            for(const auto& status: age.second){
-                                location.infected[age.first][status.first].push_back(status.second);
-                            }
+                        location.id        = loc->getData<geopop::Location>()->GetID();
+                        location.name      = loc->getData<geopop::Location>()->GetName();
+                        location.longitude = loc->GetCoordinate().get<0>();
+                        location.latitude  = loc->GetCoordinate().get<1>();
+                        location.size      = loc->getData<geopop::Location>()->GetPopCount();
+                        const auto& epi    = loc->getData<geopop::Location>()->GetStatusCounts();
+                        for (const auto& age : epi) {
+                                for (const auto& status : age.second) {
+                                        location.infected[age.first][status.first].push_back(status.second);
+                                }
                         }
                         m_Locations[loc->getData<geopop::Location>()->GetID()] = location;
                 }
@@ -62,12 +62,13 @@ void EpiViewer::Update(stride::sim_event::Id id)
         case Id::Stepped: {
                 auto& geo = m_runner->GetSim()->GetPopulation()->RefGeoGrid();
                 for (auto& loc : geo) {
-                    const auto& epi = loc->GetStatusCounts();
-                    for(const auto& age: epi){
-                        for(const auto& status: age.second){
-                            m_Locations[loc->GetID()].infected[age.first][status.first].push_back(status.second);
+                        const auto& epi = loc->GetStatusCounts();
+                        for (const auto& age : epi) {
+                                for (const auto& status : age.second) {
+                                        m_Locations[loc->GetID()].infected[age.first][status.first].push_back(
+                                            status.second);
+                                }
                         }
-                    }
                 }
                 break;
         }

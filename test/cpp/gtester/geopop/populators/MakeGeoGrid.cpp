@@ -99,7 +99,7 @@ void MakeGeoGrid(const GeoGridConfig&, int locCount, int locPop, int dayCount, i
                         }
                 }
 
-                auto coor = make_shared<EnhancedCoordinate>(loc.get(), Coordinate(0,0));
+                auto coor = make_shared<EnhancedCoordinate>(loc.get(), Coordinate(0, 0));
                 geoGrid.addLocation(loc, coor);
         }
 }

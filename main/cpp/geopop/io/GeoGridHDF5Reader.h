@@ -18,8 +18,8 @@
 #include "GeoGridFileReader.h"
 #include "contact/ContactPool.h"
 #include "contact/ContactType.h"
-#include "geopop/Location.h"
 #include "geopop/EnhancedCoordinate.h"
+#include "geopop/Location.h"
 
 #include "H5Cpp.h"
 #include "util/HDF5.h"

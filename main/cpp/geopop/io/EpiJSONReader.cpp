@@ -62,18 +62,16 @@ visualization::Location EpiJSONReader::parseLocation(nlohmann::json& node)
         loc.latitude  = double(node["coordinate"]["latitude"]);
         loc.longitude = double(node["coordinate"]["longitude"]);
 
-
-        const auto age = {"College", "Daycare", "Household", "K12School", "PreSchool", "PrimaryCommunity", "SecondaryCommunity", "Workplace"};
+        const auto age    = {"College",   "Daycare",          "Household",          "K12School",
+                          "PreSchool", "PrimaryCommunity", "SecondaryCommunity", "Workplace"};
         const auto status = {"immune", "infected", "infectious", "recovered", "susceptible", "symptomatic", "total"};
 
-        
-        for(const auto& a: age){
-            for(const auto& s: status){
-                vector<unsigned int> days = ParseArray(node["Epi"][a][s]);
-                loc.infected[a][s] = days;
-            }
+        for (const auto& a : age) {
+                for (const auto& s : status) {
+                        vector<unsigned int> days = ParseArray(node["Epi"][a][s]);
+                        loc.infected[a][s]        = days;
+                }
         }
-
 
         return loc;
 }

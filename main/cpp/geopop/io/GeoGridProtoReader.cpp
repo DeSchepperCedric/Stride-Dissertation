@@ -103,7 +103,8 @@ void GeoGridProtoReader::ParseContactPool(shared_ptr<Location>                  
         }
 }
 
-std::pair<shared_ptr <geopop::Location>, shared_ptr<geopop::EnhancedCoordinate>> GeoGridProtoReader::ParseLocation(const proto::GeoGrid_Location &protoLocation)
+std::pair<shared_ptr<geopop::Location>, shared_ptr<geopop::EnhancedCoordinate>> GeoGridProtoReader::ParseLocation(
+    const proto::GeoGrid_Location& protoLocation)
 {
         const auto  id         = protoLocation.id();
         const auto& name       = protoLocation.name();

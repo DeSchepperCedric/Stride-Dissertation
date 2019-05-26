@@ -16,11 +16,11 @@
 #pragma once
 
 #include "GeoGridStreamWriter.h"
-#include "geopop/Location.h"
 #include "geopop/EnhancedCoordinate.h"
+#include "geopop/Location.h"
 
-#include <set>
 #include <memory>
+#include <set>
 
 namespace stride {
 class ContactPool;

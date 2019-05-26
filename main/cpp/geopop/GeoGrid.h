@@ -22,38 +22,39 @@
 
 #include "LocationGrid.h"
 
+#include <memory>
 #include <set>
 #include <unordered_map>
 #include <vector>
-#include <memory>
 
 namespace stride {
-    class ContactPool;
+class ContactPool;
 
-    class Population;
+class Population;
 } // namespace stride
 
 namespace geopop {
 
-    class Location;
+class Location;
 
-    template<typename Policy, typename... F>
-    class GeoAggregator;
+template <typename Policy, typename... F>
+class GeoAggregator;
 
 /**
  * A Geographic grid of simulation region contains Locations that in turn contain
  * an index to the ContactPools situated at that Location.
  */
-    class GeoGrid {//: public LocationGrid<Location> {
-    public:
+class GeoGrid
+{ //: public LocationGrid<Location> {
+public:
         /// GeoGrid and associated Population.
-        explicit GeoGrid(stride::Population *population);
+        explicit GeoGrid(stride::Population* population);
 
         /// No copy constructor.
-        GeoGrid(const GeoGrid &) = delete;
+        GeoGrid(const GeoGrid&) = delete;
 
         /// No copy assignment.
-        GeoGrid operator=(const GeoGrid &) = delete;
+        GeoGrid operator=(const GeoGrid&) = delete;
 
         /// Gets current size of Location storage.
         size_t size() const { return m_locations.size(); }
@@ -77,61 +78,54 @@ namespace geopop {
         std::shared_ptr<Location>& operator[](size_t index) { return m_locations[index]; }
 
         /// Get the Population associated with this GeoGrid
-        stride::Population *GetPopulation() const { return m_population; }
+        stride::Population* GetPopulation() const { return m_population; }
 
         /// Find contactpools in startRadius (in km) around start and, if none are found, double
         /// the radius and search again until the radius gets infinite. May return an empty vector
         /// when there are really no pools to be found (empty grid).
-        std::vector<stride::ContactPool *> GetNearbyPools(stride::ContactType::Id id,
-                                                          const EnhancedCoordinate &start,
-                                                          double startRadius = 10.0) const;
+        std::vector<stride::ContactPool*> GetNearbyPools(stride::ContactType::Id id, const EnhancedCoordinate& start,
+                                                         double startRadius = 10.0) const;
 
         /// Gets the K biggest (in population count) EnhancedCoordinates of this GeoGrid
-        std::vector<Location *> TopK(size_t k) const {
+        std::vector<Location*> TopK(size_t k) const
+        {
 
-            auto cmp = [](Location *rhs, Location *lhs) {
-                return rhs->GetPopCount() > lhs->GetPopCount();
-            };
+                auto cmp = [](Location* rhs, Location* lhs) { return rhs->GetPopCount() > lhs->GetPopCount(); };
 
-            std::priority_queue<Location *, std::vector<Location *>, decltype(cmp)> queue(
-                    cmp);
-            for (const auto &loc : m_locations) {
-                    queue.push(loc.get());
-                    if (queue.size() > k) {
-                    queue.pop();
+                std::priority_queue<Location*, std::vector<Location*>, decltype(cmp)> queue(cmp);
+                for (const auto& loc : m_locations) {
+                        queue.push(loc.get());
+                        if (queue.size() > k) {
+                                queue.pop();
+                        }
                 }
-            }
 
-            std::vector<Location *> topLocations;
-            while (!queue.empty()) {
-                auto loc = queue.top();
-                topLocations.push_back(loc);
-                queue.pop();
-            }
+                std::vector<Location*> topLocations;
+                while (!queue.empty()) {
+                        auto loc = queue.top();
+                        topLocations.push_back(loc);
+                        queue.pop();
+                }
 
-            return topLocations;
+                return topLocations;
         };
 
         void addLocation(std::shared_ptr<Location> loc, std::shared_ptr<EnhancedCoordinate> coor);
 
         /// Gets a Location by Id and check if the Id exists.
-        std::shared_ptr<Location> GetById(unsigned int id) const {
-            return m_locations[m_id_to_index.at(id)];
-        }
+        std::shared_ptr<Location> GetById(unsigned int id) const { return m_locations[m_id_to_index.at(id)]; }
 
         std::shared_ptr<LocationGrid<Location>> m_locationGrid;
 
-    private:
-
+private:
         ///< Container for LocationData in GeoGrid.
         std::vector<std::shared_ptr<Location>> m_locations;
 
         ///< Stores pointer to Popluation, but does not take ownership.
-        stride::Population *m_population;
-
+        stride::Population* m_population;
 
         ///< Associative container maps Location Id to index in m_locations.
         std::unordered_map<unsigned int, unsigned int> m_id_to_index;
-    };
+};
 
 } // namespace geopop

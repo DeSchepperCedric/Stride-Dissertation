@@ -32,7 +32,6 @@ namespace geopop {
 class EpiJSONWriter : public EpiStreamWriter
 {
 public:
-
         explicit EpiJSONWriter(std::ostream& stream);
 
         /// Write the provided GeoGrid to the proved ostream in JSON format.

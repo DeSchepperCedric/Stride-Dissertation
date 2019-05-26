@@ -57,7 +57,7 @@ protected:
 // Checks whether stride can handle multiple provincess.
 TEST_F(DemographicTest, provincesParamsTest)
 {
-//set the params, check if the according nr of pools is generated in each region
+        // set the params, check if the according nr of pools is generated in each region
         for (unsigned int i = 0; i < 5; ++i) {
                 GeoGridConfig::Param param;
                 m_gg_config.params[i] = param;
@@ -72,10 +72,10 @@ TEST_F(DemographicTest, provincesParamsTest)
 
         for (unsigned int i = 0; i < 5; ++i) {
                 for (unsigned int nrOfLocations = 0; nrOfLocations < 10; ++nrOfLocations) {
-                        const auto loc = make_shared<Location>(10 * i + nrOfLocations, i,
-                                                               "loc" + to_string(nrOfLocations),
-                                                               m_gg_config.params.at(i).pop_size / 10);
-                        m_geo_grid.addLocation(loc, make_shared<EnhancedCoordinate>(loc.get(), Coordinate(0.0,0.0)));
+                        const auto loc =
+                            make_shared<Location>(10 * i + nrOfLocations, i, "loc" + to_string(nrOfLocations),
+                                                  m_gg_config.params.at(i).pop_size / 10);
+                        m_geo_grid.addLocation(loc, make_shared<EnhancedCoordinate>(loc.get(), Coordinate(0.0, 0.0)));
                 }
         }
         for (const auto& loc : m_geo_grid) {
@@ -112,51 +112,50 @@ TEST_F(DemographicTest, HouseholdsParsedCorrectlyTest)
 {
         // ParseHouseholdInfo, check if the info is set correctly
         // Param needs to be != 0
-        const auto ref_p_count = 18U;
-        std::vector<std::vector<unsigned int>> ages_y = {{1,2,3, 30,32},{5,7,9,40,41},{20,22},{25,23},{17,15,45,50}};
-        std::vector<std::vector<unsigned int>> ages_o = {{30,32},{40,41},{60,65},{55,60},{17,15,45,50}, {80,85}, {75,73}};
-        GeoGridConfig::Param param;
-        param.participation_daycare = 0.45;
-        param.participation_preschool = 0.99;
-        param.participation_college = 0.5;
-        param.participation_workplace = 0.75;
-        param.fraction_college_commuters = 0.5;
+        const auto                             ref_p_count = 18U;
+        std::vector<std::vector<unsigned int>> ages_y      = {
+            {1, 2, 3, 30, 32}, {5, 7, 9, 40, 41}, {20, 22}, {25, 23}, {17, 15, 45, 50}};
+        std::vector<std::vector<unsigned int>> ages_o = {{30, 32},         {40, 41}, {60, 65}, {55, 60},
+                                                         {17, 15, 45, 50}, {80, 85}, {75, 73}};
+        GeoGridConfig::Param                   param;
+        param.participation_daycare        = 0.45;
+        param.participation_preschool      = 0.99;
+        param.participation_college        = 0.5;
+        param.participation_workplace      = 0.75;
+        param.fraction_college_commuters   = 0.5;
         param.fraction_workplace_commuters = 0.5;
-        param.pop_size = 10000;
+        param.pop_size                     = 10000;
 
-        GeoGridConfig::Info info = m_gg_config.ParseHouseholdInfo(ref_p_count, ages_o, param);
-        double margin = 0.001;
-        double expected_old[5] = {0,0,1.0/9, 0, 0.375};
+        GeoGridConfig::Info info            = m_gg_config.ParseHouseholdInfo(ref_p_count, ages_o, param);
+        double              margin          = 0.001;
+        double              expected_old[5] = {0, 0, 1.0 / 9, 0, 0.375};
 
-        EXPECT_TRUE(expected_old[0] + margin > info.fraction_daycare );
-        EXPECT_TRUE(expected_old[0] - margin < info.fraction_daycare );
-        EXPECT_TRUE(expected_old[1] + margin > info.fraction_preschool );
-        EXPECT_TRUE(expected_old[1] - margin < info.fraction_preschool );
-        EXPECT_TRUE(expected_old[2] + margin > info.fraction_k12school );
-        EXPECT_TRUE(expected_old[2] - margin < info.fraction_k12school );
-        EXPECT_TRUE(expected_old[3] + margin > info.fraction_college );
-        EXPECT_TRUE(expected_old[3] - margin < info.fraction_college );
-        EXPECT_TRUE(expected_old[4] + margin > info.fraction_workplace );
-        EXPECT_TRUE(expected_old[4] - margin < info.fraction_workplace );
-        EXPECT_EQ(3888, info.count_households );
+        EXPECT_TRUE(expected_old[0] + margin > info.fraction_daycare);
+        EXPECT_TRUE(expected_old[0] - margin < info.fraction_daycare);
+        EXPECT_TRUE(expected_old[1] + margin > info.fraction_preschool);
+        EXPECT_TRUE(expected_old[1] - margin < info.fraction_preschool);
+        EXPECT_TRUE(expected_old[2] + margin > info.fraction_k12school);
+        EXPECT_TRUE(expected_old[2] - margin < info.fraction_k12school);
+        EXPECT_TRUE(expected_old[3] + margin > info.fraction_college);
+        EXPECT_TRUE(expected_old[3] - margin < info.fraction_college);
+        EXPECT_TRUE(expected_old[4] + margin > info.fraction_workplace);
+        EXPECT_TRUE(expected_old[4] - margin < info.fraction_workplace);
+        EXPECT_EQ(3888, info.count_households);
 
+        info                     = m_gg_config.ParseHouseholdInfo(ref_p_count, ages_y, param);
+        double expected_young[5] = {1.0 / 20, 1.1 / 10, 2.0 / 9, 1.0 / 9, 1.0 / 3};
 
-        info = m_gg_config.ParseHouseholdInfo(ref_p_count, ages_y, param);
-        double expected_young[5] = {1.0/20,1.1/10,2.0/9, 1.0/9, 1.0/3};
-
-        EXPECT_TRUE(expected_young[0] + margin > info.fraction_daycare );
-        EXPECT_TRUE(expected_young[0] - margin < info.fraction_daycare );
-        EXPECT_TRUE(expected_young[1] + margin > info.fraction_preschool );
-        EXPECT_TRUE(expected_young[1] - margin < info.fraction_preschool );
-        EXPECT_TRUE(expected_young[2] + margin > info.fraction_k12school );
-        EXPECT_TRUE(expected_young[2] - margin < info.fraction_k12school );
-        EXPECT_TRUE(expected_young[3] + margin > info.fraction_college );
-        EXPECT_TRUE(expected_young[3] - margin < info.fraction_college );
-        EXPECT_TRUE(expected_young[4] + margin > info.fraction_workplace );
-        EXPECT_TRUE(expected_young[4] - margin < info.fraction_workplace );
-        EXPECT_EQ(2777, info.count_households );
-
-
+        EXPECT_TRUE(expected_young[0] + margin > info.fraction_daycare);
+        EXPECT_TRUE(expected_young[0] - margin < info.fraction_daycare);
+        EXPECT_TRUE(expected_young[1] + margin > info.fraction_preschool);
+        EXPECT_TRUE(expected_young[1] - margin < info.fraction_preschool);
+        EXPECT_TRUE(expected_young[2] + margin > info.fraction_k12school);
+        EXPECT_TRUE(expected_young[2] - margin < info.fraction_k12school);
+        EXPECT_TRUE(expected_young[3] + margin > info.fraction_college);
+        EXPECT_TRUE(expected_young[3] - margin < info.fraction_college);
+        EXPECT_TRUE(expected_young[4] + margin > info.fraction_workplace);
+        EXPECT_TRUE(expected_young[4] - margin < info.fraction_workplace);
+        EXPECT_EQ(2777, info.count_households);
 }
 
 TEST_F(DemographicTest, centralCitiesParamsTest)
@@ -177,10 +176,10 @@ TEST_F(DemographicTest, centralCitiesParamsTest)
 
         for (unsigned int i = 0; i < 2; ++i) {
                 for (unsigned int nrOfLocations = 0; nrOfLocations < 5; ++nrOfLocations) {
-                        const auto loc = make_shared<Location>(2 * i + nrOfLocations, 0,
-                                                               "loc" + to_string(nrOfLocations),
-                                                               m_gg_config.params.at(0).pop_size / 10, bool(i));
-                        m_geo_grid.addLocation(loc, make_shared<EnhancedCoordinate>(loc.get(), Coordinate(0.0,0.0)));
+                        const auto loc =
+                            make_shared<Location>(2 * i + nrOfLocations, 0, "loc" + to_string(nrOfLocations),
+                                                  m_gg_config.params.at(0).pop_size / 10, bool(i));
+                        m_geo_grid.addLocation(loc, make_shared<EnhancedCoordinate>(loc.get(), Coordinate(0.0, 0.0)));
                 }
         }
         for (const auto& loc : m_geo_grid) {

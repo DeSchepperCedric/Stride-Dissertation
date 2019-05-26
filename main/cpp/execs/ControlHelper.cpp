@@ -161,13 +161,12 @@ void ControlHelper::RegisterViewers(shared_ptr<SimRunner> runner)
                 runner->Register(v, bind(&viewers::SummaryFileViewer::Update, v, placeholders::_1));
         }
 
-        //if (m_config.get<bool>("run.output_epi", false)) {
-        //TODO:turn this back on
-                m_stride_logger->info("Registering EpiFileViewer");
-                const auto v = make_shared<viewers::EpiViewer>(runner, m_output_prefix);
-                runner->Register(v, bind(&viewers::EpiViewer::Update, v, placeholders::_1));
+        // if (m_config.get<bool>("run.output_epi", false)) {
+        // TODO:turn this back on
+        m_stride_logger->info("Registering EpiFileViewer");
+        const auto v = make_shared<viewers::EpiViewer>(runner, m_output_prefix);
+        runner->Register(v, bind(&viewers::EpiViewer::Update, v, placeholders::_1));
         //}
-
 }
 
 } // namespace stride

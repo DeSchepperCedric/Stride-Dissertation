@@ -38,7 +38,7 @@ namespace viewers {
 class EpiViewer
 {
 public:
-        explicit EpiViewer(std::shared_ptr<SimRunner> runner, std::string filename="test.json")
+        explicit EpiViewer(std::shared_ptr<SimRunner> runner, std::string filename = "test.json")
             : m_Locations(), m_runner(std::move(runner)), m_filename(std::move(filename))
         {
         }

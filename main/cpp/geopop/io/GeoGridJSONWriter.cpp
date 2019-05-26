@@ -78,7 +78,7 @@ nlohmann::json GeoGridJSONWriter::WriteCoordinate(const Coordinate& coordinate)
         return coordinate_root;
 }
 
-nlohmann::json GeoGridJSONWriter::WriteLocation(const EnhancedCoordinate &location)
+nlohmann::json GeoGridJSONWriter::WriteLocation(const EnhancedCoordinate& location)
 {
         nlohmann::json location_root;
         location_root["id"]         = location.getData<Location>()->GetID();

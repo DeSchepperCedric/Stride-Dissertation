@@ -69,11 +69,11 @@ TEST(GeoGridHDF5WriterTest, locationsWrittenCorrectlyTest)
         auto pop     = Population::Create();
         auto geoGrid = GeoGrid(pop.get());
 
-        auto loc1 = make_shared<Location>(1, 4, "Bavikhove", 2500);
+        auto loc1  = make_shared<Location>(1, 4, "Bavikhove", 2500);
         auto coor1 = make_shared<EnhancedCoordinate>(loc1.get(), Coordinate(0.0, 0.0));
-        auto loc2 = make_shared<Location>(2, 3, "Gent", 5000);
+        auto loc2  = make_shared<Location>(2, 3, "Gent", 5000);
         auto coor2 = make_shared<EnhancedCoordinate>(loc2.get(), Coordinate(0.0, 0.0));
-        auto loc3 = make_shared<Location>(3, 2, "Mons", 2500);
+        auto loc3  = make_shared<Location>(3, 2, "Mons", 2500);
         auto coor3 = make_shared<EnhancedCoordinate>(loc3.get(), Coordinate(0.0, 0.0));
 
         geoGrid.addLocation(loc3, coor1);
@@ -88,7 +88,7 @@ TEST(GeoGridHDF5WriterTest, contactPoolsWrittenCorrectlyTest)
         const auto pop     = Population::Create();
         auto&      geoGrid = pop->RefGeoGrid();
         const auto loc     = make_shared<Location>(1, 4, "Bavikhove", 2500);
-        auto coor          = make_shared<EnhancedCoordinate>(loc.get(), Coordinate(0.0,0.0));
+        auto       coor    = make_shared<EnhancedCoordinate>(loc.get(), Coordinate(0.0, 0.0));
 
         loc->RefPools(Id::K12School).emplace_back(pop->RefPoolSys().CreateContactPool(Id::K12School));
         loc->RefPools(Id::PrimaryCommunity).emplace_back(pop->RefPoolSys().CreateContactPool(Id::PrimaryCommunity));
