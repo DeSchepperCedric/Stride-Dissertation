@@ -28,7 +28,7 @@
 #include "../geopop/io/EpiWriterFactory.h"
 
 #include <memory>
-#include <geopop/Location.h>
+#include <unordered_map>
 
 using namespace std;
 using namespace stride::sim_event;
@@ -41,6 +41,7 @@ void EpiViewer::Update(stride::sim_event::Id id)
         case Id::AtStart: {
                 auto& geo = m_runner->GetSim()->GetPopulation()->RefGeoGrid();
 
+                cout << "data:      " << geo.size() << endl;
                 for (auto& loc : *geo.m_locationGrid) {
                         visualization::Location location;
                         location.id               = loc->getData<geopop::Location>()->GetID();
@@ -48,20 +49,30 @@ void EpiViewer::Update(stride::sim_event::Id id)
                         location.longitude        = loc->GetCoordinate().get<0>();
                         location.latitude         = loc->GetCoordinate().get<1>();
                         location.size             = loc->getData<geopop::Location>()->GetPopCount();
+                        const auto& epi = loc->getData<geopop::Location>()->GetStatusCounts();
+                        for(const auto& age: epi){
+                            for(const auto& status: age.second){
+                                location.infected[age.first][status.first].push_back(status.second);
+                            }
+                        }
                         m_Locations[loc->getData<geopop::Location>()->GetID()] = location;
-                        m_Locations[loc->getData<geopop::Location>()->GetID()].infected.push_back(loc->getData<geopop::Location>()->GetInfectedCount());
                 }
                 break;
         }
         case Id::Stepped: {
                 auto& geo = m_runner->GetSim()->GetPopulation()->RefGeoGrid();
                 for (auto& loc : geo) {
-                        m_Locations[loc->GetID()].infected.push_back(loc->GetInfectedCount());
+                    const auto& epi = loc->GetStatusCounts();
+                    for(const auto& age: epi){
+                        for(const auto& status: age.second){
+                            m_Locations[loc->GetID()].infected[age.first][status.first].push_back(status.second);
+                        }
+                    }
                 }
                 break;
         }
         case Id::Finished: {
-                ofstream                      outputFileStream("/home/wannes/temp.json");
+                ofstream                      outputFileStream("temp.json");
                 shared_ptr<geopop::EpiWriter> writer =
                     geopop::EpiWriterFactory::CreateEpiWriter("temp.json", outputFileStream);
                 writer->Write(m_Locations);
