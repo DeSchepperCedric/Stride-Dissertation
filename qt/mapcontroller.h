@@ -21,6 +21,7 @@
 #include <iostream>
 
 #include <QtPositioning/QGeoRectangle>
+#include <QtPositioning/QGeoCircle>
 
 #include "location.h"
 
@@ -32,6 +33,8 @@ namespace visualization {
         Q_PROPERTY(QString naam READ getNaam)
         Q_PROPERTY(QString info READ getInfo)
         Q_PROPERTY(QString ID READ getID WRITE setID)
+        Q_PROPERTY(QGeoRectangle rectangle READ getRect WRITE setRect)
+        Q_PROPERTY(QGeoCircle circle READ getCircle WRITE setCircle )
 
     public:
         MapController() = default;
@@ -56,9 +59,27 @@ namespace visualization {
 
         QString getID();
 
+        void setCircle(const QGeoCircle &circle) {m_circle = circle;}
+
+        QGeoCircle getCircle() {return m_circle;}
+
+        void setRect(const QGeoRectangle &rect) {
+            m_rect = rect;
+        }
+
+        QGeoCircle getRect() {return m_rect;}
+
+        Q_INVOKABLE void setData();
+
+
+
+
     private:
         int m_day = 0;
-        int m_id = -1;
+        std::string m_id = "-1";
+
+        QGeoCircle m_circle;
+        QGeoRectangle m_rect;
 
         std::vector<Location> m_locations;
 

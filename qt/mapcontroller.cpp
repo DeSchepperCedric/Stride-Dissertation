@@ -29,7 +29,7 @@ namespace visualization {
     MapController::MapController(const std::string &file_name) : QObject(nullptr) {
         std::string temp = file_name;
         auto file = std::make_unique<std::ifstream>();
-        file->open("/home/wannes/Desktop/UA/3e_bach/BP/Stride-Dissertation/temp.json");
+        file->open("temp.json");
         geopop::EpiJSONReader reader(std::move(file));
         m_locations = reader.Read();
     }
@@ -53,13 +53,13 @@ namespace visualization {
     void MapController::Update() {
         QMetaObject::invokeMethod(m_root, "clear");
 
-        for (auto const &location: m_locations) {
+        for (auto &location: m_locations) {
             QMetaObject::invokeMethod(m_root, "addLocation",
                                       Q_ARG(QVariant, location.id),
                                       Q_ARG(QVariant, location.latitude),
                                       Q_ARG(QVariant, location.longitude),
                                       Q_ARG(QVariant, location.size),
-                                      Q_ARG(QVariant, location.infected[m_day])
+                                      Q_ARG(QVariant, location.infected["College"]["total"][m_day])
             );
         }
     }
@@ -79,7 +79,7 @@ namespace visualization {
 
     QString MapController::getNaam() {
         for (auto & loc: m_locations) {
-            if (loc.id == m_id) {
+            if (to_string(loc.id) == m_id) {
                 return QString::fromStdString(loc.name);
             }
         }
@@ -88,9 +88,8 @@ namespace visualization {
 
     QString MapController::getInfo() {
         for (auto & loc: m_locations){
-            if(loc.id == m_id){
+            if(to_string(loc.id) == m_id){
                 string s =  "population: " + to_string(loc.size) + "\n" +
-                            "infected: " + to_string(loc.infected[m_day]) + "\n" +
                             "longitude: " + to_string(loc.longitude) + "\n" +
                             "latitude: " + to_string(loc.latitude) + "\n";
                 return QString::fromStdString(s);
@@ -99,10 +98,35 @@ namespace visualization {
     }
 
     void MapController::setID(const QString &id) {
-        m_id = id.toInt();
+        m_id = id.toStdString();
     }
 
     QString MapController::getID(){
-        return QString::number(m_id);
+        return QString::fromStdString(m_id);
+    }
+
+    void MapController::setData() {
+
+        const auto age = {"College", "Daycare", "Household", "K12School", "PreSchool", "PrimaryCommunity", "SecondaryCommunity", "Workplace"};
+        const auto status = {"immune", "infected", "infectious", "recovered", "susceptible", "symptomatic", "total"};
+
+        for(auto& loc: m_locations){
+            if(to_string(loc.id) == m_id){
+                cout << m_id << endl;
+                QVariantMap data;
+                for(auto& a: age){
+                    QVariantMap health;
+                    for(auto& s: status){
+                       health[s] = QVariant(loc.infected[a][s][m_day]);
+                    }
+                    data[a] = health;
+                }
+
+                QMetaObject::invokeMethod(m_root, "setInfo",
+                        Q_ARG(QVariant, QVariant::fromValue(data))
+                        );
+            }
+        }
+
     }
 }

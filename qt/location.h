@@ -16,26 +16,26 @@
 #include <string>
 #include <map>
 #include <vector>
+#include <unordered_map>
 
 #ifndef LOCATION_H
 #define LOCATION_H
 
 
-
 namespace visualization {
 
-class Location{
-public:
-    std::string name = "";
-    unsigned int id = 0;
-    unsigned int size = 0;
-    double latitude = 0;
-    double longitude = 0;
+    class Location {
+    public:
+        std::string name = "";
+        unsigned int id = 0;
+        unsigned int size = 0;
+        double latitude = 0;
+        double longitude = 0;
 
-    std::vector<int> infected = {};
+        std::unordered_map<std::string, std::unordered_map<std::string, std::vector<unsigned int>>> infected = {};
 
-    Location() = default;
-};
+        Location() = default;
+    };
 
 }
 
