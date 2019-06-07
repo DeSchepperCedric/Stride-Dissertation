@@ -29,7 +29,7 @@ using namespace std;
 using namespace stride::ContactType;
 
 GeoGridProtoReader::GeoGridProtoReader(unique_ptr<istream> inputStream, stride::Population* pop)
-    : GeoGridReader(move(inputStream), pop)
+    : GeoGridStreamReader(move(inputStream), pop)
 {
 }
 
@@ -50,7 +50,7 @@ void GeoGridProtoReader::Read()
         for (int idx = 0; idx < protoGrid.locations_size(); idx++) {
                 const proto::GeoGrid_Location& protoLocation = protoGrid.locations(idx);
                 auto                           loc           = ParseLocation(protoLocation);
-                geoGrid.AddLocation(move(loc));
+                geoGrid.addLocation(loc.first, loc.second);
         }
 
         AddCommutes(geoGrid);
@@ -103,7 +103,8 @@ void GeoGridProtoReader::ParseContactPool(shared_ptr<Location>                  
         }
 }
 
-shared_ptr<Location> GeoGridProtoReader::ParseLocation(const proto::GeoGrid_Location& protoLocation)
+std::pair<shared_ptr<geopop::Location>, shared_ptr<geopop::EnhancedCoordinate>> GeoGridProtoReader::ParseLocation(
+    const proto::GeoGrid_Location& protoLocation)
 {
         const auto  id         = protoLocation.id();
         const auto& name       = protoLocation.name();
@@ -111,7 +112,7 @@ shared_ptr<Location> GeoGridProtoReader::ParseLocation(const proto::GeoGrid_Loca
         const auto  population = protoLocation.population();
         const auto& coordinate = ParseCoordinate(protoLocation.coordinate());
 
-        auto loc = make_shared<Location>(id, province, coordinate, name, population);
+        auto loc = make_shared<Location>(id, province, name, population);
 
         for (int idx = 0; idx < protoLocation.contactpools_size(); idx++) {
                 const proto::GeoGrid_Location_ContactPools& protoPools = protoLocation.contactpools(idx);
@@ -123,7 +124,9 @@ shared_ptr<Location> GeoGridProtoReader::ParseLocation(const proto::GeoGrid_Loca
                 m_commutes.emplace_back(make_tuple(id, commute.to(), commute.proportion()));
         }
 
-        return loc;
+        auto location = make_shared<EnhancedCoordinate>(loc.get(), coordinate);
+
+        return std::make_pair(loc, location);
 }
 
 stride::Person* GeoGridProtoReader::ParsePerson(const proto::GeoGrid_Person& protoPerson)

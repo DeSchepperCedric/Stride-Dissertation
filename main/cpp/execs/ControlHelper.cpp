@@ -27,6 +27,7 @@
 #include "util/LogUtils.h"
 #include "util/TimeStamp.h"
 #include "viewers/CliViewer.h"
+#include "viewers/EpiViewer.h"
 #include "viewers/InfectedFileViewer.h"
 #include "viewers/PersonsFileViewer.h"
 #include "viewers/SummaryFileViewer.h"
@@ -159,6 +160,13 @@ void ControlHelper::RegisterViewers(shared_ptr<SimRunner> runner)
                 const auto v = make_shared<viewers::SummaryFileViewer>(runner, m_output_prefix);
                 runner->Register(v, bind(&viewers::SummaryFileViewer::Update, v, placeholders::_1));
         }
+
+        // if (m_config.get<bool>("run.output_epi", false)) {
+        // TODO:turn this back on
+        m_stride_logger->info("Registering EpiFileViewer");
+        const auto v = make_shared<viewers::EpiViewer>(runner, m_output_prefix);
+        runner->Register(v, bind(&viewers::EpiViewer::Update, v, placeholders::_1));
+        //}
 }
 
 } // namespace stride

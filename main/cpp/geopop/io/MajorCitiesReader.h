@@ -22,26 +22,26 @@
 
 namespace geopop {
 
-    class GeoGrid;
+class GeoGrid;
 
 /**
  * Create an abstract Reader that fills a GeoGrid with the major cities info from file.
  * This can be implemented using different input types. Currently CSV is implemented.
  */
-    class MajorCitiesReader
-    {
-    public:
+class MajorCitiesReader
+{
+public:
         /// Construct the MajorCitiesReader with an istream with the file content.
         explicit MajorCitiesReader(std::unique_ptr<std::istream> inputStream) : m_inputStream(std::move(inputStream)) {}
 
-        /// Default destructor needs to be virtual.
+        /// Default destructor.
         virtual ~MajorCitiesReader() = default;
 
         /// Add major city info to the GeoGrid.
         virtual void FillGeoGrid(GeoGrid&) const = 0;
 
-    protected:
+protected:
         std::unique_ptr<std::istream> m_inputStream; ///< The istream with the file content.
-    };
+};
 
 } // namespace geopop

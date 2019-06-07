@@ -16,6 +16,7 @@
 #include "WorkplaceCSVReader.h"
 
 #include "util/CSV.h"
+#include "util/Exception.h"
 
 namespace geopop {
 
@@ -27,41 +28,36 @@ WorkplaceCSVReader::WorkplaceCSVReader(std::unique_ptr<std::istream> inputStream
 {
 }
 
-void WorkplaceCSVReader::SetReferenceWorkplaces(unsigned int&        ref_average_workplace_size,
-                                                std::vector<double>& ref_ratios)
+void WorkplaceCSVReader::SetWorkplaceSizeDistributions(std::vector<double>&       ref_ratios,
+                                                       std::vector<unsigned int>& ref_min,
+                                                       std::vector<unsigned int>& ref_max)
 {
-        CSV reader(*(m_input_stream.get()));
-//        std::cout << "setting reference"<<std::endl;
-        double         average_size = 0U;
-        vector<double> ratios;
-        for (const CSVRow& row : reader) {
-//            std::cout << row << std::endl;
-                double       ratio;
-                unsigned int min;
-                unsigned int max;
-                try {
-                        std::string temp = row.GetValue<std::string>(0);
-//                        std::cout << temp << std::endl;
+        try {
+                CSV                  reader(*(m_input_stream.get()));
+                vector<double>       ratios;
+                vector<unsigned int> max_values;
+                vector<unsigned int> min_values;
+                for (const CSVRow& row : reader) {
+                        double       ratio;
+                        unsigned int min;
+                        unsigned int max;
+                        ratio = row.GetValue<double>(0);
                         min   = row.GetValue<unsigned int>(1);
-//                        std::cout << min << std::endl;
-                        std::string t2   = row.GetValue<std::string>(2);
-//                        std::cout << t2.size() << std::endl;
-//                        for(auto i : t2){
-//                            std::cout << i << std::endl;
-//                        }
-                } catch (const std::bad_cast& e) {
-//                    std::cout << "NOT GOOD"<<std::endl;
-                    std::cout << e.what() << std::endl;
-                        // NA
-                        break;
+                        max   = row.GetValue<unsigned int>(2);
+
+                        ratios.emplace_back(ratio);
+                        max_values.emplace_back(max);
+                        min_values.emplace_back(min);
                 }
-                average_size += ratio * (max + min);
+                ref_ratios = ratios;
+                ref_min    = min_values;
+                ref_max    = max_values;
 
-                ratios.emplace_back(ratio);
+        } catch (const std::bad_cast& e) {
+                throw Exception("Problem parsing CSV file: bad lexical cast");
+        } catch (...) {
+                throw Exception("Problem parsing CSV file");
         }
-        ref_average_workplace_size = (unsigned int)round(average_size);
-
-        ref_ratios = ratios;
 }
 
 } // namespace geopop

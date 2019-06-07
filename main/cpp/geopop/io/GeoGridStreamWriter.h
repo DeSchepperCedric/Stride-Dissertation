@@ -29,17 +29,17 @@ namespace geopop {
 class GeoGridStreamWriter : public GeoGridWriter
 {
 public:
-        ///
-        explicit GeoGridStreamWriter(std::ostream& stream) : m_stream(stream) {};
+        /// Construct the GeoGridStreamWriter with an ostream containing the data.
+        explicit GeoGridStreamWriter(std::ostream& stream) : m_stream(stream){};
 
-        ///
+        /// Default destructor
         virtual ~GeoGridStreamWriter() = default;
 
-        ///
+        /// Write the provided GeoGrid.
         void Write(GeoGrid& geoGrid) override = 0;
 
-        ///
-        std::ostream& StreamRef() {return m_stream;}
+        /// Access through const reference to ostream.
+        std::ostream& StreamRef() { return m_stream; }
 
 private:
         std::ostream& m_stream;

@@ -40,9 +40,9 @@ TEST(HouseholdCSVReader, test1)
  78,75,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
 )";
 
-        GeoGridConfig      geoConfig{};
-        auto               instream = make_unique<istringstream>(csvString);
-        HouseholdCSVReader reader(move(instream));
+        GeoGridConfig        geoConfig{};
+        auto                 instream = make_unique<istringstream>(csvString);
+        HouseholdCSVReader   reader(move(instream));
         GeoGridConfig::RefHH refhh;
         geoConfig.refHouseHolds[0] = refhh;
         reader.SetReferenceHouseholds(geoConfig.refHouseHolds.at(0).person_count, geoConfig.refHouseHolds.at(0).ages);

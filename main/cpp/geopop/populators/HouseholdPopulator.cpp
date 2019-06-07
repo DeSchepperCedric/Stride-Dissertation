@@ -31,28 +31,31 @@ void Populator<stride::ContactType::Id::Household>::Apply(GeoGrid& geoGrid, cons
 {
         m_logger->trace("Starting to populate Households");
 
-        auto person_id = 0U;
+        auto                                         person_id = 0U;
         std::map<unsigned int, std::function<int()>> hh_dist;
         std::map<unsigned int, std::function<int()>> major_hh_dist;
-        for (const auto & it : geoGridConfig.refHouseHolds){
+        for (const auto& it : geoGridConfig.refHouseHolds) {
                 hh_dist[it.first] = m_rn_man.GetUniformIntGenerator(0, static_cast<int>(it.second.ages.size()), 0U);
-                major_hh_dist[it.first] = m_rn_man.GetUniformIntGenerator(0, static_cast<int>(it.second.major_ages.size()), 0U);
+                major_hh_dist[it.first] =
+                    m_rn_man.GetUniformIntGenerator(0, static_cast<int>(it.second.major_ages.size()), 0U);
         }
-        auto pop       = geoGrid.GetPopulation();
+        auto pop = geoGrid.GetPopulation();
 
         for (const shared_ptr<Location>& loc : geoGrid) {
                 for (auto& pool : loc->RefPools(Id::Household)) {
-                        const auto prov  = loc->GetProvince();
-                        if (loc->IsMajor()){
+                        const auto prov = loc->GetProvince();
+                        if (loc->IsMajor()) {
                                 const auto hDraw = static_cast<unsigned int>(major_hh_dist.at(prov)());
                                 for (const auto& age : geoGridConfig.refHouseHolds.at(prov).major_ages[hDraw]) {
-                                        const auto p = pop->CreatePerson(person_id++, age, pool->GetId(), 0, 0, 0, 0, 0, 0, 0);
+                                        const auto p =
+                                            pop->CreatePerson(person_id++, age, pool->GetId(), 0, 0, 0, 0, 0, 0, 0);
                                         pool->AddMember(p);
                                 }
                         } else {
                                 const auto hDraw = static_cast<unsigned int>(hh_dist.at(prov)());
                                 for (const auto& age : geoGridConfig.refHouseHolds.at(prov).ages[hDraw]) {
-                                        const auto p = pop->CreatePerson(person_id++, age, pool->GetId(), 0, 0, 0, 0, 0, 0, 0);
+                                        const auto p =
+                                            pop->CreatePerson(person_id++, age, pool->GetId(), 0, 0, 0, 0, 0, 0, 0);
                                         pool->AddMember(p);
                                 }
                         }

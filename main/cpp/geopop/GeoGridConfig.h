@@ -21,9 +21,9 @@
 
 #include <boost/property_tree/ptree_fwd.hpp>
 
+#include <map>
 #include <memory>
 #include <ostream>
-#include <map>
 
 namespace geopop {
 
@@ -92,7 +92,7 @@ public:
                 unsigned int pop_size;
         };
 
-        std::map<unsigned int, Param> params;
+        std::map<int, Param> params;
 
         // -----------------------------------------------------------------------------------------
         // The reference Households used to generate the population by random draws.
@@ -103,17 +103,16 @@ public:
                 unsigned int person_count = 0U;
 
                 /// Age profile per reference household.
-                std::vector<std::vector<unsigned int>> ages {};
+                std::vector<std::vector<unsigned int>> ages{};
 
                 /// Number of persons in the reference household set for central cities.
                 unsigned int major_person_count = 0U;
 
                 /// Age profile per reference household of central cities.
-                std::vector<std::vector<unsigned int>> major_ages {};
+                std::vector<std::vector<unsigned int>> major_ages{};
         };
 
-        std::map<unsigned int, RefHH> refHouseHolds;
-
+        std::map<int, RefHH> refHouseHolds;
 
         // -----------------------------------------------------------------------------------------
         // The reference Workplace types used to generate/populate workplaces
@@ -124,7 +123,11 @@ public:
                 unsigned int average_workplace_size = 0U;
 
                 /// Ratio per workplace type
-                std::vector<double> ratios;
+                std::vector<double> ratios{};
+
+                std::vector<unsigned int> max;
+
+                std::vector<unsigned int> min;
         } refWP;
 
         // -----------------------------------------------------------------------------------------
@@ -137,52 +140,50 @@ public:
         struct Info
         {
                 /// Numbers of individuals in Daycare.
-                unsigned int popcount_daycare;
+                double fraction_daycare;
 
                 /// Numbers of individuals in PreSchool.
-                unsigned int popcount_preschool;
+                double fraction_preschool;
 
                 /// Numbers of individuals in K12School.
-                unsigned int popcount_k12school;
+                double fraction_k12school;
 
                 /// Number of individuals in College.
-                unsigned int popcount_college;
+                double fraction_college;
 
                 /// Number of individuals in Workplace.
-                unsigned int popcount_workplace;
+                double fraction_workplace;
 
                 /// The number of households.
                 unsigned int count_households;
 
                 /// Numbers of individuals in Daycare.
-                unsigned int major_popcount_daycare;
+                double major_fraction_daycare;
 
                 /// Numbers of individuals in PreSchool.
-                unsigned int major_popcount_preschool;
+                double major_fraction_preschool;
 
                 /// Numbers of individuals in K12School.
-                unsigned int major_popcount_k12school;
+                double major_fraction_k12school;
 
                 /// Number of individuals in College.
-                unsigned int major_popcount_college;
+                double major_fraction_college;
 
                 /// Number of individuals in Workplace.
-                unsigned int major_popcount_workplace;
+                double major_fraction_workplace;
 
                 /// The number of households.
                 unsigned int major_count_households;
-
         };
 
-        std::map<unsigned int, Info> regionsInfo;
+        std::map<int, Info> regionsInfo;
 
         // -----------------------------------------------------------------------------------------
         /// Read the househould data file, parse it and set data.
         // -----------------------------------------------------------------------------------------
         void SetData(const boost::property_tree::ptree& configPt);
 
-
-        Info ParseHouseholdInfo(unsigned int ref_p_count, std::vector<std::vector<unsigned int>> &ages, Param &param);
+        Info ParseHouseholdInfo(unsigned int ref_p_count, std::vector<std::vector<unsigned int>>& ages, Param& param);
 };
 
 } // namespace geopop

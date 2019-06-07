@@ -30,8 +30,8 @@ void Populator<stride::ContactType::Id::PrimaryCommunity>::Apply(GeoGrid& geoGri
 {
         m_logger->trace("Starting to populate Primary Communities");
 
-        for (const shared_ptr<Location>& loc : geoGrid) {
-                if (loc->GetPopCount() == 0) {
+        for (const shared_ptr<EnhancedCoordinate>& loc : *geoGrid.m_locationGrid) {
+                if (loc->getData<Location>()->GetPopCount() == 0) {
                         continue;
                 }
 
@@ -44,7 +44,7 @@ void Populator<stride::ContactType::Id::PrimaryCommunity>::Apply(GeoGrid& geoGri
 
                 // 2. for every household assign a community
                 const auto dist = m_rn_man.GetUniformIntGenerator(0, static_cast<int>(nearbyPools.size()), 0U);
-                for (auto& hhPool : loc->RefPools(Id::Household)) {
+                for (auto& hhPool : loc->getData<Location>()->RefPools(Id::Household)) {
                         for (auto p : *hhPool) {
                                 auto& pcPool = nearbyPools[dist()];
                                 pcPool->AddMember(p);

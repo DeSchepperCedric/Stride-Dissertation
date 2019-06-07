@@ -16,8 +16,10 @@
 #pragma once
 
 #include "GeoGridStreamWriter.h"
+#include "geopop/EnhancedCoordinate.h"
 #include "geopop/Location.h"
 
+#include <memory>
 #include <set>
 
 namespace stride {
@@ -62,7 +64,7 @@ private:
         void WriteCoordinate(const Coordinate& coordinate, proto::GeoGrid_Location_Coordinate* protoCoordinate);
 
         /// Create a ProtoBuf Location containing all the info needed to reconstruct a Location.
-        void WriteLocation(Location& location, proto::GeoGrid_Location* protoLocation);
+        void WriteLocation(std::shared_ptr<EnhancedCoordinate>& location, proto::GeoGrid_Location* protoLocation);
 
         /// Create a ProtoBuf Person containing all the info needed to reconstruct a Person.
         void WritePerson(stride::Person* person, proto::GeoGrid_Person* protoPerson);

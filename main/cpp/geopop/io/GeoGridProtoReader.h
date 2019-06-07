@@ -15,9 +15,10 @@
 
 #pragma once
 
-#include "GeoGridReader.h"
+#include "GeoGridStreamReader.h"
 #include "contact/ContactPool.h"
 #include "contact/ContactType.h"
+#include "geopop/EnhancedCoordinate.h"
 #include "geopop/Location.h"
 
 #include <memory>
@@ -33,11 +34,13 @@ class GeoGrid_Person;
 
 namespace geopop {
 
+using namespace std;
+
 /**
  * An implementation of the GeoGridReader using Protocol Buffers.
  * This class is used to read a GeoGrid from a Proto file.
  */
-class GeoGridProtoReader : public GeoGridReader
+class GeoGridProtoReader : public GeoGridStreamReader
 {
 public:
         /// Construct the GeoGridJSONReader with the istream which contains the Protobuf info.
@@ -66,7 +69,8 @@ private:
         Coordinate ParseCoordinate(const proto::GeoGrid_Location_Coordinate& protoCoordinate);
 
         /// Create a Location based on  protobuf Location info.
-        std::shared_ptr<Location> ParseLocation(const proto::GeoGrid_Location& protoLocation);
+        std::pair<shared_ptr<geopop::Location>, shared_ptr<geopop::EnhancedCoordinate>> ParseLocation(
+            const proto::GeoGrid_Location& protoLocation);
 
         /// Create a Person based on protobuf Person info.
         stride::Person* ParsePerson(const proto::GeoGrid_Person& person);

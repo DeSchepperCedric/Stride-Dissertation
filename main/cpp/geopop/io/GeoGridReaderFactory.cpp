@@ -15,6 +15,7 @@
 
 #include "GeoGridReaderFactory.h"
 
+#include "GeoGridHDF5Reader.h"
 #include "GeoGridJSONReader.h"
 #include "GeoGridProtoReader.h"
 #include "GeoGridReader.h"
@@ -39,8 +40,8 @@ namespace geopop {
 std::shared_ptr<GeoGridReader> GeoGridReaderFactory::CreateReader(const std::string&  filename,
                                                                   stride::Population* pop) const
 {
-//        put "data/" in config file before filename, otherwise smoke import test needs to be updated
-//        const filesys::path path(FileSys::GetDataDir() / filesys::path(filename));
+        //        put "data/" in config file before filename, otherwise smoke import test needs to be updated
+        //        const filesys::path path(FileSys::GetDataDir() / filesys::path(filename));
         const filesys::path path(filename);
 
         if (!filesys::exists(path)) {
@@ -51,6 +52,8 @@ std::shared_ptr<GeoGridReader> GeoGridReaderFactory::CreateReader(const std::str
                 return std::make_shared<GeoGridJSONReader>(std::make_unique<std::ifstream>(path.string()), pop);
         } else if (path.extension().string() == ".proto") {
                 return std::make_shared<GeoGridProtoReader>(std::make_unique<std::ifstream>(path.string()), pop);
+        } else if (path.extension().string() == ".h5") {
+                return std::make_shared<GeoGridHDF5Reader>(path.string(), pop);
         } else {
                 throw stride::util::Exception("GeoGridReaderFactory::CreateReader> Unsupported file extension: " +
                                               path.extension().string());
