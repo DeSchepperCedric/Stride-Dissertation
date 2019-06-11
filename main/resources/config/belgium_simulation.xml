@@ -37,7 +37,7 @@
             <!-- Antwerpen -->
     				<id>1</id>
     				<fraction_college_commuters>0.55</fraction_college_commuters>
-    				<fraction_workplace_commuters>0.65</fraction_workplace_commuters>
+    				<fraction_workplace_commuters>0.75</fraction_workplace_commuters>
     				<household_file>Antwerpen.json</household_file>
     				<participation_preschool>0.97</participation_preschool>
     				<participation_daycare>0.40</participation_daycare>
@@ -49,7 +49,7 @@
             <!-- Vlaams-Brabant -->
     				<id>2</id>
     				<fraction_college_commuters>0.55</fraction_college_commuters>
-    				<fraction_workplace_commuters>0.65</fraction_workplace_commuters>
+    				<fraction_workplace_commuters>0.75</fraction_workplace_commuters>
     				<household_file>Vlaams-Brabant.json</household_file>
     				<participation_preschool>0.97</participation_preschool>
     				<participation_daycare>0.44</participation_daycare>
@@ -61,7 +61,7 @@
             <!-- West-Vlaanderen -->
     				<id>3</id>
     				<fraction_college_commuters>0.55</fraction_college_commuters>
-    				<fraction_workplace_commuters>0.65</fraction_workplace_commuters>
+    				<fraction_workplace_commuters>0.75</fraction_workplace_commuters>
     				<household_file>West-Vlaanderen.json</household_file>
     				<participation_preschool>0.97</participation_preschool>
     				<participation_daycare>0.49</participation_daycare>
@@ -73,7 +73,7 @@
             <!-- Oost-Vlaanderen -->
     				<id>4</id>
     				<fraction_college_commuters>0.55</fraction_college_commuters>
-    				<fraction_workplace_commuters>0.65</fraction_workplace_commuters>
+    				<fraction_workplace_commuters>0.75</fraction_workplace_commuters>
     				<household_file>Oost-Vlaanderen.json</household_file>
     				<participation_preschool>0.97</participation_preschool>
     				<participation_daycare>0.45</participation_daycare>
@@ -85,7 +85,7 @@
             <!-- Henegouwen -->
     				<id>5</id>
     				<fraction_college_commuters>0.55</fraction_college_commuters>
-    				<fraction_workplace_commuters>0.65</fraction_workplace_commuters>
+    				<fraction_workplace_commuters>0.75</fraction_workplace_commuters>
     				<household_file>Henegouwen.json</household_file>
     				<participation_preschool>0.786</participation_preschool>
     				<participation_daycare>0.29</participation_daycare>
@@ -97,7 +97,7 @@
             <!-- Luik -->
     				<id>6</id>
     				<fraction_college_commuters>0.55</fraction_college_commuters>
-    				<fraction_workplace_commuters>0.65</fraction_workplace_commuters>
+    				<fraction_workplace_commuters>0.75</fraction_workplace_commuters>
     				<household_file>Luik.json</household_file>
     				<participation_preschool>0.777</participation_preschool>
     				<participation_daycare>0.32</participation_daycare>
@@ -109,7 +109,7 @@
             <!-- Limburg -->
     				<id>7</id>
     				<fraction_college_commuters>0.55</fraction_college_commuters>
-    				<fraction_workplace_commuters>0.65</fraction_workplace_commuters>
+    				<fraction_workplace_commuters>0.75</fraction_workplace_commuters>
     				<household_file>Limburg.json</household_file>
     				<participation_preschool>0.97</participation_preschool>
     				<participation_daycare>0.38</participation_daycare>
@@ -121,7 +121,7 @@
             <!-- Luxemburg -->
     				<id>8</id>
     				<fraction_college_commuters>0.55</fraction_college_commuters>
-    				<fraction_workplace_commuters>0.65</fraction_workplace_commuters>
+    				<fraction_workplace_commuters>0.75</fraction_workplace_commuters>
     				<household_file>Luxemburg.json</household_file>
     				<participation_preschool>0.852</participation_preschool>
     				<participation_daycare>0.42</participation_daycare>
@@ -133,7 +133,7 @@
             <!-- Namen -->
     				<id>9</id>
     				<fraction_college_commuters>0.55</fraction_college_commuters>
-    				<fraction_workplace_commuters>0.65</fraction_workplace_commuters>
+    				<fraction_workplace_commuters>0.75</fraction_workplace_commuters>
     				<household_file>Namen.json</household_file>
     				<participation_preschool>0.795</participation_preschool>
     				<participation_daycare>0.41</participation_daycare>
@@ -145,7 +145,7 @@
             <!-- Waals-Brabant -->
     				<id>10</id>
     				<fraction_college_commuters>0.55</fraction_college_commuters>
-    				<fraction_workplace_commuters>0.65</fraction_workplace_commuters>
+    				<fraction_workplace_commuters>0.75</fraction_workplace_commuters>
     				<household_file>Waals-Brabant.json</household_file>
     				<participation_preschool>0.72</participation_preschool>
     				<participation_daycare>0.51</participation_daycare>
