@@ -67,9 +67,11 @@ for prov in [ant, vl_b, east, west, limb, wl_b, namu, luik, hene, luxe]:
 		fam_prov = []
 		for p in fam:
 			age = int(normalized[index] * sqrt(scaler_prov.var_) + scaler_prov.mean_)
+			if age > 99:
+				age = 99
 			fam_prov.append(age)
 			index += 1
 		hh_prov.append(fam_prov)
 	with open(prov[1]+"_major.json", "w") as f:
-		f.write(json.dumps({"households_list":hh_prov}, indent=4))
+		f.write(json.dumps({"households_list": hh_prov, "households_name": prov[1] + "_major"}, indent=4))
 
