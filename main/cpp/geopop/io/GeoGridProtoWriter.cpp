@@ -91,7 +91,8 @@ void GeoGridProtoWriter::WriteCoordinate(const Coordinate&                   coo
         protoCoordinate->set_latitude(boost::geometry::get<1>(coordinate));
 }
 
-void GeoGridProtoWriter::WriteLocation(std::shared_ptr<EnhancedCoordinate> &location, proto::GeoGrid_Location *protoLocation)
+void GeoGridProtoWriter::WriteLocation(std::shared_ptr<EnhancedCoordinate>& location,
+                                       proto::GeoGrid_Location*             protoLocation)
 {
         protoLocation->set_id(location->getData<Location>()->GetID());
         protoLocation->set_name(location->getData<Location>()->GetName());

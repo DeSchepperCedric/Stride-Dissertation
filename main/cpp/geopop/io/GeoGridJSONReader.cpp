@@ -55,7 +55,7 @@ void GeoGridJSONReader::Read()
         auto locations = ParseArray(root.at("locations"));
         for (auto it = locations.begin(); it != locations.end(); it++) {
                 shared_ptr<Location> loc;
-                auto result = ParseLocation(*it);
+                auto                 result = ParseLocation(*it);
                 geoGrid.addLocation(result.first, result.second);
         }
 
@@ -64,7 +64,8 @@ void GeoGridJSONReader::Read()
         m_people.clear();
 }
 
-std::pair<shared_ptr<Location>, shared_ptr<geopop::EnhancedCoordinate>> GeoGridJSONReader::ParseLocation(nlohmann::json& location)
+std::pair<shared_ptr<Location>, shared_ptr<geopop::EnhancedCoordinate>> GeoGridJSONReader::ParseLocation(
+    nlohmann::json& location)
 {
         const auto id         = ParseNumerical<unsigned int>(location.at("id"));
         const auto name       = location.at("name").get<std::string>();

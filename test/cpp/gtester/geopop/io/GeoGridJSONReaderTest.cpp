@@ -163,9 +163,8 @@ void runPeopleTest(const string& filename)
         auto pop = Population::Create();
         getGeoGridFromFile(filename, pop.get());
         auto& geoGrid  = pop->RefGeoGrid();
-        auto& grid = *geoGrid.m_locationGrid.get();
-        auto location = grid[0];
-
+        auto& grid     = *geoGrid.m_locationGrid.get();
+        auto  location = grid[0];
 
         EXPECT_EQ(location->getData<Location>()->GetID(), 1);
         EXPECT_EQ(location->getData<Location>()->GetName(), "Bavikhove");

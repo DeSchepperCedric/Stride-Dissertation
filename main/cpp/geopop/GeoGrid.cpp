@@ -21,10 +21,10 @@
 #include "geopop/geo/GeoGridKdTree.h"
 #include "pop/Population.h"
 
+#include <memory>
 #include <queue>
 #include <stdexcept>
 #include <utility>
-#include <memory>
 
 namespace geopop {
 
@@ -32,7 +32,9 @@ using namespace std;
 using stride::ContactPool;
 using stride::ContactType::Id;
 
-GeoGrid::GeoGrid(stride::Population* population) :m_locations(), m_population(population){
+GeoGrid::GeoGrid(stride::Population* population)
+    : m_locationGrid(), m_locations(), m_population(population), m_id_to_index()
+{
         m_locationGrid = std::make_shared<geopop::LocationGrid<Location>>();
 }
 
@@ -54,7 +56,8 @@ vector<ContactPool*> GeoGrid::GetNearbyPools(Id id, const EnhancedCoordinate& st
         return pools;
 }
 
-void GeoGrid::addLocation(std::shared_ptr<geopop::Location> loc, std::shared_ptr<geopop::EnhancedCoordinate> coor) {
+void GeoGrid::addLocation(std::shared_ptr<geopop::Location> loc, std::shared_ptr<geopop::EnhancedCoordinate> coor)
+{
         m_locationGrid->AddData(move(coor));
         m_locations.push_back(loc);
         m_id_to_index[loc->GetID()] = static_cast<unsigned int>(m_locations.size() - 1);

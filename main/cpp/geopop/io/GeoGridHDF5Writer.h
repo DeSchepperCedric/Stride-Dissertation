@@ -16,8 +16,8 @@
 #pragma once
 
 #include "GeoGridFileWriter.h"
-#include "geopop/Location.h"
 #include "geopop/EnhancedCoordinate.h"
+#include "geopop/Location.h"
 
 #include "H5Cpp.h"
 #include <set>
@@ -59,7 +59,8 @@ private:
         void WriteCoordinate(const Coordinate& coordinate, H5::Group& location);
 
         /// Create a HDF5 Group containing all info needed to reconstruct a Location.
-        void WriteLocation(const geopop::EnhancedCoordinate& location, H5::Group& locations, const std::string& location_name);
+        void WriteLocation(const geopop::EnhancedCoordinate& location, H5::Group& locations,
+                           const std::string& location_name);
 
         /// Write to a HDF5 Dataset containing all info needed to reconstruct a Person.
         stride::util::PersonType WritePerson(stride::Person* person); //, H5::DataSet& persons);

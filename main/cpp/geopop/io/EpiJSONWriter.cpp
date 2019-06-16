@@ -54,10 +54,19 @@ json EpiJSONWriter::WriteLocation(const visualization::Location& location)
         coordinate["longitude"]     = location.longitude;
         coordinate["latitude"]      = location.latitude;
         location_root["coordinate"] = coordinate;
-        json infected               = json::array();
-        for (auto i : location.infected)
-                infected.push_back(i);
-        location_root["infected"] = infected;
+        json infected;
+        for (const auto& age : location.infected) {
+                json statusJ;
+                for (const auto& status : age.second) {
+                        json dayJ = json::array();
+                        for (const auto& day : status.second) {
+                                dayJ.push_back(day);
+                        }
+                        statusJ[status.first] = dayJ;
+                }
+                infected[age.first] = statusJ;
+        }
+        location_root["Epi"] = infected;
 
         return location_root;
 }

@@ -173,7 +173,7 @@ shared_ptr<GeoGrid> GetPopulatedGeoGrid(Population* pop)
 {
         const auto geoGrid = make_shared<GeoGrid>(pop);
         const auto loc     = make_shared<Location>(1, 4, "Bavikhove", 2500);
-        auto coord         = make_shared<EnhancedCoordinate>(loc.get(), Coordinate(0,0));
+        auto       coord   = make_shared<EnhancedCoordinate>(loc.get(), Coordinate(0, 0));
 
         auto k12Pool = pop->RefPoolSys().CreateContactPool(Id::K12School);
         loc->RefPools(Id::K12School).emplace_back(k12Pool);
@@ -211,11 +211,11 @@ shared_ptr<GeoGrid> GetCommutesGeoGrid(Population* pop)
 {
         const auto geoGrid   = make_shared<GeoGrid>(pop);
         const auto bavikhove = make_shared<Location>(1, 4, "Bavikhove", 2500);
-        auto coord1          = make_shared<EnhancedCoordinate>(bavikhove.get(), Coordinate(0,0));
+        auto       coord1    = make_shared<EnhancedCoordinate>(bavikhove.get(), Coordinate(0, 0));
         const auto gent      = make_shared<Location>(2, 4, "Gent", 2500);
-        auto coord2          = make_shared<EnhancedCoordinate>(gent.get(), Coordinate(0,0));
+        auto       coord2    = make_shared<EnhancedCoordinate>(gent.get(), Coordinate(0, 0));
         const auto mons      = make_shared<Location>(3, 4, "Mons", 2500);
-        auto coord3          = make_shared<EnhancedCoordinate>(mons.get(), Coordinate(0,0));
+        auto       coord3    = make_shared<EnhancedCoordinate>(mons.get(), Coordinate(0, 0));
 
         bavikhove->AddOutgoingCommute(gent.get(), 0.5);
         gent->AddIncomingCommute(bavikhove.get(), 0.5);

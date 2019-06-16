@@ -32,7 +32,7 @@ template <typename T>
 class LocationGrid
 {
 public:
-        LocationGrid() : m_finalized(false), m_tree(){};
+        LocationGrid() : m_coordinates(), m_finalized(false), m_tree(){};
 
         ~LocationGrid() = default;
 
@@ -81,8 +81,7 @@ public:
          *  |       |     |       |
          *  +-------p2    p2------+
          */
-        std::set<const EnhancedCoordinate*> LocationsInBox(double long1, double lat1, double long2,
-                                                              double lat2) const
+        std::set<const EnhancedCoordinate*> LocationsInBox(double long1, double lat1, double long2, double lat2) const
         {
                 CheckFinalized(__func__);
 
@@ -97,18 +96,15 @@ public:
         }
 
         /// Gets the EnhancedCoordinates in a rectangle defined by the two Locations.
-        std::set<const EnhancedCoordinate*> LocationsInBox(EnhancedCoordinate* loc1,
-                                                              EnhancedCoordinate* loc2) const
+        std::set<const EnhancedCoordinate*> LocationsInBox(EnhancedCoordinate* loc1, EnhancedCoordinate* loc2) const
         {
                 using boost::geometry::get;
                 return LocationsInBox(get<0>(loc1->GetCoordinate()), get<1>(loc1->GetCoordinate()),
                                       get<0>(loc2->GetCoordinate()), get<1>(loc2->GetCoordinate()));
         }
 
-
         /// Search for locations in \p radius (in km) around \p start.
-        std::vector<const EnhancedCoordinate*> LocationsInRadius(const EnhancedCoordinate& start,
-                                                                    double                       radius) const
+        std::vector<const EnhancedCoordinate*> LocationsInRadius(const EnhancedCoordinate& start, double radius) const
         {
                 CheckFinalized(__func__);
 
@@ -128,8 +124,8 @@ public:
                         throw std::runtime_error("Calling addLocation while GeoGrid is finalized not supported!");
                 }
                 m_coordinates.emplace_back(location);
-                //TODO: fix having no ID
-                //m_id_to_index[0] = static_cast<unsigned int>(m_coordinates.size() - 1);
+                // TODO: fix having no ID
+                // m_id_to_index[0] = static_cast<unsigned int>(m_coordinates.size() - 1);
         }
 
         void CheckFinalized(const std::string& functionName) const

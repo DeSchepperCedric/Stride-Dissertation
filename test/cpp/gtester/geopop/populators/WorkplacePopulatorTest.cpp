@@ -57,8 +57,8 @@ protected:
 
 TEST_F(WorkplacePopulatorTest, NoPopulation)
 {
-        auto loc = make_shared<Location>(0,0,"", 0);
-        auto coor = make_shared<EnhancedCoordinate>(loc.get(), Coordinate(0.0,0.0));
+        auto loc  = make_shared<Location>(0, 0, "", 0);
+        auto coor = make_shared<EnhancedCoordinate>(loc.get(), Coordinate(0.0, 0.0));
         m_geo_grid.addLocation(loc, coor);
         m_geo_grid.m_locationGrid->Finalize();
 
@@ -236,7 +236,6 @@ TEST_F(WorkplacePopulatorTest, NoCommutingAvailable)
         m_gg_config.regionsInfo.at(1).fraction_workplace      = 0.01;
         m_gg_config.params.at(1).participation_workplace      = 1;
         m_gg_config.params.at(1).participation_college        = 0.5;
-
 
         auto brasschaat = *m_geo_grid.m_locationGrid->begin();
         brasschaat->SetCoordinate(Coordinate(51.29227, 4.49419));

@@ -15,11 +15,11 @@
 
 #include "EpiJSONWriter.h"
 #include "util/Exception.h"
-#include <ostream>
 #include <fstream>
+#include <ostream>
 
-#include <ostream>
 #include <fstream>
+#include <ostream>
 
 #ifdef BOOST_FOUND
 

@@ -27,8 +27,8 @@ using namespace std;
 using namespace stride::ContactType;
 
 Location::Location(unsigned int id, unsigned int province, string name, unsigned int popCount, bool major)
-    : m_id(id), m_name(move(name)), m_pop_count(popCount), m_pop_fraction(0.0),
-      m_province(province), m_major_city(major), m_inCommutes(), m_outCommutes(), /* m_cc(),*/ m_pool_index()
+    : m_id(id), m_name(move(name)), m_pop_count(popCount), m_pop_fraction(0.0), m_province(province),
+      m_major_city(major), m_inCommutes(), m_outCommutes(), /* m_cc(),*/ m_pool_index()
 {
 }
 
@@ -79,61 +79,55 @@ unsigned int Location::GetInfectedCount() const
 }
 std::unordered_map<std::string, std::unordered_map<std::string, unsigned int>> Location::GetStatusCounts() const
 {
-    std::unordered_map<std::string, std::unordered_map<std::string, unsigned int>> map;
-    // loop over every ContactType ID
-    for(const auto& id : stride::ContactType::IdList){
-        unsigned int total = 0U;
-        unsigned int immune = 0U;
-        unsigned int infected = 0U;
-        unsigned int infectious = 0U;
-        unsigned int recovered = 0U;
-        unsigned int susceptible = 0U;
-        unsigned int symptomatic = 0U;
+        std::unordered_map<std::string, std::unordered_map<std::string, unsigned int>> map;
+        // loop over every ContactType ID
+        for (const auto& id : stride::ContactType::IdList) {
+                unsigned int total       = 0U;
+                unsigned int immune      = 0U;
+                unsigned int infected    = 0U;
+                unsigned int infectious  = 0U;
+                unsigned int recovered   = 0U;
+                unsigned int susceptible = 0U;
+                unsigned int symptomatic = 0U;
 
+                // loop over contactpools of that type
+                for (const auto& pool : CRefPools(id)) {
+                        // loop over persons in that pool
+                        for (const auto& person : *pool) {
 
+                                const stride::Health& h = person->GetHealth();
+                                total++;
 
-        // loop over contactpools of that type
-        for(const auto& pool : CRefPools(id)){
-            // loop over persons in that pool
-            for(const auto& person : *pool){
-
-                const stride::Health& h = person->GetHealth();
-                total++;
-
-                if(h.IsImmune()){
-                    immune++;
+                                if (h.IsImmune()) {
+                                        immune++;
+                                }
+                                if (h.IsInfected()) {
+                                        infected++;
+                                }
+                                if (h.IsInfectious()) {
+                                        infectious++;
+                                }
+                                if (h.IsRecovered()) {
+                                        recovered++;
+                                }
+                                if (h.IsSusceptible()) {
+                                        susceptible++;
+                                }
+                                if (h.IsSymptomatic()) {
+                                        symptomatic++;
+                                }
+                        }
                 }
-                if(h.IsInfected()){
-                    infected++;
-                }
-                if(h.IsInfectious()){
-                    infectious++;
-                }
-                if(h.IsRecovered()){
-                    recovered++;
-                }
-                if(h.IsSusceptible()){
-                    susceptible++;
-                }
-                if(h.IsSymptomatic()){
-                    symptomatic++;
-                }
-
-
-            }
+                const std::string pop_type   = stride::ContactType::ToString(id);
+                map[pop_type]["total"]       = total;
+                map[pop_type]["immune"]      = immune;
+                map[pop_type]["infected"]    = infected;
+                map[pop_type]["infectious"]  = infectious;
+                map[pop_type]["recovered"]   = recovered;
+                map[pop_type]["susceptible"] = susceptible;
+                map[pop_type]["symptomatic"] = symptomatic;
         }
-        const std::string pop_type = stride::ContactType::ToString(id);
-        map[pop_type]["total"] = total;
-        map[pop_type]["immune"] = immune;
-        map[pop_type]["infected"] = infected;
-        map[pop_type]["infectious"] = infectious;
-        map[pop_type]["recovered"] = recovered;
-        map[pop_type]["susceptible"] = susceptible;
-        map[pop_type]["symptomatic"] = symptomatic;
-
-    }
-    return map;
-
+        return map;
 }
 
 unsigned int Location::GetOutgoingCommuteCount(double fractionCommuters) const

@@ -62,7 +62,7 @@ protected:
 TEST_F(K12SchoolPopulatorTest, NoPopulation)
 {
 
-        auto loc = make_shared<Location>(0,0, "", 0);
+        auto loc  = make_shared<Location>(0, 0, "", 0);
         auto coor = make_shared<EnhancedCoordinate>(loc.get(), Coordinate(0.0, 0.0));
         m_geo_grid.addLocation(loc, coor);
 

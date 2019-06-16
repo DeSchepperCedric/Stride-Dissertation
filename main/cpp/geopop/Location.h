@@ -19,7 +19,6 @@
 #include "contact/IdSubscriptArray.h"
 #include "geopop/Coordinate.h"
 #include "util/SegmentedVector.h"
-#include "contact/ContactType.h"
 
 #include <iostream>
 #include <memory>
@@ -43,8 +42,8 @@ class Location
 {
 public:
         /// Parametrized constructor with population count.
-        Location(unsigned int id, unsigned int province,
-                 std::string name = "", unsigned int popCount = 0U, bool major = false);
+        Location(unsigned int id, unsigned int province, std::string name = "", unsigned int popCount = 0U,
+                 bool major = false);
 
         /// Perform a full comparison with the other location.
         bool operator==(const Location& other) const;
