@@ -38,7 +38,7 @@
     				<id>1</id>
     				<fraction_college_commuters>0.55</fraction_college_commuters>
     				<fraction_workplace_commuters>0.75</fraction_workplace_commuters>
-    				<household_file>households_flanders.csv</household_file>
+    				<household_file>Antwerpen.json</household_file>
     				<participation_preschool>0.97</participation_preschool>
     				<participation_daycare>0.40</participation_daycare>
     				<participation_college>0.33</participation_college>
@@ -50,7 +50,7 @@
     				<id>2</id>
     				<fraction_college_commuters>0.55</fraction_college_commuters>
     				<fraction_workplace_commuters>0.75</fraction_workplace_commuters>
-    				<household_file>households_flanders.csv</household_file>
+    				<household_file>Vlaams-Brabant.json</household_file>
     				<participation_preschool>0.97</participation_preschool>
     				<participation_daycare>0.44</participation_daycare>
     				<participation_college>0.33</participation_college>
@@ -62,7 +62,7 @@
     				<id>3</id>
     				<fraction_college_commuters>0.55</fraction_college_commuters>
     				<fraction_workplace_commuters>0.75</fraction_workplace_commuters>
-    				<household_file>households_flanders.csv</household_file>
+    				<household_file>West-Vlaanderen.json</household_file>
     				<participation_preschool>0.97</participation_preschool>
     				<participation_daycare>0.49</participation_daycare>
     				<participation_college>0.33</participation_college>
@@ -74,7 +74,7 @@
     				<id>4</id>
     				<fraction_college_commuters>0.55</fraction_college_commuters>
     				<fraction_workplace_commuters>0.75</fraction_workplace_commuters>
-    				<household_file>households_flanders.csv</household_file>
+    				<household_file>Oost-Vlaanderen.json</household_file>
     				<participation_preschool>0.97</participation_preschool>
     				<participation_daycare>0.45</participation_daycare>
     				<participation_college>0.33</participation_college>
@@ -86,7 +86,7 @@
     				<id>7</id>
     				<fraction_college_commuters>0.55</fraction_college_commuters>
     				<fraction_workplace_commuters>0.75</fraction_workplace_commuters>
-    				<household_file>households_flanders.csv</household_file>
+    				<household_file>Limburg.json</household_file>
     				<participation_preschool>0.97</participation_preschool>
     				<participation_daycare>0.38</participation_daycare>
     				<participation_college>0.33</participation_college>
