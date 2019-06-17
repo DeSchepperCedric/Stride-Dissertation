@@ -31,7 +31,7 @@
     <geopop_gen>
         <cities_file>belgium_cities.csv</cities_file>
         <commuting_file>belgium_commuting_matrix.csv</commuting_file>
-		<workplace_file>workplace_size_distribution.csv</workplace_file>
+		<workplace_file>workplace_size_distribution_belgium.csv</workplace_file>
 		<regions>
   			<region>
             <!-- Antwerpen -->
