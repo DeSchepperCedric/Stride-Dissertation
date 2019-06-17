@@ -26,7 +26,7 @@ using namespace nlohmann;
 
 EpiJSONWriter::EpiJSONWriter(std::ostream& stream) : EpiStreamWriter(stream) {}
 
-void EpiJSONWriter::Write(std::map<int, visualization::Location> locations)
+void EpiJSONWriter::Write(std::vector<geopop::EnhancedCoordinate> locations)
 {
 
         json root;
@@ -34,7 +34,7 @@ void EpiJSONWriter::Write(std::map<int, visualization::Location> locations)
 
         for (auto& loc : locations) {
                 nlohmann::json child;
-                child = WriteLocation(loc.second);
+                child = WriteLocation(loc);
                 locs.push_back(move(child));
         }
 
@@ -43,19 +43,19 @@ void EpiJSONWriter::Write(std::map<int, visualization::Location> locations)
         StreamRef() << root;
 }
 
-json EpiJSONWriter::WriteLocation(const visualization::Location& location)
+json EpiJSONWriter::WriteLocation(const geopop::EnhancedCoordinate& location)
 {
 
         nlohmann::json location_root;
-        location_root["id"]         = location.id;
-        location_root["name"]       = location.name;
-        location_root["population"] = location.size;
+        location_root["id"]         = location.getData<visualization::Location>()->id;
+        location_root["name"]       = location.getData<visualization::Location>()->name;
+        location_root["population"] = location.getData<visualization::Location>()->size;
         json coordinate;
-        coordinate["longitude"]     = location.longitude;
-        coordinate["latitude"]      = location.latitude;
+        coordinate["longitude"]     = location.GetCoordinate().get<0>();
+        coordinate["latitude"]      = location.GetCoordinate().get<1>();
         location_root["coordinate"] = coordinate;
         json infected;
-        for (const auto& age: location.infected){
+        for (const auto& age: location.getData<visualization::Location>()->infected){
             json statusJ;
             for (const auto& status: age.second){
                 json dayJ = json::array();

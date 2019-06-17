@@ -38,6 +38,7 @@ Window {
             property var coor;
             property variant selectionCircle : QtPositioning.circle()
             property variant selectionRectangle : QtPositioning.rectangle()
+
             anchors.bottomMargin: 0
 
             hoverEnabled: false
@@ -100,6 +101,14 @@ Window {
             border.width: 3
             opacity: 0.5
             visible: false
+
+            MouseArea{
+                anchors.fill: parent
+                onClicked: {
+                        controller.ID = "circle"
+                        controller.setData()
+                    }
+            }
         }
 
         MapRectangle {
@@ -108,6 +117,14 @@ Window {
             border.width: 3
             opacity: 0.5
             visible: false
+
+            MouseArea{
+                anchors.fill: parent
+                onClicked: {
+                        controller.ID = "rectangle"
+                        controller.setData()
+                    }
+            }
         }
     }
 
@@ -142,9 +159,10 @@ Window {
 
         Button {
             id: button3
-            x: 167
             y: 22
             text: qsTr("select Circle")
+            anchors.left: button2.right
+            anchors.leftMargin: 20
             checkable: true
             anchors.verticalCenter: parent.verticalCenter
 
@@ -153,6 +171,23 @@ Window {
                     button2.checked = false
                 }
                 map.gesture.enabled = !checked
+            }
+        }
+
+        Button {
+            id: button4
+            y: 13
+            text: qsTr("Clear")
+            anchors.left: button3.right
+            anchors.leftMargin: 20
+            anchors.verticalCenterOffset: 0
+            checkable: false
+            anchors.verticalCenter: parent.verticalCenter
+
+            onClicked: {
+                selectCircle.visible = false;
+                selectRect.visible = false;
+                dataBar.visible = false;
             }
         }
     }
@@ -206,22 +241,13 @@ Window {
         Text {
             id: element
             x: 44
-            y: 93
+            y: 23
             color: "#000000"
             text: qsTr("0")
             anchors.horizontalCenterOffset: 0
             anchors.horizontalCenter: parent.horizontalCenter
             elide: Text.ElideRight
             font.pixelSize: 19
-        }
-
-        Button {
-            id: button1
-            x: 22
-            y: 29
-            width: 90
-            height: 28
-            text: qsTr("Select file")
         }
     }
 
@@ -366,3 +392,16 @@ Window {
         dataBar.visible = true;
     }
 }
+
+
+
+
+
+
+
+
+
+/*##^## Designer {
+    D{i:10;anchors_x:167}D{i:11;anchors_x:281}
+}
+ ##^##*/

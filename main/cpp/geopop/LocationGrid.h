@@ -21,6 +21,7 @@
 #include <set>
 #include <unordered_map>
 #include <vector>
+#include <geopop/geo/GeoGridKdTree.h>
 
 #include "EnhancedCoordinate.h"
 
@@ -128,8 +129,6 @@ public:
                         throw std::runtime_error("Calling addLocation while GeoGrid is finalized not supported!");
                 }
                 m_coordinates.emplace_back(location);
-                //TODO: fix having no ID
-                //m_id_to_index[0] = static_cast<unsigned int>(m_coordinates.size() - 1);
         }
 
         void CheckFinalized(const std::string& functionName) const

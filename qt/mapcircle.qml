@@ -55,7 +55,6 @@ MapCircle {
         }*/
 
         onClicked: {
-            console.log(parent.dataId)
             controller.ID = parent.dataId
             controller.setData()
         }

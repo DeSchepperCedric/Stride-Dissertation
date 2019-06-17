@@ -23,6 +23,9 @@
 #include <QtPositioning/QGeoRectangle>
 #include <QtPositioning/QGeoCircle>
 
+#include <geopop/EnhancedCoordinate.h>
+#include <geopop/LocationGrid.h>
+
 #include "location.h"
 
 namespace visualization {
@@ -81,7 +84,9 @@ namespace visualization {
         QGeoCircle m_circle;
         QGeoRectangle m_rect;
 
-        std::vector<Location> m_locations;
+        std::vector<Location*> m_locations;
+        geopop::LocationGrid<Location> m_grid;
+        std::vector<geopop::EnhancedCoordinate> m_coords;
 
         QObject *m_root = nullptr;
     };

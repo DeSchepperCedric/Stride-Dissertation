@@ -16,6 +16,7 @@
 #include "EpiJSONReader.h"
 
 #include "geopop/GeoGrid.h"
+#include "geopop/Coordinate.h"
 #include "pop/Population.h"
 #include "util/Exception.h"
 
@@ -31,7 +32,7 @@ using namespace stride::util;
 
 EpiJSONReader::EpiJSONReader(unique_ptr<istream> inputStream) : EpiStreamReader(move(inputStream)) {}
 
-std::vector<visualization::Location> EpiJSONReader::Read()
+std::pair<std::vector<visualization::Location*>, std::vector<geopop::EnhancedCoordinate>> EpiJSONReader::Read()
 {
         nlohmann::json root;
         try {
@@ -42,25 +43,28 @@ std::vector<visualization::Location> EpiJSONReader::Read()
                 throw Exception("Problem parsing JSON file, check whether empty or invalid JSON.");
         }*/
 
-        std::vector<visualization::Location> locs;
+        std::vector<visualization::Location*> locs;
+        std::vector<geopop::EnhancedCoordinate> coords;
 
         auto locations = ParseArray(root.at("locations"));
         for (auto it = locations.begin(); it != locations.end(); it++) {
-                visualization::Location loc = parseLocation(*it);
-                locs.push_back(loc);
+                auto loc = parseLocation(*it);
+                locs.push_back(loc.first);
+                coords.push_back(loc.second);
         }
-        return locs;
+        return make_pair(locs, coords);
 }
 
-visualization::Location EpiJSONReader::parseLocation(nlohmann::json& node)
+std::pair<visualization::Location*, geopop::EnhancedCoordinate> EpiJSONReader::parseLocation(nlohmann::json& node)
 {
-        visualization::Location loc;
+        geopop::EnhancedCoordinate coord(nullptr);
+        visualization::Location* loc = new visualization::Location();
 
-        loc.size      = node["population"];
-        loc.name      = node["name"];
-        loc.id        = node["id"];
-        loc.latitude  = double(node["coordinate"]["latitude"]);
-        loc.longitude = double(node["coordinate"]["longitude"]);
+        loc->size      = node["population"];
+        loc->name      = node["name"];
+        loc->id        = node["id"];
+        coord.SetCoordinate(geopop::Coordinate(double(node["coordinate"]["latitude"]), double(node["coordinate"]["longitude"])));
+        coord.setData(loc);
 
 
         const auto age = {"College", "Daycare", "Household", "K12School", "PreSchool", "PrimaryCommunity", "SecondaryCommunity", "Workplace"};
@@ -70,12 +74,12 @@ visualization::Location EpiJSONReader::parseLocation(nlohmann::json& node)
         for(const auto& a: age){
             for(const auto& s: status){
                 vector<unsigned int> days = ParseArray(node["Epi"][a][s]);
-                loc.infected[a][s] = days;
+                loc->infected[a][s] = days;
             }
         }
 
 
-        return loc;
+        return make_pair(loc, coord);
 }
 
 nlohmann::json EpiJSONReader::ParseArray(nlohmann::json& node)

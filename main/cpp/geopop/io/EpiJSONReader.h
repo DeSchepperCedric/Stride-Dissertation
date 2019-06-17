@@ -16,6 +16,7 @@
 #pragma once
 
 #include "EpiStreamReader.h"
+#include "../EnhancedCoordinate.h"
 
 #include <boost/lexical_cast.hpp>
 #include <nlohmann/json.hpp>
@@ -34,7 +35,7 @@ class EpiJSONReader : public EpiStreamReader
 {
 public:
         /// Construct the GeoGridJSONReader with the istream which contains the JSON.
-        EpiJSONReader(std::unique_ptr<std::istream> inputStream);
+        explicit EpiJSONReader(std::unique_ptr<std::istream> inputStream);
 
         /// No copy constructor.
         EpiJSONReader(const EpiJSONReader&) = delete;
@@ -43,10 +44,10 @@ public:
         EpiJSONReader operator=(const EpiJSONReader&) = delete;
 
         /// Actually perform the read and return the GeoGrid.
-        std::vector<visualization::Location> Read() override;
+        std::pair<std::vector<visualization::Location*>, std::vector<geopop::EnhancedCoordinate>> Read() override;
 
 private:
-        visualization::Location parseLocation(nlohmann::json& node);
+        std::pair<visualization::Location*, geopop::EnhancedCoordinate> parseLocation(nlohmann::json& node);
 
         /// Get numerical data from a json node, this will not fail in case it is formatted as a string
         template <typename T>

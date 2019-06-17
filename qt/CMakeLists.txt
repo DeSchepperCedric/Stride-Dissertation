@@ -26,5 +26,5 @@ set(QML
 add_executable(${PROJECT_NAME} ${SOURCE_FILES} "qml.qrc")
 target_compile_definitions(${PROJECT_NAME} PRIVATE $<$<OR:$<CONFIG:Debug>,$<CONFIG:RelWithDebInfo>>:QT_QML_DEBUG>)
 target_link_libraries(${PROJECT_NAME} PRIVATE Qt5::Core Qt5::Quick Qt5::Positioning Qt5::Widgets libstride)
-install(FILES ${QML} DESTINATION ${BIN_INSTALL_LOCATION})
-install(TARGETS ${PROJECT_NAME} DESTINATION ${BIN_INSTALL_LOCATION})
+#install(FILES ${QML} DESTINATION ${BIN_INSTALL_LOCATION})
+#install(TARGETS ${PROJECT_NAME} DESTINATION ${BIN_INSTALL_LOCATION})

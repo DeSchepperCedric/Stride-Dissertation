@@ -18,6 +18,7 @@
 #include <memory>
 #include <ostream>
 #include <vector>
+#include "geopop/EnhancedCoordinate.h"
 
 #include "../../../../qt/location.h"
 
@@ -36,7 +37,7 @@ public:
         virtual ~EpiWriter() = default;
 
         /// Write the GeoGrid to ostream.
-        virtual void Write(std::map<int, visualization::Location> locations) = 0;
+        virtual void Write(std::vector<geopop::EnhancedCoordinate> locations) = 0;
 };
 
 } // namespace geopop

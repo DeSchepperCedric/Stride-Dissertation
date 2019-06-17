@@ -21,6 +21,7 @@
 #include "EpiViewer.h"
 
 #include "geopop/Location.h"
+#include "geopop/EnhancedCoordinate.h"
 #include "pop/Population.h"
 #include "sim/Sim.h"
 #include "sim/SimRunner.h"
@@ -44,11 +45,12 @@ void EpiViewer::Update(stride::sim_event::Id id)
                 cout << "data:      " << geo.size() << endl;
                 for (auto& loc : *geo.m_locationGrid) {
                         visualization::Location location;
+                        geopop::EnhancedCoordinate coor = geopop::EnhancedCoordinate(nullptr);
                         location.id               = loc->getData<geopop::Location>()->GetID();
                         location.name             = loc->getData<geopop::Location>()->GetName();
-                        location.longitude        = loc->GetCoordinate().get<0>();
-                        location.latitude         = loc->GetCoordinate().get<1>();
+                        coor.SetCoordinate(geopop::Coordinate(loc->GetCoordinate()));
                         location.size             = loc->getData<geopop::Location>()->GetPopCount();
+                        coor.setData(&location);
                         const auto& epi = loc->getData<geopop::Location>()->GetStatusCounts();
                         for(const auto& age: epi){
                             for(const auto& status: age.second){
@@ -75,7 +77,7 @@ void EpiViewer::Update(stride::sim_event::Id id)
                 ofstream                      outputFileStream("temp.json");
                 shared_ptr<geopop::EpiWriter> writer =
                     geopop::EpiWriterFactory::CreateEpiWriter("temp.json", outputFileStream);
-                writer->Write(m_Locations);
+                writer->Write(m_coors);
                 outputFileStream.close();
         }
         default: break;

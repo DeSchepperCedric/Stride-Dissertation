@@ -16,6 +16,7 @@
 #pragma once
 
 #include "EpiStreamWriter.h"
+#include "geopop/EnhancedCoordinate.h"
 
 #include <nlohmann/json.hpp>
 #include <set>
@@ -36,9 +37,9 @@ public:
         explicit EpiJSONWriter(std::ostream& stream);
 
         /// Write the provided GeoGrid to the proved ostream in JSON format.
-        void Write(std::map<int, visualization::Location> location) override;
+        void Write(std::vector<geopop::EnhancedCoordinate> locations) override;
 
 private:
-        nlohmann::json WriteLocation(const visualization::Location& location);
+        nlohmann::json WriteLocation(const geopop::EnhancedCoordinate& location);
 };
 } // namespace geopop
