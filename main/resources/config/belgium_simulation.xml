@@ -62,7 +62,7 @@
             <!-- West-Vlaanderen -->
     				<id>3</id>
     				<fraction_college_commuters>0.55</fraction_college_commuters>
-    				<fraction_workplace_commuters>0.75</fraction_workplace_commuters>
+    				<fraction_workplace_commuters>0.65</fraction_workplace_commuters>
     				<household_file>West-Vlaanderen.json</household_file>
     				<participation_preschool>0.97</participation_preschool>
     				<participation_daycare>0.49</participation_daycare>
