@@ -72,9 +72,9 @@ void EpiViewer::Update(stride::sim_event::Id id)
                 break;
         }
         case Id::Finished: {
-                ofstream                      outputFileStream("temp.json");
+                ofstream                      outputFileStream(this->m_filename + "epi.json");
                 shared_ptr<geopop::EpiWriter> writer =
-                    geopop::EpiWriterFactory::CreateEpiWriter("temp.json", outputFileStream);
+                    geopop::EpiWriterFactory::CreateEpiWriter(this->m_filename + "epi.json", outputFileStream);
                 writer->Write(m_Locations);
                 outputFileStream.close();
         }
