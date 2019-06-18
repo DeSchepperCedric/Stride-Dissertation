@@ -112,7 +112,7 @@ void GeoGridHDF5Reader::ParseContactPool(H5::DataSet& contactPool, const shared_
                         try {
                                 const auto person = m_people.at(people_id);
                                 cp->AddMember(person);
-                                person->SetPoolId(typeId, result->GetID());
+                                person->SetPoolId(typeId, cp->GetId());
                         } catch (out_of_range& e) {
                                 throw util::Exception("No such person with id: " + to_string(people_id));
                         }
