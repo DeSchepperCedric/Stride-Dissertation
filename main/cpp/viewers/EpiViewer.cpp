@@ -41,7 +41,6 @@ void EpiViewer::Update(stride::sim_event::Id id)
         case Id::AtStart: {
                 auto& geo = m_runner->GetSim()->GetPopulation()->RefGeoGrid();
 
-                cout << "data:      " << geo.size() << endl;
                 for (auto& loc : *geo.m_locationGrid) {
                         visualization::Location location;
                         location.id        = loc->getData<geopop::Location>()->GetID();
