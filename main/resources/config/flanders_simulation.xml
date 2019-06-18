@@ -32,7 +32,8 @@
         <cities_file>flanders_cities.csv</cities_file>
         <commuting_file>flanders_commuting.csv</commuting_file>
 		<workplace_file>workplace_size_distribution_flanders.csv</workplace_file>
-		<regions>
+    <workplace_performance>fast</workplace_performance>
+    <regions>
   			<region>
             <!-- Antwerpen -->
     				<id>1</id>
