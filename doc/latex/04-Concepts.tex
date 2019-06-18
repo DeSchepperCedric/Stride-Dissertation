@@ -91,6 +91,10 @@ To explain the algorithms used for generating the geography of the countries and
         the domicile of the households. All households in the same location are mapped to the coordinates 
         of the location's center. These locations with corresponding coordinates will form a grid that covers 
         the simulation area.
+    \item[Regions]:
+         It it possible to vary multiple parameters for each region.  Furthermore, it  is  also  possible  to  provide  different  household  reference  profiles  for  these regions, and it is even possible to differentiate the profiles of ”Central Cities” from normal cities.\\
+        To do this, the simulator will look at the province IDs of the locations, and match it with the parameters. If no matching parameters for all the province IDs are available, default parameters should be provided.
+
 \end{description}
 
 \subsection{Generating the geography}

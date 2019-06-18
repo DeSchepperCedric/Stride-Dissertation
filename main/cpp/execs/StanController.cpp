@@ -104,7 +104,7 @@ void StanController::Control()
                 // ---------------------------------------------------------------------------------
                 auto runner  = make_shared<SimRunner>(configPt, sim);
                 auto iViewer = make_shared<viewers::InfectedViewer>(runner);
-                auto eViewer = make_shared<viewers::EpiViewer>(runner);
+                auto eViewer = make_shared<viewers::EpiViewer>(runner, m_config.get<string>("run.output_prefix") + "run_" + std::to_string(i) + "_");
                 runner->Register(iViewer, bind(&viewers::InfectedViewer::Update, iViewer, std::placeholders::_1));
                 runner->Register(eViewer, bind(&viewers::EpiViewer::Update, eViewer, std::placeholders::_1));
                 runner->Run();
