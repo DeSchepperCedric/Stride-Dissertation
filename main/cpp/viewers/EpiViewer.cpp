@@ -41,7 +41,6 @@ void EpiViewer::Update(stride::sim_event::Id id)
         case Id::AtStart: {
                 auto& geo = m_runner->GetSim()->GetPopulation()->RefGeoGrid();
 
-                cout << "data:      " << geo.size() << endl;
                 for (auto& loc : *geo.m_locationGrid) {
                         visualization::Location location;
                         location.id        = loc->getData<geopop::Location>()->GetID();
@@ -73,9 +72,9 @@ void EpiViewer::Update(stride::sim_event::Id id)
                 break;
         }
         case Id::Finished: {
-                ofstream                      outputFileStream("temp.json");
+                ofstream                      outputFileStream(this->m_filename + "epi.json");
                 shared_ptr<geopop::EpiWriter> writer =
-                    geopop::EpiWriterFactory::CreateEpiWriter("temp.json", outputFileStream);
+                    geopop::EpiWriterFactory::CreateEpiWriter(this->m_filename + "epi.json", outputFileStream);
                 writer->Write(m_Locations);
                 outputFileStream.close();
         }
