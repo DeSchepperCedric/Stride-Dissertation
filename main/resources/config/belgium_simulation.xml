@@ -38,24 +38,24 @@
             <!-- Antwerpen -->
     				<id>1</id>
     				<fraction_college_commuters>0.55</fraction_college_commuters>
-    				<fraction_workplace_commuters>0.75</fraction_workplace_commuters>
+    				<fraction_workplace_commuters>0.65</fraction_workplace_commuters>
     				<household_file>Antwerpen.json</household_file>
     				<participation_preschool>0.97</participation_preschool>
     				<participation_daycare>0.40</participation_daycare>
     				<participation_college>0.33</participation_college>
-    				<participation_workplace>0.746</participation_workplace>
+    				<participation_workplace>0.694</participation_workplace>
     				<population_size>1855486</population_size>
   			</region>
   			<region>
             <!-- Vlaams-Brabant -->
     				<id>2</id>
     				<fraction_college_commuters>0.55</fraction_college_commuters>
-    				<fraction_workplace_commuters>0.75</fraction_workplace_commuters>
+    				<fraction_workplace_commuters>0.65</fraction_workplace_commuters>
     				<household_file>Vlaams-Brabant.json</household_file>
     				<participation_preschool>0.97</participation_preschool>
     				<participation_daycare>0.44</participation_daycare>
-    				<participation_college>0.33</participation_college>
-    				<participation_workplace>0.746</participation_workplace>
+    				<participation_college>0.255</participation_college>
+    				<participation_workplace>0.638</participation_workplace>
     				<population_size>2345693</population_size>
   			</region>
   			<region>
@@ -67,91 +67,91 @@
     				<participation_preschool>0.97</participation_preschool>
     				<participation_daycare>0.49</participation_daycare>
     				<participation_college>0.33</participation_college>
-    				<participation_workplace>0.746</participation_workplace>
+    				<participation_workplace>0.694</participation_workplace>
     				<population_size>1194950</population_size>
   			</region>
   			<region>
             <!-- Oost-Vlaanderen -->
     				<id>4</id>
     				<fraction_college_commuters>0.55</fraction_college_commuters>
-    				<fraction_workplace_commuters>0.75</fraction_workplace_commuters>
+    				<fraction_workplace_commuters>0.65</fraction_workplace_commuters>
     				<household_file>Oost-Vlaanderen.json</household_file>
     				<participation_preschool>0.97</participation_preschool>
     				<participation_daycare>0.45</participation_daycare>
     				<participation_college>0.33</participation_college>
-    				<participation_workplace>0.746</participation_workplace>
+    				<participation_workplace>0.694</participation_workplace>
     				<population_size>1513556</population_size>
   			</region>
         <region>
             <!-- Henegouwen -->
     				<id>5</id>
     				<fraction_college_commuters>0.55</fraction_college_commuters>
-    				<fraction_workplace_commuters>0.75</fraction_workplace_commuters>
+    				<fraction_workplace_commuters>0.65</fraction_workplace_commuters>
     				<household_file>Henegouwen.json</household_file>
     				<participation_preschool>0.786</participation_preschool>
     				<participation_daycare>0.29</participation_daycare>
     				<participation_college>0.32</participation_college>
-    				<participation_workplace>0.637</participation_workplace>
+    				<participation_workplace>0.6</participation_workplace>
     				<population_size>1342456</population_size>
   			</region>
         <region>
             <!-- Luik -->
     				<id>6</id>
     				<fraction_college_commuters>0.55</fraction_college_commuters>
-    				<fraction_workplace_commuters>0.75</fraction_workplace_commuters>
+    				<fraction_workplace_commuters>0.65</fraction_workplace_commuters>
     				<household_file>Luik.json</household_file>
     				<participation_preschool>0.777</participation_preschool>
     				<participation_daycare>0.32</participation_daycare>
     				<participation_college>0.32</participation_college>
-    				<participation_workplace>0.637</participation_workplace>
+    				<participation_workplace>0.6</participation_workplace>
     				<population_size>1105733</population_size>
   			</region>
   			<region>
             <!-- Limburg -->
     				<id>7</id>
     				<fraction_college_commuters>0.55</fraction_college_commuters>
-    				<fraction_workplace_commuters>0.75</fraction_workplace_commuters>
+    				<fraction_workplace_commuters>0.65</fraction_workplace_commuters>
     				<household_file>Limburg.json</household_file>
     				<participation_preschool>0.97</participation_preschool>
     				<participation_daycare>0.38</participation_daycare>
     				<participation_college>0.33</participation_college>
-    				<participation_workplace>0.746</participation_workplace>
+    				<participation_workplace>0.694</participation_workplace>
     				<population_size>873425</population_size>
   			</region>
         <region>
             <!-- Luxemburg -->
     				<id>8</id>
     				<fraction_college_commuters>0.55</fraction_college_commuters>
-    				<fraction_workplace_commuters>0.75</fraction_workplace_commuters>
+    				<fraction_workplace_commuters>0.65</fraction_workplace_commuters>
     				<household_file>Luxemburg.json</household_file>
     				<participation_preschool>0.852</participation_preschool>
     				<participation_daycare>0.42</participation_daycare>
     				<participation_college>0.32</participation_college>
-    				<participation_workplace>0.637</participation_workplace>
+    				<participation_workplace>0.6</participation_workplace>
     				<population_size>284442</population_size>
   			</region>
         <region>
             <!-- Namen -->
     				<id>9</id>
     				<fraction_college_commuters>0.55</fraction_college_commuters>
-    				<fraction_workplace_commuters>0.75</fraction_workplace_commuters>
+    				<fraction_workplace_commuters>0.65</fraction_workplace_commuters>
     				<household_file>Namen.json</household_file>
     				<participation_preschool>0.795</participation_preschool>
     				<participation_daycare>0.41</participation_daycare>
     				<participation_college>0.32</participation_college>
-    				<participation_workplace>0.637</participation_workplace>
+    				<participation_workplace>0.6</participation_workplace>
     				<population_size>494042</population_size>
   			</region>
         <region>
             <!-- Waals-Brabant -->
     				<id>10</id>
     				<fraction_college_commuters>0.55</fraction_college_commuters>
-    				<fraction_workplace_commuters>0.75</fraction_workplace_commuters>
+    				<fraction_workplace_commuters>0.65</fraction_workplace_commuters>
     				<household_file>Waals-Brabant.json</household_file>
     				<participation_preschool>0.72</participation_preschool>
     				<participation_daycare>0.51</participation_daycare>
     				<participation_college>0.32</participation_college>
-    				<participation_workplace>0.637</participation_workplace>
+    				<participation_workplace>0.6</participation_workplace>
     				<population_size>403420</population_size>
   			</region>
 		</regions>
