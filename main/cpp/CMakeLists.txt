@@ -26,7 +26,7 @@ else()
     set(PROTO_SRC_GEOGRID ${Protobuf_PBS_DIR}/geogrid.pb.cc)
     set(PROTO_HDR_EPI ${Protobuf_PBS_DIR}/epi.pb.h)
     set(PROTO_HDR_GEOGRID ${Protobuf_PBS_DIR}/geogrid.pb.h)
-#endif()
+endif()
 
 set_source_files_properties(
     geopop/io/GeoGridProtoReader.cpp
