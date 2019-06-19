@@ -50,13 +50,12 @@ TEST(ReaderFactoryTest, TestCommutesFromFile)
         auto  pop     = Population::Create();
         auto& geoGrid = pop->RefGeoGrid();
 
-        auto loc1 = make_shared<Location>(21,0,"", 1000);
-        auto coor1 = make_shared<EnhancedCoordinate>(loc1.get(), Coordinate(0,0));
-        auto loc2 = make_shared<Location>(22,0,"", 1000);
-        auto coor2 = make_shared<EnhancedCoordinate>(loc2.get(), Coordinate(0,0));
+        auto loc1  = make_shared<Location>(21, 0, "", 1000);
+        auto coor1 = make_shared<EnhancedCoordinate>(loc1.get(), Coordinate(0, 0));
+        auto loc2  = make_shared<Location>(22, 0, "", 1000);
+        auto coor2 = make_shared<EnhancedCoordinate>(loc2.get(), Coordinate(0, 0));
         geoGrid.addLocation(loc1, coor1);
         geoGrid.addLocation(loc2, coor2);
-
 
         res2->FillGeoGrid(geoGrid);
 

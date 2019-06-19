@@ -37,7 +37,8 @@ class PrimaryCommunityPopulatorTest : public testing::Test
 public:
         PrimaryCommunityPopulatorTest()
             : m_rn_man(RnInfo{}), m_populator(m_rn_man), m_gg_config(), m_pop(Population::Create()),
-              m_location(make_shared<Location>(1, 4, "Antwerpen", 2500)), m_coordinate(make_shared<EnhancedCoordinate>(m_location.get(), Coordinate(0.0,0.0))),
+              m_location(make_shared<Location>(1, 4, "Antwerpen", 2500)),
+              m_coordinate(make_shared<EnhancedCoordinate>(m_location.get(), Coordinate(0.0, 0.0))),
               m_geo_grid(m_pop->RefGeoGrid()), m_person(), m_community_generator(m_rn_man),
               m_household_generator(m_rn_man)
         {
@@ -64,16 +65,16 @@ protected:
                 m_community_generator.AddPools(*m_location, m_pop.get(), m_gg_config);
         }
 
-        RnMan                           m_rn_man;
-        PrimaryCommunityPopulator       m_populator;
-        GeoGridConfig                   m_gg_config;
-        shared_ptr<Population>          m_pop;
-        shared_ptr<Location>            m_location;
-        shared_ptr<EnhancedCoordinate>  m_coordinate;
-        GeoGrid&                        m_geo_grid;
-        shared_ptr<Person>              m_person;
-        PrimaryCommunityGenerator       m_community_generator;
-        HouseholdGenerator              m_household_generator;
+        RnMan                          m_rn_man;
+        PrimaryCommunityPopulator      m_populator;
+        GeoGridConfig                  m_gg_config;
+        shared_ptr<Population>         m_pop;
+        shared_ptr<Location>           m_location;
+        shared_ptr<EnhancedCoordinate> m_coordinate;
+        GeoGrid&                       m_geo_grid;
+        shared_ptr<Person>             m_person;
+        PrimaryCommunityGenerator      m_community_generator;
+        HouseholdGenerator             m_household_generator;
 };
 
 TEST_F(PrimaryCommunityPopulatorTest, OneCommunityTest)
@@ -122,8 +123,8 @@ TEST_F(PrimaryCommunityPopulatorTest, HouseholdTest)
 // and that person gets assigned to the PrimaryCommunity at the first Location.
 TEST_F(PrimaryCommunityPopulatorTest, TwoLocationsTest)
 {
-        auto loc = make_shared<Location>(2,5,"Brussel", 1500);
-        auto coor = make_shared<EnhancedCoordinate>(loc.get(), Coordinate(1,1));
+        auto loc  = make_shared<Location>(2, 5, "Brussel", 1500);
+        auto coor = make_shared<EnhancedCoordinate>(loc.get(), Coordinate(1, 1));
         m_community_generator.AddPools(*loc, m_pop.get(), m_gg_config);
 
         m_geo_grid.addLocation(loc, coor);

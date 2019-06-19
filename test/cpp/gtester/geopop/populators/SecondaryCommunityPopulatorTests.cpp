@@ -38,7 +38,7 @@ public:
         SecondaryCommunityPopulatorTest()
             : m_rn_man(RnInfo{}), m_populator(m_rn_man), m_gg_config(), m_pop(Population::Create()),
               m_location(make_shared<Location>(1, 4, "Antwerpen", 2500)),
-              m_coordinate(make_shared<EnhancedCoordinate>(m_location.get(), Coordinate(0,0))),
+              m_coordinate(make_shared<EnhancedCoordinate>(m_location.get(), Coordinate(0, 0))),
               m_geo_grid(m_pop->RefGeoGrid()), m_person(), m_community_generator(m_rn_man),
               m_household_generator(m_rn_man)
         {
@@ -65,16 +65,16 @@ protected:
                 m_community_generator.AddPools(*m_location, m_pop.get(), m_gg_config);
         }
 
-        RnMan                       m_rn_man;
-        SecondaryCommunityPopulator m_populator;
-        GeoGridConfig               m_gg_config;
-        shared_ptr<Population>      m_pop;
-        shared_ptr<Location>        m_location;
-        shared_ptr<EnhancedCoordinate>  m_coordinate;
-        GeoGrid&                    m_geo_grid;
-        shared_ptr<Person>          m_person;
-        SecondaryCommunityGenerator m_community_generator;
-        HouseholdGenerator          m_household_generator;
+        RnMan                          m_rn_man;
+        SecondaryCommunityPopulator    m_populator;
+        GeoGridConfig                  m_gg_config;
+        shared_ptr<Population>         m_pop;
+        shared_ptr<Location>           m_location;
+        shared_ptr<EnhancedCoordinate> m_coordinate;
+        GeoGrid&                       m_geo_grid;
+        shared_ptr<Person>             m_person;
+        SecondaryCommunityGenerator    m_community_generator;
+        HouseholdGenerator             m_household_generator;
 };
 
 TEST_F(SecondaryCommunityPopulatorTest, OneCommunityTest)
@@ -123,7 +123,7 @@ TEST_F(SecondaryCommunityPopulatorTest, HouseholdTest)
 TEST_F(SecondaryCommunityPopulatorTest, TwoLocationsTest)
 {
         auto location2 = make_shared<Location>(2, 5, "Brussel", 1500);
-        auto coor2 = make_shared<EnhancedCoordinate>(location2.get(), Coordinate(1,1));
+        auto coor2     = make_shared<EnhancedCoordinate>(location2.get(), Coordinate(1, 1));
         m_community_generator.AddPools(*location2, m_pop.get(), m_gg_config);
 
         m_geo_grid.addLocation(location2, coor2);

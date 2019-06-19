@@ -90,7 +90,7 @@ TEST_F(WorkplaceGeneratorTest, NoCommuting)
                                       49823,  181594, 119075, 27700,  116959, 146583, 102531, 58864, 76946,  91951,
                                       134464, 59248,  10003,  125423, 15004,  8656,   13658,  50784, 61749,  165243};
         for (const auto size : sizes) {
-                auto loc = make_shared<Location>(1, 4, "Size: " + to_string(size), size);
+                auto loc  = make_shared<Location>(1, 4, "Size: " + to_string(size), size);
                 auto coor = make_shared<EnhancedCoordinate>(loc.get(), Coordinate(0, 0));
                 m_geo_grid.addLocation(loc, coor);
         }
@@ -125,7 +125,7 @@ TEST_F(WorkplaceGeneratorTest, NullCommuting)
                                       49823,  181594, 119075, 27700,  116959, 146583, 102531, 58864, 76946,  91951,
                                       134464, 59248,  10003,  125423, 15004,  8656,   13658,  50784, 61749,  165243};
         for (const auto size : sizes) {
-                auto loc = make_shared<Location>(1, 4, "Size: " + to_string(size), size);
+                auto loc  = make_shared<Location>(1, 4, "Size: " + to_string(size), size);
                 auto coor = make_shared<EnhancedCoordinate>(loc.get(), Coordinate(0, 0));
                 m_geo_grid.addLocation(loc, coor);
         }
@@ -172,8 +172,8 @@ TEST_F(WorkplaceGeneratorTest, TenCommuting)
                                       49823,  181594, 119075, 27700,  116959, 146583, 102531, 58864, 76946,  91951,
                                       134464, 59248,  10003,  125423, 15004,  8656,   13658,  50784, 61749,  165243};
         for (const auto size : sizes) {
-                auto loc = make_shared<Location>(1, 4, "Size: " + to_string(size), size);
-                auto coor = make_shared<EnhancedCoordinate>(loc.get(),Coordinate(0, 0));
+                auto loc  = make_shared<Location>(1, 4, "Size: " + to_string(size), size);
+                auto coor = make_shared<EnhancedCoordinate>(loc.get(), Coordinate(0, 0));
                 m_geo_grid.addLocation(loc, coor);
         }
 

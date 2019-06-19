@@ -14,9 +14,9 @@
     <output_persons>false</output_persons>
     <output_prefix></output_prefix>
     <output_summary>false</output_summary>
-    <population_file>genpop.json</population_file>
-    <population_type>generate</population_type>
-    <rng_seed>1097253,2387652,9963540,4730214</rng_seed>
+    <population_file>data/genpop.h5</population_file>
+    <population_type>import</population_type>
+    <rng_seed>1699003,2391520,1905217,6394931</rng_seed>
     <r0>11</r0>
     <seeding_age_max>99</seeding_age_max>
     <seeding_age_min>1</seeding_age_min>
@@ -28,17 +28,4 @@
     <vaccine_link_probability>0</vaccine_link_probability>
     <vaccine_profile>Random</vaccine_profile>
     <vaccine_rate>0.8</vaccine_rate>
-    <geopop_gen>
-        <cities_file>flanders_cities_1_prov.csv</cities_file>
-        <commuting_file>flanders_commuting.csv</commuting_file>
-        <fraction_college_commuters>0.5</fraction_college_commuters>
-        <fraction_workplace_commuters>0.5</fraction_workplace_commuters>
-        <household_file>households_flanders.json</household_file>
-	<participation_preschool>0.99</participation_preschool>
-	<participation_daycare>0.45</participation_daycare>
-        <participation_college>0.5</participation_college>
-        <participation_workplace>0.75</particpation_workplace>
-        <population_size>600000</population_size>
-    </geopop_gen>
 </run>
-

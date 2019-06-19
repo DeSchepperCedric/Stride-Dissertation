@@ -14,15 +14,15 @@
     <output_persons>false</output_persons>
     <output_prefix></output_prefix>
     <output_summary>false</output_summary>
-    <population_file>gengeopop.json</population_file>
+    <population_file>genpop.proto</population_file>
     <population_type>generate</population_type>
-    <rng_seed>2227027,7202813,7027912,9079671</rng_seed>
+    <rng_seed>1097253,2387652,9963540,4730214</rng_seed>
     <r0>11</r0>
     <seeding_age_max>99</seeding_age_max>
     <seeding_age_min>1</seeding_age_min>
     <seeding_rate>0.002</seeding_rate>
-    <start_date>2017-01-01</start_date>
-    <stride_log_level>trace</stride_log_level>
+    <start_date>2019-01-01</start_date>
+    <stride_log_level>info</stride_log_level>
     <track_index_case>false</track_index_case>
     <use_install_dirs>true</use_install_dirs>
     <vaccine_link_probability>0</vaccine_link_probability>
@@ -49,8 +49,8 @@
 			<id>1</id>
 			<fraction_college_commuters>0.5</fraction_college_commuters>
 			<fraction_workplace_commuters>0.5</fraction_workplace_commuters>
-			<household_file>antwerp.json</household_file>
-			<major_household_file>antwerp_major.json</major_household_file>
+			<household_file>Antwerpen.json</household_file>
+			<major_household_file>Antwerpen_major.json</major_household_file>
 			<participation_preschool>0.99</participation_preschool>
 			<participation_daycare>0.45</participation_daycare>
 			<participation_college>0.5</participation_college>
@@ -61,11 +61,11 @@
 			<id>2</id>
 			<fraction_college_commuters>0.5</fraction_college_commuters>
 			<fraction_workplace_commuters>0.5</fraction_workplace_commuters>
-			<household_file>flemish_brabant.json</household_file>
-			<major_household_file>flemish_br_major.json</major_household_file>
+			<household_file>Vlaams-Brabant.json</household_file>
+			<major_household_file>Vlaams-Brabant_major.json</major_household_file>
 			<participation_preschool>0.99</participation_preschool>
 			<participation_daycare>0.45</participation_daycare>
-			<participation_college>0.5</participation_colleJSONHouseholdsge>
+			<participation_college>0.5</participation_college>
 			<participation_workplace>0.75</participation_workplace>
 			<population_size>172139</population_size>
 		</region>
@@ -73,8 +73,8 @@
 			<id>3</id>
 			<fraction_college_commuters>0.5</fraction_college_commuters>
 			<fraction_workplace_commuters>0.5</fraction_workplace_commuters>
-			<household_file>west_flanders.json</household_file>
-			<major_household_file>west_major.json</major_household_file>
+			<household_file>West-Vlaanderen.json</household_file>
+			<major_household_file>West-Vlaanderen_major.json</major_household_file>
 			<participation_preschool>0.99</participation_preschool>
 			<participation_daycare>0.45</participation_daycare>
 			<participation_college>0.5</participation_college>
@@ -85,8 +85,8 @@
 			<id>4</id>
 			<fraction_college_commuters>0.5</fraction_college_commuters>
 			<fraction_workplace_commuters>0.5</fraction_workplace_commuters>
-			<household_file>east_flanders.json</household_file>
-			<major_household_file>east_major.json</major_household_file>
+			<household_file>Oost-Vlaanderen.json</household_file>
+			<major_household_file>Oost-Vlaanderen_major.json</major_household_file>
 			<participation_preschool>0.99</participation_preschool>
 			<participation_daycare>0.45</participation_daycare>
 			<participation_college>0.5</participation_college>
@@ -97,8 +97,8 @@
 			<id>7</id>
 			<fraction_college_commuters>0.5</fraction_college_commuters>
 			<fraction_workplace_commuters>0.5</fraction_workplace_commuters>
-			<household_file>limburg.json</household_file>
-			<major_household_file>limburg_major.json</major_household_file>
+			<household_file>Limburg.json</household_file>
+			<major_household_file>Limburg_major.json</major_household_file>
 			<participation_preschool>0.99</participation_preschool>
 			<participation_daycare>0.45</participation_daycare>
 			<participation_college>0.5</participation_college>
