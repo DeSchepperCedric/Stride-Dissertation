@@ -31,8 +31,6 @@ using namespace stride::ContactType;
 using namespace stride::util;
 using namespace H5;
 
-const unsigned int RANK = 2;
-
 EpiHDF5Writer::EpiHDF5Writer(const string& fileName) : EpiFileWriter(fileName) {}
 
 void EpiHDF5Writer::Write(std::vector<geopop::EnhancedCoordinate> locations)
@@ -42,7 +40,7 @@ void EpiHDF5Writer::Write(std::vector<geopop::EnhancedCoordinate> locations)
         H5File file;
         try {
                 file = H5File(GetFileName(), H5F_ACC_TRUNC);
-        } catch (FileIException error) {
+        } catch (FileIException& error) {
                 throw util::Exception(error.getDetailMsg());
         }
 
