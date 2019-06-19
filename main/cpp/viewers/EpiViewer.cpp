@@ -76,11 +76,10 @@ void EpiViewer::Update(stride::sim_event::Id id)
                 break;
         }
         case Id::Finished: {
-                const string  filename = "temp.json";
                 std::ofstream outputFileStream;
-                outputFileStream.open(filename);
+                outputFileStream.open(m_filename);
                 shared_ptr<geopop::EpiWriter> writer =
-                    geopop::EpiWriterFactory::CreateEpiWriter(filename, outputFileStream);
+                    geopop::EpiWriterFactory::CreateEpiWriter(m_filename, outputFileStream);
                 writer->Write(m_coors);
         }
         default: break;

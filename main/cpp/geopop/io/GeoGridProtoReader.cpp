@@ -15,7 +15,7 @@
 
 #include "GeoGridProtoReader.h"
 
-#include "proto_pb/geogrid.pb.h"
+#include "geogrid.pb.h"
 #include "geopop/GeoGrid.h"
 #include "pop/Person.h"
 #include "pop/Population.h"

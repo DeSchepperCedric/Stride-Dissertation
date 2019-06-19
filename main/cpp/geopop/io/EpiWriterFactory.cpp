@@ -15,6 +15,7 @@
 
 #include "EpiHDF5Writer.h"
 #include "EpiJSONWriter.h"
+#include "EpiProtoWriter.h"
 #include "util/Exception.h"
 #include <fstream>
 #include <ostream>
@@ -46,10 +47,10 @@ std::shared_ptr<EpiWriter> EpiWriterFactory::CreateEpiWriter(const std::string& 
                 return std::make_shared<EpiJSONWriter>(outputFileStream);
         } else if (path.extension().string() == ".h5") {
                 return std::make_shared<EpiHDF5Writer>(path.string());
-        } /*else
+        } else
      if (path.extension().string() == ".proto") {
-         return std::make_shared<GeoGridProtoWriter>();
-     } */
+         return std::make_shared<EpiProtoWriter>(outputFileStream);
+     }
         else {
                 throw stride::util::Exception("GeoGridWriterFactory::CreateWriter> Unsupported file extension: " +
                                               path.extension().string());

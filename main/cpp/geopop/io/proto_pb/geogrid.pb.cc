@@ -254,9 +254,9 @@ static ::google::protobuf::Message const * const file_default_instances[] = {
 };
 
 const char descriptor_table_protodef_geogrid_2eproto[] =
-  "\n\rgeogrid.proto\022\005proto\"\204\006\n\007GeoGrid\022*\n\tlo"
+  "\n\rgeogrid.proto\022\005proto\"\241\006\n\007GeoGrid\022*\n\tlo"
   "cations\030\001 \003(\0132\027.proto.GeoGrid.Location\022&"
-  "\n\007persons\030\002 \003(\0132\025.proto.GeoGrid.Person\032\201"
+  "\n\007persons\030\002 \003(\0132\025.proto.GeoGrid.Person\032\236"
   "\005\n\010Location\022\n\n\002id\030\001 \001(\003\022\014\n\004name\030\002 \001(\t\022\020\n"
   "\010province\030\003 \001(\003\022\022\n\npopulation\030\004 \001(\003\0226\n\nc"
   "oordinate\030\005 \001(\0132\".proto.GeoGrid.Location"
@@ -264,22 +264,22 @@ const char descriptor_table_protodef_geogrid_2eproto[] =
   "o.GeoGrid.Location.ContactPools\0221\n\010commu"
   "tes\030\007 \003(\0132\037.proto.GeoGrid.Location.Commu"
   "te\0321\n\nCoordinate\022\021\n\tlongitude\030\001 \001(\001\022\020\n\010l"
-  "atitude\030\002 \001(\001\032\257\002\n\014ContactPools\022\n\n\002id\030\001 \001"
+  "atitude\030\002 \001(\001\032\314\002\n\014ContactPools\022\n\n\002id\030\001 \001"
   "(\003\0227\n\004type\030\002 \001(\0162).proto.GeoGrid.Locatio"
   "n.ContactPools.Type\022\?\n\005pools\030\003 \003(\01320.pro"
   "to.GeoGrid.Location.ContactPools.Contact"
   "Pool\032)\n\013ContactPool\022\n\n\002id\030\001 \001(\003\022\016\n\006peopl"
-  "e\030\002 \003(\003\"n\n\004Type\022\r\n\tK12School\020\000\022\024\n\020Primar"
-  "yCommunity\020\001\022\026\n\022SecondaryCommunity\020\002\022\013\n\007"
-  "College\020\003\022\r\n\tHousehold\020\004\022\r\n\tWorkplace\020\005\032"
-  ")\n\007Commute\022\n\n\002to\030\001 \001(\003\022\022\n\nproportion\030\002 \001"
-  "(\001\032!\n\006Person\022\n\n\002id\030\001 \001(\003\022\013\n\003age\030\002 \001(\003b\006p"
-  "roto3"
+  "e\030\002 \003(\003\"\212\001\n\004Type\022\r\n\tK12School\020\000\022\024\n\020Prima"
+  "ryCommunity\020\001\022\026\n\022SecondaryCommunity\020\002\022\013\n"
+  "\007College\020\003\022\r\n\tHousehold\020\004\022\r\n\tWorkplace\020\005"
+  "\022\013\n\007Daycare\020\006\022\r\n\tPreSchool\020\007\032)\n\007Commute\022"
+  "\n\n\002to\030\001 \001(\003\022\022\n\nproportion\030\002 \001(\001\032!\n\006Perso"
+  "n\022\n\n\002id\030\001 \001(\003\022\013\n\003age\030\002 \001(\003b\006proto3"
   ;
 ::google::protobuf::internal::DescriptorTable descriptor_table_geogrid_2eproto = {
   false, InitDefaults_geogrid_2eproto, 
   descriptor_table_protodef_geogrid_2eproto,
-  "geogrid.proto", &assign_descriptors_table_geogrid_2eproto, 805,
+  "geogrid.proto", &assign_descriptors_table_geogrid_2eproto, 834,
 };
 
 void AddDescriptors_geogrid_2eproto() {
@@ -319,8 +319,8 @@ const GeoGrid_Location_ContactPools_Type GeoGrid_Location_ContactPools::Secondar
 const GeoGrid_Location_ContactPools_Type GeoGrid_Location_ContactPools::College;
 const GeoGrid_Location_ContactPools_Type GeoGrid_Location_ContactPools::Household;
 const GeoGrid_Location_ContactPools_Type GeoGrid_Location_ContactPools::Workplace;
-    const GeoGrid_Location_ContactPools_Type GeoGrid_Location_ContactPools::Daycare;
-    const GeoGrid_Location_ContactPools_Type GeoGrid_Location_ContactPools::PreSchool;
+const GeoGrid_Location_ContactPools_Type GeoGrid_Location_ContactPools::Daycare;
+const GeoGrid_Location_ContactPools_Type GeoGrid_Location_ContactPools::PreSchool;
 const GeoGrid_Location_ContactPools_Type GeoGrid_Location_ContactPools::Type_MIN;
 const GeoGrid_Location_ContactPools_Type GeoGrid_Location_ContactPools::Type_MAX;
 const int GeoGrid_Location_ContactPools::Type_ARRAYSIZE;

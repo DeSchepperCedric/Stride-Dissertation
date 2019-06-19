@@ -105,9 +105,9 @@ Window {
             MouseArea{
                 anchors.fill: parent
                 onClicked: {
-                        controller.ID = "circle"
-                        controller.setData()
-                    }
+                    controller.ID = "circle"
+                    controller.setData()
+                }
             }
         }
 
@@ -121,9 +121,9 @@ Window {
             MouseArea{
                 anchors.fill: parent
                 onClicked: {
-                        controller.ID = "rectangle"
-                        controller.setData()
-                    }
+                    controller.ID = "rectangle"
+                    controller.setData()
+                }
             }
         }
     }
@@ -296,18 +296,34 @@ Window {
             section.property: "ageBracket"
         }
 
+
+        Rectangle {
+            id: rectangle
+            width: 30
+            height: 50
+            color: "#ffffff"
+            anchors.rightMargin: 0
+            anchors.leftMargin: 0
+            anchors.top: parent.top
+            anchors.right: parent.right
+            anchors.left: parent.left
+            anchors.topMargin: 0
+        }
+
         Text {
             id: name
             x: 76
             y: 51
             width: 86
-            height: 15
+            height: 30
             text: qsTr("Text")
+            anchors.horizontalCenter: parent.horizontalCenter
+            z: 5
+            anchors.verticalCenter: rectangle.verticalCenter
             fontSizeMode: Text.Fit
             wrapMode: Text.WordWrap
             font.underline: true
             font.bold: true
-            anchors.horizontalCenter: parent.horizontalCenter
             font.pixelSize: 20
         }
 
@@ -349,6 +365,7 @@ Window {
             id: model
         }
 
+
     }
 
 
@@ -387,8 +404,6 @@ Window {
 
         name.text = controller.naam;
 
-        list.header = controller.naam;
-
         for(var i = 0; i < ages.length; i++){
             for(var j = 0; j < healts.length; j++){
                 model.append({ status: healts[j] + ": " + epiData[ages[i]][healts[j]], ageBracket: ages[i] })
@@ -401,3 +416,10 @@ Window {
         slider.to = days;
     }
 }
+
+
+
+/*##^## Designer {
+    D{i:19;anchors_height:50}D{i:20;anchors_width:86;anchors_x:76}
+}
+ ##^##*/

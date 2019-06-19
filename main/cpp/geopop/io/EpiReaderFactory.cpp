@@ -17,6 +17,7 @@
 
 #include "EpiHDF5Reader.h"
 #include "EpiJSONReader.h"
+#include "EpiProtoReader.h"
 #include "EpiReader.h"
 #include "util/Exception.h"
 #include "util/FileSys.h"
@@ -50,9 +51,11 @@ std::shared_ptr<EpiReader> EpiReaderFactory::CreateReader(const std::string& fil
                 auto file = std::make_unique<std::ifstream>();
                 file->open(path.string());
                 return std::make_shared<EpiJSONReader>(move(file));
-        } /* else if (path.extension().string() == ".proto") {
-             return std::make_shared<GeoGridProtoReader>(std::make_unique<std::ifstream>(path.string()), pop);
-         } */
+        } else if (path.extension().string() == ".proto") {
+                auto file = std::make_unique<std::ifstream>();
+                file->open(path.string());
+                return std::make_shared<EpiProtoReader>(move(file));
+        }
         else if (path.extension().string() == ".h5") {
                 return std::make_shared<EpiHDF5Reader>(path.string());
         } else {
