@@ -18,10 +18,10 @@
 #============================================================================
 # Protocol Buffer sources.
 #============================================================================
-#if(Protobuf_FOUND)
-#    protobuf_generate_cpp(PROTO_SRC_GEOGRID PROTO_HDR_GEOGRID geopop/io/proto/geogrid.proto)
-#    protobuf_generate_cpp(PROTO_SRC_EPI PROTO_HDR_EPI geopop/io/proto/epi.proto)
-#else()
+if(Protobuf_FOUND)
+    protobuf_generate_cpp(PROTO_SRC_GEOGRID PROTO_HDR_GEOGRID geopop/io/proto/geogrid.proto)
+    protobuf_generate_cpp(PROTO_SRC_EPI PROTO_HDR_EPI geopop/io/proto/epi.proto)
+else()
     set(PROTO_SRC_EPI ${Protobuf_PBS_DIR}/epi.pb.cc)
     set(PROTO_SRC_GEOGRID ${Protobuf_PBS_DIR}/geogrid.pb.cc)
     set(PROTO_HDR_EPI ${Protobuf_PBS_DIR}/epi.pb.h)
