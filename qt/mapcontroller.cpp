@@ -29,7 +29,8 @@ namespace visualization {
 
     using namespace std;
 
-    MapController::MapController(const std::string &file_name) : QObject(nullptr) {
+
+    MapController::MapController(const std::string &file_name) : QObject(nullptr), m_circle(), m_rect(), m_locations(), m_grid(), m_coords() {
         geopop::EpiReaderFactory fac;
         shared_ptr<geopop::EpiReader> reader =
                 fac.CreateReader(file_name);
@@ -110,6 +111,7 @@ namespace visualization {
             }
         }
         std::cerr << m_id << std::endl;
+        return QString::fromStdString("");
     }
 
     QString MapController::getInfo() {
@@ -122,6 +124,7 @@ namespace visualization {
                 return QString::fromStdString(s);
             }
         }
+        return QString::fromStdString("");
     }
 
     void MapController::setID(const QString &id) {

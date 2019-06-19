@@ -44,6 +44,10 @@ namespace visualization {
 
         explicit MapController(const std::string &file);
 
+        MapController(const visualization::MapController&) = delete;
+
+        bool operator=(const visualization::MapController&) = delete;
+
         void setDay(const QString &day);
 
         QString getDay();
