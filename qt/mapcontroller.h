@@ -23,6 +23,9 @@
 #include <QtPositioning/QGeoRectangle>
 #include <QtPositioning/QGeoCircle>
 
+#include <geopop/EnhancedCoordinate.h>
+#include <geopop/LocationGrid.h>
+
 #include "location.h"
 
 namespace visualization {
@@ -40,6 +43,10 @@ namespace visualization {
         MapController() = default;
 
         explicit MapController(const std::string &file);
+
+        MapController(const visualization::MapController&) = delete;
+
+        bool operator=(const visualization::MapController&) = delete;
 
         void setDay(const QString &day);
 
@@ -76,12 +83,15 @@ namespace visualization {
 
     private:
         int m_day = 0;
+        int max_days = 0;
         std::string m_id = "-1";
 
         QGeoCircle m_circle;
         QGeoRectangle m_rect;
 
-        std::vector<Location> m_locations;
+        std::vector<Location*> m_locations;
+        geopop::LocationGrid<Location> m_grid;
+        std::vector<geopop::EnhancedCoordinate> m_coords;
 
         QObject *m_root = nullptr;
     };

@@ -21,9 +21,11 @@
 
 #include "../../../qt/location.h"
 #include "InfectedFile.h"
+#include "geopop/EnhancedCoordinate.h"
 #include "sim/event/Id.h"
 
 #include <iostream>
+#include <memory>
 #include <spdlog/spdlog.h>
 
 #ifndef STRIDE_EPIVIEWER_H
@@ -39,7 +41,7 @@ class EpiViewer
 {
 public:
         explicit EpiViewer(std::shared_ptr<SimRunner> runner, std::string filename = "test.json")
-            : m_Locations(), m_runner(std::move(runner)), m_filename(std::move(filename))
+            : m_Locations(), m_coors(), m_runner(std::move(runner)), m_filename(std::move(filename))
         {
         }
 
@@ -49,9 +51,10 @@ public:
         void Update(sim_event::Id id);
 
 private:
-        std::map<int, visualization::Location> m_Locations;
-        std::shared_ptr<SimRunner>             m_runner;
-        std::string                            m_filename;
+        std::map<int, visualization::Location>  m_Locations;
+        std::vector<geopop::EnhancedCoordinate> m_coors;
+        std::shared_ptr<SimRunner>              m_runner;
+        std::string                             m_filename;
 };
 } // namespace viewers
 } // namespace stride

@@ -16,10 +16,12 @@
 #pragma once
 
 #include "../EnhancedCoordinate.h"
-#include "EpiStreamReader.h"
+#include "EpiFileReader.h"
 
+#include "H5Cpp.h"
+#include "util/HDF5.h"
 #include <boost/lexical_cast.hpp>
-#include <nlohmann/json.hpp>
+#include <geopop/Location.h>
 
 #include "../../../../qt/location.h"
 
@@ -31,38 +33,23 @@ class GeoGrid;
  * An implementation of the GeoGridReader using JSON.
  * This class is used to read a GeoGrid from a JSON file.
  */
-class EpiJSONReader : public EpiStreamReader
+class EpiHDF5Reader : public EpiFileReader
 {
 public:
         /// Construct the GeoGridJSONReader with the istream which contains the JSON.
-        explicit EpiJSONReader(std::unique_ptr<std::istream> inputStream);
+        explicit EpiHDF5Reader(std::string inputFile);
 
         /// No copy constructor.
-        EpiJSONReader(const EpiJSONReader&) = delete;
-
-        /// No copy assignement.
-        EpiJSONReader operator=(const EpiJSONReader&) = delete;
+        EpiHDF5Reader(const EpiHDF5Reader&) = delete;
 
         /// Actually perform the read and return the GeoGrid.
         std::pair<std::vector<visualization::Location*>, std::vector<geopop::EnhancedCoordinate>> Read() override;
 
 private:
-        std::pair<visualization::Location*, geopop::EnhancedCoordinate> parseLocation(nlohmann::json& node);
-
-        /// Get numerical data from a json node, this will not fail in case it is formatted as a string
         template <typename T>
-        T ParseNumerical(nlohmann::json& node)
-        {
-                if (node.type() == nlohmann::json::value_t::string) {
-                        return boost::lexical_cast<T>(node.get<std::string>());
-                } else {
-                        return node.get<T>();
-                }
-        }
+        T ReadAttribute(const std::string& name, H5::H5Object& object);
 
-        /// Get an array from a json node, this will not fail if the array is an empty string
-        /// this could be the case, given the provided example files (rather safe than segfault).
-        nlohmann::json ParseArray(nlohmann::json& node);
+        std::pair<visualization::Location*, EnhancedCoordinate> ParseLocation(H5::Group& location);
 };
 
 } // namespace geopop

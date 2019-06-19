@@ -27,6 +27,7 @@ namespace geopop {
 
 using namespace std;
 using namespace stride::ContactType;
+using namespace proto;
 
 GeoGridProtoReader::GeoGridProtoReader(unique_ptr<istream> inputStream, stride::Population* pop)
     : GeoGridStreamReader(move(inputStream), pop)

@@ -17,28 +17,43 @@
 
 #include "EpiStreamWriter.h"
 #include "geopop/EnhancedCoordinate.h"
+#include "geopop/Location.h"
 
-#include <nlohmann/json.hpp>
+#include <memory>
 #include <set>
 
 namespace stride {
-class ContactPool;
-class Person;
 } // namespace stride
 
+namespace proto {
+class Epi_Location;
+class Epi_Location_Coordinate;
+class Epi_Location_Data;
+class Epi_Location_Data_Age;
+class Epi_Location_Data_Age_Status;
+} // namespace proto
+
 namespace geopop {
+
 /**
- * Writes a GeoGrid to a JSON file.
+ * An implementation of the GeoGridWriter using Protocol Buffers
+ * This class is used to write a GeoGrid to a Proto file
  */
-class EpiJSONWriter : public EpiStreamWriter
+class EpiProtoWriter : public EpiStreamWriter
 {
 public:
-        explicit EpiJSONWriter(std::ostream& stream);
+        /// Construct the EpiProtoWriter.
+        explicit EpiProtoWriter(std::ostream& stream);
 
-        /// Write the provided GeoGrid to the proved ostream in JSON format.
+        /// Write the GeoGrid to the ostream in Protobuf format.
         void Write(std::vector<geopop::EnhancedCoordinate> locations) override;
 
 private:
-        nlohmann::json WriteLocation(const geopop::EnhancedCoordinate& location);
+        /// Create a ProtoBuf Coordinate containing all the info needed to reconstruct a Coordinate..
+        void WriteCoordinate(const Coordinate& coordinate, proto::Epi_Location_Coordinate* protoCoordinate);
+
+        /// Create a ProtoBuf Location containing all the info needed to reconstruct a Location.
+        void WriteLocation(EnhancedCoordinate& location, proto::Epi_Location* protoLocation);
 };
+
 } // namespace geopop

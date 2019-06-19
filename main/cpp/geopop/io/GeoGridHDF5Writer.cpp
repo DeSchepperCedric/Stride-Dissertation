@@ -42,7 +42,7 @@ void GeoGridHDF5Writer::Write(GeoGrid& geoGrid)
         H5File file;
         try {
                 file = H5File(GetFileName(), H5F_ACC_TRUNC);
-        } catch (FileIException error) {
+        } catch (FileIException& error) {
                 throw util::Exception(error.getDetailMsg());
         }
 

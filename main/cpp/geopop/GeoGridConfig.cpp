@@ -68,6 +68,14 @@ void GeoGridConfig::SetData(const ptree& configPt)
         if (!workplacesFileName.empty()) {
                 auto workplaceReader = ReaderFactory::CreateWorkplaceReader(workplacesFileName);
                 workplaceReader->SetWorkplaceSizeDistributions(refWP.ratios, refWP.min, refWP.max);
+
+                //----------------------------------------------------------------
+                // Distribution performance: fast or accurate
+                //----------------------------------------------------------------
+                std::string performance = configPt.get<string>("workplace_performance", "");
+                if (performance == "fast") {
+                        refWP.accurate = false;
+                }
         }
 
         //------------------------------------------------------------------------------------------

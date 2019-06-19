@@ -66,10 +66,8 @@ unsigned int GetWorkplaceIndex(std::unordered_map<unsigned int, unsigned int>& p
         }
 }
 
-template <>
-void Populator<stride::ContactType::Id::Workplace>::Apply(GeoGrid& geoGrid, const GeoGridConfig& geoGridConfig)
+void applyAccurately(stride::util::RnMan& m_rn_man, GeoGrid& geoGrid, const GeoGridConfig& geoGridConfig)
 {
-        m_logger->trace("Starting to populate Workplaces");
         auto genCommute{function<int()>()};
         auto genNonCommute{function<int()>()};
         auto gen{function<int()>()};
@@ -239,6 +237,236 @@ void Populator<stride::ContactType::Id::Workplace>::Apply(GeoGrid& geoGrid, cons
                                 }
                         }
                 }
+        }
+}
+
+void applyFast(stride::util::RnMan& m_rn_man, GeoGrid& geoGrid, const GeoGridConfig& geoGridConfig)
+{
+        auto genCommute{function<int()>()};
+        auto genNonCommute{function<int()>()};
+        auto gen{function<int()>()};
+        auto genWorkPlaceSize{function<int()>()};
+
+        vector<ContactPool*> nearbyWp{};
+
+        vector<Location*> commuteLocations{};
+
+        // key : pool ID
+        // value : index of pool type
+        std::unordered_map<unsigned int, unsigned int> poolTypes;
+
+        const bool wp_types_present = !geoGridConfig.refWP.ratios.empty();
+
+        // discrete generator to decide workplace type
+        if (wp_types_present) {
+                genWorkPlaceSize = m_rn_man.GetDiscreteGenerator(geoGridConfig.refWP.ratios, 0U);
+        }
+        // --------------------------------------------------------------------------------
+        // For every location, if populated ...
+        // --------------------------------------------------------------------------------
+        for (const auto& loc : *geoGrid.m_locationGrid) {
+                if (loc->getData<Location>()->GetPopCount() == 0) {
+                        continue;
+                }
+                const auto prov              = loc->getData<Location>()->GetProvince();
+                const auto participWorkplace = geoGridConfig.params.at(prov).participation_workplace;
+                const auto popCollege = static_cast<unsigned int>(geoGridConfig.regionsInfo.at(prov).fraction_college *
+                                                                  geoGridConfig.params.at(prov).pop_size);
+                const auto popWorkplace = static_cast<unsigned int>(
+                    geoGridConfig.regionsInfo.at(prov).fraction_workplace * geoGridConfig.params.at(prov).pop_size);
+                const auto fracCollegeCommute   = geoGridConfig.params.at(prov).fraction_college_commuters;
+                const auto fracWorkplaceCommute = geoGridConfig.params.at(prov).fraction_workplace_commuters;
+
+                double fracCommuteStudents = 0.0;
+                if (static_cast<bool>(fracWorkplaceCommute) && popWorkplace) {
+                        fracCommuteStudents = (popCollege * fracCollegeCommute) / (popWorkplace * fracWorkplaceCommute);
+                }
+
+                // --------------------------------------------------------------------------------
+                // Find all Workplaces where employees from this location commute to
+                // --------------------------------------------------------------------------------
+                commuteLocations.clear();
+                genCommute = function<int()>();
+
+                vector<double> commutingWeights;
+                for (const pair<Location*, double>& commute : loc->getData<Location>()->CRefOutgoingCommutes()) {
+                        const auto& workplaces = commute.first->RefPools(Id::Workplace);
+                        if (!workplaces.empty()) {
+                                commuteLocations.push_back(commute.first);
+                                const auto weight = commute.second - (commute.second * fracCommuteStudents);
+                                commutingWeights.push_back(weight);
+                                AssertThrow(weight >= 0.0 && weight <= 1.0 && !isnan(weight),
+                                            "Invalid weight: " + to_string(weight), m_logger);
+                        }
+                }
+                if (!commutingWeights.empty()) {
+                        genCommute = m_rn_man.GetDiscreteGenerator(commutingWeights, 0U);
+                }
+                // --------------------------------------------------------------------------------
+                // Set NearbyWorkspacePools and associated generator
+                // When dealing with different workplace types, the generator will be updated later
+                // --------------------------------------------------------------------------------
+                nearbyWp      = geoGrid.GetNearbyPools(Id::Workplace, *loc);
+                genNonCommute = m_rn_man.GetUniformIntGenerator(0, static_cast<int>(nearbyWp.size()), 0U);
+
+                // --------------------------------------------------------------------------------
+                // For everyone of working age: decide between work or college (iff of College age)
+                // --------------------------------------------------------------------------------
+                for (auto& hhPool : loc->getData<Location>()->RefPools(Id::Household)) {
+                        for (auto person : *hhPool) {
+
+                                // NOTICE: logic below requires that CollegePopulator has already executed
+                                // such that we can identify the college students.
+                                // If this person is not in the age bracket for college/work/unemployed
+                                // or if the perosn is in the age bracket but is a student we are done here.
+                                if (!Workplace::HasAge(person->GetAge()) || (person->GetPoolId(Id::College) != 0)) {
+                                        continue;
+                                }
+
+                                // We are dealing with a non-student person of the age bracket for work,
+                                // flip coin to decide whether they are actually employed.
+                                bool isActiveWorker = m_rn_man.MakeWeightedCoinFlip(participWorkplace);
+                                if (isActiveWorker) {
+                                        // ---------------------------------------------
+                                        // this person is employed
+                                        // ---------------------------------------------
+                                        const auto isCommuter = m_rn_man.MakeWeightedCoinFlip(fracWorkplaceCommute);
+
+                                        if (!commuteLocations.empty() && isCommuter) {
+                                                // --------------------------------------------------------------
+                                                // this person commutes to the Location and in particular to Pool
+                                                // --------------------------------------------------------------
+                                                auto& pools = commuteLocations[genCommute()]->RefPools(Id::Workplace);
+                                                auto  s     = static_cast<int>(pools.size());
+
+                                                auto defaultIndex   = m_rn_man.GetUniformIntGenerator(0, s)();
+                                                auto foundPoolIndex = defaultIndex;
+
+                                                if (wp_types_present) {
+                                                        // -------------------------------------
+                                                        // Handling workplace size distribution
+                                                        // -------------------------------------
+                                                        for (int i = 0; i < s; i++) {
+                                                                const unsigned int index = geopop::GetWorkplaceIndex(
+                                                                    poolTypes, pools[i]->GetId(), genWorkPlaceSize);
+
+                                                                if (pools[i]->size() < geoGridConfig.refWP.max[index]) {
+                                                                        foundPoolIndex = i;
+                                                                        break;
+                                                                }
+                                                        }
+
+                                                        // if no workplace with room left found, calculate weights to
+                                                        // find best fit
+                                                        if (defaultIndex == foundPoolIndex) {
+                                                                std::vector<double> weightsCommutePools;
+                                                                for (int i = 0; i < s; i++) {
+                                                                        const unsigned int index =
+                                                                            geopop::GetWorkplaceIndex(poolTypes,
+                                                                                                      pools[i]->GetId(),
+                                                                                                      genWorkPlaceSize);
+                                                                        const auto weight = GetWorkplaceWeight(
+                                                                            geoGridConfig, pools[i], index);
+                                                                        weightsCommutePools.push_back(weight);
+                                                                        AssertThrow(weight >= 0.0 && weight <= 1.0 &&
+                                                                                        !isnan(weight),
+                                                                                    "Invalid weight: " +
+                                                                                        to_string(weight),
+                                                                                    m_logger);
+                                                                }
+                                                                foundPoolIndex = m_rn_man.GetDiscreteGenerator(
+                                                                    weightsCommutePools, 0U)();
+                                                        }
+                                                }
+                                                auto pool      = pools[foundPoolIndex];
+                                                auto pool_type = poolTypes[pool->GetId()];
+
+                                                pool->AddMember(person);
+                                                person->SetPoolId(Id::Workplace, pool->GetId());
+                                                // increase workplace type to larger size
+                                                if (wp_types_present &&
+                                                    pool->size() > geoGridConfig.refWP.max[pool_type] &&
+                                                    pool_type < geoGridConfig.refWP.ratios.size() - 1) {
+                                                        poolTypes[pool->GetId()] += 1;
+                                                }
+
+                                        } else {
+                                                // ----------------------------
+                                                // this person does not commute
+                                                // ----------------------------
+                                                auto defaultIndex   = genNonCommute();
+                                                auto foundPoolIndex = defaultIndex;
+
+                                                if (wp_types_present) {
+                                                        // -------------------------------------
+                                                        // Handling workplace size distribution
+                                                        // -------------------------------------
+                                                        auto                s = static_cast<int>(nearbyWp.size());
+                                                        std::vector<double> weightsNonCommutePools;
+                                                        std::vector<int>    tempIndex;
+                                                        for (int i = 0; i < s; i++) {
+                                                                const unsigned int index = geopop::GetWorkplaceIndex(
+                                                                    poolTypes, nearbyWp[i]->GetId(), genWorkPlaceSize);
+
+                                                                if (nearbyWp[i]->size() <
+                                                                    geoGridConfig.refWP.max[index]) {
+                                                                        foundPoolIndex = i;
+                                                                        break;
+                                                                }
+                                                        }
+                                                        // if no workplace with room left found, calculate weights to
+                                                        // find best fit to add one
+                                                        if (defaultIndex == foundPoolIndex) {
+                                                                std::vector<double> weightsCommutePools;
+                                                                for (int i = 0; i < s; i++) {
+                                                                        const unsigned int index =
+                                                                            geopop::GetWorkplaceIndex(
+                                                                                poolTypes, nearbyWp[i]->GetId(),
+                                                                                genWorkPlaceSize);
+                                                                        const auto weight = GetWorkplaceWeight(
+                                                                            geoGridConfig, nearbyWp[i], index);
+                                                                        weightsCommutePools.push_back(weight);
+                                                                        AssertThrow(weight >= 0.0 && weight <= 1.0 &&
+                                                                                        !isnan(weight),
+                                                                                    "Invalid weight: " +
+                                                                                        to_string(weight),
+                                                                                    m_logger);
+                                                                }
+                                                                foundPoolIndex = m_rn_man.GetDiscreteGenerator(
+                                                                    weightsCommutePools, 0U)();
+                                                        }
+                                                }
+
+                                                auto pool = nearbyWp[foundPoolIndex];
+
+                                                const auto pool_type = poolTypes[pool->GetId()];
+
+                                                pool->AddMember(person);
+                                                person->SetPoolId(Id::Workplace, pool->GetId());
+
+                                                // increase workplace type to larger size
+                                                if (wp_types_present &&
+                                                    pool->size() > geoGridConfig.refWP.max[pool_type] &&
+                                                    pool_type < geoGridConfig.refWP.ratios.size() - 1) {
+
+                                                        poolTypes[pool->GetId()] += 1;
+                                                }
+                                        }
+                                }
+                        }
+                }
+        }
+}
+
+template <>
+void Populator<stride::ContactType::Id::Workplace>::Apply(GeoGrid& geoGrid, const GeoGridConfig& geoGridConfig)
+{
+        m_logger->trace("Starting to populate Workplaces");
+
+        if (geoGridConfig.refWP.accurate) {
+                applyAccurately(m_rn_man, geoGrid, geoGridConfig);
+        } else {
+                applyFast(m_rn_man, geoGrid, geoGridConfig);
         }
 
         m_logger->trace("Done populating Workplaces");

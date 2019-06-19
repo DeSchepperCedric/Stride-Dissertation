@@ -15,11 +15,13 @@
 
 #pragma once
 
-#include "EpiStreamWriter.h"
+#include "EpiFileWriter.h"
 #include "geopop/EnhancedCoordinate.h"
+#include "geopop/Location.h"
 
-#include <nlohmann/json.hpp>
+#include "H5Cpp.h"
 #include <set>
+#include <string>
 
 namespace stride {
 class ContactPool;
@@ -30,15 +32,26 @@ namespace geopop {
 /**
  * Writes a GeoGrid to a JSON file.
  */
-class EpiJSONWriter : public EpiStreamWriter
+class EpiHDF5Writer : public EpiFileWriter
 {
 public:
-        explicit EpiJSONWriter(std::ostream& stream);
+        explicit EpiHDF5Writer(const std::string& fileName);
 
         /// Write the provided GeoGrid to the proved ostream in JSON format.
         void Write(std::vector<geopop::EnhancedCoordinate> locations) override;
 
 private:
-        nlohmann::json WriteLocation(const geopop::EnhancedCoordinate& location);
+        void WriteAttribute(const std::string& data, const std::string& name, H5::H5Object& object);
+
+        /// Write an attribute of size 1 for data to a group or dataset
+        template <typename T>
+        void WriteAttribute(const T& data, const std::string& name, H5::H5Object& object);
+
+        /// Create a HDF5 containing all info needed to reconstruct a Coordinate.
+        void WriteCoordinate(const Coordinate& coordinate, H5::Group& location);
+
+        /// Create a HDF5 Group containing all info needed to reconstruct a Location.
+        void WriteLocation(const geopop::EnhancedCoordinate& location, H5::Group& locations,
+                           const std::string& location_name);
 };
 } // namespace geopop

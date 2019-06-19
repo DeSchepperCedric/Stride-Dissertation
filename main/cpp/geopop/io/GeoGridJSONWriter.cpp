@@ -103,7 +103,7 @@ nlohmann::json GeoGridJSONWriter::WriteLocation(const EnhancedCoordinate& locati
                 contactPoolClass["class"] = ToString(typ);
                 nlohmann::json pools      = nlohmann::json::array();
                 for (const auto& c : location.getData<Location>()->CRefPools(typ)) {
-                        pools.push_back(move(WriteContactPool(c)));
+                        pools.push_back(WriteContactPool(c));
                 }
                 if (pools.size() != 0) {
                         contactPoolClass["pools"] = pools;

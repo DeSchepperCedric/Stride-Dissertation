@@ -20,6 +20,7 @@
 
 #include "EpiViewer.h"
 
+#include "geopop/EnhancedCoordinate.h"
 #include "geopop/Location.h"
 #include "pop/Population.h"
 #include "sim/Sim.h"
@@ -42,19 +43,22 @@ void EpiViewer::Update(stride::sim_event::Id id)
                 auto& geo = m_runner->GetSim()->GetPopulation()->RefGeoGrid();
 
                 for (auto& loc : *geo.m_locationGrid) {
-                        visualization::Location location;
-                        location.id        = loc->getData<geopop::Location>()->GetID();
-                        location.name      = loc->getData<geopop::Location>()->GetName();
-                        location.longitude = loc->GetCoordinate().get<0>();
-                        location.latitude  = loc->GetCoordinate().get<1>();
-                        location.size      = loc->getData<geopop::Location>()->GetPopCount();
-                        const auto& epi    = loc->getData<geopop::Location>()->GetStatusCounts();
+                        visualization::Location    location;
+                        geopop::EnhancedCoordinate coor = geopop::EnhancedCoordinate(nullptr);
+                        location.id                     = loc->getData<geopop::Location>()->GetID();
+                        location.name                   = loc->getData<geopop::Location>()->GetName();
+                        coor.SetCoordinate(geopop::Coordinate(loc->GetCoordinate()));
+                        location.size   = loc->getData<geopop::Location>()->GetPopCount();
+                        const auto& epi = loc->getData<geopop::Location>()->GetStatusCounts();
                         for (const auto& age : epi) {
                                 for (const auto& status : age.second) {
                                         location.infected[age.first][status.first].push_back(status.second);
                                 }
                         }
-                        m_Locations[loc->getData<geopop::Location>()->GetID()] = location;
+                        auto loc_id         = loc->getData<geopop::Location>()->GetID();
+                        m_Locations[loc_id] = location;
+                        coor.setData(&m_Locations[loc_id]);
+                        m_coors.push_back(coor);
                 }
                 break;
         }
@@ -72,11 +76,11 @@ void EpiViewer::Update(stride::sim_event::Id id)
                 break;
         }
         case Id::Finished: {
-                ofstream                      outputFileStream("temp.json");
+                std::ofstream outputFileStream;
+                outputFileStream.open(m_filename);
                 shared_ptr<geopop::EpiWriter> writer =
-                    geopop::EpiWriterFactory::CreateEpiWriter("temp.json", outputFileStream);
-                writer->Write(m_Locations);
-                outputFileStream.close();
+                    geopop::EpiWriterFactory::CreateEpiWriter(m_filename, outputFileStream);
+                writer->Write(m_coors);
         }
         default: break;
         }

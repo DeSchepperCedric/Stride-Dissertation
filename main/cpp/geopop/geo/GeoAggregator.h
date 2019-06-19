@@ -103,6 +103,7 @@ public:
                             return true;
                     },
                     box);
+                std::cout << "";
         }
 
 private:

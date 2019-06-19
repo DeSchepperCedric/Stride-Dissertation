@@ -128,6 +128,8 @@ public:
                 std::vector<unsigned int> max;
 
                 std::vector<unsigned int> min;
+
+                bool accurate = true;
         } refWP;
 
         // -----------------------------------------------------------------------------------------

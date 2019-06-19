@@ -29,8 +29,6 @@ namespace visualization {
         std::string name = "";
         unsigned int id = 0;
         unsigned int size = 0;
-        double latitude = 0;
-        double longitude = 0;
 
         std::unordered_map<std::string, std::unordered_map<std::string, std::vector<unsigned int>>> infected = {};
 
