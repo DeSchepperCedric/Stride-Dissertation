@@ -48,11 +48,9 @@ public:
         EpiProtoReader operator=(const EpiProtoReader&) = delete;
 
         /// Actually perform the read and return the GeoGrid.
-        std::pair<std::vector<visualization::Location*>, std::vector<geopop::EnhancedCoordinate>> Read()
-        override;
+        std::pair<std::vector<visualization::Location*>, std::vector<geopop::EnhancedCoordinate>> Read() override;
 
 private:
-
         /// Create a Coordinate based on the provided protobuf Coordinate.
         Coordinate ParseCoordinate(const proto::Epi_Location_Coordinate& protoCoordinate);
 

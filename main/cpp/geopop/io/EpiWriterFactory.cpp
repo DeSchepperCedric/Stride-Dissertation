@@ -47,11 +47,9 @@ std::shared_ptr<EpiWriter> EpiWriterFactory::CreateEpiWriter(const std::string& 
                 return std::make_shared<EpiJSONWriter>(outputFileStream);
         } else if (path.extension().string() == ".h5") {
                 return std::make_shared<EpiHDF5Writer>(path.string());
-        } else
-     if (path.extension().string() == ".proto") {
-         return std::make_shared<EpiProtoWriter>(outputFileStream);
-     }
-        else {
+        } else if (path.extension().string() == ".proto") {
+                return std::make_shared<EpiProtoWriter>(outputFileStream);
+        } else {
                 throw stride::util::Exception("GeoGridWriterFactory::CreateWriter> Unsupported file extension: " +
                                               path.extension().string());
         }

@@ -31,7 +31,7 @@ using namespace std;
 using namespace stride::util;
 using namespace stride::ContactType;
 
-EpiProtoWriter::EpiProtoWriter(std::ostream& stream) : EpiStreamWriter(stream){}
+EpiProtoWriter::EpiProtoWriter(std::ostream& stream) : EpiStreamWriter(stream) {}
 
 void EpiProtoWriter::Write(std::vector<geopop::EnhancedCoordinate> locations)
 {
@@ -48,16 +48,13 @@ void EpiProtoWriter::Write(std::vector<geopop::EnhancedCoordinate> locations)
         StreamRef().flush();
 }
 
-
-void EpiProtoWriter::WriteCoordinate(const Coordinate&                   coordinate,
-                                         proto::Epi_Location_Coordinate* protoCoordinate)
+void EpiProtoWriter::WriteCoordinate(const Coordinate& coordinate, proto::Epi_Location_Coordinate* protoCoordinate)
 {
         protoCoordinate->set_longitude(boost::geometry::get<1>(coordinate));
         protoCoordinate->set_latitude(boost::geometry::get<0>(coordinate));
 }
 
-void EpiProtoWriter::WriteLocation(EnhancedCoordinate& location,
-                                       proto::Epi_Location*             protoLocation)
+void EpiProtoWriter::WriteLocation(EnhancedCoordinate& location, proto::Epi_Location* protoLocation)
 {
         protoLocation->set_id(location.getData<visualization::Location>()->id);
         protoLocation->set_name(location.getData<visualization::Location>()->name);
@@ -66,18 +63,18 @@ void EpiProtoWriter::WriteLocation(EnhancedCoordinate& location,
         WriteCoordinate(location.GetCoordinate(), coordinate);
         protoLocation->set_allocated_coordinate(coordinate);
 
-        auto epi = new proto::Epi_Location_Data();
-        auto &infected = location.getData<visualization::Location>()->infected;
-        for(auto &a: infected){
-            auto age = epi->add_age();
-            age->set_name(a.first);
-            for(auto &s: a.second){
-                auto status = age->add_status();
-                status->set_name(s.first);
-                for(auto& d: s.second){
-                    status->add_day(d);
+        auto  epi      = new proto::Epi_Location_Data();
+        auto& infected = location.getData<visualization::Location>()->infected;
+        for (auto& a : infected) {
+                auto age = epi->add_age();
+                age->set_name(a.first);
+                for (auto& s : a.second) {
+                        auto status = age->add_status();
+                        status->set_name(s.first);
+                        for (auto& d : s.second) {
+                                status->add_day(d);
+                        }
                 }
-            }
         }
         protoLocation->set_allocated_data(epi);
 }

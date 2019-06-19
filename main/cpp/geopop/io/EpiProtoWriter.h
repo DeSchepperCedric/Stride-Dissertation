@@ -49,13 +49,11 @@ public:
         void Write(std::vector<geopop::EnhancedCoordinate> locations) override;
 
 private:
-
         /// Create a ProtoBuf Coordinate containing all the info needed to reconstruct a Coordinate..
         void WriteCoordinate(const Coordinate& coordinate, proto::Epi_Location_Coordinate* protoCoordinate);
 
         /// Create a ProtoBuf Location containing all the info needed to reconstruct a Location.
         void WriteLocation(EnhancedCoordinate& location, proto::Epi_Location* protoLocation);
-
 };
 
 } // namespace geopop

@@ -885,7 +885,7 @@ inline double Epi_Location_Coordinate::longitude() const {
   return longitude_;
 }
 inline void Epi_Location_Coordinate::set_longitude(double value) {
-  
+
   longitude_ = value;
   // @@protoc_insertion_point(field_set:proto.Epi.Location.Coordinate.longitude)
 }
@@ -899,7 +899,7 @@ inline double Epi_Location_Coordinate::latitude() const {
   return latitude_;
 }
 inline void Epi_Location_Coordinate::set_latitude(double value) {
-  
+
   latitude_ = value;
   // @@protoc_insertion_point(field_set:proto.Epi.Location.Coordinate.latitude)
 }
@@ -917,13 +917,13 @@ inline const ::std::string& Epi_Location_Data_Age_Status::name() const {
   return name_.GetNoArena();
 }
 inline void Epi_Location_Data_Age_Status::set_name(const ::std::string& value) {
-  
+
   name_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), value);
   // @@protoc_insertion_point(field_set:proto.Epi.Location.Data.Age.Status.name)
 }
 #if LANG_CXX11
 inline void Epi_Location_Data_Age_Status::set_name(::std::string&& value) {
-  
+
   name_.SetNoArena(
     &::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::move(value));
   // @@protoc_insertion_point(field_set_rvalue:proto.Epi.Location.Data.Age.Status.name)
@@ -931,31 +931,31 @@ inline void Epi_Location_Data_Age_Status::set_name(::std::string&& value) {
 #endif
 inline void Epi_Location_Data_Age_Status::set_name(const char* value) {
   GOOGLE_DCHECK(value != nullptr);
-  
+
   name_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::string(value));
   // @@protoc_insertion_point(field_set_char:proto.Epi.Location.Data.Age.Status.name)
 }
 inline void Epi_Location_Data_Age_Status::set_name(const char* value, size_t size) {
-  
+
   name_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(),
       ::std::string(reinterpret_cast<const char*>(value), size));
   // @@protoc_insertion_point(field_set_pointer:proto.Epi.Location.Data.Age.Status.name)
 }
 inline ::std::string* Epi_Location_Data_Age_Status::mutable_name() {
-  
+
   // @@protoc_insertion_point(field_mutable:proto.Epi.Location.Data.Age.Status.name)
   return name_.MutableNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
 }
 inline ::std::string* Epi_Location_Data_Age_Status::release_name() {
   // @@protoc_insertion_point(field_release:proto.Epi.Location.Data.Age.Status.name)
-  
+
   return name_.ReleaseNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
 }
 inline void Epi_Location_Data_Age_Status::set_allocated_name(::std::string* name) {
   if (name != nullptr) {
-    
+
   } else {
-    
+
   }
   name_.SetAllocatedNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), name);
   // @@protoc_insertion_point(field_set_allocated:proto.Epi.Location.Data.Age.Status.name)
@@ -1004,13 +1004,13 @@ inline const ::std::string& Epi_Location_Data_Age::name() const {
   return name_.GetNoArena();
 }
 inline void Epi_Location_Data_Age::set_name(const ::std::string& value) {
-  
+
   name_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), value);
   // @@protoc_insertion_point(field_set:proto.Epi.Location.Data.Age.name)
 }
 #if LANG_CXX11
 inline void Epi_Location_Data_Age::set_name(::std::string&& value) {
-  
+
   name_.SetNoArena(
     &::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::move(value));
   // @@protoc_insertion_point(field_set_rvalue:proto.Epi.Location.Data.Age.name)
@@ -1018,31 +1018,31 @@ inline void Epi_Location_Data_Age::set_name(::std::string&& value) {
 #endif
 inline void Epi_Location_Data_Age::set_name(const char* value) {
   GOOGLE_DCHECK(value != nullptr);
-  
+
   name_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::string(value));
   // @@protoc_insertion_point(field_set_char:proto.Epi.Location.Data.Age.name)
 }
 inline void Epi_Location_Data_Age::set_name(const char* value, size_t size) {
-  
+
   name_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(),
       ::std::string(reinterpret_cast<const char*>(value), size));
   // @@protoc_insertion_point(field_set_pointer:proto.Epi.Location.Data.Age.name)
 }
 inline ::std::string* Epi_Location_Data_Age::mutable_name() {
-  
+
   // @@protoc_insertion_point(field_mutable:proto.Epi.Location.Data.Age.name)
   return name_.MutableNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
 }
 inline ::std::string* Epi_Location_Data_Age::release_name() {
   // @@protoc_insertion_point(field_release:proto.Epi.Location.Data.Age.name)
-  
+
   return name_.ReleaseNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
 }
 inline void Epi_Location_Data_Age::set_allocated_name(::std::string* name) {
   if (name != nullptr) {
-    
+
   } else {
-    
+
   }
   name_.SetAllocatedNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), name);
   // @@protoc_insertion_point(field_set_allocated:proto.Epi.Location.Data.Age.name)
@@ -1125,7 +1125,7 @@ inline ::google::protobuf::int64 Epi_Location::id() const {
   return id_;
 }
 inline void Epi_Location::set_id(::google::protobuf::int64 value) {
-  
+
   id_ = value;
   // @@protoc_insertion_point(field_set:proto.Epi.Location.id)
 }
@@ -1139,13 +1139,13 @@ inline const ::std::string& Epi_Location::name() const {
   return name_.GetNoArena();
 }
 inline void Epi_Location::set_name(const ::std::string& value) {
-  
+
   name_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), value);
   // @@protoc_insertion_point(field_set:proto.Epi.Location.name)
 }
 #if LANG_CXX11
 inline void Epi_Location::set_name(::std::string&& value) {
-  
+
   name_.SetNoArena(
     &::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::move(value));
   // @@protoc_insertion_point(field_set_rvalue:proto.Epi.Location.name)
@@ -1153,31 +1153,31 @@ inline void Epi_Location::set_name(::std::string&& value) {
 #endif
 inline void Epi_Location::set_name(const char* value) {
   GOOGLE_DCHECK(value != nullptr);
-  
+
   name_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::string(value));
   // @@protoc_insertion_point(field_set_char:proto.Epi.Location.name)
 }
 inline void Epi_Location::set_name(const char* value, size_t size) {
-  
+
   name_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(),
       ::std::string(reinterpret_cast<const char*>(value), size));
   // @@protoc_insertion_point(field_set_pointer:proto.Epi.Location.name)
 }
 inline ::std::string* Epi_Location::mutable_name() {
-  
+
   // @@protoc_insertion_point(field_mutable:proto.Epi.Location.name)
   return name_.MutableNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
 }
 inline ::std::string* Epi_Location::release_name() {
   // @@protoc_insertion_point(field_release:proto.Epi.Location.name)
-  
+
   return name_.ReleaseNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
 }
 inline void Epi_Location::set_allocated_name(::std::string* name) {
   if (name != nullptr) {
-    
+
   } else {
-    
+
   }
   name_.SetAllocatedNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), name);
   // @@protoc_insertion_point(field_set_allocated:proto.Epi.Location.name)
@@ -1192,7 +1192,7 @@ inline ::google::protobuf::int64 Epi_Location::population() const {
   return population_;
 }
 inline void Epi_Location::set_population(::google::protobuf::int64 value) {
-  
+
   population_ = value;
   // @@protoc_insertion_point(field_set:proto.Epi.Location.population)
 }
@@ -1215,13 +1215,13 @@ inline const ::proto::Epi_Location_Coordinate& Epi_Location::coordinate() const 
 }
 inline ::proto::Epi_Location_Coordinate* Epi_Location::release_coordinate() {
   // @@protoc_insertion_point(field_release:proto.Epi.Location.coordinate)
-  
+
   ::proto::Epi_Location_Coordinate* temp = coordinate_;
   coordinate_ = nullptr;
   return temp;
 }
 inline ::proto::Epi_Location_Coordinate* Epi_Location::mutable_coordinate() {
-  
+
   if (coordinate_ == nullptr) {
     auto* p = CreateMaybeMessage<::proto::Epi_Location_Coordinate>(GetArenaNoVirtual());
     coordinate_ = p;
@@ -1240,9 +1240,9 @@ inline void Epi_Location::set_allocated_coordinate(::proto::Epi_Location_Coordin
       coordinate = ::google::protobuf::internal::GetOwnedMessage(
           message_arena, coordinate, submessage_arena);
     }
-    
+
   } else {
-    
+
   }
   coordinate_ = coordinate;
   // @@protoc_insertion_point(field_set_allocated:proto.Epi.Location.coordinate)
@@ -1266,13 +1266,13 @@ inline const ::proto::Epi_Location_Data& Epi_Location::data() const {
 }
 inline ::proto::Epi_Location_Data* Epi_Location::release_data() {
   // @@protoc_insertion_point(field_release:proto.Epi.Location.data)
-  
+
   ::proto::Epi_Location_Data* temp = data_;
   data_ = nullptr;
   return temp;
 }
 inline ::proto::Epi_Location_Data* Epi_Location::mutable_data() {
-  
+
   if (data_ == nullptr) {
     auto* p = CreateMaybeMessage<::proto::Epi_Location_Data>(GetArenaNoVirtual());
     data_ = p;
@@ -1291,9 +1291,9 @@ inline void Epi_Location::set_allocated_data(::proto::Epi_Location_Data* data) {
       data = ::google::protobuf::internal::GetOwnedMessage(
           message_arena, data, submessage_arena);
     }
-    
+
   } else {
-    
+
   }
   data_ = data;
   // @@protoc_insertion_point(field_set_allocated:proto.Epi.Location.data)

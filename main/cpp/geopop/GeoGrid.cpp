@@ -32,7 +32,9 @@ using namespace std;
 using stride::ContactPool;
 using stride::ContactType::Id;
 
-GeoGrid::GeoGrid(stride::Population* population) :  m_locationGrid(std::make_shared<geopop::LocationGrid<Location>>()), m_locations(), m_population(population), m_id_to_index()
+GeoGrid::GeoGrid(stride::Population* population)
+    : m_locationGrid(std::make_shared<geopop::LocationGrid<Location>>()), m_locations(), m_population(population),
+      m_id_to_index()
 {
 }
 

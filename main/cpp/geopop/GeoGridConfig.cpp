@@ -73,10 +73,9 @@ void GeoGridConfig::SetData(const ptree& configPt)
                 // Distribution performance: fast or accurate
                 //----------------------------------------------------------------
                 std::string performance = configPt.get<string>("workplace_performance", "");
-                if(performance == "fast"){
-                    refWP.accurate = false;
+                if (performance == "fast") {
+                        refWP.accurate = false;
                 }
-
         }
 
         //------------------------------------------------------------------------------------------

@@ -28,10 +28,7 @@ namespace geopop {
 using namespace std;
 using namespace stride::ContactType;
 
-EpiProtoReader::EpiProtoReader(unique_ptr<istream> inputStream)
-    : EpiStreamReader(move(inputStream))
-{
-}
+EpiProtoReader::EpiProtoReader(unique_ptr<istream> inputStream) : EpiStreamReader(move(inputStream)) {}
 
 std::pair<std::vector<visualization::Location*>, std::vector<geopop::EnhancedCoordinate>> EpiProtoReader::Read()
 {
@@ -43,14 +40,13 @@ std::pair<std::vector<visualization::Location*>, std::vector<geopop::EnhancedCoo
         std::vector<visualization::Location*>   locs;
         std::vector<geopop::EnhancedCoordinate> coords;
 
-
         for (int idx = 0; idx < protoGrid.locations_size(); idx++) {
-                    const proto::Epi_Location& protoLocation = protoGrid.locations(idx);
-                    auto                           loc           = ParseLocation(protoLocation);
+                const proto::Epi_Location& protoLocation = protoGrid.locations(idx);
+                auto                       loc           = ParseLocation(protoLocation);
                 locs.push_back(loc.first);
                 coords.push_back(loc.second);
-            }
-    return make_pair(locs, coords);
+        }
+        return make_pair(locs, coords);
 }
 
 Coordinate EpiProtoReader::ParseCoordinate(const proto::Epi_Location_Coordinate& protoCoordinate)
@@ -73,25 +69,19 @@ std::pair<visualization::Location*, geopop::EnhancedCoordinate> EpiProtoReader::
         coord.SetCoordinate(coordinate);
         coord.setData(loc);
 
-        loc->id = id;
+        loc->id   = id;
         loc->name = name;
         loc->size = population;
-
-        const auto age    = {"College",   "Daycare",          "Household",          "K12School",
-                             "PreSchool", "PrimaryCommunity", "SecondaryCommunity", "Workplace"};
-        const auto status = {"immune", "infected", "infectious", "recovered", "susceptible", "symptomatic", "total"};
 
         for (const auto& a : protoLocation.data().age()) {
                 for (const auto& s : a.status()) {
                         vector<unsigned int> days;
-                        for(const auto& d: s.day()){
+                        for (const auto& d : s.day()) {
                                 days.push_back(d);
                         }
-                        loc->infected[a.name()][s.name()]       = days;
+                        loc->infected[a.name()][s.name()] = days;
                 }
         }
-
-
 
         return std::make_pair(loc, coord);
 }

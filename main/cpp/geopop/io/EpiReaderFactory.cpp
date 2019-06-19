@@ -55,8 +55,7 @@ std::shared_ptr<EpiReader> EpiReaderFactory::CreateReader(const std::string& fil
                 auto file = std::make_unique<std::ifstream>();
                 file->open(path.string());
                 return std::make_shared<EpiProtoReader>(move(file));
-        }
-        else if (path.extension().string() == ".h5") {
+        } else if (path.extension().string() == ".h5") {
                 return std::make_shared<EpiHDF5Reader>(path.string());
         } else {
                 throw stride::util::Exception("EpiReaderFactory::CreateReader> Unsupported file extension: " +

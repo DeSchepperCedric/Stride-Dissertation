@@ -50,7 +50,6 @@ private:
         T ReadAttribute(const std::string& name, H5::H5Object& object);
 
         std::pair<visualization::Location*, EnhancedCoordinate> ParseLocation(H5::Group& location);
-
 };
 
 } // namespace geopop
