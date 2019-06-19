@@ -20,7 +20,7 @@
     <r0>11</r0>
     <seeding_age_max>99</seeding_age_max>
     <seeding_age_min>1</seeding_age_min>
-    <seeding_rate>0.0000001</seeding_rate>
+    <seeding_rate>0.0000001286</seeding_rate>
     <start_date>2019-01-01</start_date>
     <stride_log_level>info</stride_log_level>
     <track_index_case>false</track_index_case>
@@ -29,9 +29,9 @@
     <vaccine_profile>Random</vaccine_profile>
     <vaccine_rate>0.8</vaccine_rate>
     <geopop_gen>
-        <cities_file>belgium_cities.csv</cities_file>
-        <commuting_file>belgium_commuting_matrix.csv</commuting_file>
-		<workplace_file>workplace_size_distribution_belgium.csv</workplace_file>
+        <cities_file>flanders_cities.csv</cities_file>
+        <commuting_file>flanders_commuting.csv</commuting_file>
+		<workplace_file>workplace_size_distribution_flanders.csv</workplace_file>
     <workplace_performance>fast</workplace_performance>
     <regions>
   			<region>
@@ -82,30 +82,6 @@
     				<participation_workplace>0.694</participation_workplace>
     				<population_size>1513556</population_size>
   			</region>
-        <region>
-            <!-- Henegouwen -->
-    				<id>5</id>
-    				<fraction_college_commuters>0.55</fraction_college_commuters>
-    				<fraction_workplace_commuters>0.65</fraction_workplace_commuters>
-    				<household_file>Henegouwen.json</household_file>
-    				<participation_preschool>0.786</participation_preschool>
-    				<participation_daycare>0.29</participation_daycare>
-    				<participation_college>0.32</participation_college>
-    				<participation_workplace>0.6</participation_workplace>
-    				<population_size>1342456</population_size>
-  			</region>
-        <region>
-            <!-- Luik -->
-    				<id>6</id>
-    				<fraction_college_commuters>0.55</fraction_college_commuters>
-    				<fraction_workplace_commuters>0.65</fraction_workplace_commuters>
-    				<household_file>Luik.json</household_file>
-    				<participation_preschool>0.777</participation_preschool>
-    				<participation_daycare>0.32</participation_daycare>
-    				<participation_college>0.32</participation_college>
-    				<participation_workplace>0.6</participation_workplace>
-    				<population_size>1105733</population_size>
-  			</region>
   			<region>
             <!-- Limburg -->
     				<id>7</id>
@@ -117,42 +93,6 @@
     				<participation_college>0.33</participation_college>
     				<participation_workplace>0.694</participation_workplace>
     				<population_size>873425</population_size>
-  			</region>
-        <region>
-            <!-- Luxemburg -->
-    				<id>8</id>
-    				<fraction_college_commuters>0.55</fraction_college_commuters>
-    				<fraction_workplace_commuters>0.65</fraction_workplace_commuters>
-    				<household_file>Luxemburg.json</household_file>
-    				<participation_preschool>0.852</participation_preschool>
-    				<participation_daycare>0.42</participation_daycare>
-    				<participation_college>0.32</participation_college>
-    				<participation_workplace>0.6</participation_workplace>
-    				<population_size>284442</population_size>
-  			</region>
-        <region>
-            <!-- Namen -->
-    				<id>9</id>
-    				<fraction_college_commuters>0.55</fraction_college_commuters>
-    				<fraction_workplace_commuters>0.65</fraction_workplace_commuters>
-    				<household_file>Namen.json</household_file>
-    				<participation_preschool>0.795</participation_preschool>
-    				<participation_daycare>0.41</participation_daycare>
-    				<participation_college>0.32</participation_college>
-    				<participation_workplace>0.6</participation_workplace>
-    				<population_size>494042</population_size>
-  			</region>
-        <region>
-            <!-- Waals-Brabant -->
-    				<id>10</id>
-    				<fraction_college_commuters>0.55</fraction_college_commuters>
-    				<fraction_workplace_commuters>0.65</fraction_workplace_commuters>
-    				<household_file>Waals-Brabant.json</household_file>
-    				<participation_preschool>0.72</participation_preschool>
-    				<participation_daycare>0.51</participation_daycare>
-    				<participation_college>0.32</participation_college>
-    				<participation_workplace>0.6</participation_workplace>
-    				<population_size>403420</population_size>
   			</region>
 		</regions>
 	</geopop_gen>
