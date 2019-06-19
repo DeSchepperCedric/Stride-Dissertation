@@ -92,8 +92,11 @@ To explain the algorithms used for generating the geography of the countries and
         of the location's center. These locations with corresponding coordinates will form a grid that covers 
         the simulation area.
     \item[Regions]:
-         It it possible to vary multiple parameters for each region.  Furthermore, it  is  also  possible  to  provide  different  household  reference  profiles  for  these regions, and it is even possible to differentiate the profiles of ”Central Cities” from normal cities.\\
+        It it possible to vary multiple parameters for each region.  Furthermore, it is also possible to provide different household reference  profiles for these regions.\\
         To do this, the simulator will look at the province IDs of the locations, and match it with the parameters. If no matching parameters for all the province IDs are available, default parameters should be provided.
+        
+    \item[Major (Central) Cities]:
+        Apart from differentiating between regions, it is also possible to define cities as major cities. This can be done by listing the ID's in an input CSV file, as described in the appendices. This action will affect the population in those major cities, as it will use a different household reference profile to create the population for major cities.
 
 \end{description}
 
@@ -161,7 +164,7 @@ each populate a type of ContactPool:
         To create the actual persons, we randomly draw a household from the list of reference households 
         and use that as a template for the number of household members and their ages.
         We simply do this for each household in the GeoGrid, since we already determined 
-        the locations and number of households while generating the geography.
+        the locations and number of households while generating the geography. Depending on whether or not the location in which this household is major, a different reference list shall be used.
         
     \item[Daycares/PreSchools/K-12 Schools]:
         We start by listing all schools within a 10km radius of the household location. 

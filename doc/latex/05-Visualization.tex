@@ -1,0 +1,49 @@
+%%!TEX root = ./UserManual.tex
+\chapter{Visualization}
+\label{chap:visualization}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% System Requirements
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{System Requirements}
+\label{section:system requirements}
+
+The visualization tool is written in C++ with using QT. To use this tool you need to have version 5.12 or higher of QT.
+The command "make visualization" will create an executable "visualization" that launches the qt interface. 
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Use
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Use}
+\label{section:Use}
+
+The tool is split into 3 main components: a map, controllers and a data section.
+
+\subsection{Launching}
+The tool is located in the bin folder and can be launched via the command: "./visualization -file $FileName$.
+The files can be protobuf, HDF5 or JSON. When there is no file provided the tool will not start.
+
+\subsection{Map}
+
+The Map shows the different locations that have been simulated by stride. The locations are show on the map by circles that indicate the portion of the population that is infected. When clicked on the circle the dataBar will update with the data from that location.
+
+
+\subsection{Controls}
+
+The slider on the right side of the GUI controls which day of the simulation is shown. The centre button on the bottom right will centre and zoom the Map to fit all the locations rendered.
+
+To select a area on the map the 2 most left buttons can be used to draw a rectangle or a circle. To do so just select the kind of area then click and drag over the wanted area. The clear button will clear the rectangle and/or circle and hide the data bar.
+
+
+\begin{figure}[H]
+  \caption{standard view with rectangle selection}
+  \centering
+    \includegraphics[width=\textwidth]{selection.png}
+\end{figure}
+
+\begin{figure}[H]
+  \caption{standard view with databar view}
+  \centering
+    \includegraphics[width=\textwidth]{databar.png}
+\end{figure}
