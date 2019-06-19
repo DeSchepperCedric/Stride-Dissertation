@@ -42,7 +42,8 @@ public:
         virtual ~EpiStreamReader() = default;
 
         /// Perform the actual read and return the created GeoGrid.
-        virtual std::pair<std::vector<visualization::Location*>, std::vector<geopop::EnhancedCoordinate>> Read() override = 0;
+        virtual std::pair<std::vector<visualization::Location*>, std::vector<geopop::EnhancedCoordinate>> Read()
+            override = 0;
 
 protected:
         std::unique_ptr<std::istream> m_inputStream; ///< File to read.

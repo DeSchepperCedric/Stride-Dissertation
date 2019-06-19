@@ -106,7 +106,6 @@ void StanController::Control()
                 auto iViewer = make_shared<viewers::InfectedViewer>(runner);
                 auto eViewer = make_shared<viewers::EpiViewer>(runner);
                 runner->Register(iViewer, bind(&viewers::InfectedViewer::Update, iViewer, std::placeholders::_1));
-                runner->Register(eViewer, bind(&viewers::EpiViewer::Update, eViewer, std::placeholders::_1));
                 runner->Run();
                 results[i] = iViewer->GetInfectionCounts();
         }

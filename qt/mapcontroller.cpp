@@ -18,7 +18,8 @@
 #include <memory>
 
 #include "mapcontroller.h"
-#include "../main/cpp/geopop/io/EpiJSONReader.h"
+#include <geopop/io/EpiReaderFactory.h>
+#include <geopop/io/EpiReader.h>
 
 #include <geopop/EnhancedCoordinate.h>
 
@@ -29,15 +30,18 @@ namespace visualization {
     using namespace std;
 
     MapController::MapController(const std::string &file_name) : QObject(nullptr) {
-        auto file = std::make_unique<std::ifstream>();
-        file->open(file_name);
-        geopop::EpiJSONReader reader(std::move(file));
-        auto r = reader.Read();
+        geopop::EpiReaderFactory fac;
+        shared_ptr<geopop::EpiReader> reader =
+                fac.CreateReader(file_name);
+        auto r = reader->Read();
         m_locations = r.first;
         m_coords = r.second;
-        for(auto loc: m_coords){
-            auto coord = shared_ptr<geopop::EnhancedCoordinate>(new geopop::EnhancedCoordinate(loc.getData<visualization::Location>(), loc.GetCoordinate()));
-            m_grid.AddData(coord);
+        for(auto& loc: m_coords){
+            auto temp = make_shared<geopop::EnhancedCoordinate>(new geopop::EnhancedCoordinate(nullptr));
+            temp->setData(loc.getData<void>());
+            temp->SetCoordinate(loc.GetCoordinate());
+            m_grid.AddData(temp);
+
         }
         m_grid.Finalize();
     }
@@ -54,8 +58,13 @@ namespace visualization {
     void MapController::initialize(QObject *root) {
         m_root = root;
 
-        center();
+        if(!m_coords.empty()){
+            int size = m_coords[0].getData<Location>()->infected["College"]["total"].size();
+            QMetaObject::invokeMethod(m_root, "setDays", Q_ARG(QVariant, size-1));
+        }
+
         Update();
+        center();
     }
 
     void MapController::Update() {
@@ -137,7 +146,6 @@ namespace visualization {
             geopop::EnhancedCoordinate top(nullptr, right);
             geopop::EnhancedCoordinate bottom(nullptr, left);
             auto list = m_grid.LocationsInBox(&top, &bottom);
-
             if(!list.empty()){
                 found = true;
                 for (auto &a: age) {

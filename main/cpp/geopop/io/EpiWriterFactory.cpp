@@ -13,13 +13,14 @@
  *  Copyright 2018, Jan Broeckhove and Bistromatics group.
  */
 
+#include "EpiHDF5Writer.h"
 #include "EpiJSONWriter.h"
 #include "util/Exception.h"
-#include <ostream>
 #include <fstream>
+#include <ostream>
 
-#include <ostream>
 #include <fstream>
+#include <ostream>
 
 #ifdef BOOST_FOUND
 
@@ -43,10 +44,13 @@ std::shared_ptr<EpiWriter> EpiWriterFactory::CreateEpiWriter(const std::string& 
 
         if (path.extension().string() == ".json") {
                 return std::make_shared<EpiJSONWriter>(outputFileStream);
+        } else if (path.extension().string() == ".h5") {
+                return std::make_shared<EpiHDF5Writer>(path.string());
         } /*else
-    if (path.extension().string() == ".proto") {
-        return std::make_shared<GeoGridProtoWriter>();
-    } */ else {
+     if (path.extension().string() == ".proto") {
+         return std::make_shared<GeoGridProtoWriter>();
+     } */
+        else {
                 throw stride::util::Exception("GeoGridWriterFactory::CreateWriter> Unsupported file extension: " +
                                               path.extension().string());
         }

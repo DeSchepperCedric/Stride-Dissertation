@@ -55,16 +55,16 @@ json EpiJSONWriter::WriteLocation(const geopop::EnhancedCoordinate& location)
         coordinate["latitude"]      = location.GetCoordinate().get<1>();
         location_root["coordinate"] = coordinate;
         json infected;
-        for (const auto& age: location.getData<visualization::Location>()->infected){
-            json statusJ;
-            for (const auto& status: age.second){
-                json dayJ = json::array();
-                for (const auto& day: status.second){
-                    dayJ.push_back(day);
+        for (const auto& age : location.getData<visualization::Location>()->infected) {
+                json statusJ;
+                for (const auto& status : age.second) {
+                        json dayJ = json::array();
+                        for (const auto& day : status.second) {
+                                dayJ.push_back(day);
+                        }
+                        statusJ[status.first] = dayJ;
                 }
-                statusJ[status.first] = dayJ;
-            }
-            infected[age.first] = statusJ;
+                infected[age.first] = statusJ;
         }
         location_root["Epi"] = infected;
 

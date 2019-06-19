@@ -277,10 +277,12 @@ Window {
 
             onClicked: {
                 dataBar.visible = false
+                controller.ID = "-1"
             }
         }
 
         ListView {
+            id: list
             boundsBehavior: Flickable.StopAtBounds
             anchors.topMargin: 79
             anchors.fill: parent
@@ -301,6 +303,7 @@ Window {
             width: 86
             height: 15
             text: qsTr("Text")
+            fontSizeMode: Text.Fit
             wrapMode: Text.WordWrap
             font.underline: true
             font.bold: true
@@ -384,6 +387,8 @@ Window {
 
         name.text = controller.naam;
 
+        list.header = controller.naam;
+
         for(var i = 0; i < ages.length; i++){
             for(var j = 0; j < healts.length; j++){
                 model.append({ status: healts[j] + ": " + epiData[ages[i]][healts[j]], ageBracket: ages[i] })
@@ -391,17 +396,8 @@ Window {
         }
         dataBar.visible = true;
     }
+
+    function setDays(days){
+        slider.to = days;
+    }
 }
-
-
-
-
-
-
-
-
-
-/*##^## Designer {
-    D{i:10;anchors_x:167}D{i:11;anchors_x:281}
-}
- ##^##*/

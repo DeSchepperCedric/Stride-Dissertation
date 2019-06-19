@@ -20,8 +20,8 @@
 
 #include "EpiViewer.h"
 
-#include "geopop/Location.h"
 #include "geopop/EnhancedCoordinate.h"
+#include "geopop/Location.h"
 #include "pop/Population.h"
 #include "sim/Sim.h"
 #include "sim/SimRunner.h"
@@ -42,43 +42,46 @@ void EpiViewer::Update(stride::sim_event::Id id)
         case Id::AtStart: {
                 auto& geo = m_runner->GetSim()->GetPopulation()->RefGeoGrid();
 
-                cout << "data:      " << geo.size() << endl;
                 for (auto& loc : *geo.m_locationGrid) {
-                        visualization::Location location;
+                        visualization::Location    location;
                         geopop::EnhancedCoordinate coor = geopop::EnhancedCoordinate(nullptr);
-                        location.id               = loc->getData<geopop::Location>()->GetID();
-                        location.name             = loc->getData<geopop::Location>()->GetName();
+                        location.id                     = loc->getData<geopop::Location>()->GetID();
+                        location.name                   = loc->getData<geopop::Location>()->GetName();
                         coor.SetCoordinate(geopop::Coordinate(loc->GetCoordinate()));
-                        location.size             = loc->getData<geopop::Location>()->GetPopCount();
-                        coor.setData(&location);
+                        location.size   = loc->getData<geopop::Location>()->GetPopCount();
                         const auto& epi = loc->getData<geopop::Location>()->GetStatusCounts();
-                        for(const auto& age: epi){
-                            for(const auto& status: age.second){
-                                location.infected[age.first][status.first].push_back(status.second);
-                            }
+                        for (const auto& age : epi) {
+                                for (const auto& status : age.second) {
+                                        location.infected[age.first][status.first].push_back(status.second);
+                                }
                         }
-                        m_Locations[loc->getData<geopop::Location>()->GetID()] = location;
+                        auto loc_id         = loc->getData<geopop::Location>()->GetID();
+                        m_Locations[loc_id] = location;
+                        coor.setData(&m_Locations[loc_id]);
+                        m_coors.push_back(coor);
                 }
                 break;
         }
         case Id::Stepped: {
                 auto& geo = m_runner->GetSim()->GetPopulation()->RefGeoGrid();
                 for (auto& loc : geo) {
-                    const auto& epi = loc->GetStatusCounts();
-                    for(const auto& age: epi){
-                        for(const auto& status: age.second){
-                            m_Locations[loc->GetID()].infected[age.first][status.first].push_back(status.second);
+                        const auto& epi = loc->GetStatusCounts();
+                        for (const auto& age : epi) {
+                                for (const auto& status : age.second) {
+                                        m_Locations[loc->GetID()].infected[age.first][status.first].push_back(
+                                            status.second);
+                                }
                         }
-                    }
                 }
                 break;
         }
         case Id::Finished: {
-                ofstream                      outputFileStream("temp.json");
+                const string  filename = "temp.json";
+                std::ofstream outputFileStream;
+                outputFileStream.open(filename);
                 shared_ptr<geopop::EpiWriter> writer =
-                    geopop::EpiWriterFactory::CreateEpiWriter("temp.json", outputFileStream);
+                    geopop::EpiWriterFactory::CreateEpiWriter(filename, outputFileStream);
                 writer->Write(m_coors);
-                outputFileStream.close();
         }
         default: break;
         }

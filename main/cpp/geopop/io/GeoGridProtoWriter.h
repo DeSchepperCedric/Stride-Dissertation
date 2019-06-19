@@ -16,11 +16,11 @@
 #pragma once
 
 #include "GeoGridStreamWriter.h"
-#include "geopop/Location.h"
 #include "geopop/EnhancedCoordinate.h"
+#include "geopop/Location.h"
 
-#include <set>
 #include <memory>
+#include <set>
 
 namespace stride {
 class ContactPool;
@@ -45,7 +45,7 @@ class GeoGridProtoWriter : public GeoGridStreamWriter
 {
 public:
         /// Construct the GeoGridProtoWriter.
-        GeoGridProtoWriter(std::ostream& stream);
+        explicit GeoGridProtoWriter(std::ostream& stream);
 
         /// Write the GeoGrid to the ostream in Protobuf format.
         void Write(GeoGrid& geoGrid) override;

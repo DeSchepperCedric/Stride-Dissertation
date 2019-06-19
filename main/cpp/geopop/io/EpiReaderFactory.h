@@ -15,29 +15,26 @@
 
 #pragma once
 
-#include "geopop/EnhancedCoordinate.h"
+#include "EpiReader.h"
 #include <memory>
-#include <ostream>
-#include <vector>
+#include <string>
 
-#include "../../../../qt/location.h"
+namespace stride {
+class Population;
+}
 
 namespace geopop {
 
-class GeoGrid;
+class GeoGridReader;
 
 /**
- * An interface for writing the Epidemiologic information to a file, can be implemented with multiple file types.
- * are currently implemented.
+ * A Factory for creating the correct implementation of a GeoGridReader based on the filename extension
  */
-class EpiWriter
+class EpiReaderFactory
 {
 public:
-        /// Construct the Writer.
-        virtual ~EpiWriter() = default;
-
-        /// Write the GeoGrid to ostream.
-        virtual void Write(std::vector<geopop::EnhancedCoordinate> locations) = 0;
+        /// Create a GeoGridReader based on the provided extension in the filename
+        std::shared_ptr<EpiReader> CreateReader(const std::string& filename) const;
 };
 
 } // namespace geopop

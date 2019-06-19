@@ -69,14 +69,12 @@ void CommutesCSVReader::FillGeoGrid(GeoGrid& geoGrid) const
                                                         " is invalid (0 <= proportion <= 1)");
                                 }
 
-
                                 locFrom->AddOutgoingCommute(locTo.get(), proportion);
                                 locTo->AddIncomingCommute(locFrom.get(), proportion);
                         }
                 }
                 rowIndex++;
         }
-
 }
 
 } // namespace geopop

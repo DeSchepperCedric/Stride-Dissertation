@@ -43,18 +43,7 @@ MapCircle {
         anchors.fill: parent
         hoverEnabled: true
 
-        /*onEntered: {
-            controller.ID = parent.dataId
-            dia.title = controller.naam
-            info.text = controller.info
-            dia.visible = true;
-        }
-
-        onExited: {
-            dia.visible = false
-        }*/
-
-        onClicked: {
+       onClicked: {
             controller.ID = parent.dataId
             controller.setData()
         }

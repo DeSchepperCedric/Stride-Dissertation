@@ -79,6 +79,7 @@ namespace visualization {
 
     private:
         int m_day = 0;
+        int max_days = 0;
         std::string m_id = "-1";
 
         QGeoCircle m_circle;

@@ -15,7 +15,7 @@
 
 #include "GeoGridProtoReader.h"
 
-#include "geogrid.pb.h"
+#include "proto_pb/geogrid.pb.h"
 #include "geopop/GeoGrid.h"
 #include "pop/Person.h"
 #include "pop/Population.h"
@@ -27,6 +27,7 @@ namespace geopop {
 
 using namespace std;
 using namespace stride::ContactType;
+using namespace proto;
 
 GeoGridProtoReader::GeoGridProtoReader(unique_ptr<istream> inputStream, stride::Population* pop)
     : GeoGridStreamReader(move(inputStream), pop)
@@ -103,7 +104,8 @@ void GeoGridProtoReader::ParseContactPool(shared_ptr<Location>                  
         }
 }
 
-std::pair<shared_ptr <geopop::Location>, shared_ptr<geopop::EnhancedCoordinate>> GeoGridProtoReader::ParseLocation(const proto::GeoGrid_Location &protoLocation)
+std::pair<shared_ptr<geopop::Location>, shared_ptr<geopop::EnhancedCoordinate>> GeoGridProtoReader::ParseLocation(
+    const proto::GeoGrid_Location& protoLocation)
 {
         const auto  id         = protoLocation.id();
         const auto& name       = protoLocation.name();

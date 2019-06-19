@@ -37,10 +37,10 @@ void LocationsCSVReader::FillGeoGrid(GeoGrid& geoGrid) const
                 // In file: id,province,population,x_coord,y_coord,latitude,longitude,name
                 // Ignore x and y, we do not use them,
                 // In Coordinate constructor switch order of latitude and longitude
-                auto loc = make_shared<Location>(row.GetValue<int>(0), row.GetValue<int>(1),
-                                                       row.GetValue(7));
-                auto coor = make_shared<EnhancedCoordinate>(loc.get(), Coordinate(row.GetValue<double>(6), row.GetValue<double>(5)));
-                geoGrid.addLocation(loc,coor);
+                auto loc  = make_shared<Location>(row.GetValue<int>(0), row.GetValue<int>(1), row.GetValue(7));
+                auto coor = make_shared<EnhancedCoordinate>(
+                    loc.get(), Coordinate(row.GetValue<double>(6), row.GetValue<double>(5)));
+                geoGrid.addLocation(loc, coor);
 
                 locations.emplace_back(loc, row.GetValue<int>(2));
                 totalPopulation += row.GetValue<int>(2);

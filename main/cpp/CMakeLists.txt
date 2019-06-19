@@ -113,7 +113,11 @@ set(STRIDE_SRC
     geopop/io/EpiJSONWriter.cpp
     geopop/io/EpiWriter.h
     geopop/io/EpiWriterFactory.cpp
+    geopop/io/EpiReaderFactory.cpp
+    geopop/io/EpiJSONWriter.cpp
     geopop/io/EpiJSONReader.cpp
+    geopop/io/EpiHDF5Writer.cpp
+    geopop/io/EpiHDF5Reader.cpp
 
     #---
     ${PROTO_HEADER}
