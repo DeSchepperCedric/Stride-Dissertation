@@ -53,7 +53,8 @@ void Populator<stride::ContactType::Id::PreSchool>::Apply(GeoGrid& geoGrid, cons
                         for (Person* p : *hhPool) {
                                 if (AgeBrackets::PreSchool::HasAge(p->GetAge()) &&
                                     m_rn_man.MakeWeightedCoinFlip(
-                                        geoGridConfig.params.at(loc->getData<Location>()->GetProvince()).participation_preschool)) {
+                                        geoGridConfig.params.at(loc->getData<Location>()->GetProvince())
+                                            .participation_preschool)) {
                                         // this person is a todler
                                         auto& c = nearByPreSchoolsPools[dist()];
                                         c->AddMember(p);

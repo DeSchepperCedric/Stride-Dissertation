@@ -48,14 +48,16 @@ public:
                 return static_cast<T*>(m_data);
         }
 
-        bool operator==(const EnhancedCoordinate& coord)const{
-            using boost::geometry::get;
-            return get<0>(coord.m_coordinate) == get<0>(coord.m_coordinate) && get<1>(coord.m_coordinate) == get<1>(coord.m_coordinate);
+        bool operator==(const EnhancedCoordinate& coord) const
+        {
+                using boost::geometry::get;
+                return get<0>(coord.m_coordinate) == get<0>(coord.m_coordinate) &&
+                       get<1>(coord.m_coordinate) == get<1>(coord.m_coordinate);
         }
 
 private:
-        geopop::Coordinate  m_coordinate; ///< Coordinate of the Location.
-        void*               m_data;       ///< Extra data for this coordinate
+        geopop::Coordinate m_coordinate; ///< Coordinate of the Location.
+        void*              m_data;       ///< Extra data for this coordinate
 };
 
 } // namespace geopop

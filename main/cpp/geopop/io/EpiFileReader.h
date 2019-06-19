@@ -15,8 +15,9 @@
 
 #pragma once
 
-#include "EpiReader.h.h"
+#include "EpiReader.h"
 
+#include <iostream>
 #include <istream>
 
 namespace geopop {
@@ -31,19 +32,19 @@ class EpiFileReader : public EpiReader
 {
 public:
         /// Parametrized constructor.
-        explicit EpiFileReader(const std::string& inputFile) : GeoGridReader(), m_inputFile(inputFile){};
+        explicit EpiFileReader(std::string inputFile) : EpiReader(), m_inputFile(inputFile){};
 
         /// No copy constructor.
-        EpiFileReader(const GeoGridFileReader&) = delete;
+        EpiFileReader(const EpiFileReader&) = delete;
 
         /// No copy assignment.
-        EpiFileReader& operator=(const GeoGridFileReader&) = delete;
+        EpiFileReader& operator=(const EpiFileReader&) = delete;
 
         /// Default destructor.
         virtual ~EpiFileReader() = default;
 
         /// Perform the actual read and return the created GeoGrid.
-        virtual void Read() override = 0;
+        std::pair<std::vector<visualization::Location*>, std::vector<geopop::EnhancedCoordinate>> Read() = 0;
 
 protected:
         std::string m_inputFile; ///< File to read.

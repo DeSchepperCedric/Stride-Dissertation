@@ -17,8 +17,8 @@
 
 #include "EpiWriter.h"
 
-#include <ostream>
 #include <fstream>
+#include <ostream>
 // namespace stride
 
 namespace geopop {
@@ -33,7 +33,7 @@ public:
         virtual ~EpiStreamWriter() = default;
 
         ///
-        void Write(std::map<int, visualization::Location> locations) = 0;
+        void Write(std::vector<geopop::EnhancedCoordinate> locations) = 0;
 
         ///
         std::ostream& StreamRef() { return m_stream; }

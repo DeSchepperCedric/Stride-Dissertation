@@ -16,6 +16,8 @@
 #pragma once
 
 #include "../../../../qt/location.h"
+#include "geopop/EnhancedCoordinate.h"
+
 #include <map>
 #include <memory>
 #include <tuple>
@@ -49,7 +51,7 @@ public:
         virtual ~EpiReader() = default;
 
         /// Perform the actual read and return the created vector<Location>.
-        virtual std::vector<visualization::Location> Read() = 0;
+        virtual std::pair<std::vector<visualization::Location*>, std::vector<geopop::EnhancedCoordinate>> Read() = 0;
 };
 
 } // namespace geopop

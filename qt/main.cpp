@@ -16,17 +16,35 @@
 #include <QGuiApplication>
 #include <QQmlApplicationEngine>
 #include <QQmlContext>
+#include <string>
+#include <iostream>
 
 #include "mapcontroller.h"
 
+using namespace std;
+
 int main(int argc, char *argv[]){
+    std::string filename;
+    bool file = false;
+    for (int i = 0; i < argc; ++i){
+        std::string argument = argv[i];
+        if(argument == "-file" && argc >= i+1){
+            filename = argv[i+1];
+            file = true;
+        }
+    }
+    if(not file){
+        cerr << "no file provided" << endl;
+        return 2;
+    }
+
     QCoreApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
 
     QGuiApplication app(argc, argv);
 
     QQmlApplicationEngine engine;
 
-    visualization::MapController controller("temp.json");
+    visualization::MapController controller(filename);
     const QUrl url(QStringLiteral("qrc:/main.qml"));
     engine.rootContext()->setContextProperty("controller", &controller);
     QObject::connect(&engine, &QQmlApplicationEngine::objectCreated,

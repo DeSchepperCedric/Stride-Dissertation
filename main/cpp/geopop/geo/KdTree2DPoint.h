@@ -75,10 +75,7 @@ public:
         }
 
         /// Retrieve the location.
-        const EnhancedCoordinate* GetLocation() const
-        {
-                return m_location;
-        }
+        const EnhancedCoordinate* GetLocation() const { return m_location; }
 
         /// Get the coordinate for this Location.
         Coordinate GetPoint() const { return m_pt; }

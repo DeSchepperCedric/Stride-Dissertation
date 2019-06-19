@@ -38,6 +38,7 @@ Window {
             property var coor;
             property variant selectionCircle : QtPositioning.circle()
             property variant selectionRectangle : QtPositioning.rectangle()
+
             anchors.bottomMargin: 0
 
             hoverEnabled: false
@@ -100,6 +101,14 @@ Window {
             border.width: 3
             opacity: 0.5
             visible: false
+
+            MouseArea{
+                anchors.fill: parent
+                onClicked: {
+                    controller.ID = "circle"
+                    controller.setData()
+                }
+            }
         }
 
         MapRectangle {
@@ -108,6 +117,14 @@ Window {
             border.width: 3
             opacity: 0.5
             visible: false
+
+            MouseArea{
+                anchors.fill: parent
+                onClicked: {
+                    controller.ID = "rectangle"
+                    controller.setData()
+                }
+            }
         }
     }
 
@@ -142,9 +159,10 @@ Window {
 
         Button {
             id: button3
-            x: 167
             y: 22
             text: qsTr("select Circle")
+            anchors.left: button2.right
+            anchors.leftMargin: 20
             checkable: true
             anchors.verticalCenter: parent.verticalCenter
 
@@ -153,6 +171,23 @@ Window {
                     button2.checked = false
                 }
                 map.gesture.enabled = !checked
+            }
+        }
+
+        Button {
+            id: button4
+            y: 13
+            text: qsTr("Clear")
+            anchors.left: button3.right
+            anchors.leftMargin: 20
+            anchors.verticalCenterOffset: 0
+            checkable: false
+            anchors.verticalCenter: parent.verticalCenter
+
+            onClicked: {
+                selectCircle.visible = false;
+                selectRect.visible = false;
+                dataBar.visible = false;
             }
         }
     }
@@ -206,22 +241,13 @@ Window {
         Text {
             id: element
             x: 44
-            y: 93
+            y: 23
             color: "#000000"
             text: qsTr("0")
             anchors.horizontalCenterOffset: 0
             anchors.horizontalCenter: parent.horizontalCenter
             elide: Text.ElideRight
             font.pixelSize: 19
-        }
-
-        Button {
-            id: button1
-            x: 22
-            y: 29
-            width: 90
-            height: 28
-            text: qsTr("Select file")
         }
     }
 
@@ -251,10 +277,12 @@ Window {
 
             onClicked: {
                 dataBar.visible = false
+                controller.ID = "-1"
             }
         }
 
         ListView {
+            id: list
             boundsBehavior: Flickable.StopAtBounds
             anchors.topMargin: 79
             anchors.fill: parent
@@ -268,17 +296,34 @@ Window {
             section.property: "ageBracket"
         }
 
+
+        Rectangle {
+            id: rectangle
+            width: 30
+            height: 50
+            color: "#ffffff"
+            anchors.rightMargin: 0
+            anchors.leftMargin: 0
+            anchors.top: parent.top
+            anchors.right: parent.right
+            anchors.left: parent.left
+            anchors.topMargin: 0
+        }
+
         Text {
             id: name
             x: 76
             y: 51
             width: 86
-            height: 15
+            height: 30
             text: qsTr("Text")
+            anchors.horizontalCenter: parent.horizontalCenter
+            z: 5
+            anchors.verticalCenter: rectangle.verticalCenter
+            fontSizeMode: Text.Fit
             wrapMode: Text.WordWrap
             font.underline: true
             font.bold: true
-            anchors.horizontalCenter: parent.horizontalCenter
             font.pixelSize: 20
         }
 
@@ -319,6 +364,7 @@ Window {
         ListModel{
             id: model
         }
+
 
     }
 
@@ -365,4 +411,15 @@ Window {
         }
         dataBar.visible = true;
     }
+
+    function setDays(days){
+        slider.to = days;
+    }
 }
+
+
+
+/*##^## Designer {
+    D{i:19;anchors_height:50}D{i:20;anchors_width:86;anchors_x:76}
+}
+ ##^##*/
