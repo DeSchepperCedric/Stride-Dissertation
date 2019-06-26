@@ -293,7 +293,7 @@ Window {
             delegate: statusDelegate
 
             section.delegate: ageDelegate
-            section.property: "ageBracket"
+            section.property: "age"
         }
 
 
@@ -406,7 +406,7 @@ Window {
 
         for(var i = 0; i < ages.length; i++){
             for(var j = 0; j < healts.length; j++){
-                model.append({ status: healts[j] + ": " + epiData[ages[i]][healts[j]], ageBracket: ages[i] })
+                model.append({ status: healts[j] + ": " + epiData[ages[i]][healts[j]], age: ages[i] })
             }
         }
         dataBar.visible = true;

@@ -18,8 +18,8 @@ Below is an example of the new configuration file when generating the population
 <commuting_file>flanders_commuting.csv</commuting_file>
 <workplace_file>workplace_size_distribution.csv</workplace_file>
 <workplace_performance>fast</workplace_performance>
-<epi_output>true</epi_output>
-<epi_output_file>data.h5</epi_output_file>
+<output_epi>true</output_epi>
+<output_epi_file>data.h5</output_epi_file>
 <!-- Default parameters -->
 <fraction_college_commuters>0.5</fraction_college_commuters>
 <fraction_workplace_commuters>0.5</fraction_workplace_commuters>
@@ -68,7 +68,7 @@ As you can see, you can specify the following parameters for each region:
 
 The most important one here is the id. The id of a region will correspond to the province of a city in the cities file. If the province matches no region id, the default values will be used.
 
-To generate the files needed for the visualization tool, the parameter "epi\_output" must be true and the parameter "epi\_output\_file can be used to specify the file and format of the output.
+To generate the files needed for the visualization tool, the parameter "output\_epi" must be true and the parameter "output\_epi\_file can be used to specify the file and format of the output.
 
 \section{Major cities file}
 \label{section:major_cities}

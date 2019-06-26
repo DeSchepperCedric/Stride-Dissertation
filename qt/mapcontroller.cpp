@@ -70,15 +70,27 @@ namespace visualization {
 
     void MapController::Update() {
         QMetaObject::invokeMethod(m_root, "clear");
+        const auto age = {"College", "Daycare", "Household", "K12School", "PreSchool", "PrimaryCommunity", "SecondaryCommunity", "Workplace"};
+
+        auto comp = [](const geopop::EnhancedCoordinate& a, const geopop::EnhancedCoordinate& b)->bool {
+            return a.getData<visualization::Location>()->size > b.getData<visualization::Location>()->size;
+        };
+
+        sort(m_coords.begin(), m_coords.end(), comp);
 
         for (auto &location: m_coords) {
+
+            int i = 0;
+            for(auto& a : age){
+                    i+= location.getData<visualization::Location>()->infected[a]["infected"][m_day]+ location.getData<visualization::Location>()->infected[a]["recovered"][m_day];
+            }
             auto coor = location.GetCoordinate();
             QMetaObject::invokeMethod(m_root, "addLocation",
                                       Q_ARG(QVariant, location.getData<visualization::Location>()->id),
                                       Q_ARG(QVariant, coor.get<0>()),
                                       Q_ARG(QVariant, coor.get<1>()),
                                       Q_ARG(QVariant, location.getData<visualization::Location>()->size),
-                                      Q_ARG(QVariant, location.getData<visualization::Location>()->infected["College"]["total"][m_day])
+                                      Q_ARG(QVariant, i)
             );
         }
         setData();
